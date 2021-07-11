@@ -1,0 +1,6 @@
+{
+	    "require": {
+	                    "jeroen/mediawiki-github":">=1.6.0"			        
+	    }
+}
+
