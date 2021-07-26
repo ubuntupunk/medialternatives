@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "57766b9d345c08b0ef75768feb4e2d77",
+    "content-hash": "22bb4805698301b723f67ebcabec1e2c",
     "packages": [
         {
             "name": "composer/installers",
@@ -784,15 +784,15 @@
         },
         {
             "name": "wpackagist-plugin/all-in-one-seo-pack",
-            "version": "4.1.2.1",
+            "version": "4.1.2.2",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/all-in-one-seo-pack/",
-                "reference": "tags/4.1.2.1"
+                "reference": "tags/4.1.2.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/all-in-one-seo-pack.4.1.2.1.zip"
+                "url": "https://downloads.wordpress.org/plugin/all-in-one-seo-pack.4.1.2.2.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -910,15 +910,15 @@
         },
         {
             "name": "wpackagist-plugin/custom-css-js",
-            "version": "3.36",
+            "version": "3.37",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/custom-css-js/",
-                "reference": "tags/3.36"
+                "reference": "tags/3.37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/custom-css-js.3.36.zip"
+                "url": "https://downloads.wordpress.org/plugin/custom-css-js.3.37.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -946,7 +946,7 @@
         },
         {
             "name": "wpackagist-plugin/easy-google-fonts",
-            "version": "1.4.4",
+            "version": "2.0.4",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/easy-google-fonts/",
@@ -954,7 +954,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/easy-google-fonts.zip?timestamp=1605028404"
+                "url": "https://downloads.wordpress.org/plugin/easy-google-fonts.zip?timestamp=1626377261"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -982,15 +982,15 @@
         },
         {
             "name": "wpackagist-plugin/google-site-kit",
-            "version": "1.35.0",
+            "version": "1.36.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/google-site-kit/",
-                "reference": "tags/1.35.0"
+                "reference": "tags/1.36.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/google-site-kit.1.35.0.zip"
+                "url": "https://downloads.wordpress.org/plugin/google-site-kit.1.36.0.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -1162,15 +1162,15 @@
         },
         {
             "name": "wpackagist-plugin/olympus-google-fonts",
-            "version": "2.5.9",
+            "version": "2.5.95",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/olympus-google-fonts/",
-                "reference": "tags/2.5.9"
+                "reference": "tags/2.5.95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/olympus-google-fonts.2.5.9.zip"
+                "url": "https://downloads.wordpress.org/plugin/olympus-google-fonts.2.5.95.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -1198,7 +1198,7 @@
         },
         {
             "name": "wpackagist-plugin/open-graphite",
-            "version": "1.4.0",
+            "version": "1.4.1",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/open-graphite/",
@@ -1206,13 +1206,31 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/open-graphite.zip?timestamp=1607306117"
+                "url": "https://downloads.wordpress.org/plugin/open-graphite.zip?timestamp=1626442122"
             },
             "require": {
                 "composer/installers": "~1.0"
             },
             "type": "wordpress-plugin",
             "homepage": "https://wordpress.org/plugins/open-graphite/"
+        },
+        {
+            "name": "wpackagist-plugin/responsivevoice-text-to-speech",
+            "version": "1.7.2",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/responsivevoice-text-to-speech/",
+                "reference": "tags/1.7.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/responsivevoice-text-to-speech.1.7.2.zip"
+            },
+            "require": {
+                "composer/installers": "~1.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/responsivevoice-text-to-speech/"
         },
         {
             "name": "wpackagist-plugin/semantic-linkbacks",
@@ -1450,15 +1468,15 @@
         },
         {
             "name": "wpackagist-plugin/wordpress-seo",
-            "version": "16.6.1",
+            "version": "16.7",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/wordpress-seo/",
-                "reference": "tags/16.6.1"
+                "reference": "tags/16.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/wordpress-seo.16.6.1.zip"
+                "url": "https://downloads.wordpress.org/plugin/wordpress-seo.16.7.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -1528,12 +1546,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "1a08d0c7ab47e57fad0d254951a615f07445e91f"
+                "reference": "fc5e5d772af47d035df8178172391259b6e30566"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/1a08d0c7ab47e57fad0d254951a615f07445e91f",
-                "reference": "1a08d0c7ab47e57fad0d254951a615f07445e91f",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/fc5e5d772af47d035df8178172391259b6e30566",
+                "reference": "fc5e5d772af47d035df8178172391259b6e30566",
                 "shasum": ""
             },
             "conflict": {
@@ -1591,6 +1609,7 @@
                 "endroid/qr-code-bundle": "<3.4.2",
                 "enshrined/svg-sanitize": "<0.13.1",
                 "erusev/parsedown": "<1.7.2",
+                "ether/logs": "<3.0.4",
                 "ezsystems/demobundle": ">=5.4,<5.4.6.1",
                 "ezsystems/ez-support-tools": ">=2.2,<2.2.3",
                 "ezsystems/ezdemo-ls-extension": ">=5.4,<5.4.2.1",
@@ -1705,7 +1724,7 @@
                 "phpunit/phpunit": ">=4.8.19,<4.8.28|>=5.0.10,<5.6.3",
                 "phpwhois/phpwhois": "<=4.2.5",
                 "phpxmlrpc/extras": "<0.6.1",
-                "pimcore/pimcore": "<6.8.8",
+                "pimcore/pimcore": "<10.0.7",
                 "pocketmine/pocketmine-mp": "<3.15.4",
                 "pressbooks/pressbooks": "<5.18",
                 "prestashop/autoupgrade": ">=4,<4.10.1",
@@ -1895,7 +1914,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-02T20:02:51+00:00"
+            "time": "2021-07-13T18:03:10+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
