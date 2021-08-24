@@ -356,15 +356,15 @@
         },
         {
             "name": "roots/wordpress",
-            "version": "5.7.2",
+            "version": "5.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress.git",
-                "reference": "5.7.2"
+                "reference": "5.8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress/zipball/refs/tags/5.7.2"
+                "url": "https://api.github.com/repos/WordPress/WordPress/zipball/refs/tags/5.8"
             },
             "require": {
                 "php": ">=5.3.2",
@@ -407,7 +407,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2021-05-12T23:52:01+00:00"
+            "time": "2021-07-20T16:24:55+00:00"
         },
         {
             "name": "roots/wordpress-core-installer",
@@ -838,15 +838,15 @@
         },
         {
             "name": "wpackagist-plugin/block-navigation",
-            "version": "3.4.0",
+            "version": "3.4.1",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/block-navigation/",
-                "reference": "tags/3.4.0"
+                "reference": "tags/3.4.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/block-navigation.3.4.0.zip"
+                "url": "https://downloads.wordpress.org/plugin/block-navigation.3.4.1.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -856,15 +856,15 @@
         },
         {
             "name": "wpackagist-plugin/buddypress",
-            "version": "8.0.0",
+            "version": "9.0.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/buddypress/",
-                "reference": "tags/8.0.0"
+                "reference": "tags/9.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/buddypress.8.0.0.zip"
+                "url": "https://downloads.wordpress.org/plugin/buddypress.9.0.0.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -954,7 +954,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/easy-google-fonts.zip?timestamp=1626377261"
+                "url": "https://downloads.wordpress.org/plugin/easy-google-fonts.zip?timestamp=1627033554"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -982,15 +982,15 @@
         },
         {
             "name": "wpackagist-plugin/google-site-kit",
-            "version": "1.36.0",
+            "version": "1.38.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/google-site-kit/",
-                "reference": "tags/1.36.0"
+                "reference": "tags/1.38.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/google-site-kit.1.36.0.zip"
+                "url": "https://downloads.wordpress.org/plugin/google-site-kit.1.38.0.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -1008,7 +1008,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/google-website-translator.zip?timestamp=1615364237"
+                "url": "https://downloads.wordpress.org/plugin/google-website-translator.zip?timestamp=1627282619"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -1036,15 +1036,15 @@
         },
         {
             "name": "wpackagist-plugin/jetpack",
-            "version": "9.9",
+            "version": "9.9.1",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/jetpack/",
-                "reference": "tags/9.9"
+                "reference": "tags/9.9.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/jetpack.9.9.zip"
+                "url": "https://downloads.wordpress.org/plugin/jetpack.9.9.1.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -1090,15 +1090,15 @@
         },
         {
             "name": "wpackagist-plugin/litespeed-cache",
-            "version": "4.1",
+            "version": "4.2",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/litespeed-cache/",
-                "reference": "tags/4.1"
+                "reference": "tags/4.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/litespeed-cache.4.1.zip"
+                "url": "https://downloads.wordpress.org/plugin/litespeed-cache.4.2.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -1162,15 +1162,15 @@
         },
         {
             "name": "wpackagist-plugin/olympus-google-fonts",
-            "version": "2.5.95",
+            "version": "3.0.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/olympus-google-fonts/",
-                "reference": "tags/2.5.95"
+                "reference": "tags/3.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/olympus-google-fonts.2.5.95.zip"
+                "url": "https://downloads.wordpress.org/plugin/olympus-google-fonts.3.0.0.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -1360,15 +1360,15 @@
         },
         {
             "name": "wpackagist-plugin/websitevoice",
-            "version": "1.1.8",
+            "version": "1.1.9",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/websitevoice/",
-                "reference": "tags/1.1.8"
+                "reference": "tags/1.1.9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/websitevoice.1.1.8.zip"
+                "url": "https://downloads.wordpress.org/plugin/websitevoice.1.1.9.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -1468,15 +1468,15 @@
         },
         {
             "name": "wpackagist-plugin/wordpress-seo",
-            "version": "16.7",
+            "version": "16.8",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/wordpress-seo/",
-                "reference": "tags/16.7"
+                "reference": "tags/16.8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/wordpress-seo.16.7.zip"
+                "url": "https://downloads.wordpress.org/plugin/wordpress-seo.16.8.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -1486,15 +1486,15 @@
         },
         {
             "name": "wpackagist-plugin/worker",
-            "version": "4.9.8",
+            "version": "4.9.9",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/worker/",
-                "reference": "trunk"
+                "reference": "tags/4.9.9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/worker.zip?timestamp=1612796225"
+                "url": "https://downloads.wordpress.org/plugin/worker.4.9.9.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -1546,12 +1546,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "fc5e5d772af47d035df8178172391259b6e30566"
+                "reference": "52a126190a36bc9236846f5d42e10bff9ff60d72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/fc5e5d772af47d035df8178172391259b6e30566",
-                "reference": "fc5e5d772af47d035df8178172391259b6e30566",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/52a126190a36bc9236846f5d42e10bff9ff60d72",
+                "reference": "52a126190a36bc9236846f5d42e10bff9ff60d72",
                 "shasum": ""
             },
             "conflict": {
@@ -1640,6 +1640,7 @@
                 "friendsofsymfony/rest-bundle": ">=1.2,<1.2.2",
                 "friendsofsymfony/user-bundle": ">=1.2,<1.3.5",
                 "friendsoftypo3/mediace": ">=7.6.2,<7.6.5",
+                "froala/wysiwyg-editor": "<3.2.7",
                 "fuel/core": "<1.8.1",
                 "getgrav/grav": "<=1.7.10",
                 "getkirby/cms": "<=3.5.6",
@@ -1673,6 +1674,7 @@
                 "lexik/jwt-authentication-bundle": "<2.10.7|>=2.11,<2.11.3",
                 "librenms/librenms": "<21.1",
                 "livewire/livewire": ">2.2.4,<2.2.6",
+                "localizationteam/l10nmgr": "<7.4|>=8,<8.7|>=9,<9.2",
                 "magento/community-edition": ">=2,<2.2.10|>=2.3,<2.3.3",
                 "magento/magento1ce": "<1.9.4.3",
                 "magento/magento1ee": ">=1,<1.14.4.3",
@@ -1690,6 +1692,7 @@
                 "neos/swiftmailer": ">=4.1,<4.1.99|>=5.4,<5.4.5",
                 "nette/application": ">=2,<2.0.19|>=2.1,<2.1.13|>=2.2,<2.2.10|>=2.3,<2.3.14|>=2.4,<2.4.16|>=3,<3.0.6",
                 "nette/nette": ">=2,<2.0.19|>=2.1,<2.1.13",
+                "nilsteampassnet/teampass": "<=2.1.27.36",
                 "nukeviet/nukeviet": "<4.3.4",
                 "nystudio107/craft-seomatic": "<3.3",
                 "nzo/url-encryptor-bundle": ">=4,<4.3.2|>=5,<5.0.1",
@@ -1825,9 +1828,9 @@
                 "tribalsystems/zenario": "<8.8.53370",
                 "truckersmp/phpwhois": "<=4.3.1",
                 "twig/twig": "<1.38|>=2,<2.7",
-                "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.32|>=8,<8.7.38|>=9,<9.5.25|>=10,<10.4.14|>=11,<11.1.1",
+                "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.32|>=8,<8.7.38|>=9,<9.5.28|>=10,<10.4.18|>=11,<11.3.1",
                 "typo3/cms-backend": ">=7,<=7.6.50|>=8,<=8.7.39|>=9,<=9.5.24|>=10,<=10.4.13|>=11,<=11.1",
-                "typo3/cms-core": ">=6.2,<=6.2.56|>=7,<=7.6.50|>=8,<=8.7.39|>=9,<9.5.25|>=10,<10.4.14|>=11,<11.1.1",
+                "typo3/cms-core": ">=6.2,<=6.2.56|>=7,<7.6.52|>=8,<8.7.41|>=9,<9.5.28|>=10,<10.4.18|>=11,<11.3.1",
                 "typo3/cms-form": ">=8,<=8.7.39|>=9,<=9.5.24|>=10,<=10.4.13|>=11,<=11.1",
                 "typo3/flow": ">=1,<1.0.4|>=1.1,<1.1.1|>=2,<2.0.1|>=2.3,<2.3.16|>=3,<3.0.12|>=3.1,<3.1.10|>=3.2,<3.2.13|>=3.3,<3.3.13|>=4,<4.0.6",
                 "typo3/neos": ">=1.1,<1.1.3|>=1.2,<1.2.13|>=2,<2.0.4|>=2.3,<2.3.99|>=3,<3.0.20|>=3.1,<3.1.18|>=3.2,<3.2.14|>=3.3,<3.3.23|>=4,<4.0.17|>=4.1,<4.1.16|>=4.2,<4.2.12|>=4.3,<4.3.3",
@@ -1914,7 +1917,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-13T18:03:10+00:00"
+            "time": "2021-07-26T22:02:34+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
