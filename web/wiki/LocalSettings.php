@@ -138,3 +138,19 @@ wfLoadSkin( 'Vector' );
 # Add more configuration options below.
 
 $wgTmpDirectory = "/home/sexthera/tmp_tgyl5x";
+
+wfLoadExtension( 'InputBox' );
+#wfLoadExtension( 'SmartIndex' );
+#wfLoadExtension( 'Intersection' );
+wfLoadExtension( 'Cite' );
+wfLoadExtension( 'Gadgets' );
+wfLoadExtension( 'ImageMap' );
+wfLoadExtension( 'InputBox' );
+#wfLoadExtension( 'Nuke' );
+wfLoadExtension( 'ParserFunctions' );
+#wfLoadExtension( 'Poem' );
+#wfLoadExtension( 'SyntaxHighlight_GeSHi' );
+wfLoadExtension( 'WikiEditor' );
+wfLoadExtension( 'Interwiki' );
+$wgShowExceptionDetails = false;
+

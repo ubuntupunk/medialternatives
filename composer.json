@@ -58,13 +58,12 @@
     "wpackagist-plugin/jetpack":">=9.1",
     "wpackagist-plugin/jetpack-extras":">=3.3",
     "wpackagist-plugin/jetpack-markdown-support":">=1.0.0",
-    "wpackagist-plugin/bbpress":">=2.6.6",
+    "wpackagist-plugin/jetpack-boost":">=1.2.0",
     "wpackagist-plugin/olympus-google-fonts":">=2.2.4",
     "wpackagist-plugin/olympus-widgets":">=1.0.1",
     "wpackagist-plugin/google-website-translator":">=1.4.4",
     "wpackagist-plugin/indieweb":">=3.4.3",
     "wpackagist-plugin/litespeed-cache":">=3.5.2",
-    "wpackagist-plugin/natural-sounding-text-to-speech-app-listencat":">=1.0.0",
     "wpackagist-plugin/manage-xml-rpc":">=1.0",
     "wpackagist-plugin/loginizer":">=1.6.4",
     "wpackagist-plugin/open-graphite":">=1.3.2",
@@ -78,9 +77,11 @@
     "wpackagist-plugin/to-top":">=2.2.0",
     "wpackagist-plugin/webmention":">=4.0.5",
     "wpackagist-plugin/wp-pagenavi":">=2.93.3",
+    "wpackagist-plugin/wp-super-minify":">=1.5.1",	    
     "wpackagist-plugin/wordfence":">=7.4.12",
     "wpackagist-plugin/widget-css-classes":">=1.5.4.1",
-    "wpackagist-theme/blaskan":">=3.0.1"
+    "wpackagist-theme/blaskan":">=3.0.1",
+    "wpackagist-plugin/wp-graphql":">=1.6.5"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.5.6",

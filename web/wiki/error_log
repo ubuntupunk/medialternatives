@@ -1,0 +1,56 @@
+[25-Sep-2021 08:12:41 UTC] PHP Deprecated:  Use of $wgParser was deprecated in MediaWiki 1.32. [Called from MediaWiki\HookContainer\HookContainer::callLegacyHook in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/HookContainer/HookContainer.php at line 338] in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/debug/MWDebug.php on line 376
+[25-Sep-2021 08:14:37 UTC] PHP Parse error:  syntax error, unexpected '$wgShowExceptionDetails' (T_VARIABLE) in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/LocalSettings.php on line 145
+[25-Sep-2021 08:14:40 UTC] PHP Parse error:  syntax error, unexpected '$wgShowExceptionDetails' (T_VARIABLE) in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/LocalSettings.php on line 145
+[25-Sep-2021 08:14:45 UTC] PHP Parse error:  syntax error, unexpected '$wgShowExceptionDetails' (T_VARIABLE) in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/LocalSettings.php on line 145
+[25-Sep-2021 08:16:02 UTC] PHP Parse error:  syntax error, unexpected '$wgShowExceptionDetails' (T_VARIABLE) in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/LocalSettings.php on line 145
+[25-Sep-2021 08:16:11 UTC] PHP Parse error:  syntax error, unexpected '$wgShowExceptionDetails' (T_VARIABLE) in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/LocalSettings.php on line 145
+[25-Sep-2021 08:18:38 UTC] PHP Deprecated:  Use of $wgParser was deprecated in MediaWiki 1.32. [Called from MediaWiki\HookContainer\HookContainer::callLegacyHook in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/HookContainer/HookContainer.php at line 338] in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/debug/MWDebug.php on line 376
+[25-Sep-2021 08:19:15 UTC] PHP Deprecated:  Use of $wgParser was deprecated in MediaWiki 1.32. [Called from MediaWiki\HookContainer\HookContainer::callLegacyHook in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/HookContainer/HookContainer.php at line 338] in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/debug/MWDebug.php on line 376
+[25-Sep-2021 08:23:10 UTC] PHP Deprecated:  Use of $wgParser was deprecated in MediaWiki 1.32. [Called from MediaWiki\HookContainer\HookContainer::callLegacyHook in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/HookContainer/HookContainer.php at line 338] in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/debug/MWDebug.php on line 376
+[25-Sep-2021 08:23:35 UTC] PHP Deprecated:  Use of $wgParser was deprecated in MediaWiki 1.32. [Called from MediaWiki\HookContainer\HookContainer::callLegacyHook in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/HookContainer/HookContainer.php at line 338] in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/debug/MWDebug.php on line 376
+[25-Sep-2021 08:23:42 UTC] PHP Deprecated:  Use of $wgParser was deprecated in MediaWiki 1.32. [Called from MediaWiki\HookContainer\HookContainer::callLegacyHook in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/HookContainer/HookContainer.php at line 338] in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/debug/MWDebug.php on line 376
+[25-Sep-2021 08:24:09 UTC] PHP Deprecated:  Use of $wgParser was deprecated in MediaWiki 1.32. [Called from MediaWiki\HookContainer\HookContainer::callLegacyHook in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/HookContainer/HookContainer.php at line 338] in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/debug/MWDebug.php on line 376
+[25-Sep-2021 08:39:01 UTC] PHP Fatal error:  Uncaught Exception: Unable to open file /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/extensions/SmartIndex/extension.json: filemtime(): stat failed for /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/extensions/SmartIndex/extension.json in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/registration/ExtensionRegistry.php:176
+Stack trace:
+#0 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/GlobalFunctions.php(52): ExtensionRegistry->queue('/home/sexthera/...')
+#1 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/LocalSettings.php(143): wfLoadExtension('SmartIndex')
+#2 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/Setup.php(145): require_once('/home/sexthera/...')
+#3 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/WebStart.php(87): require_once('/home/sexthera/...')
+#4 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/index.php(44): require(' in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/registration/ExtensionRegistry.php on line 176
+[25-Sep-2021 08:39:06 UTC] PHP Fatal error:  Uncaught Exception: Unable to open file /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/extensions/SmartIndex/extension.json: filemtime(): stat failed for /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/extensions/SmartIndex/extension.json in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/registration/ExtensionRegistry.php:176
+Stack trace:
+#0 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/GlobalFunctions.php(52): ExtensionRegistry->queue('/home/sexthera/...')
+#1 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/LocalSettings.php(143): wfLoadExtension('SmartIndex')
+#2 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/Setup.php(145): require_once('/home/sexthera/...')
+#3 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/WebStart.php(87): require_once('/home/sexthera/...')
+#4 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/index.php(44): require(' in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/registration/ExtensionRegistry.php on line 176
+[25-Sep-2021 08:39:09 UTC] PHP Fatal error:  Uncaught Exception: Unable to open file /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/extensions/SmartIndex/extension.json: filemtime(): stat failed for /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/extensions/SmartIndex/extension.json in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/registration/ExtensionRegistry.php:176
+Stack trace:
+#0 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/GlobalFunctions.php(52): ExtensionRegistry->queue('/home/sexthera/...')
+#1 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/LocalSettings.php(143): wfLoadExtension('SmartIndex')
+#2 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/Setup.php(145): require_once('/home/sexthera/...')
+#3 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/WebStart.php(87): require_once('/home/sexthera/...')
+#4 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/index.php(44): require(' in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/registration/ExtensionRegistry.php on line 176
+[25-Sep-2021 08:48:59 UTC] PHP Fatal error:  Uncaught ExtensionDependencyError: DynamicPageList is not compatible with the current MediaWiki core (version 1.36.1), it requires: >= 1.37.0.
+ in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/registration/ExtensionRegistry.php:406
+Stack trace:
+#0 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/registration/ExtensionRegistry.php(230): ExtensionRegistry->readFromQueue(Array)
+#1 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/Setup.php(168): ExtensionRegistry->loadFromQueue()
+#2 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/WebStart.php(87): require_once('/home/sexthera/...')
+#3 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/index.php(44): require('/home/sexthera/...')
+#4 {main}
+  thrown in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/registration/ExtensionRegistry.php on line 406
+[25-Sep-2021 09:13:59 UTC] PHP Fatal error:  Uncaught Exception: Unable to open file /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/extensions/SmartIndex/extension.json: filemtime(): stat failed for /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/extensions/SmartIndex/extension.json in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/registration/ExtensionRegistry.php:176
+Stack trace:
+#0 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/GlobalFunctions.php(52): ExtensionRegistry->queue('/home/sexthera/...')
+#1 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/LocalSettings.php(143): wfLoadExtension('SmartIndex')
+#2 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/Setup.php(145): require_once('/home/sexthera/...')
+#3 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/WebStart.php(87): require_once('/home/sexthera/...')
+#4 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/index.php(44): require(' in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/registration/ExtensionRegistry.php on line 176
+[25-Sep-2021 09:14:39 UTC] PHP Fatal error:  Uncaught Exception: Unable to open file /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/extensions/SmartIndex/extension.json: filemtime(): stat failed for /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/extensions/SmartIndex/extension.json in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/registration/ExtensionRegistry.php:176
+Stack trace:
+#0 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/GlobalFunctions.php(52): ExtensionRegistry->queue('/home/sexthera/...')
+#1 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/LocalSettings.php(143): wfLoadExtension('SmartIndex')
+#2 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/Setup.php(145): require_once('/home/sexthera/...')
+#3 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/WebStart.php(87): require_once('/home/sexthera/...')
+#4 /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/index.php(44): require(' in /home/sexthera/public_html/medialternatives.com/bedrock/web/wiki/includes/registration/ExtensionRegistry.php on line 176
