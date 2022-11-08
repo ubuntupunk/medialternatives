@@ -4,6 +4,7 @@ declare( strict_types = 1 );
 
 namespace FileFetcher\Tests\Unit;
 
+use InvalidArgumentException;
 use FileFetcher\FileFetchingException;
 use FileFetcher\InMemoryFileFetcher;
 use PHPUnit\Framework\TestCase;
@@ -18,18 +19,22 @@ class InMemoryFileFetcherTest extends TestCase {
 
 	public function testWhenEmptyHash_requestsCauseException() {
 		$fetcher = new InMemoryFileFetcher( [] );
+		$invalidFileUrl = 'http://foo.bar/baz';
 
 		$this->expectException( FileFetchingException::class );
-		$fetcher->fetchFile( 'http://foo.bar/baz' );
+		$this->expectExceptionMessage( 'Could not fetch file: ' . $invalidFileUrl );
+		$fetcher->fetchFile( $invalidFileUrl );
 	}
 
 	public function testWhenUrlNotKnown_requestsCauseException() {
 		$fetcher = new InMemoryFileFetcher( [
 			'http://something.else/entirely' => 'kittens'
 		] );
+		$invalidFileUrl = 'http://foo.bar/baz';
 
 		$this->expectException( FileFetchingException::class );
-		$fetcher->fetchFile( 'http://foo.bar/baz' );
+		$this->expectExceptionMessage( 'Could not fetch file: ' . $invalidFileUrl );
+		$fetcher->fetchFile( $invalidFileUrl );
 	}
 
 	public function testWhenUrlKnown_requestsReturnsValue() {
@@ -56,6 +61,18 @@ class InMemoryFileFetcherTest extends TestCase {
 		);
 
 		$this->assertSame( 'cats', $fetcher->fetchFile( 'http://foo.bar' ) );
+	}
+
+	public function testWhenFilesAreNotStringType() {
+		$this->expectException( InvalidArgumentException::class );
+		$this->expectExceptionMessage( 'Both file url and file contents need to be of type string' );
+
+		new InMemoryFileFetcher(
+			[
+				'http://foo.bar' => 1000,
+			],
+			'default kittens'
+		);
 	}
 
 }

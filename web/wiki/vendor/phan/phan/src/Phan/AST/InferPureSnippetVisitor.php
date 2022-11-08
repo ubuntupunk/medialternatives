@@ -57,6 +57,10 @@ class InferPureSnippetVisitor extends InferPureVisitor
         }
     }
 
+    /**
+     * @override
+     * @return never
+     */
     public function visitReturn(Node $node): void
     {
         throw new NodeException($node);
@@ -79,17 +83,29 @@ class InferPureSnippetVisitor extends InferPureVisitor
         }
     }
 
+    /**
+     * @override
+     * @return never
+     */
     public function visitYield(Node $node): void
     {
         throw new NodeException($node);
     }
 
+    /**
+     * @override
+     * @return never
+     */
     public function visitYieldFrom(Node $node): void
     {
         throw new NodeException($node);
     }
 
     // TODO(optional) track actual goto labels
+    /**
+     * @override
+     * @return never
+     */
     public function visitGoto(Node $node): void
     {
         throw new NodeException($node);
@@ -97,11 +113,16 @@ class InferPureSnippetVisitor extends InferPureVisitor
 
     // NOTE: Checks of assignment, increment or decrement are deferred to --unused-variable-detection
 
+    /**
+     * @override
+     * @return never
+     */
     public function visitUnset(Node $node): void
     {
         throw new NodeException($node);
     }
 
+    // TODO: Return all classes in union and intersection types instead
     protected function getClassForVariable(Node $expr): Clazz
     {
         if ($expr->kind !== ast\AST_VAR) {
@@ -120,7 +141,8 @@ class InferPureSnippetVisitor extends InferPureVisitor
 
             $union_type = $variable->getUnionType()->asNormalizedTypes();
             $known_fqsen = null;
-            foreach ($union_type->getTypeSet() as $type) {
+
+            foreach ($union_type->getUniqueFlattenedTypeSet() as $type) {
                 if (!$type->isObjectWithKnownFQSEN()) {
                     continue;
                 }

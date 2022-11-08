@@ -37,7 +37,7 @@ $wgResourceBasePath = $wgScriptPath;
 
 ## The URL paths to the logo.  Make sure you change this from the default,
 ## or else you'll overwrite your logo when you upgrade!
-$wgLogos = [ '1x' => "$wgResourceBasePath/resources/assets/wiki.png" ];
+$wgLogos = [ '1x' => "$wgResourceBasePath/resources/assets/wikilogo.png" ];
 
 ## UPO means: this is also a user preference option
 
@@ -92,7 +92,8 @@ $wgPingback = true;
 ## language locale so that the behaviour of C library functions will
 ## be consistent with typical installations. Use $wgLanguageCode to
 ## localise the wiki.
-$wgShellLocale = "en_US.utf8";
+#$wgShellLocale = "en_US.utf8";
+$wgShellLocale = "C.UTF-8";
 
 ## Set $wgCacheDirectory to a writable directory on the web server
 ## to make your wiki go slightly faster. The directory should not
@@ -139,6 +140,12 @@ wfLoadSkin( 'Vector' );
 
 $wgTmpDirectory = "/home/sexthera/tmp_tgyl5x";
 
+
+#require_once( "$IP/extensions/Code/Code.php" );
+
+wfLoadExtension( 'CodeMirror' );
+#wfLoadExtension( 'Echo' );
+#wfLoadExtension( 'Flow' );
 wfLoadExtension( 'InputBox' );
 #wfLoadExtension( 'SmartIndex' );
 #wfLoadExtension( 'Intersection' );
@@ -149,8 +156,53 @@ wfLoadExtension( 'InputBox' );
 #wfLoadExtension( 'Nuke' );
 wfLoadExtension( 'ParserFunctions' );
 #wfLoadExtension( 'Poem' );
-#wfLoadExtension( 'SyntaxHighlight_GeSHi' );
+wfLoadExtension( 'SyntaxHighlight_GeSHi' );
+wfLoadExtension( 'TemplateData' );
 wfLoadExtension( 'WikiEditor' );
 wfLoadExtension( 'Interwiki' );
-$wgShowExceptionDetails = false;
+wfLoadExtension( 'WikiMarkdown' );
+wfLoadExtension( 'Widgets' );
+
+//VisualEditor
+wfLoadExtension( 'VisualEditor' );
+
+// Enable by default for everybody
+$wgDefaultUserOptions['visualeditor-enable'] = 1;
+$wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
+$wgDefaultUserOptions['visualeditor-newwikitext'] = 1;
+
+$wgGroupPermissions['*']['writeapi'] = true;
+$wgRevokePermissions['*']['writeapi'] = false;
+$wgGroupPermissions['*']['read'] = true;
+$wgGroupPermissions['*']['edit'] = true;
+
+// Optional: Set VisualEditor as the default for anonymous users
+// otherwise they will have to switch to VE
+// $wgDefaultUserOptions['visualeditor-editor'] = "visualeditor";
+
+// Don't allow users to disable it
+$wgHiddenPrefs[] = 'visualeditor-enable';
+$wgHiddenPrefs[] = 'visualeditor-newwikitext';
+
+// Per default, the VisualEditor only works with Namespace 0 (NS_MAIN),
+// i.e. the main article namespace. To change this, adapt the following example
+// that enables namespaces 0 (main), 2 (user) and 102 (some user specific one)
+$wgVisualEditorAvailableNamespaces = [
+    NS_MAIN => true,
+    NS_USER => true,
+    102 => true,
+    "_merge_strategy" => "array_plus"
+];
+
+#$wgVisualEditorEnableWikitext = true;
+wfLoadExtension( 'Parsoid', 'vendor/wikimedia/parsoid/extension.json' );
+$wgTmpDirectory = "$IP/images/temp";
+
+// Experimental
+#wfLoadExtension( 'SemanticMediaWiki' );
+
+#enableSemantics( 'medialternatives.com/wiki' )';
+#$wgMemoryLimit = "64M";
+
+$wgShowExceptionDetails = true;
 

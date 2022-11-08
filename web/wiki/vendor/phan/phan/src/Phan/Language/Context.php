@@ -7,6 +7,7 @@ namespace Phan\Language;
 use AssertionError;
 use ast\Node;
 use Closure;
+use Exception;
 use Phan\CodeBase;
 use Phan\Exception\CodeBaseException;
 use Phan\Issue;
@@ -652,7 +653,7 @@ class Context extends FileRef
 
         if ($fqsen instanceof FullyQualifiedMethodName) {
             if (!$code_base->hasMethodWithFQSEN($fqsen)) {
-                throw new RuntimeException("Method does not exist");
+                throw new RuntimeException("Method $fqsen does not exist");
             }
             return $code_base->getMethodByFQSEN($fqsen);
         }
@@ -734,7 +735,11 @@ class Context extends FileRef
             return false;
         }
 
-        $element = $this->getElementInScope($code_base);
+        try {
+            $element = $this->getElementInScope($code_base);
+        } catch (Exception $_) {
+            return false;
+        }
         if ($element instanceof ClassElement) {
             $defining_fqsen = $element->getRealDefiningFQSEN();
             if ($defining_fqsen !== $element->getFQSEN()) {

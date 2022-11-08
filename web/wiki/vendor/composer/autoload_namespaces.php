@@ -6,7 +6,11 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Pimple' => array($vendorDir . '/pimple/pimple/src'),
+    'TextCat' => array($vendorDir . '/wikimedia/textcat/src'),
+    'SemanticMediaWiki' => array($baseDir . '/extensions/SemanticMediaWiki/includes/SemanticMediaWiki.php'),
+    'ParsedownExtra' => array($vendorDir . '/erusev/parsedown-extra'),
+    'ParsedownExtended' => array($vendorDir . '/benjaminhoegh/parsedown-extended'),
+    'Parsedown' => array($vendorDir . '/erusev/parsedown'),
     'Net' => array($vendorDir . '/pear/net_smtp', $vendorDir . '/pear/net_socket'),
     'Mail' => array($vendorDir . '/pear/mail', $vendorDir . '/pear/mail_mime'),
     'Liuggio' => array($vendorDir . '/liuggio/statsd-php-client/src'),

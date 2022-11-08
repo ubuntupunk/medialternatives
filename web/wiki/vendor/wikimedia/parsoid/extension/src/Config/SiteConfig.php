@@ -17,9 +17,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-namespace MWParsoid\Config;
+// NO_PRELOAD -- anonymous class in parent
 
-// phpcs:disable MediaWiki.Commenting.FunctionComment.MissingDocumentationPublic
+namespace MWParsoid\Config;
 
 use Config;
 use ExtensionRegistry;
@@ -40,12 +40,17 @@ use MutableConfig;
 use MWException;
 use NamespaceInfo;
 use Parser;
+use ParserOutput;
 use PrefixingStatsdDataFactoryProxy;
 use Psr\Log\LoggerInterface;
 use Title;
 use UnexpectedValueException;
 use WikiMap;
+use Wikimedia\ObjectFactory\ObjectFactory;
 use Wikimedia\Parsoid\Config\SiteConfig as ISiteConfig;
+use Wikimedia\Parsoid\Core\ContentMetadataCollector;
+use Wikimedia\Parsoid\DOM\Document;
+use Wikimedia\Parsoid\Utils\Utils;
 
 /**
  * Site-level configuration for Parsoid
@@ -116,6 +121,9 @@ class SiteConfig extends ISiteConfig {
 	/** @var UserOptionsLookup */
 	private $userOptionsLookup;
 
+	/** @var ObjectFactory */
+	private $objectFactory;
+
 	/** @var LanguageFactory */
 	private $languageFactory;
 
@@ -126,10 +134,16 @@ class SiteConfig extends ISiteConfig {
 	private $languageNameUtils;
 
 	/** @var string|null */
-	private $baseUri, $relativeLinkPrefix;
+	private $baseUri;
+
+	/** @var string|null */
+	private $relativeLinkPrefix;
 
 	/** @var array|null */
-	private $interwikiMap, $variants;
+	private $interwikiMap;
+
+	/** @var array|null */
+	private $variants;
 
 	/** @var array */
 	private $extensionTags;
@@ -137,6 +151,7 @@ class SiteConfig extends ISiteConfig {
 	/**
 	 * @param ServiceOptions $config MediaWiki main configuration object
 	 * @param array $parsoidSettings Parsoid-specific options array from main configuration.
+	 * @param ObjectFactory $objectFactory
 	 * @param Language $contentLanguage Content language.
 	 * @param StatsdDataFactoryInterface $stats
 	 * @param MagicWordFactory $magicWordFactory
@@ -153,6 +168,7 @@ class SiteConfig extends ISiteConfig {
 	public function __construct(
 		ServiceOptions $config,
 		array $parsoidSettings,
+		ObjectFactory $objectFactory,
 		Language $contentLanguage,
 		StatsdDataFactoryInterface $stats,
 		MagicWordFactory $magicWordFactory,
@@ -175,6 +191,7 @@ class SiteConfig extends ISiteConfig {
 		$this->optionalConfig = $optionalConfig;
 		$this->parsoidSettings = $parsoidSettings;
 
+		$this->objectFactory = $objectFactory;
 		$this->contLang = $contentLanguage;
 		$this->stats = $stats;
 		$this->magicWordFactory = $magicWordFactory;
@@ -195,14 +212,10 @@ class SiteConfig extends ISiteConfig {
 		}
 
 		if ( isset( $this->parsoidSettings['wt2htmlLimits'] ) ) {
-			$this->wt2htmlLimits = array_merge(
-				$this->wt2htmlLimits, $this->parsoidSettings['wt2htmlLimits']
-			);
+			$this->wt2htmlLimits = $this->parsoidSettings['wt2htmlLimits'] + $this->wt2htmlLimits;
 		}
 		if ( isset( $this->parsoidSettings['html2wtLimits'] ) ) {
-			$this->html2wtLimits = array_merge(
-				$this->html2wtLimits, $this->parsoidSettings['html2wtLimits']
-			);
+			$this->html2wtLimits = $this->parsoidSettings['html2wtLimits'] + $this->html2wtLimits;
 		}
 
 		// Register extension modules
@@ -211,6 +224,11 @@ class SiteConfig extends ISiteConfig {
 		foreach ( $parsoidModules as $configOrSpec ) {
 			$this->registerExtensionModule( $configOrSpec );
 		}
+	}
+
+	/** @inheritDoc */
+	public function getObjectFactory(): ObjectFactory {
+		return $this->objectFactory;
 	}
 
 	/** @inheritDoc */
@@ -341,6 +359,10 @@ class SiteConfig extends ISiteConfig {
 
 	public function bswRegexp(): string {
 		$bsw = self::mwaToRegex( $this->magicWordFactory->getDoubleUnderscoreArray(), '@' );
+		// Aliases for double underscore mws include the underscores
+		// So, strip them since the base regexp will have included them
+		// and they aren't expected at the use sites of bswRegexp
+		$bsw = str_replace( '__', '', $bsw );
 		return "@$bsw@Su";
 	}
 
@@ -456,7 +478,7 @@ class SiteConfig extends ISiteConfig {
 		return WikiMap::getCurrentWikiId();
 	}
 
-	public function legalTitleChars() : string {
+	public function legalTitleChars(): string {
 		return Title::legalChars();
 	}
 
@@ -525,8 +547,27 @@ class SiteConfig extends ISiteConfig {
 		return $this->config->get( 'Server' );
 	}
 
-	public function getModulesLoadURI(): string {
-		return $this->config->get( 'LoadScript' );
+	/** @inheritDoc */
+	public function exportMetadataToHead(
+		Document $document,
+		ContentMetadataCollector $metadata,
+		string $defaultTitle,
+		string $lang
+	): void {
+		'@phan-var ParserOutput $metadata'; // @var ParserOutput $metadata
+		// Look for a displaytitle.
+		$displayTitle = $metadata->getPageProperty( 'displaytitle' ) ?:
+			// Use the default title, properly escaped
+			Utils::escapeHtml( $defaultTitle );
+		$this->exportMetadataHelper(
+			$document,
+			$this->config->get( 'LoadScript' ),
+			$metadata->getModules(),
+			$metadata->getModuleStyles(),
+			$metadata->getJsConfigVars(),
+			$displayTitle,
+			$lang
+		);
 	}
 
 	public function timezoneOffset(): int {
@@ -567,12 +608,8 @@ class SiteConfig extends ISiteConfig {
 	}
 
 	public function widthOption(): int {
-		// Allow override of thumb limit for parser tests (the core parser
-		// test framework does this by setting a per-user option, but parsoid
-		// doesn't support per-user options)
-		if ( isset( $this->parsoidSettings['thumbsize'] ) ) {
-			return $this->parsoidSettings['thumbsize'];
-		}
+		// Even though this looks like Parsoid is supporting per-user thumbsize
+		// options, that is not the case, Parsoid doesn't receive user session state
 		$thumbsize = $this->userOptionsLookup->getDefaultOption( 'thumbsize' );
 		return $this->config->get( 'ThumbLimits' )[$thumbsize];
 	}
@@ -583,8 +620,8 @@ class SiteConfig extends ISiteConfig {
 	}
 
 	/** @inheritDoc */
-	protected function getFunctionHooks(): array {
-		return $this->parser->getFunctionHooks();
+	protected function getFunctionSynonyms(): array {
+		return $this->parser->getFunctionSynonyms();
 	}
 
 	/** @inheritDoc */
@@ -592,6 +629,7 @@ class SiteConfig extends ISiteConfig {
 		return $this->contLang->getMagicWords();
 	}
 
+	/** @inheritDoc */
 	public function getMagicWordMatcher( string $id ): string {
 		return $this->magicWordFactory->get( $id )->getRegexStartToEnd();
 	}
@@ -607,7 +645,7 @@ class SiteConfig extends ISiteConfig {
 			$words = preg_grep( '/^timedmedia_/', $words, PREG_GREP_INVERT );
 		}
 		$words = $this->magicWordFactory->newArray( $words );
-		return function ( $text ) use ( $words ) {
+		return static function ( $text ) use ( $words ) {
 			$ret = $words->matchVariableStartToEnd( $text );
 			if ( $ret[0] === false || $ret[1] === false ) {
 				return null;
@@ -629,6 +667,7 @@ class SiteConfig extends ISiteConfig {
 		return $this->extensionTags;
 	}
 
+	/** @inheritDoc */
 	public function getMaxTemplateDepth(): int {
 		return (int)$this->config->get( 'MaxTemplateDepth' );
 	}
@@ -659,7 +698,7 @@ class SiteConfig extends ISiteConfig {
 			$this->quoteTitleRe( $this->contLang->getNsText( NS_SPECIAL ) )
 		];
 		foreach (
-			array_merge( $this->config->get( 'NamespaceAliases' ), $this->contLang->getNamespaceAliases() )
+			$this->contLang->getNamespaceAliases() + $this->config->get( 'NamespaceAliases' )
 			as $name => $ns
 		) {
 			if ( $ns === NS_SPECIAL ) {

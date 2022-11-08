@@ -101,7 +101,7 @@ class Daemon
                     \restore_error_handler();
                 }
 
-                if (!\is_resource($conn)) {
+                if (!$conn) {
                     // If we didn't get a connection, and it wasn't due to a signal from a child process, then stop the daemon.
                     break;
                 }
@@ -156,7 +156,7 @@ class Daemon
                     \restore_error_handler();
                 }
 
-                if (!\is_resource($conn)) {
+                if (!$conn) {
                     // If we didn't get a connection, and it wasn't due to a signal from a child process, then stop the daemon.
                     break;
                 }
@@ -228,7 +228,7 @@ class Daemon
         \printf(
             "Listening for Phan analysis requests at %s\nAwaiting analysis requests for directory %s\n",
             $listen_url,
-            \var_export(Config::getProjectRootDirectory(), true)
+            \var_representation(Config::getProjectRootDirectory())
         );
         $socket_server = \stream_socket_server($listen_url, $errno, $errstr);
         if (!$socket_server) {

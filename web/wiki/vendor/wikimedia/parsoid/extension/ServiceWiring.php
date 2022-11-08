@@ -25,11 +25,18 @@ use MWParsoid\Config\SiteConfig as MWSiteConfig;
 use Wikimedia\Parsoid\Config\Api\DataAccess as ApiDataAccess;
 use Wikimedia\Parsoid\Config\Api\SiteConfig as ApiSiteConfig;
 use Wikimedia\Parsoid\Config\DataAccess;
+use Wikimedia\Parsoid\Config\PageConfigFactory;
 use Wikimedia\Parsoid\Config\SiteConfig;
+
+// Compatibility: we're going to move this code to core eventually; this
+// ensures we yield gracefully to core's implementation when it exists.
+if ( class_exists( '\MediaWiki\Parser\Parsoid\ParsoidServices' ) ) {
+	return [];
+}
 
 return [
 
-	'ParsoidSiteConfig' => function ( MediaWikiServices $services ): SiteConfig {
+	'ParsoidSiteConfig' => static function ( MediaWikiServices $services ): SiteConfig {
 		$mainConfig = $services->getMainConfig();
 		$parsoidSettings = $mainConfig->get( 'ParsoidSettings' );
 		if ( !empty( $parsoidSettings['debugApi'] ) ) {
@@ -38,6 +45,7 @@ return [
 		return new MWSiteConfig(
 			new ServiceOptions( MWSiteConfig::CONSTRUCTOR_OPTIONS, $mainConfig ),
 			$parsoidSettings,
+			$services->getObjectFactory(),
 			$services->getContentLanguage(),
 			$services->getStatsdDataFactory(),
 			$services->getMagicWordFactory(),
@@ -55,12 +63,12 @@ return [
 		);
 	},
 
-	'ParsoidPageConfigFactory' => function ( MediaWikiServices $services ): MWPageConfigFactory {
+	'ParsoidPageConfigFactory' => static function ( MediaWikiServices $services ): PageConfigFactory {
 		return new MWPageConfigFactory( $services->getRevisionStore(),
 			$services->getSlotRoleRegistry() );
 	},
 
-	'ParsoidDataAccess' => function ( MediaWikiServices $services ): DataAccess {
+	'ParsoidDataAccess' => static function ( MediaWikiServices $services ): DataAccess {
 		$parsoidSettings = $services->getMainConfig()->get( 'ParsoidSettings' );
 		if ( !empty( $parsoidSettings['debugApi'] ) ) {
 			return ApiDataAccess::fromSettings( $parsoidSettings );
@@ -69,6 +77,7 @@ return [
 			$services->getRepoGroup(),
 			$services->getBadFileLookup(),
 			$services->getHookContainer(),
+			$services->getContentTransformer(),
 			$services->getParserFactory() // *legacy* parser factory
 		);
 	},

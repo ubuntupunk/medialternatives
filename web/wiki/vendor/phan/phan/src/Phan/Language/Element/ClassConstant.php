@@ -18,6 +18,7 @@ use Phan\Library\StringUtil;
 class ClassConstant extends ClassElement implements ConstantInterface
 {
     use ConstantTrait;
+    use HasAttributesTrait;
 
     /** @var ?Comment the phpdoc comment associated with this declaration, if any exists. */
     private $comment;
@@ -81,6 +82,7 @@ class ClassConstant extends ClassElement implements ConstantInterface
      * @return FullyQualifiedClassConstantName
      * The fully-qualified structural element name of this
      * structural element
+     * @suppress PhanTypeMismatchReturn (FQSEN on declaration)
      */
     public function getFQSEN(): FQSEN
     {
@@ -112,6 +114,9 @@ class ClassConstant extends ClassElement implements ConstantInterface
         } elseif ($this->isPrivate()) {
             $string .= 'private ';
         }
+        if ($this->isFinal()) {
+            $string .= 'final ';
+        }
 
         $string .= 'const ' . $this->name . ' = ';
         $value_node = $this->getNodeForValue();
@@ -135,11 +140,24 @@ class ClassConstant extends ClassElement implements ConstantInterface
     }
 
     /**
+     * Returns true if this is a final element
+     */
+    public function isFinal(): bool
+    {
+        return $this->getFlagsHasState(\ast\flags\MODIFIER_FINAL);
+    }
+
+    /**
      * Converts this class constant to a stub php snippet that can be used by `tool/make_stubs`
      */
     public function toStub(): string
     {
-        $string = '    ';
+        $string = '';
+        if (self::shouldAddDescriptionsToStubs()) {
+            $description = (string)MarkupDescription::extractDescriptionFromDocComment($this);
+            $string .= MarkupDescription::convertStringToDocComment($description, '    ');
+        }
+        $string .= '    ';
         if ($this->isPrivate()) {
             $string .= 'private ';
         } elseif ($this->isProtected()) {
@@ -150,7 +168,7 @@ class ClassConstant extends ClassElement implements ConstantInterface
         // show public class constants as 'const', not 'public const'.
         // Also, PHP modules probably won't have private/protected constants.
         $string .= 'const ' . $this->name . ' = ';
-        $fqsen = $this->getFQSEN()->__toString();
+        $fqsen = $this->fqsen->__toString();
         if (\defined($fqsen)) {
             // TODO: Could start using $this->getNodeForValue()?
             // NOTE: This is used by tool/make_stubs, which is why it uses reflection instead of getting a node.

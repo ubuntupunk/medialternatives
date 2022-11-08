@@ -3,12 +3,13 @@ declare( strict_types = 1 );
 
 namespace Wikimedia\Parsoid\Wt2Html\PP\Handlers;
 
-use DOMComment;
-use DOMElement;
-use DOMText;
 use Wikimedia\Parsoid\Config\Env;
 use Wikimedia\Parsoid\Core\DomSourceRange;
 use Wikimedia\Parsoid\Core\Sanitizer;
+use Wikimedia\Parsoid\DOM\Comment;
+use Wikimedia\Parsoid\DOM\Element;
+use Wikimedia\Parsoid\DOM\Text;
+use Wikimedia\Parsoid\NodeData\DataParsoid;
 use Wikimedia\Parsoid\Utils\DOMDataUtils;
 use Wikimedia\Parsoid\Utils\DOMUtils;
 use Wikimedia\Parsoid\Utils\Utils;
@@ -22,12 +23,12 @@ use Wikimedia\Parsoid\Utils\WTUtils;
 class DisplaySpace {
 
 	/**
-	 * @param DOMText $node
+	 * @param Text $node
 	 * @return ?int
 	 */
-	private static function getTextNodeDSRStart( DOMText $node ): ?int {
+	private static function getTextNodeDSRStart( Text $node ): ?int {
 		$parent = $node->parentNode;
-		'@phan-var DOMElement $parent';  /** @var DOMElement $parent */
+		'@phan-var Element $parent';  /** @var Element $parent */
 		$dsr = DOMDataUtils::getDataParsoid( $parent )->dsr ?? null;
 		if ( !Utils::isValidDSR( $dsr, true ) ) {
 			return null;
@@ -35,12 +36,12 @@ class DisplaySpace {
 		$start = $dsr->innerStart();
 		$c = $parent->firstChild;
 		while ( $c !== $node ) {
-			if ( $c instanceof DOMComment ) {
+			if ( $c instanceof Comment ) {
 				$start += WTUtils::decodedCommentLength( $c );
-			} elseif ( $c instanceof DOMText ) {
+			} elseif ( $c instanceof Text ) {
 				$start += strlen( $c->nodeValue );
 			} else {
-				'@phan-var DOMElement $c';  /** @var DOMElement $c */
+				'@phan-var Element $c';  /** @var Element $c */
 				$dsr = DOMDataUtils::getDataParsoid( $c )->dsr ?? null;
 				if ( !Utils::isValidDSR( $dsr ) ) {
 					return null;
@@ -53,11 +54,11 @@ class DisplaySpace {
 	}
 
 	/**
-	 * @param DOMText $node
+	 * @param Text $node
 	 * @param int $offset
 	 */
 	private static function insertDisplaySpace(
-		DOMText $node, int $offset
+		Text $node, int $offset
 	): void {
 		$str = $str = $node->nodeValue;
 
@@ -81,18 +82,20 @@ class DisplaySpace {
 		$span = $doc->createElement( 'span' );
 		$span->appendChild( $doc->createTextNode( "\u{00A0}" ) );
 		$span->setAttribute( 'typeof', 'mw:DisplaySpace' );
-		DOMDataUtils::setDataParsoid( $span, (object)[ 'dsr' => $dsr ] );
+		$dp = new DataParsoid;
+		$dp->dsr = $dsr;
+		DOMDataUtils::setDataParsoid( $span, $dp );
 		$node->parentNode->insertBefore( $span, $post );
 	}
 
 	/**
 	 * French spaces, Guillemet-left
 	 *
-	 * @param DOMText $node
+	 * @param Text $node
 	 * @param Env $env
-	 * @return bool|DOMElement
+	 * @return bool|Element
 	 */
-	public static function leftHandler( DOMText $node, Env $env ) {
+	public static function leftHandler( Text $node, Env $env ) {
 		if ( DOMUtils::isRawTextElement( $node->parentNode ) ) {
 			return true;
 		}
@@ -108,11 +111,11 @@ class DisplaySpace {
 	/**
 	 * French spaces, Guillemet-right
 	 *
-	 * @param DOMText $node
+	 * @param Text $node
 	 * @param Env $env
-	 * @return bool|DOMElement
+	 * @return bool|Element
 	 */
-	public static function rightHandler( DOMText $node, Env $env ) {
+	public static function rightHandler( Text $node, Env $env ) {
 		if ( DOMUtils::isRawTextElement( $node->parentNode ) ) {
 			return true;
 		}

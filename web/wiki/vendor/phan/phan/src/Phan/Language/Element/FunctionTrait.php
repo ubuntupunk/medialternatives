@@ -54,6 +54,8 @@ use function spl_object_id;
  */
 trait FunctionTrait
 {
+    use HasAttributesTrait;
+
     /**
      * @var Comment|null This is reused when quick mode is off.
      */
@@ -412,6 +414,15 @@ trait FunctionTrait
     }
 
     /**
+     * @return bool
+     * True if this method has static variables
+     */
+    public function hasStaticVariable(): bool
+    {
+        return $this->getPhanFlagsHasState(Flags::HAS_STATIC_VARIABLE);
+    }
+
+    /**
      * @param bool $has_return
      * Set to true to mark this method as having a
      * return value
@@ -438,6 +449,22 @@ trait FunctionTrait
             $this->getPhanFlags(),
             Flags::HAS_YIELD,
             $has_yield
+        ));
+    }
+
+    /**
+     * @param bool $has_static_variable
+     * Set to true to mark this method as having a
+     * static variable
+     */
+    public function setHasStaticVariable(bool $has_static_variable): void
+    {
+        // TODO: In a future release of php-ast, this information will be part of the function node's flags.
+        // (PHP 7.1+ only, not supported in PHP 7.0)
+        $this->setPhanFlags(Flags::bitVectorWithState(
+            $this->getPhanFlags(),
+            Flags::HAS_STATIC_VARIABLE,
+            $has_static_variable
         ));
     }
 
@@ -860,7 +887,8 @@ trait FunctionTrait
             // issue.
             if (!$default_is_null) {
                 if (!$default_type->canCastToUnionType(
-                    $parameter->getUnionType()
+                    $parameter->getUnionType(),
+                    $code_base
                 )) {
                     Issue::maybeEmit(
                         $code_base,
@@ -885,7 +913,7 @@ trait FunctionTrait
             // to null
             if ($default_is_null) {
                 if ($was_empty) {
-                    $parameter->addUnionType(MixedType::instance(false)->asPHPDocUnionType());
+                    $parameter->addUnionType(MixedType::instance(true)->asPHPDocUnionType());
                 }
                 // The parameter constructor or above check for wasEmpty already took care of null default case
             } else {
@@ -1186,7 +1214,7 @@ trait FunctionTrait
             if (!($this instanceof FunctionInterface)) {
                 throw new AssertionError('Expected any class using FunctionTrait to implement FunctionInterface');
             }
-            FunctionTrait::addParamsToScopeOfFunctionOrMethod($this->getContext(), $code_base, $this, $comment);
+            self::addParamsToScopeOfFunctionOrMethod($this->getContext(), $code_base, $this, $comment);
         }
     }
 
@@ -1443,7 +1471,7 @@ trait FunctionTrait
                         $real_return_type->__toString()
                     );
                 }
-                if ($is_exclusively_narrowed && Config::getValue('prefer_narrowed_phpdoc_return_type')) {
+                if ($is_exclusively_narrowed && Config::getValue('prefer_narrowed_phpdoc_return_type') && !$phpdoc_return_type->isNeverType()) {
                     $normalized_phpdoc_return_type = ParameterTypesAnalyzer::normalizeNarrowedParamType($phpdoc_return_type, $real_return_type);
                     if ($normalized_phpdoc_return_type) {
                         // TODO: How does this currently work when there are multiple types in the union type that are compatible?
@@ -1484,7 +1512,7 @@ trait FunctionTrait
                 }
             }
         }
-        foreach ($real_return_type->getTypeSet() as $type) {
+        foreach ($real_return_type->getUniqueFlattenedTypeSet() as $type) {
             if (!$type->isObjectWithKnownFQSEN()) {
                 continue;
             }
@@ -1522,7 +1550,7 @@ trait FunctionTrait
     {
         if ($this->comment) {
             // Template types are identical if they have the same name. See TemplateType::instanceForId.
-            return \in_array($template_type, $this->comment->getTemplateTypeList(), true);
+            return \in_array($template_type->withIsNullable(false), $this->comment->getTemplateTypeList(), true);
         }
         return false;
     }
@@ -1914,6 +1942,22 @@ trait FunctionTrait
     public function isPure(): bool
     {
         return $this->getPhanFlagsHasState(Flags::IS_SIDE_EFFECT_FREE);
+    }
+
+    /**
+     * Mark this function or method as having a tentative return type
+     */
+    public function setHasTentativeReturnType(): void
+    {
+        $this->setPhanFlags($this->getPhanFlags() | Flags::HAS_TENTATIVE_RETURN_TYPE);
+    }
+
+    /**
+     * Check if this function has a tentative return type
+     */
+    public function hasTentativeReturnType(): bool
+    {
+        return $this->getPhanFlagsHasState(Flags::HAS_TENTATIVE_RETURN_TYPE);
     }
 
     /**

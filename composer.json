@@ -39,6 +39,7 @@
     "roots/wordpress": ">=5.7.2",
     "roots/wp-config": "1.0.0",
     "roots/wp-password-bcrypt": "1.0.0",
+    "wpackagist-plugin/ad-inserter":">=2.7.17",
     "wpackagist-plugin/advanced-floating-content-lite":">=1.2.1",
     "wpackagist-plugin/akismet":"dev-trunk",
     "wpackagist-plugin/all-in-one-seo-pack":">=3.7.1",
@@ -55,6 +56,7 @@
     "wpackagist-plugin/wordpress-importer":">=0.7",
     "wpackagist-plugin/wordpress-importer-extended":">=0.3",
     "wpackagist-plugin/easy-google-fonts":">=1.4.4", 
+    "wpackagist-plugin/easy-adsense-ads-scripts-manager":">=0.57",
     "wpackagist-plugin/backup-and-restore-for-wp":">=1.0.2",
     "wpackagist-plugin/custom-css-js":">=3.34",
     "wpackagist-plugin/jetpack":">=9.1",
@@ -78,6 +80,7 @@
     "wpackagist-plugin/pwa4wp":">=0.6.0",
     "wpackagist-plugin/to-top":">=2.2.0",
     "wpackagist-plugin/webmention":">=4.0.5",
+    "wpackagist-plugin/wpadcenter":">=2.4.0",
     "wpackagist-plugin/wp-pagenavi":">=2.93.3",
     "wpackagist-plugin/wp-super-minify":">=1.5.1",	    
     "wpackagist-plugin/wordfence":">=7.4.12",
@@ -91,7 +94,11 @@
   },
   "config": {
     "optimize-autoloader": true,
-    "preferred-install": "dist"
+    "preferred-install": "dist",
+    "allow-plugins": {
+      "composer/installers": true,
+      "roots/wordpress-core-installer": true
+    }
   },
   "minimum-stability": "dev",
   "prefer-stable": true,

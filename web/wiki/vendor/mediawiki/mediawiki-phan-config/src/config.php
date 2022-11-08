@@ -56,6 +56,13 @@ $baseOptions = [
 		'PregRegexCheckerPlugin',
 		'UnusedSuppressionPlugin',
 		'DuplicateExpressionPlugin',
+		'LoopVariableReusePlugin',
+		'RedundantAssignmentPlugin',
+		'UnreachableCodePlugin',
+		'SimplifyExpressionPlugin',
+		'DuplicateArrayKeyPlugin',
+		'UseReturnValuePlugin',
+		'AddNeverReturnTypePlugin',
 	],
 	'plugin_config' => [],
 	// BC for repos not checking whether these are set
@@ -74,7 +81,7 @@ if ( !defined( 'MSG_EOR' ) ) {
  * names without phan complaining about "directory not found". It should NOT be used in
  * repo-specific config files.
  */
-$filterDirs = function ( array $dirs ) : array {
+$filterDirs = static function ( array $dirs ): array {
 	return array_filter( $dirs, 'file_exists' );
 };
 
@@ -101,17 +108,19 @@ $baseCfg = $baseCfg
 	] )
 	->setExcludeFileRegex(
 		'@vendor/(' .
-		// Exclude known dev dependencies
 		'(' . implode( '|', [
+			// Exclude known dev dependencies
 			'composer/installers',
-			'jakub-onderka/php-console-color',
-			'jakub-onderka/php-console-highlighter',
-			'jakub-onderka/php-parallel-lint',
+			'php-parallel-lint/php-console-color',
+			'php-parallel-lint/php-console-highlighter',
+			'php-parallel-lint/php-parallel-lint',
 			'mediawiki/mediawiki-codesniffer',
 			'microsoft/tolerant-php-parser',
 			'phan/phan',
 			'phpunit/php-code-coverage',
 			'squizlabs/php_codesniffer',
+			// Exclude stubs used in libraries
+			'[^/]+/[^/]+/\.phan',
 		] ) . ')' .
 		'|' .
 		// Also exclude tests folder from dependencies
@@ -127,6 +136,7 @@ $baseCfg = $baseCfg
 	// TODO Enable by default
 	->setProgressBarMode( ConfigBuilder::PROGRESS_BAR_DISABLED )
 	->setSuppressedIssuesList( [
+		// Deprecation warnings
 		'PhanDeprecatedFunction',
 		'PhanDeprecatedClass',
 		'PhanDeprecatedClassConstant',
@@ -134,7 +144,19 @@ $baseCfg = $baseCfg
 		'PhanDeprecatedInterface',
 		'PhanDeprecatedProperty',
 		'PhanDeprecatedTrait',
+
+		// Covered by codesniffer
 		'PhanUnreferencedUseNormal',
+		'PhanUnreferencedUseFunction',
+		'PhanUnreferencedUseConstant',
+		'PhanDuplicateUseNormal',
+		'PhanDuplicateUseFunction',
+		'PhanDuplicateUseConstant',
+		'PhanUseNormalNoEffect',
+		'PhanUseNormalNamespacedNoEffect',
+		'PhanUseFunctionNoEffect',
+		'PhanUseConstantNoEffect',
+		'PhanDeprecatedCaseInsensitiveDefine',
 
 		// https://github.com/phan/phan/issues/3420
 		'PhanAccessClassConstantInternal',
@@ -147,6 +169,12 @@ $baseCfg = $baseCfg
 		'PhanParamNameIndicatingUnused',
 		'PhanParamNameIndicatingUnusedInClosure',
 		'PhanProvidingUnusedParameter',
+
+		// No proper way to fix until we support PHP 7.4+ (T278139)
+		'PhanCompatibleSerializeInterfaceDeprecated',
+
+		// Would probably have many false positives
+		'PhanPluginMixedKeyNoKey',
 	] )
 	->readClassAliases( true )
 	->enableRedundantConditionDetection( true )
@@ -160,12 +188,8 @@ $baseCfg = $baseCfg
 		'wgLang' => '\\Language',
 		'wgOut' => '\\OutputPage',
 		'wgRequest' => '\\WebRequest',
-	] );
-
-// Hacky variable to quickly disable taint-check if something explodes.
-// @note This is **NOT** a stable feature. It's only for BC and could be removed or changed
-// without prior notice.
-$baseCfg->makeTaintCheckAdjustments( !isset( $disableTaintCheck ), $DIR, $IP );
+	] )
+	->enableTaintCheck( $DIR, $VP );
 
 // BC: We're not ready to use the ConfigBuilder everywhere
 return $baseCfg->make();

@@ -1,4 +1,5 @@
 <?php
+declare( strict_types = 1 );
 
 namespace Wikimedia\Parsoid\Logger;
 
@@ -35,7 +36,6 @@ class ParsoidLogger {
 		'trace/selser' => '[SELSER]',
 		'trace/domdiff' => '[DOM-DIFF]',
 		'trace/wt-escape' => '[wt-esc]',
-		'trace/ttm:1' => '[1-TTM]',
 		'trace/ttm:2' => '[2-TTM]',
 		'trace/ttm:3' => '[3-TTM]',
 	];
@@ -105,7 +105,7 @@ class ParsoidLogger {
 		}
 
 		// indent by number of slashes
-		$numMatches = preg_match_all( '#/#', $logType );
+		$numMatches = substr_count( $logType, '/' );
 		$indent = str_repeat( '  ', $numMatches > 1 ? $numMatches - 1 : 0 );
 		$msg .= $indent;
 
@@ -169,7 +169,7 @@ class ParsoidLogger {
 			return;
 		}
 
-		$logLevel = preg_replace( '#/.*$#', '', $prefix );
+		$logLevel = strstr( $prefix, '/', true ) ?: $prefix;
 
 		// Handle trace type first
 		if ( $logLevel === 'trace' || $logLevel === 'debug' ) {

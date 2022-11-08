@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Sniffs\PHPUnit;
 
+use PHP_CodeSniffer\Files\DummyFile;
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Util\Tokens;
 
@@ -27,15 +28,33 @@ trait PHPUnitTestTrait {
 	];
 
 	/**
+	 * @var bool[]
+	 */
+	private static $isTestFile = [];
+
+	/**
 	 * @param File $phpcsFile
 	 * @param int|false $stackPtr
 	 *
 	 * @return bool
 	 */
-	private function isTestFile( File $phpcsFile, $stackPtr = false ) {
-		$classToken = $this->getClassToken( $phpcsFile, $stackPtr ) ?:
-			$phpcsFile->findNext( Tokens::$ooScopeTokens, 0 );
-		return $this->isTestClass( $phpcsFile, $classToken );
+	private function isTestFile( File $phpcsFile, $stackPtr = false ): bool {
+		$fileName = $phpcsFile->getFilename();
+
+		if ( !isset( self::$isTestFile[$fileName] ) ) {
+			$classToken = $this->getClassToken( $phpcsFile, $stackPtr ) ?:
+				$phpcsFile->findNext( Tokens::$ooScopeTokens, 0 );
+			$isTestFile = $this->isTestClass( $phpcsFile, $classToken );
+
+			// There is no file but STDIN when Helper::runPhpCs() is used
+			if ( $phpcsFile instanceof DummyFile ) {
+				return $isTestFile;
+			}
+
+			self::$isTestFile[$fileName] = $isTestFile;
+		}
+
+		return self::$isTestFile[$fileName];
 	}
 
 	/**
@@ -44,7 +63,7 @@ trait PHPUnitTestTrait {
 	 *
 	 * @return bool
 	 */
-	private function isTestClass( File $phpcsFile, $classToken ) {
+	private function isTestClass( File $phpcsFile, $classToken ): bool {
 		$tokens = $phpcsFile->getTokens();
 		if ( !$classToken || $tokens[$classToken]['code'] !== T_CLASS ) {
 			return false;
@@ -63,7 +82,7 @@ trait PHPUnitTestTrait {
 	 * @param int $functionToken Token position of the function declaration
 	 * @return bool
 	 */
-	private function isTestFunction( File $phpcsFile, $functionToken ) {
+	private function isTestFunction( File $phpcsFile, $functionToken ): bool {
 		return $this->isTestClass( $phpcsFile, $this->getClassToken( $phpcsFile, $functionToken ) )
 			&& preg_match( '/^(?:test|provide)|Provider$/', $phpcsFile->getDeclarationName( $functionToken ) );
 	}

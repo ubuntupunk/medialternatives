@@ -41,7 +41,7 @@ class DropdownInputWidget extends InputWidget {
 
 	public function setValue( $value ) {
 		$this->value = $this->cleanUpValue( $value );
-		foreach ( $this->options as &$opt ) {
+		foreach ( $this->options as $opt ) {
 			if ( $opt->getAttribute( 'value' ) === $this->value ) {
 				$opt->setAttributes( [ 'selected' => 'selected' ] );
 			} else {
@@ -101,7 +101,7 @@ class DropdownInputWidget extends InputWidget {
 			}
 			// Add disabled attribute if required (both the <option> and
 			// <optgroup> elements can be disabled).
-			if ( isset( $opt[ 'disabled' ] ) && $opt[ 'disabled' ] ) {
+			if ( $opt['disabled'] ?? false ) {
 				$option->setAttributes( [ 'disabled' => 'disabled' ] );
 			}
 

@@ -62,8 +62,17 @@ class SiteConfigTest extends MediaWikiUnitTestCase {
 		return $this->createNoOpMock( $class );
 	}
 
-	// TODO it might save code to have this helper always return a
-	// TestingAccessWrapper?
+	/**
+	 * TODO it might save code to have this helper always return a
+	 * TestingAccessWrapper?
+	 *
+	 * @param array $configOverrides Configuration options overriding default ServiceOptions config defined in
+	 *                               DEFAULT_CONFIG above.
+	 * @param array $parsoidSettings
+	 * @param array $serviceOverrides
+	 *
+	 * @return SiteConfig
+	 */
 	private function createSiteConfig(
 		array $configOverrides = [],
 		array $parsoidSettings = [],
@@ -75,6 +84,7 @@ class SiteConfigTest extends MediaWikiUnitTestCase {
 				array_replace( self::DEFAULT_CONFIG, $configOverrides )
 			),
 			$parsoidSettings,
+			$this->createSimpleObjectFactory(),
 			$this->createMockOrOverride( Language::class, $serviceOverrides ),
 			new NullStatsdDataFactory(),
 			$this->createMockOrOverride( MagicWordFactory::class, $serviceOverrides ),
@@ -90,7 +100,7 @@ class SiteConfigTest extends MediaWikiUnitTestCase {
 		);
 	}
 
-	public function provideConfigParameterPassed() {
+	public function provideConfigParameterPassed(): iterable {
 		yield 'galleryOptions' => [
 			[ 'GalleryOptions' => [ 'blabla' ] ],
 			'galleryOptions',
@@ -146,11 +156,6 @@ class SiteConfigTest extends MediaWikiUnitTestCase {
 			'server',
 			'blabla'
 		];
-		yield 'getModulesLoadURI' => [
-			[ 'LoadScript' => 'blabla' ],
-			'getModulesLoadURI',
-			'blabla'
-		];
 		yield 'timezoneOffset' => [
 			[ 'LocalTZoffset' => 42 ],
 			'timezoneOffset',
@@ -184,7 +189,6 @@ class SiteConfigTest extends MediaWikiUnitTestCase {
 	 * @covers \MWParsoid\Config\SiteConfig::script
 	 * @covers \MWParsoid\Config\SiteConfig::scriptpath
 	 * @covers \MWParsoid\Config\SiteConfig::server
-	 * @covers \MWParsoid\Config\SiteConfig::getModulesLoadURI
 	 * @covers \MWParsoid\Config\SiteConfig::timezoneOffset
 	 * @covers \MWParsoid\Config\SiteConfig::getMaxTemplateDepth
 	 * @covers \MWParsoid\Config\SiteConfig::legalTitleChars
@@ -192,7 +196,7 @@ class SiteConfigTest extends MediaWikiUnitTestCase {
 	 * @dataProvider provideConfigParameterPassed
 	 * @param array $settings
 	 * @param string $method
-	 * @param $expectedValue
+	 * @param mixed $expectedValue
 	 */
 	public function testConfigParametersPassed(
 		array $settings,
@@ -210,20 +214,14 @@ class SiteConfigTest extends MediaWikiUnitTestCase {
 			'nativeGalleryEnabled',
 			true
 		];
-		yield 'widthOption' => [
-			[ 'thumbsize' => 4242 ],
-			'widthOption',
-			4242
-		];
 	}
 
 	/**
 	 * @covers \MWParsoid\Config\SiteConfig::nativeGalleryEnabled()
-	 * @covers \MWParsoid\Config\SiteConfig::widthOption()
 	 * @dataProvider provideParsoidSettingPassed
 	 * @param array $settings
 	 * @param string $method
-	 * @param $expectedValue
+	 * @param mixed $expectedValue
 	 */
 	public function testParsoidSettingPassed(
 		array $settings,
@@ -275,8 +273,9 @@ class SiteConfigTest extends MediaWikiUnitTestCase {
 		yield 'getVariableIDs' => [
 			MagicWordFactory::class, 'getVariableIDs', [], [ 'blabla' ], 'getVariableIDs', [ 'blabla' ]
 		];
-		yield 'getFunctionHooks' => [
-			Parser::class, 'getFunctionHooks', [], [ 'blabla' ], 'getFunctionHooks', [ 'blabla' ]
+		yield 'getFunctionSynonyms' => [
+			Parser::class, 'getFunctionSynonyms', [], [ 0 => [ 'blabla' ], 1 => [ 'blabla' ] ],
+			'getFunctionSynonyms', [ 0 => [ 'blabla' ], 1 => [ 'blabla' ] ]
 		];
 		yield 'getMagicWords' => [
 			Language::class, 'getMagicWords', [], [ 'blabla' ], 'getMagicWords', [ 'blabla' ]
@@ -299,15 +298,15 @@ class SiteConfigTest extends MediaWikiUnitTestCase {
 	 * @covers \MWParsoid\Config\SiteConfig::rtl
 	 * @covers \MWParsoid\Config\SiteConfig::widthOption
 	 * @covers \MWParsoid\Config\SiteConfig::getVariableIDs
-	 * @covers \MWParsoid\Config\SiteConfig::getFunctionHooks
+	 * @covers \MWParsoid\Config\SiteConfig::getFunctionSynonyms
 	 * @covers \MWParsoid\Config\SiteConfig::getMagicWords
 	 * @covers \MWParsoid\Config\SiteConfig::getNonNativeExtensionTags
 	 * @param string $serviceClass
 	 * @param string $serviceMethod
 	 * @param array $arguments
-	 * @param $returnValue
+	 * @param mixed $returnValue
 	 * @param string $method
-	 * @param $expectedValue
+	 * @param mixed $expectedValue
 	 */
 	public function testServiceMethodProxied(
 		string $serviceClass,
@@ -766,7 +765,7 @@ class SiteConfigTest extends MediaWikiUnitTestCase {
 		] );
 		$config = TestingAccessWrapper::newFromObject( $config );
 		$this->assertSame(
-			[ 'Special', 'Special[ _]Special', 'From[ _]Config', 'From[ _]Language' ],
+			[ 'Special', 'Special[ _]Special', 'From[ _]Language', 'From[ _]Config' ],
 			$config->getSpecialNSAliases()
 		);
 	}

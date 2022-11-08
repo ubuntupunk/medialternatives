@@ -1,12 +1,12 @@
-.PHONY: ci test phpunit cs stan covers
+.PHONY: ci test phpunit cs stan psalm
 
 DEFAULT_GOAL := ci
 
 ci: test cs
 
-test: covers phpunit
+test: phpunit stan psalm
 
-cs: phpcs stan
+cs: phpcs
 
 phpunit:
 	./vendor/bin/phpunit
@@ -15,8 +15,7 @@ phpcs:
 	./vendor/bin/phpcs -p -s
 
 stan:
-	./vendor/bin/phpstan analyse --level=1 --no-progress src/ tests/
+	./vendor/bin/phpstan analyse --no-progress
 
-covers:
-	./vendor/bin/covers-validator
-
+psalm:
+	./vendor/bin/psalm

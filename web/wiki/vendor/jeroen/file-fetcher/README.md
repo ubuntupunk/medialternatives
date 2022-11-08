@@ -1,8 +1,9 @@
 # FileFetcher
 
-[![Build Status](https://secure.travis-ci.org/JeroenDeDauw/FileFetcher.png?branch=master)](http://travis-ci.org/JeroenDeDauw/FileFetcher)
-[![Code Coverage](https://scrutinizer-ci.com/g/JeroenDeDauw/FileFetcher/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/JeroenDeDauw/FileFetcher/?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/JeroenDeDauw/FileFetcher/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/JeroenDeDauw/FileFetcher/?branch=master)
+[![Build Status](https://img.shields.io/github/workflow/status/JeroenDeDauw/FileFetcher/CI)](https://github.com/JeroenDeDauw/FileFetcher/actions?query=workflow%3ACI)
+[![codecov](https://codecov.io/gh/JeroenDeDauw/FileFetcher/branch/master/graph/badge.svg)](https://codecov.io/gh/JeroenDeDauw/FileFetcher)
+[![Type Coverage](https://shepherd.dev/github/JeroenDeDauw/FileFetcher/coverage.svg)](https://shepherd.dev/github/JeroenDeDauw/FileFetcher)
+[![Psalm level](https://shepherd.dev/github/JeroenDeDauw/FileFetcher/level.svg)](psalm.xml)
 [![Latest Stable Version](https://poser.pugx.org/jeroen/file-fetcher/version.png)](https://packagist.org/packages/jeroen/file-fetcher)
 [![Download count](https://poser.pugx.org/jeroen/file-fetcher/d/total.png)](https://packagist.org/packages/jeroen/file-fetcher)
 
@@ -83,6 +84,12 @@ You can also invoke PHPUnit directly to pass it arguments, as follows
     vendor/bin/phpunit --filter SomeClassNameOrFilter
 
 ## Release notes
+
+### 6.1.0 (2022-04-26)
+
+* Added support for installation with `psr/log` 2.x and 3.x
+* Raised minimum PHP version from 7.1 to 7.3
+* Improved type documentation
 
 ### 6.0.0 (2019-01-17)
 

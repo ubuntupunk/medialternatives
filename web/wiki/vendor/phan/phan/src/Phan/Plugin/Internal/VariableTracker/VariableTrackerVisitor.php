@@ -429,7 +429,8 @@ final class VariableTrackerVisitor extends AnalysisVisitor
      */
     private static function getConstExprOrNull($expr)
     {
-        return ParseVisitor::isConstExpr($expr) ? $expr : null;
+        // Don't allow new expressions
+        return ParseVisitor::isConstExpr($expr, ParseVisitor::CONSTANT_EXPRESSION_FORBID_NEW_EXPRESSION) ? $expr : null;
     }
 
     /**
@@ -535,7 +536,6 @@ final class VariableTrackerVisitor extends AnalysisVisitor
                         self::$variable_graph->recordVariableDefinition($name, $expr, $this->scope, null);
                     // @phan-suppress-next-line PhanUndeclaredProperty
                     } elseif (isset($node->is_unset_target)) {
-                        // @phan-suppress-next-line PhanUndeclaredProperty
                         self::$variable_graph->markAsUnset($expr);
                         self::$variable_graph->recordVariableDefinition($name, $expr, $this->scope, null);
                     } else {
@@ -750,7 +750,7 @@ final class VariableTrackerVisitor extends AnalysisVisitor
         $inner_scope = $this->analyze($this->scope, $node->children['stmts']);
 
         // Merge inner scope into outer scope
-        // @phan-suppress-next-line PhanTypeMismatchArgument
+        // @phan-suppress-next-line PhanTypeMismatchArgumentSuperType
         $outer_scope = $outer_scope->mergeInnerLoopScope($inner_scope, self::$variable_graph);
 
         return $outer_scope_unbranched->mergeWithSingleBranchScope($outer_scope);
@@ -831,7 +831,7 @@ final class VariableTrackerVisitor extends AnalysisVisitor
             }
             $this->top_level_statement = $loop_node;
             $loop_scope = $this->analyze(new VariableTrackingBranchScope($inner_scope), $loop_node);
-            // @phan-suppress-next-line PhanTypeMismatchArgument
+            // @phan-suppress-next-line PhanTypeMismatchArgumentSuperType
             $inner_scope = $inner_scope->mergeWithSingleBranchScope($loop_scope);
             $this->top_level_statement = $top_level_statement;
         }
@@ -842,7 +842,7 @@ final class VariableTrackerVisitor extends AnalysisVisitor
             if ($loop_node instanceof Node) {
                 $this->top_level_statement = $loop_node;
                 $loop_scope = $this->analyze(new VariableTrackingBranchScope($inner_scope), $loop_node);
-                // @phan-suppress-next-line PhanTypeMismatchArgument
+                // @phan-suppress-next-line PhanTypeMismatchArgumentSuperType
                 $inner_scope = $inner_scope->mergeWithSingleBranchScope($loop_scope);
                 $this->top_level_statement = $top_level_statement;
             }
@@ -850,7 +850,7 @@ final class VariableTrackerVisitor extends AnalysisVisitor
         $inner_scope = $this->analyzeCondExprList($inner_scope, $node->children['cond']);
 
         // Merge inner scope into outer scope
-        // @phan-suppress-next-line PhanTypeMismatchArgument
+        // @phan-suppress-next-line PhanTypeMismatchArgumentSuperType
         $outer_scope = $outer_scope->mergeInnerLoopScope($inner_scope, self::$variable_graph);
         return $outer_scope_unbranched->mergeWithSingleBranchScope($outer_scope);
     }
@@ -908,6 +908,7 @@ final class VariableTrackerVisitor extends AnalysisVisitor
                 '@phan-var VariableTrackingBranchScope $inner_cond_scope';
                 $outer_scope = $outer_scope->mergeBranchScopeList([$inner_cond_scope], $merge_parent_scope, []);
             }
+            $this->scope = $outer_scope;
 
             $inner_scope = new VariableTrackingBranchScope($outer_scope);
             $inner_scope = $this->analyze($inner_scope, $stmts_node);
@@ -1045,7 +1046,7 @@ final class VariableTrackerVisitor extends AnalysisVisitor
         if (\count($catch_node_list) > 0) {
             $catches_scope = new VariableTrackingBranchScope($main_scope);
             $catches_scope = $this->analyze($catches_scope, $node->children['catches']);
-            // @phan-suppress-next-line PhanTypeMismatchArgument
+            // @phan-suppress-next-line PhanTypeMismatchArgumentSuperType
             $main_scope = $main_scope->mergeWithSingleBranchScope($catches_scope);
         }
         $finally_node = $node->children['finally'];

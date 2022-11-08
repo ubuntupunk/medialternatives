@@ -477,14 +477,26 @@ class JsonMapper
                 $isNullable = false;
                 $rparams = $rmeth->getParameters();
                 if (count($rparams) > 0) {
-                    $pclass = $rparams[0]->getClass();
                     $isNullable = $rparams[0]->allowsNull();
-                    if ($pclass !== null) {
-                        return array(
-                            true, $rmeth,
-                            '\\' . $pclass->getName(),
-                            $isNullable,
-                        );
+                    $ptype      = $rparams[0]->getType();
+                    if ($ptype !== null) {
+                        if ($ptype instanceof ReflectionNamedType) {
+                            $typeName = $ptype->getName();
+                        }
+                        if ($ptype instanceof ReflectionUnionType
+                            || !$ptype->isBuiltin()
+                        ) {
+                            $typeName = '\\' . $typeName;
+                        }
+                        //allow overriding an "array" type hint
+                        // with a more specific class in the docblock
+                        if ($typeName !== 'array') {
+                            return array(
+                                true, $rmeth,
+                                $typeName,
+                                $isNullable,
+                            );
+                        }
                     }
                 }
 
@@ -492,26 +504,6 @@ class JsonMapper
                 $annotations = static::parseAnnotations($docblock);
 
                 if (!isset($annotations['param'][0])) {
-                    // If there is no annotations (higher priority) inspect
-                    // if there's a scalar type being defined
-                    if (PHP_MAJOR_VERSION >= 7) {
-                        $ptype = $rparams[0]->getType();
-                        if (is_string($ptype)) {
-                            return array(true, $rmeth, $ptype, $isNullable);
-                        }
-                        if (PHP_VERSION_ID >= 70100
-                            && $ptype instanceof ReflectionNamedType
-                        ) {
-                            return array(
-                                true,
-                                $rmeth,
-                                $ptype->getName(),
-                                $ptype->allowsNull()
-                            );
-                        }
-
-                        return array(true, $rmeth, null, $isNullable);
-                    }
                     return array(true, $rmeth, null, $isNullable);
                 }
                 list($type) = explode(' ', trim($annotations['param'][0]));
@@ -804,7 +796,9 @@ class JsonMapper
      *
      * @param string $docblock Full method docblock
      *
-     * @return array
+     * @return array Array of arrays.
+     *               Key is the "@"-name like "param",
+     *               each value is an array of the rest of the @-lines
      */
     protected static function parseAnnotations($docblock)
     {

@@ -3,11 +3,12 @@ declare( strict_types = 1 );
 
 namespace Wikimedia\Parsoid\ParserTests;
 
-use DOMElement;
-use DOMNode;
-use DOMText;
 use Error;
 use Exception;
+use Wikimedia\Parsoid\DOM\Comment;
+use Wikimedia\Parsoid\DOM\Element;
+use Wikimedia\Parsoid\DOM\Node;
+use Wikimedia\Parsoid\DOM\Text;
 use Wikimedia\Parsoid\Html2Wt\DOMNormalizer;
 use Wikimedia\Parsoid\Html2Wt\SerializerState;
 use Wikimedia\Parsoid\Html2Wt\WikitextSerializer;
@@ -20,7 +21,7 @@ use Wikimedia\Parsoid\Utils\Utils;
 use Wikimedia\Parsoid\Utils\WTUtils;
 
 class TestUtils {
-	/** @var mixed $consoleColor */
+	/** @var mixed */
 	private static $consoleColor;
 
 	/**
@@ -44,18 +45,18 @@ class TestUtils {
 	 * If parsoidOnly is true-ish, we allow more markup through (like property
 	 * and typeof attributes), for better checking of parsoid-only test cases.
 	 *
-	 * @param DOMElement|string $domBody
+	 * @param Element|string $domBody
 	 * @param array $options
 	 *  - parsoidOnly (bool) Is this test Parsoid Only? Optional. Default: false
 	 *  - preserveIEW (bool) Should inter-element WS be preserved? Optional. Default: false
-	 *  - scrubWikitext (bool) Are we running html2wt in scrubWikitext mode? Optional. Default: false
+	 *  - hackyNormalize (bool) Apply the normalizer to the html. Optional. Default: false
 	 * @return string
 	 */
 	public static function normalizeOut( $domBody, array $options = [] ): string {
 		$parsoidOnly = !empty( $options['parsoidOnly'] );
 		$preserveIEW = !empty( $options['preserveIEW'] );
 
-		if ( !empty( $options['scrubWikitext'] ) ) {
+		if ( !empty( $options['hackyNormalize'] ) ) {
 			// Mock env obj
 			//
 			// FIXME: This is ugly.
@@ -65,7 +66,7 @@ class TestUtils {
 			//     That feels like a carryover of 2013 era code.
 			//     If possible, get rid of it and diff-mark dependency
 			//     on the env object.
-			$mockEnv = new MockEnv( [ 'scrubWikitext' => true ] );
+			$mockEnv = new MockEnv( [] );
 			$mockSerializer = new WikitextSerializer( [ 'env' => $mockEnv ] );
 			$mockState = new SerializerState( $mockSerializer, [ 'selserMode' => false ] );
 			if ( is_string( $domBody ) ) {
@@ -74,7 +75,7 @@ class TestUtils {
 				$domBody = DOMCompat::getBody( $doc );
 			}
 			DOMDataUtils::visitAndLoadDataAttribs( $domBody, [ 'markNew' => true ] );
-			$domBody = ( new DOMNormalizer( $mockState ) )->normalize( $domBody );
+			( new DOMNormalizer( $mockState ) )->normalize( $domBody );
 			DOMDataUtils::visitAndStoreDataAttribs( $domBody );
 		} elseif ( is_string( $domBody ) ) {
 			$domBody = DOMCompat::getBody( DOMUtils::parseHTML( $domBody ) );
@@ -128,7 +129,7 @@ class TestUtils {
 			// <meta> tags stripped out, allowing the html2wt test to verify that
 			// the <nowiki> is correctly added during WTS, while still allowing
 			// the html2html and wt2html versions of the test to pass as a
-			// sanity check.  If <meta>s were not stripped, these tests would all
+			// validity check.  If <meta>s were not stripped, these tests would all
 			// have to be modified and split up.  Not worth it at this time.
 			// (see commit 689b22431ad690302420d049b10e689de6b7d426)
 			$out = preg_replace( '#<span typeof="mw:Nowiki"></span>#', '', $out );
@@ -169,7 +170,7 @@ class TestUtils {
 		$out = preg_replace( '#<span>\s*</span>#u', '', $out );
 		$out = preg_replace( '#(href=")(?:\.?\./)+#u', '$1', $out );
 		// replace unnecessary URL escaping
-		$out = preg_replace_callback( '/ href="[^"]*"/u', function ( $m ) {
+		$out = preg_replace_callback( '/ href="[^"]*"/u', static function ( $m ) {
 			return Utils::decodeURI( $m[0] );
 		}, $out );
 		// strip thumbnail size prefixes
@@ -180,11 +181,11 @@ class TestUtils {
 	}
 
 	/**
-	 * @param DOMNode $node
+	 * @param Node $node
 	 * @param ?string $stripSpanTypeof
 	 */
 	private static function cleanSpans(
-		DOMNode $node, ?string $stripSpanTypeof
+		Node $node, ?string $stripSpanTypeof
 	): void {
 		if ( !$stripSpanTypeof ) {
 			return;
@@ -194,7 +195,7 @@ class TestUtils {
 		$next = null;
 		for ( $child = $node->firstChild; $child; $child = $next ) {
 			$next = $child->nextSibling;
-			if ( $child instanceof DOMElement && $child->nodeName === 'span' &&
+			if ( $child instanceof Element && DOMCompat::nodeName( $child ) === 'span' &&
 				preg_match( $stripSpanTypeof, $child->getAttribute( 'typeof' ) ?? '' )
 			) {
 				self::unwrapSpan( $node, $child, $stripSpanTypeof );
@@ -203,13 +204,13 @@ class TestUtils {
 	}
 
 	/**
-	 * @param DOMNode $parent
-	 * @param DOMNode $node
+	 * @param Node $parent
+	 * @param Node $node
 	 * @param ?string $stripSpanTypeof
 	 */
 	private static function unwrapSpan(
-		DOMNode $parent, DOMNode $node, ?string $stripSpanTypeof
-	):void {
+		Node $parent, Node $node, ?string $stripSpanTypeof
+	): void {
 		// first recurse to unwrap any spans in the immediate children.
 		self::cleanSpans( $node, $stripSpanTypeof );
 		// now unwrap this span.
@@ -218,30 +219,32 @@ class TestUtils {
 	}
 
 	/**
-	 * @param ?DOMNode $node
+	 * @param ?Node $node
 	 * @return bool
 	 */
-	private static function newlineAround( ?DOMNode $node ): bool {
-		return $node &&
-			preg_match( '/^(body|caption|div|dd|dt|li|p|table|tr|td|th|tbody|dl|ol|ul|h[1-6])$/D', $node->nodeName );
+	private static function newlineAround( ?Node $node ): bool {
+		return $node && preg_match(
+			'/^(body|caption|div|dd|dt|li|p|table|tr|td|th|tbody|dl|ol|ul|h[1-6])$/D',
+			DOMCompat::nodeName( $node )
+		);
 	}
 
 	/**
-	 * @param DOMNode $node
+	 * @param Node $node
 	 * @param array $opts
-	 * @return DOMNode
+	 * @return Node
 	 */
 	private static function normalizeIEWVisitor(
-		DOMNode $node, array $opts
-	): DOMNode {
+		Node $node, array $opts
+	): Node {
 		$child = null;
 		$next = null;
 		$prev = null;
-		if ( $node->nodeName === 'pre' ) {
+		if ( DOMCompat::nodeName( $node ) === 'pre' ) {
 			// Preserve newlines in <pre> tags
 			$opts['inPRE'] = true;
 		}
-		if ( !$opts['preserveIEW'] && $node instanceof DOMText ) {
+		if ( !$opts['preserveIEW'] && $node instanceof Text ) {
 			if ( !$opts['inPRE'] ) {
 				$node->data = preg_replace( '/\s+/u', ' ', $node->data );
 			}
@@ -258,21 +261,21 @@ class TestUtils {
 		if ( !$opts['parsoidOnly'] ) {
 			for ( $child = $node->firstChild;  $child;  $child = $next ) {
 				$next = $child->nextSibling;
-				if ( DOMUtils::isComment( $child ) ) {
+				if ( $child instanceof Comment ) {
 					$node->removeChild( $child );
 				}
 			}
 		}
 		// reassemble text nodes split by a comment or span, if necessary
-		if ( $node instanceof DOMElement ) {
+		if ( $node instanceof Element ) {
 			DOMCompat::normalize( $node );
 		}
 		// now recurse.
-		if ( $node->nodeName === 'pre' ) {
+		if ( DOMCompat::nodeName( $node ) === 'pre' ) {
 			// hack, since PHP adds a newline before </pre>
 			$opts['stripLeadingWS'] = false;
 			$opts['stripTrailingWS'] = true;
-		} elseif ( $node->nodeName === 'span' &&
+		} elseif ( DOMCompat::nodeName( $node ) === 'span' &&
 			preg_match( '/^mw[:]/', $node->getAttribute( 'typeof' ) ?? '' )
 		) {
 			// SPAN is transparent; pass the strip parameters down to kids
@@ -282,7 +285,7 @@ class TestUtils {
 		$child = $node->firstChild;
 		// Skip over the empty mw:FallbackId <span> and strip leading WS
 		// on the other side of it.
-		if ( preg_match( '/^h[1-6]$/D', $node->nodeName ) &&
+		if ( preg_match( '/^h[1-6]$/D', DOMCompat::nodeName( $node ) ) &&
 			$child && WTUtils::isFallbackIdSpan( $child )
 		) {
 			$child = $child->nextSibling;
@@ -304,13 +307,13 @@ class TestUtils {
 			$prev = $child->previousSibling;
 			$next = $child->nextSibling;
 			if ( self::newlineAround( $child ) ) {
-				if ( $prev && $prev instanceof DOMText ) {
+				if ( $prev instanceof Text ) {
 					$prev->data = preg_replace( '/\s*$/uD', "\n", $prev->data, 1 );
 				} else {
 					$prev = $node->ownerDocument->createTextNode( "\n" );
 					$node->insertBefore( $prev, $child );
 				}
-				if ( $next && $next instanceof DOMText ) {
+				if ( $next instanceof Text ) {
 					$next->data = preg_replace( '/^\s*/u', "\n", $next->data, 1 );
 				} else {
 					$next = $node->ownerDocument->createTextNode( "\n" );
@@ -324,15 +327,15 @@ class TestUtils {
 	/**
 	 * Normalize newlines in IEW to spaces instead.
 	 *
-	 * @param DOMElement $body The document body node to normalize.
+	 * @param Element $body The document body node to normalize.
 	 * @param ?string $stripSpanTypeof Regular expression to strip typeof attributes
 	 * @param bool $parsoidOnly
 	 * @param bool $preserveIEW
-	 * @return DOMElement
+	 * @return Element
 	 */
 	public static function unwrapSpansAndNormalizeIEW(
-		DOMElement $body, ?string $stripSpanTypeof = null, bool $parsoidOnly = false, bool $preserveIEW = false
-	): DOMElement {
+		Element $body, ?string $stripSpanTypeof = null, bool $parsoidOnly = false, bool $preserveIEW = false
+	): Element {
 		$opts = [
 			'preserveIEW' => $preserveIEW,
 			'parsoidOnly' => $parsoidOnly,
@@ -342,6 +345,7 @@ class TestUtils {
 			'inPRE' => false
 		];
 		// clone body first, since we're going to destructively mutate it.
+		// @phan-suppress-next-line PhanTypeMismatchReturnSuperType
 		return self::normalizeIEWVisitor( $body->cloneNode( true ), $opts );
 	}
 
@@ -407,7 +411,7 @@ class TestUtils {
 			$html = preg_replace( '/href="#/', 'href="Main Page#', $html );
 			// replace unnecessary URL escaping
 			$html = preg_replace_callback( '/ href="[^"]*"/',
-				function ( $m ) {
+				static function ( $m ) {
 					return Utils::decodeURI( $m[0] );
 				},
 				$html );

@@ -107,9 +107,11 @@ Config::define( 'REACTIVATE_WP_RESET', true );
  * Debugging Settings
  */
 /**Config::define('JETPACK_DEV_DEBUG', true); */
+Config::define('WP_DEBUG', false);
 Config::define('WP_DEBUG_DISPLAY', false);
 Config::define('WP_DEBUG_LOG', env('WP_DEBUG_LOG') ?? true);
-Config::define('SCRIPT_DEBUG', true);
+Config::define('SCRIPT_DEBUG', false);
+Config::define('SAVEQUERIES', false);
 ini_set('display_errors', '0');
 
 /**

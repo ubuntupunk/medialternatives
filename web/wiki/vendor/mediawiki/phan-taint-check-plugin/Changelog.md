@@ -1,5 +1,46 @@
 # MediaWiki Security Check Plugin changelog
 
+## v3.3.2
+### Bug fixes
+* Improved caused-by lines for return statements consisting of a function-like call and for inherited methods.
+### Internal changes
+* Bumped phan/phan to 5.2.0
+
+## v3.3.1
+### Internal changes
+* Bumped phan/phan to 5.1.0
+
+## v3.3.0
+### Breaking changes
+* Removed support for standalone install on MediaWiki repos. Generic standalone is still supported, but the script is now called `seccheck`, not `seccheck-generic`.
+* `raw_param` is now a modifier for EXEC taintedness, so it must be specified together with EXEC bits, not normal bits.
+* The plugin now limits reanalysis of classes to 1 per class when the taintedness of a property is changed. This might hide some issues, but is much faster. Running phan with `--analyze-twice` will help; this might become officially suggested in the future.
+
+### New features
+* Added support for the following PHP 7.4 and PHP 8 features: arrow functions, `match`, named arguments, nullsafe method calls and property access, typed properties, constructor property promotion
+* Infer array shape mutations for several array-related builtin functions
+* Improved taint data for $_FILES
+* The plugin now properly infers when a parameter is passed through by a function (even partially or conditionally), and can determine the resulting taintedness of a function call much more accurately
+* Improved caused-by lines for setters and some functions that pass their parameters through
+* It is now possible to put comments after `@param-taint` and `@return-taint` annotations
+* Added taintedness data for PDO functions
+* Added partial support for backpropagating NUMKEY taint, in the very few cases where false positives are highly unlikely (this will be improved)
+* (MW) Improved hook registration, being now able to infer the callback in more cases
+* (MW) Added partial support for HookHandlers in extension.json
+* Improved handling of pass-by-reference parameters when the parameter is essentially left unchanged
+* The plugin can now track array shapes when backpropagating EXEC taintedness. This brings increased accuracy when analyzing method calls.
+* The following hashing functions were annotated as removing taintedness from their arguments: `md5`, `sha1` and `crc32`
+
+### Bug fixes
+* Improved merging caused-by lines to avoid duplicates
+* Avoid tracking dependencies of functions with hardcoded taintedness, so to keep caused-by lines shorter and more relevant
+* Fixed a bug that caused EXEC taints to be backpropagated to local variables, thus creating weird-looking issues
+* Fixed some edge cases which would make phan issues disappear with taint-check enabled
+
+### Internal changes
+* Bumped phan/phan to 4.0.4
+* The plugin now caches taintedness data inside AST nodes. This requires additional memory (300 MB for MW core), but reduces the runtime (30 seconds for MW core)
+
 ## v3.2.1
 ### Bug fixes
 * Fixed a crash observed when using the polyfill parser

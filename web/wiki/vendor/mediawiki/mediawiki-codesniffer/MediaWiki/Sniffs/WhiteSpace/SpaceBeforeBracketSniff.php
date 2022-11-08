@@ -34,7 +34,7 @@ class SpaceBeforeBracketSniff implements Sniff {
 	/**
 	 * @inheritDoc
 	 */
-	public function register() {
+	public function register(): array {
 		return [ T_OPEN_SQUARE_BRACKET ];
 	}
 
@@ -52,9 +52,15 @@ class SpaceBeforeBracketSniff implements Sniff {
 			return;
 		}
 
-		// Only triggered on spaces (one or more), allows tabs and newlines
-		if ( $priorToken['content'] === '' ||
-			rtrim( $priorToken['content'], ' ' ) !== ''
+		// Skip newlines
+		$lastNonWhitespace = $phpcsFile->findPrevious(
+			T_WHITESPACE,
+			$stackPtr - 1,
+			null,
+			true
+		);
+		if ( $lastNonWhitespace &&
+			$tokens[$lastNonWhitespace]['line'] !== $tokens[$stackPtr]['line']
 		) {
 			return;
 		}

@@ -25,7 +25,7 @@ class ComposerAutoloaderInit_mediawiki_vendor
         require __DIR__ . '/platform_check.php';
 
         spl_autoload_register(array('ComposerAutoloaderInit_mediawiki_vendor', 'loadClassLoader'), true, false);
-        self::$loader = $loader = new \Composer\Autoload\ClassLoader();
+        self::$loader = $loader = new \Composer\Autoload\ClassLoader(\dirname(\dirname(__FILE__)));
         spl_autoload_unregister(array('ComposerAutoloaderInit_mediawiki_vendor', 'loadClassLoader'));
 
         $includePaths = require __DIR__ . '/include_paths.php';
@@ -69,11 +69,16 @@ class ComposerAutoloaderInit_mediawiki_vendor
     }
 }
 
+/**
+ * @param string $fileIdentifier
+ * @param string $file
+ * @return void
+ */
 function composerRequire_mediawiki_vendor($fileIdentifier, $file)
 {
     if (empty($GLOBALS['__composer_autoload_files'][$fileIdentifier])) {
-        require $file;
-
         $GLOBALS['__composer_autoload_files'][$fileIdentifier] = true;
+
+        require $file;
     }
 }

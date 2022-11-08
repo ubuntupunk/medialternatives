@@ -32,7 +32,7 @@ class PropertyDocumentationSniff implements Sniff {
 	/**
 	 * @inheritDoc
 	 */
-	public function register() {
+	public function register(): array {
 		return [ T_VARIABLE ];
 	}
 
@@ -115,7 +115,7 @@ class PropertyDocumentationSniff implements Sniff {
 	 * @param File $phpcsFile The file being scanned.
 	 * @param int $commentStart The position in the stack where the comment started.
 	 */
-	private function processVar( File $phpcsFile, $commentStart ) {
+	private function processVar( File $phpcsFile, int $commentStart ): void {
 		$tokens = $phpcsFile->getTokens();
 		$var = null;
 		foreach ( $tokens[$commentStart]['comment_tags'] as $ptr ) {
@@ -132,6 +132,7 @@ class PropertyDocumentationSniff implements Sniff {
 		}
 		if ( $var !== null ) {
 			$varTypeSpacing = $var + 1;
+			// Check spaces before var
 			if ( $tokens[$varTypeSpacing]['code'] === T_DOC_COMMENT_WHITESPACE ) {
 				$expectedSpaces = 1;
 				$currentSpaces = strlen( $tokens[$varTypeSpacing]['content'] );
@@ -157,10 +158,7 @@ class PropertyDocumentationSniff implements Sniff {
 				$phpcsFile->addError( $error, $var, 'MissingVarType' );
 				return;
 			}
-			// The first word of the var type is the actual type
-			$exploded = explode( ' ', $content, 2 );
-			$type = $exploded[0];
-			$comment = $exploded[1] ?? null;
+			[ $type, $separatorLength, $comment ] = $this->splitTypeAndComment( $content );
 			$fixType = false;
 			// Check for unneeded punctation
 			$type = $this->fixTrailingPunctation(
@@ -185,27 +183,32 @@ class PropertyDocumentationSniff implements Sniff {
 				$type,
 				'var'
 			);
+			$this->maybeAddTypeTypehintError(
+				$phpcsFile,
+				$varType,
+				$type,
+				'var'
+			);
 			// Check spacing after type
-			if ( $comment !== null ) {
+			if ( $comment !== '' ) {
 				$expectedSpaces = 1;
-				$currentSpaces = strspn( $comment, ' ' ) + 1;
-				if ( $currentSpaces !== $expectedSpaces ) {
+				if ( $separatorLength !== $expectedSpaces ) {
 					$fix = $phpcsFile->addFixableWarning(
 						'Expected %s spaces after var type; %s found',
 						$varType,
 						'SpacingAfterVarType',
-						[ $expectedSpaces, $currentSpaces ]
+						[ $expectedSpaces, $separatorLength ]
 					);
 					if ( $fix ) {
 						$fixType = true;
-						$comment = substr( $comment, $currentSpaces - 1 );
+						$separatorLength = $expectedSpaces;
 					}
 				}
 			}
 			if ( $fixType ) {
 				$phpcsFile->fixer->replaceToken(
 					$varType,
-					$type . ( $comment !== null ? ' ' . $comment : '' )
+					$type . ( $comment !== '' ? str_repeat( ' ', $separatorLength ) . $comment : '' )
 				);
 			}
 		} else {

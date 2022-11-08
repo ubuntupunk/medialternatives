@@ -105,6 +105,10 @@ class InferPureVisitor extends AnalysisVisitor
     // visitEcho
     // visitPrint
     // visitIncludeOrExec
+    /**
+     * @override
+     * @return never
+     */
     public function visit(Node $node): void
     {
         throw new NodeException($node);
@@ -460,7 +464,8 @@ class InferPureVisitor extends AnalysisVisitor
         if (!($name_node instanceof Node && $name_node->kind === ast\AST_NAME)) {
             throw new NodeException($node);
         }
-        $this->visitArgList($node->children['args']);
+        // "Fatal error: Cannot create Closure for new expression" (for AST_CALLABLE_CONVERT) is caught elsewhere
+        $this->__invoke($node->children['args']);
         try {
             $class_list = (new ContextNode($this->code_base, $this->context, $name_node))->getClassList(false, ContextNode::CLASS_LIST_ACCEPT_OBJECT_OR_CLASS_NAME);
         } catch (Exception $_) {
@@ -474,7 +479,7 @@ class InferPureVisitor extends AnalysisVisitor
                 // TODO build a list of internal classes where result of new() is often unused.
                 continue;
             }
-            if (!$class->hasMethodWithName($this->code_base, '__construct')) {
+            if (!$class->hasMethodWithName($this->code_base, '__construct', true)) {
                 throw new NodeException($name_node, 'no __construct found');
             }
             $this->checkCalledFunction($node, $class->getMethodByName($this->code_base, '__construct'));
@@ -542,7 +547,7 @@ class InferPureVisitor extends AnalysisVisitor
         if (!$found_function) {
             throw new NodeException($expr, 'not a function');
         }
-        $this->visitArgList($node->children['args']);
+        $this->__invoke($node->children['args']);
     }
 
     public function visitStaticCall(Node $node): void
@@ -567,6 +572,7 @@ class InferPureVisitor extends AnalysisVisitor
         } catch (Exception $_) {
             throw new NodeException($class, 'could not get type');
         }
+        // TODO: Check all classes in union and intersection types instead up to a limit?
         if ($union_type->typeCount() !== 1) {
             throw new NodeException($class);
         }
@@ -586,12 +592,12 @@ class InferPureVisitor extends AnalysisVisitor
         } catch (Exception $_) {
             throw new NodeException($node);
         }
-        if (!$class->hasMethodWithName($this->code_base, $method)) {
+        if (!$class->hasMethodWithName($this->code_base, $method, true)) {
             throw new NodeException($node, 'no method');
         }
 
         $this->checkCalledFunction($node, $class->getMethodByName($this->code_base, $method));
-        $this->visitArgList($node->children['args']);
+        $this->__invoke($node->children['args']);
     }
 
     public function visitNullsafeMethodCall(Node $node): void
@@ -610,12 +616,12 @@ class InferPureVisitor extends AnalysisVisitor
             throw new NodeException($node);
         }
         $class = $this->getClassForVariable($expr);
-        if (!$class->hasMethodWithName($this->code_base, $method_name)) {
+        if (!$class->hasMethodWithName($this->code_base, $method_name, true)) {
             throw new NodeException($expr, 'does not have method');
         }
         $this->checkCalledFunction($node, $class->getMethodByName($this->code_base, $method_name));
 
-        $this->visitArgList($node->children['args']);
+        $this->__invoke($node->children['args']);
     }
 
     protected function getClassForVariable(Node $expr): Clazz
@@ -700,6 +706,14 @@ class InferPureVisitor extends AnalysisVisitor
                 $this->__invoke($x);
             }
         }
+    }
+
+    /**
+     * @unused-param $node
+     * @override
+     */
+    public function visitCallableConvert(Node $node): void
+    {
     }
 
     public function visitNamedArg(Node $node): void
