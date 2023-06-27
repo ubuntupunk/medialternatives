@@ -21,9 +21,9 @@
         <div class="container">
             <div class="row">
                 <div class="copyright-info col-md-6 col-sm-12">
-                    <a href="<?php echo esc_url( 'https://wordpress.org/' ); ?>"><?php printf( esc_html__( 'Proudly powered by %s', 'blaskan' ), 'WordPress' ); ?></a>
+                    <a href="<?php echo esc_url( 'https://wordpress.org/' ); ?>"><?php printf( esc_html__( 'Proudly powered by %s', 'Netbones' ), 'WordPress' ); ?></a>
                     <span class="sep"> | </span>
-					<?php printf( esc_html__( 'Theme: %1$s by %2$s.', 'blaskan' ), 'Blaskan', '<a href="https://colorlib.com/" target="_blank" rel="designer">Colorlib.com</a>' ); ?>
+					<?php printf( esc_html__( 'Theme: %1$s by %2$s.', 'pressroom' ), 'Pressroom', '<a href="https://netbones.co.za/" target="_blank" rel="designer">Netbones</a>' ); ?>
                 </div>
 				<?php if ( has_nav_menu( 'menu-2' ) ) { ?>
                     <div class="main-footer-navigation col-md-6 col-sm-12">

@@ -64,6 +64,9 @@ $wgDBprefix = "mwhd_";
 # MySQL table options to use during installation or update
 $wgDBTableOptions = "ENGINE=InnoDB, DEFAULT CHARSET=binary";
 
+## Use this when dumping the db
+#$wgReadOnly = 'Dumping Database, Access will be restored shortly';
+
 # Shared database table
 # This has no effect unless $wgSharedDB is also set.
 $wgSharedTables[] = "actor";
@@ -71,6 +74,12 @@ $wgSharedTables[] = "actor";
 ## Shared memory settings
 $wgMainCacheType = CACHE_NONE;
 $wgMemCachedServers = [];
+$wgParserCacheType = CACHE_NONE;
+$wgCachePages = false;
+
+##Jobs
+$wgJobRunRate = 0.01;
+
 
 ## To enable image uploads, make sure the 'images' directory
 ## is writable, then set this to true:
@@ -94,11 +103,14 @@ $wgPingback = true;
 ## localise the wiki.
 #$wgShellLocale = "en_US.utf8";
 $wgShellLocale = "C.UTF-8";
+$wgLanguageCode = "en";
 
-## Set $wgCacheDirectory to a writable directory on the web server
+# Set $wgCacheDirectory to a writable directory on the web server
 ## to make your wiki go slightly faster. The directory should not
 ## be publicly accessible from the web.
 #$wgCacheDirectory = "$IP/cache";
+
+$wgRevisionCacheExpiry = "0";
 
 # Site language code, should be one of the list in ./languages/data/Names.php
 $wgLanguageCode = "en";
@@ -139,7 +151,7 @@ wfLoadSkin( 'Vector' );
 # Add more configuration options below.
 
 $wgTmpDirectory = "/home/sexthera/tmp_tgyl5x";
-
+$wgCompressRevisions = true;
 
 #require_once( "$IP/extensions/Code/Code.php" );
 
@@ -162,6 +174,8 @@ wfLoadExtension( 'WikiEditor' );
 wfLoadExtension( 'Interwiki' );
 wfLoadExtension( 'WikiMarkdown' );
 wfLoadExtension( 'Widgets' );
+wfLoadExtension( 'ConfirmAccount' );
+wfLoadExtension( 'UserAgreement' );
 
 //VisualEditor
 wfLoadExtension( 'VisualEditor' );

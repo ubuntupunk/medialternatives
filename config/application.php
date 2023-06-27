@@ -88,6 +88,11 @@ Config::define('SECURE_AUTH_SALT', env('SECURE_AUTH_SALT'));
 Config::define('LOGGED_IN_SALT', env('LOGGED_IN_SALT'));
 Config::define('NONCE_SALT', env('NONCE_SALT'));
 
+
+/* GRAPHQL API AUTHORITY */
+Config::define( 'GRAPHQL_JWT_AUTH_SECRET_KEY', '1ggW3imJt}3[o&VOrQrOA=4}QjZ-bd7b974i6ZP5~3v|-(J}2x7+!K}J2H6Q .Kt');
+
+
 /**
  * Custom Settings
  */
@@ -98,6 +103,8 @@ Config::define('DISALLOW_FILE_EDIT', true);
 // Disable plugin and theme updates and installation from the admin
 Config::define('DISALLOW_FILE_MODS', true);
 
+Config::define('JETPACK_IP_ADDRESS_OK', '165.0.131.172');
+
 /**Additions for wp importer extended**/
 
 /**Config::define('WP_LOAD_IMPORTERS', true);**/
@@ -107,12 +114,19 @@ Config::define( 'REACTIVATE_WP_RESET', true );
  * Debugging Settings
  */
 /**Config::define('JETPACK_DEV_DEBUG', true); */
-Config::define('WP_DEBUG', false);
+Config::define('WP_DEBUG', true);
 Config::define('WP_DEBUG_DISPLAY', false);
 Config::define('WP_DEBUG_LOG', env('WP_DEBUG_LOG') ?? true);
-Config::define('SCRIPT_DEBUG', false);
-Config::define('SAVEQUERIES', false);
+Config::define('SCRIPT_DEBUG', true);
+Config::define('SAVEQUERIES', true);
 ini_set('display_errors', '0');
+
+/** Admin over SSL */
+Config::define('FORCE_SSL_ADMIN', true);
+
+/** Set port to 443 */
+$_SERVER['SERVER_PORT'] = 443;
+
 
 /**
  * Allow WordPress to detect HTTPS when used behind a reverse proxy or a load balancer
