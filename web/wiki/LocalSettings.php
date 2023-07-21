@@ -80,7 +80,6 @@ $wgCachePages = false;
 ##Jobs
 $wgJobRunRate = 0.01;
 
-
 ## To enable image uploads, make sure the 'images' directory
 ## is writable, then set this to true:
 $wgEnableUploads = true;
@@ -145,8 +144,6 @@ wfLoadSkin( 'MonoBook' );
 wfLoadSkin( 'Timeless' );
 wfLoadSkin( 'Vector' );
 
-
-
 # End of automatically generated settings.
 # Add more configuration options below.
 
@@ -195,8 +192,8 @@ $wgGroupPermissions['*']['edit'] = true;
 // $wgDefaultUserOptions['visualeditor-editor'] = "visualeditor";
 
 // Don't allow users to disable it
-$wgHiddenPrefs[] = 'visualeditor-enable';
-$wgHiddenPrefs[] = 'visualeditor-newwikitext';
+//$wgHiddenPrefs[] = 'visualeditor-enable';
+//$wgHiddenPrefs[] = 'visualeditor-newwikitext';
 
 // Per default, the VisualEditor only works with Namespace 0 (NS_MAIN),
 // i.e. the main article namespace. To change this, adapt the following example
@@ -220,3 +217,31 @@ $wgTmpDirectory = "$IP/images/temp";
 
 $wgShowExceptionDetails = true;
 
+
+wfLoadExtensions([ 'ConfirmEdit', 'ConfirmEdit/QuestyCaptcha' ]);
+
+$wgCaptchaQuestions = [
+
+'What mountain named after furniture is in Cape Town?' => 'Table Mountain',
+
+'Who was the first president of the new South Africa' => 'Nelson Mandela', // Answers are case insensitive
+
+'What is the name of this wiki?' => $wgSitename, // You can use variables
+
+'How many fingers does a hand have?' => [ 5, 'five' ], // A question may have many answers
+
+];
+
+$wgMainCacheType    = CACHE_ANYTHING;
+
+$wgCaptchaTriggers['edit']          = true;
+
+$wgCaptchaTriggers['create']        = true;
+
+$wgCaptchaTriggers['createtalk']    = true;
+
+$wgCaptchaTriggers['addurl']        = true;
+
+$wgCaptchaTriggers['createaccount'] = true;
+
+$wgCaptchaTriggers['badlogin']      = true;
