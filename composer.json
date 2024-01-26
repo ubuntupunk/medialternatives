@@ -53,7 +53,6 @@
     "wpackagist-plugin/worker":">=4.9.8",
     "wpackagist-plugin/wordpress-seo":">=7.0.2",
     "wpackagist-plugin/wordpress-importer":">=0.7",
-    "wpackagist-plugin/wordpress-importer-extended":">=0.3",
     "wpackagist-plugin/easy-google-fonts":">=1.4.4", 
     "wpackagist-plugin/easy-adsense-ads-scripts-manager":">=0.57",
     "wpackagist-plugin/backup-and-restore-for-wp":">=1.0.2",

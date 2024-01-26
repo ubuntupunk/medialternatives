@@ -10,6 +10,8 @@ web/app/uploads/*
 web/wp
 web/.htaccess
 
+#WIKI
+web/wiki/
 # Logs
 *.log
 
