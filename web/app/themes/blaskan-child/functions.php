@@ -67,3 +67,32 @@ true );
 	}
 }
 add_action( 'wp_head', 'count_post_visits' );
+
+/* add custom post type */
+add_action( 'init', function() {
+$args = array(
+'public' => true,
+'label' => 'Adsense',
+'show_in_rest' => true,
+'template_lock' => 'all',
+'template' => array(
+array( 'core/paragraph', array(
+'placeholder' => 'Put my Adsense',
+) ),
+array( 'core/image', array(
+'align' => 'right',
+) ),
+),
+);
+register_post_type( 'advert', $args );
+} );
+
+/* add custom adsense block */
+function enqueue_custom_adsense_block() {
+    wp_enqueue_script(
+        'custom-adsense-block',
+        get_template_directory_uri() . '/js/adsense-feed.js',
+        array( 'wp-blocks', 'wp-element', 'wp-editor' )
+    );
+}
+add_action( 'enqueue_block_editor_assets', 'enqueue_custom_adsense_block' );
