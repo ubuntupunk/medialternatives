@@ -114,12 +114,13 @@ Config::define( 'REACTIVATE_WP_RESET', true );
  * Debugging Settings
  */
 /**Config::define('JETPACK_DEV_DEBUG', true); */
-Config::define('WP_DEBUG', true);
-Config::define('WP_DEBUG_DISPLAY', false);
-Config::define('WP_DEBUG_LOG', env('WP_DEBUG_LOG') ?? true);
-Config::define('SCRIPT_DEBUG', true);
-Config::define('SAVEQUERIES', true);
-ini_set('display_errors', '0');
+//Config::define('WP_DEBUG', true);
+//Config::define('WP_DEBUG_DISPLAY', true);
+//Config::define('WP_DEBUG_LOG', env('WP_DEBUG_LOG') ?? true);
+//Config::define('SCRIPT_DEBUG', true);
+//Config::define('SAVEQUERIES', true);
+//ini_set('display_errors', '0');
+
 
 /** Admin over SSL */
 Config::define('FORCE_SSL_ADMIN', true);
