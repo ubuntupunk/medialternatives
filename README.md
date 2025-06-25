@@ -1,115 +1,275 @@
-<p align="center">
-  <a href="https://roots.io/bedrock/">
-    <img alt="Bedrock" src="https://cdn.roots.io/app/uploads/logo-bedrock.svg" height="100">
-  </a>
-</p>
+# Media Activism WordPress Site
 
-<p align="center">
-  <a href="LICENSE.md">
-    <img alt="MIT License" src="https://img.shields.io/github/license/roots/bedrock?color=%23525ddc&style=flat-square" />
-  </a>
+A modern WordPress website focused on media activism, built with the Roots Bedrock framework. This site features a comprehensive handbook, educational resources, and tools for media activists and alternative journalism.
 
-  <a href="https://packagist.org/packages/roots/bedrock">
-    <img alt="Packagist" src="https://img.shields.io/packagist/v/roots/bedrock.svg?style=flat-square" />
-  </a>
+## 🎯 Project Overview
 
-  <a href="https://circleci.com/gh/roots/bedrock">
-    <img alt="Build Status" src="https://img.shields.io/circleci/build/gh/roots/bedrock?style=flat-square" />
-  </a>
+This WordPress site serves as a platform for media activism education and resources. It includes:
 
-  <a href="https://twitter.com/rootswp">
-    <img alt="Follow Roots" src="https://img.shields.io/twitter/follow/rootswp.svg?style=flat-square&color=1da1f2" />
-  </a>
-</p>
+- **Main WordPress Site**: Content management for articles, resources, and community features
+- **Media Activist's Handbook**: Static documentation site with coursework and case studies
+- **Educational Resources**: Tools and guides for alternative media and journalism
+- **Community Features**: Social sharing, commenting, and engagement tools
 
-<p align="center">
-  <strong>A modern WordPress stack</strong>
-  <br />
-  Built with ❤️
-</p>
+## ✨ Key Features
 
-<p align="center">
-  <a href="https://roots.io">Official Website</a> | <a href="https://roots.io/docs/bedrock/master/installation/">Documentation</a> | <a href="CHANGELOG.md">Change Log</a>
-</p>
+### WordPress Features
+- **Modern Stack**: Built on Roots Bedrock with Composer dependency management
+- **Custom Themes**: Blaskan child theme with media activism customizations
+- **SEO Optimized**: Yoast SEO, structured data, and social media integration
+- **Performance**: LiteSpeed caching, image optimization, and CDN integration
+- **Security**: Wordfence protection, SSL enforcement, and secure authentication
+- **Analytics**: Google Analytics integration with custom tracking
 
-## Supporting
+### Content Features
+- **Custom Post Types**: AdSense management system with Gutenberg blocks
+- **Multi-language Support**: Translation-ready with language packs
+- **Social Integration**: ActivityPub, social sharing, and community features
+- **Contact Forms**: Contact Form 7 integration for user engagement
+- **Media Management**: Advanced upload handling and optimization
 
-**Bedrock** is an open source project and completely free to use.
+### Technical Features
+- **GraphQL API**: JWT authentication for headless capabilities
+- **Progressive Web App**: PWA features for mobile experience
+- **Search Integration**: Algolia-powered search functionality
+- **Backup System**: Automated backup and restore capabilities
+- **Health Monitoring**: WordPress health checks and troubleshooting tools
 
-However, the amount of effort needed to maintain and develop new features and products within the Roots ecosystem is not sustainable without proper financial backing. If you have the capability, please consider donating using the links below:
+## 🛠 Technology Stack
 
-<div align="center">
+- **Framework**: Roots Bedrock (WordPress)
+- **Language**: PHP 7.1+
+- **Dependency Management**: Composer
+- **Environment Management**: Dotenv
+- **Code Standards**: PSR-2 (PHP_CodeSniffer)
+- **Build Tools**: WP-CLI
+- **Caching**: LiteSpeed Cache, Object Caching
+- **CDN**: Cloudflare integration
+- **Analytics**: Google Analytics, Google Site Kit
 
-[![Donate via Patreon](https://img.shields.io/badge/donate-patreon-orange.svg?style=flat-square&logo=patreon")](https://www.patreon.com/rootsdev)
-[![Donate via PayPal](https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square&logo=paypal)](https://www.paypal.me/rootsdev)
-
-</div>
-
-## Overview
-
-Bedrock is a modern WordPress stack that helps you get started with the best development tools and project structure.
-
-Much of the philosophy behind Bedrock is inspired by the [Twelve-Factor App](http://12factor.net/) methodology including the [WordPress specific version](https://roots.io/twelve-factor-wordpress/).
-
-## Features
-
-- Better folder structure
-- Dependency management with [Composer](https://getcomposer.org)
-- Easy WordPress configuration with environment specific files
-- Environment variables with [Dotenv](https://github.com/vlucas/phpdotenv)
-- Autoloader for mu-plugins (use regular plugins as mu-plugins)
-- Enhanced security (separated web root and secure passwords with [wp-password-bcrypt](https://github.com/roots/wp-password-bcrypt))
-
-## Requirements
+## 📋 Requirements
 
 - PHP >= 7.1
-- Composer - [Install](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx)
+- MySQL 5.7+ or MariaDB 10.2+
+- Composer
+- Node.js (for theme development)
+- Web server (Apache/Nginx) with SSL support
 
-## Installation
+## 🚀 Installation
 
-1. Create a new project:
-   ```sh
-   $ composer create-project roots/bedrock
-   ```
-2. Update environment variables in the `.env` file. Wrap values that may contain non-alphanumeric characters with quotes, or they may be incorrectly parsed.
+### 1. Clone and Install Dependencies
+```bash
+git clone [repository-url]
+cd [project-directory]
+composer install
+```
 
-- Database variables
-  - `DB_NAME` - Database name
-  - `DB_USER` - Database user
-  - `DB_PASSWORD` - Database password
-  - `DB_HOST` - Database host
-  - Optionally, you can define `DATABASE_URL` for using a DSN instead of using the variables above (e.g. `mysql://user:password@127.0.0.1:3306/db_name`)
-- `WP_ENV` - Set to environment (`development`, `staging`, `production`)
-- `WP_HOME` - Full URL to WordPress home (https://example.com)
-- `WP_SITEURL` - Full URL to WordPress including subdirectory (https://example.com/wp)
-- `AUTH_KEY`, `SECURE_AUTH_KEY`, `LOGGED_IN_KEY`, `NONCE_KEY`, `AUTH_SALT`, `SECURE_AUTH_SALT`, `LOGGED_IN_SALT`, `NONCE_SALT`
-  - Generate with [wp-cli-dotenv-command](https://github.com/aaemnnosttv/wp-cli-dotenv-command)
-  - Generate with [our WordPress salts generator](https://roots.io/salts.html)
+### 2. Environment Configuration
+```bash
+cp .env.example .env
+```
 
-3. Add theme(s) in `web/app/themes/` as you would for a normal WordPress site
-4. Set the document root on your webserver to Bedrock's `web` folder: `/path/to/site/web/`
-5. Access WordPress admin at `https://example.com/wp/wp-admin/`
+Edit `.env` file with your configuration:
+```env
+# Database
+DB_NAME=your_database_name
+DB_USER=your_database_user
+DB_PASSWORD=your_database_password
+DB_HOST=localhost
 
-## Documentation
+# Environment
+WP_ENV=development
+WP_HOME=http://localhost:8000
+WP_SITEURL=http://localhost:8000/wp
 
-Bedrock documentation is available at [https://roots.io/docs/bedrock/master/installation/](https://roots.io/docs/bedrock/master/installation/).
+# Generate these with: https://roots.io/salts.html
+AUTH_KEY=your_auth_key
+SECURE_AUTH_KEY=your_secure_auth_key
+# ... (add all WordPress salts)
+```
 
-## Contributing
+### 3. Web Server Configuration
+Set your web server document root to the `web/` directory:
+```
+/path/to/project/web/
+```
 
-Contributions are welcome from everyone. We have [contributing guidelines](https://github.com/roots/guidelines/blob/master/CONTRIBUTING.md) to help you get started.
+### 4. Complete Setup
+1. Visit your site to complete WordPress installation
+2. Access admin at `/wp/wp-admin/`
+3. Activate the Blaskan child theme
+4. Configure plugins as needed
 
-## Bedrock sponsors
+## 📁 Project Structure
 
-Help support our open-source development efforts by [becoming a patron](https://www.patreon.com/rootsdev).
+```
+├── config/                 # WordPress configuration
+│   ├── application.php     # Main config
+│   └── environments/       # Environment-specific configs
+├── web/                    # Web root (document root)
+│   ├── app/               # WordPress content
+│   │   ├── mu-plugins/    # Must-use plugins
+│   │   ├── plugins/       # Regular plugins (Composer managed)
+│   │   ├── themes/        # WordPress themes
+│   │   └── uploads/       # Media uploads
+│   ├── handbook/          # Static handbook site
+│   └── wp/               # WordPress core (Composer managed)
+├── vendor/                # Composer dependencies
+├── composer.json          # PHP dependencies
+├── wp-cli.yml            # WP-CLI configuration
+└── .env                  # Environment variables
+```
 
-<a href="https://kinsta.com/?kaid=OFDHAJIXUDIV"><img src="https://cdn.roots.io/app/uploads/kinsta.svg" alt="Kinsta" width="200" height="150"></a> <a href="https://k-m.com/"><img src="https://cdn.roots.io/app/uploads/km-digital.svg" alt="KM Digital" width="200" height="150"></a> <a href="https://carrot.com/"><img src="https://cdn.roots.io/app/uploads/carrot.svg" alt="Carrot" width="200" height="150"></a> <a href="https://www.c21redwood.com/"><img src="https://cdn.roots.io/app/uploads/c21redwood.svg" alt="C21 Redwood Realty" width="200" height="150"></a>
+## 🎨 Theme Development
 
-## Community
+### Active Themes
+- **Parent**: Blaskan (Composer managed)
+- **Child**: Blaskan Child (custom development)
+- **Alternative**: Qi theme (available)
 
-Keep track of development and community news.
+### Child Theme Features
+- Google Analytics integration
+- Custom post view tracking
+- AdSense management system
+- Author bio enhancements
+- Custom Gutenberg blocks
 
-- Participate on the [Roots Discourse](https://discourse.roots.io/)
-- Follow [@rootswp on Twitter](https://twitter.com/rootswp)
-- Read and subscribe to the [Roots Blog](https://roots.io/blog/)
-- Subscribe to the [Roots Newsletter](https://roots.io/subscribe/)
-- Listen to the [Roots Radio podcast](https://roots.io/podcast/)
+### Development Workflow
+```bash
+# Watch for changes (if using build tools)
+npm run watch
+
+# Code standards check
+composer test
+
+# WP-CLI commands
+wp --path=web/wp plugin list
+wp --path=web/wp theme list
+```
+
+## 📖 Handbook Section
+
+The site includes a static handbook at `/handbook/` featuring:
+- Media activism coursework
+- South African resistance case studies
+- Alternative media strategies
+- Educational resources and downloads
+
+The handbook is built with:
+- Bootstrap 5 framework
+- FontAwesome icons
+- Responsive design
+- Downloadable content via Gumroad
+
+## 🔧 Development Commands
+
+### Composer
+```bash
+composer install          # Install dependencies
+composer update           # Update dependencies
+composer test             # Run code standards check
+```
+
+### WP-CLI
+```bash
+wp plugin list           # List installed plugins
+wp theme list            # List available themes
+wp db export backup.sql  # Export database
+wp search-replace old.com new.com  # Update URLs
+```
+
+### Code Standards
+```bash
+./vendor/bin/phpcs       # Check code standards
+./vendor/bin/phpcbf      # Fix code standards
+```
+
+## 🔒 Security Features
+
+- SSL enforcement for admin and frontend
+- File editing disabled in production
+- Secure password hashing with bcrypt
+- Wordfence security monitoring
+- Login attempt limiting
+- File modification restrictions
+- Jetpack security features
+
+## 🚀 Performance Optimization
+
+- LiteSpeed Cache integration
+- Image optimization and WebP support
+- CSS/JS minification and concatenation
+- Database optimization tools
+- CDN integration (Cloudflare)
+- Object caching support
+- Lazy loading for images
+
+## 🌍 Deployment
+
+### Staging/Production
+1. Set appropriate `WP_ENV` in `.env`
+2. Configure production database
+3. Set up SSL certificates
+4. Configure caching (Redis/Memcached)
+5. Set up automated backups
+6. Configure monitoring and alerts
+
+### Environment Variables
+- `WP_ENV=production` - Disables debug, enables optimizations
+- `WP_ENV=staging` - Staging environment settings
+- `WP_ENV=development` - Enables debug, allows file modifications
+
+## 📊 Analytics & Monitoring
+
+- Google Analytics 4 integration
+- Google Site Kit for webmaster tools
+- Custom post view tracking
+- WordPress health monitoring
+- Performance monitoring via plugins
+- Error logging and reporting
+
+## 🤝 Contributing
+
+1. Follow PSR-2 coding standards
+2. Test changes in development environment
+3. Use semantic commit messages
+4. Update documentation as needed
+5. Run code standards checks before committing
+
+### Code Standards
+- PHP: PSR-2
+- WordPress: WordPress Coding Standards
+- CSS: BEM methodology recommended
+- JavaScript: ES6+ with proper linting
+
+## 📚 Resources
+
+- [Roots Bedrock Documentation](https://roots.io/docs/bedrock/)
+- [WordPress Developer Handbook](https://developer.wordpress.org/)
+- [Blaskan Theme Documentation](https://github.com/blaskan/blaskan)
+- [Media Activist's Handbook](./web/handbook/)
+
+## 📝 License
+
+This project is licensed under the MIT License. See individual plugin and theme licenses for their respective terms.
+
+## 🆘 Support & Troubleshooting
+
+### Common Issues
+- Ensure web server document root points to `web/` directory
+- Check `.env` file configuration
+- Verify file permissions for uploads directory
+- Use Health Check plugin for WordPress issues
+
+### Debug Mode
+Set `WP_ENV=development` in `.env` to enable:
+- Error display and logging
+- Script debugging
+- Query debugging
+- File modification permissions
+
+### Getting Help
+- Check the `.agent.md` file for detailed development guidelines
+- Review WordPress and Bedrock documentation
+- Use WP-CLI for command-line troubleshooting
+- Enable troubleshooting mode via Health Check plugin
