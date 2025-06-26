@@ -78,9 +78,6 @@
 3. Begin WordPress.com API service implementation
 
 ### Discovered During Work:
-- Format `frontend-app/src/content/support.md`
-- Format `frontend-app/src/content/case.md`
-- Format `frontend-app/src/content/publish.md`
 - Format `frontend-app/src/content/environment.md` (special handling for blog content, link verification, and WordPress card format)
 
 **Blockers**:
@@ -104,6 +101,10 @@
 - **Styling Integration**: additional.css integrated with custom styling
 - **Sample Pages**: Blog and Components showcase pages created
 - **Site Structure**: Reorganized with blog as front page, matching WordPress configuration
+- **Formatted `about` page**: Extracted content to markdown, used react-markdown
+- **Formatted `support` page**: Extracted content to markdown, used react-markdown
+- **Formatted `case` page**: Extracted content to markdown, used react-markdown, handled download links and embeds
+- **Formatted `republish` page**: Extracted content to markdown, used react-markdown, resolved routing issue
 
 ### 📊 Time Tracking
 - **Planned**: 32h
@@ -126,23 +127,38 @@
 ## 🔄 Next Sprint Planning
 
 ### Upcoming Tasks (Week 2)
-1. **Enhance WordPress.com API Integration**
+1. **Implement the site-specific pages**
+   - Case page
+     -- Format `frontend-app/src/content/case.md`
+     -- Hosting of pdf downloads need to be resolved.
+   - Environment page
+     -- Format `frontend-app/src/content/environment.md`
+     -- Cards for individual articles, we need to check links are available via our API
+   - Support page
+     -- Format `frontend-app/src/content/support.md`
+   - About page
+     -- Format `frontend-app/src/content/about.md`
+   - Republish page
+     -- Format `frontend-app/src/content/republish.md`
+   - Include header and footer on all pages
+
+2. **Enhance WordPress.com API Integration**
    - Implement pagination with headers
    - Add category and tag filtering
    - Optimize data fetching
 
-2. **Advanced Component Development**
+3. **Advanced Component Development**
    - Single post page
    - Category and tag pages
    - Author page
    - Search functionality
 
-3. **Handbook Integration**
+4. **Handbook Integration**
    - Static handbook integration (Phase 1)
    - Handbook navigation
    - Handbook styling
 
-4. **Deployment Setup**
+5. **Deployment Setup**
    - Vercel configuration
    - Environment variables
    - Cloudflare backup
