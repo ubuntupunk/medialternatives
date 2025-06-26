@@ -19,7 +19,7 @@ const Footer: React.FC<FooterProps> = ({
         <div className="container">
           <div className="row">
             <div className="copyright-info col-md-6 col-sm-12">
-              <Link href="https://netbones.co.za/">Proudly powered by Netbones South Africa</Link>
+              <Link href="https://netbones.co.za/" className="text-nowrap">Proudly powered by Netbones South Africa</Link>
               <span className="sep"> | </span>
               {copyrightText || defaultCopyrightText}
             </div>
