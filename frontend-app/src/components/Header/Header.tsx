@@ -11,8 +11,7 @@ import { SITE_CONFIG } from '@/lib/constants';
 const Header: React.FC<HeaderProps> = ({
   siteTitle = SITE_CONFIG.SITE_TITLE,
   siteDescription = SITE_CONFIG.SITE_DESCRIPTION,
-  showSearch = true,
-  showSocialMenu = true
+  showSearch = true
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -30,27 +29,9 @@ const Header: React.FC<HeaderProps> = ({
     <header id="masthead" className="site-header" role="banner">
       <div className="site-branding">
         <div className="top-header container">
-          {showSocialMenu && (
-            <div className="blaskan-social-menu pull-right">
-              {/* Social menu will be implemented later */}
-              <nav className="social-navigation">
-                <ul id="social-menu" className="menu">
-                  <li className="menu-item">
-                    <a href="#" target="_blank" rel="noopener noreferrer">
-                      <span>Twitter</span>
-                    </a>
-                  </li>
-                  <li className="menu-item">
-                    <a href="#" target="_blank" rel="noopener noreferrer">
-                      <span>Facebook</span>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          )}
+          {/* Social menu will be implemented later */}
           
-          {showSearch && (
+          {/* {showSearch && (
             <div className="search-header-form-container pull-right">
               <div id="search-header-form" className="search">
                 <form role="search" method="get" className="search-form" action="/">
@@ -61,19 +42,19 @@ const Header: React.FC<HeaderProps> = ({
                 </form>
               </div>
             </div>
-          )}
+          )} */}
           
           <div className="clearfix"></div>
         </div>
 
-        <div className="container">
-          <h1 className="site-title">
+        <div className="container pt-5">
+          <h1 className="site-title text-center">
             <Link href="/" rel="home">
               {siteInfo.title}
             </Link>
           </h1>
           
-          <p className="site-description">
+          <p className="site-description text-center">
             {siteInfo.description}
           </p>
         </div>
