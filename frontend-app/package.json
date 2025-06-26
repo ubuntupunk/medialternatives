@@ -15,6 +15,7 @@
   "dependencies": {
     "@types/bootstrap": "^5.2.10",
     "bootstrap": "5",
+    "html-react-parser": "^5.2.5",
     "next": "15.3.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

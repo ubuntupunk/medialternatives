@@ -65,6 +65,7 @@
 | Create sample pages | ✅ Done | Dev Team | 2h | 1h | Blog and components showcase |
 | Reorganize site structure | ✅ Done | Dev Team | 1h | 0.5h | Blog as front page, about page created |
 | Update site branding | ✅ Done | Dev Team | 0.5h | 0.5h | Hardcoded title and subtitle |
+| Format about/page.tsx | ✅ Done | Dev Team | 2h | 2h | Extracted content to markdown, used react-markdown |
 
 ---
 
@@ -75,6 +76,12 @@
 1. Complete WordPress content export and migration to WordPress.com
 2. Initialize Next.js project with proper configuration
 3. Begin WordPress.com API service implementation
+
+### Discovered During Work:
+- Format `frontend-app/src/content/support.md`
+- Format `frontend-app/src/content/case.md`
+- Format `frontend-app/src/content/publish.md`
+- Format `frontend-app/src/content/environment.md` (special handling for blog content, link verification, and WordPress card format)
 
 **Blockers**:
 - Need access to current WordPress site for content export
