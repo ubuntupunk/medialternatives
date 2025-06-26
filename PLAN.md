@@ -29,9 +29,23 @@ This document outlines the plan to recreate our WordPress site using WordPress.c
 ```css
 --color-primary: #24221D;
 --color-secondary: #BCBCBC;
---color-background: #fff;
+--color-background: #e3e3e3; /* From additional.css */
 --color-text: #333;
+--color-link: #0031FF; /* From additional.css */
+--color-link-visited: #B800FF; /* From additional.css */
+--color-link-hover: blueviolet; /* From additional.css */
 ```
+
+### Additional CSS Customizations
+The project includes an `additional.css` file in the root directory that contains important customizations:
+- Custom typography settings (Revalia for site title, Quattrocento for description, Copse for content)
+- Background color (#e3e3e3)
+- Link colors (blue, purple when visited)
+- Button styling
+- Widget formatting
+- Tag cloud styling with colored tags
+- Quote block styling
+- AdSense styling
 
 ## Technology Stack Recommendation
 

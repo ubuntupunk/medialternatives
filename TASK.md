@@ -37,6 +37,7 @@
 | Create API service layer | ✅ Done | Dev Team | 2h | 2h | Full WordPress.com API integration |
 | Create utility functions | ✅ Done | Dev Team | 1h | 1h | Helpers for dates, text, etc. |
 | Configure Next.js settings | ✅ Done | Dev Team | 0.5h | 0.5h | Image optimization, security headers |
+| Integrate additional.css | ✅ Done | Dev Team | 0.5h | 0.5h | Custom styling from original site |
 
 ### Phase 3: Core API Integration
 | Task | Status | Assignee | Estimate | Actual | Notes |

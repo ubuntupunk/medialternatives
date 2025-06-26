@@ -19,6 +19,17 @@ export const SITE_CONFIG = {
   EXCERPT_LENGTH: 150
 } as const;
 
+// Theme Colors (from additional.css)
+export const THEME_COLORS = {
+  BACKGROUND: '#e3e3e3',
+  LINK: '#0031FF',
+  LINK_HOVER: 'blueviolet',
+  LINK_VISITED: '#B800FF',
+  BUTTON_BG: '#04AA6D',
+  BUTTON_TEXT: '#00e7ff',
+  FOOTER_TEXT: '#8B008B'
+} as const;
+
 // Layout Configuration
 export const LAYOUT_CONFIG = {
   MAIN_COLUMN_CLASS: 'col-md-8 col-sm-12',

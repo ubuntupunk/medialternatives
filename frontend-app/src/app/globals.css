@@ -5,6 +5,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Copse&family=Quattrocento:wght@400;700&family=Revalia&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Quicksand:700|Roboto:400,400i,700&display=swap');
 
+/* Import additional custom styles from original site */
+@import '../styles/additional.css';
+
 /* CSS Custom Properties */
 :root {
   /* Main Site Fonts */
@@ -16,15 +19,23 @@
   --font-handbook-heading: 'Quicksand', sans-serif;
   --font-handbook-body: 'Roboto', sans-serif;
   
-  /* Colors from Blaskan theme */
+  /* Colors from Blaskan theme and additional.css */
   --color-primary: #24221D;
   --color-secondary: #BCBCBC;
-  --color-background: #fff;
+  --color-background: #e3e3e3; /* From additional.css */
   --color-text: #333;
+  --color-link: #0031FF; /* From additional.css */
+  --color-link-hover: blueviolet; /* From additional.css */
+  --color-link-visited: #B800FF; /* From additional.css */
+  --color-button-bg: #04AA6D; /* From additional.css */
+  --color-button-text: #00e7ff; /* From additional.css */
+  --color-footer-text: #8B008B; /* From additional.css */
   
   /* Bootstrap overrides */
   --bs-primary: #24221D;
   --bs-secondary: #BCBCBC;
+  --bs-link-color: var(--color-link);
+  --bs-link-hover-color: var(--color-link-hover);
 }
 
 /* Global Typography */
