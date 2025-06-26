@@ -12,15 +12,22 @@ import { wordpressApi } from '@/services/wordpress-api';
  */
 const AuthorWidget: React.FC<AuthorWidgetProps> = ({
   authorId,
+  author: initialAuthor, // Renamed to avoid conflict with state
   title = 'About Author',
   showSocialMenu = true
 }) => {
-  const [author, setAuthor] = useState<WordPressUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [author, setAuthor] = useState<WordPressUser | null>(initialAuthor || null);
+  const [isLoading, setIsLoading] = useState(!initialAuthor);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchAuthor = async () => {
+      if (initialAuthor) {
+        setAuthor(initialAuthor);
+        setIsLoading(false);
+        return;
+      }
+
       if (!authorId) {
         setIsLoading(false);
         return;
@@ -39,7 +46,7 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
     };
 
     fetchAuthor();
-  }, [authorId]);
+  }, [authorId, initialAuthor]);
 
   if (isLoading) {
     return <div className="widget author-widget">Loading author information...</div>;

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { PostCardProps } from '@/types';
 import { formatDate, createExcerpt, getFeaturedImageUrl, getPostAuthor, decodeHtmlEntities } from '@/utils/helpers';
 import { LAYOUT_CONFIG } from '@/lib/constants';
+import AuthorWidget from '@/components/Widgets/AuthorWidget';
 
 /**
  * Regular post card component for grid display
@@ -50,14 +51,7 @@ const PostCard: React.FC<PostCardProps> = ({
             )}
             
             {showAuthor && author && (
-              <span className="byline">
-                {' by '}
-                <span className="author vcard">
-                  <Link href={`/author/${author.slug}`}>
-                    {author.name}
-                  </Link>
-                </span>
-              </span>
+              <AuthorWidget author={author} showSocialMenu={false} title="" />
             )}
           </div>
         )}

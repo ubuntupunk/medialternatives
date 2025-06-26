@@ -27,12 +27,11 @@ export interface FooterProps {
 }
 
 // AdSense component types
-export interface AdSenseWidgetProps {
-  adSlot?: string;
-  adClient?: string;
-  adFormat?: string;
-  adLayout?: string;
-  className?: string;
+export interface AuthorWidgetProps {
+  authorId?: number;
+  author?: WordPressUser; // Add this line
+  title?: string;
+  showSocialMenu?: boolean;
 }
 
 // Search component types
@@ -99,4 +98,19 @@ declare global {
   interface Window {
     adsbygoogle: any[];
   }
+}
+
+export interface AuthorWidgetProps {
+  authorId?: number;
+  author?: WordPressUser; // Add this line
+  title?: string;
+  showSocialMenu?: boolean;
+}
+
+export interface AdSenseWidgetProps {
+  adSlot?: string;
+  adClient?: string;
+  adFormat?: string;
+  adLayout?: string;
+  className?: string;
 }
