@@ -1,7 +1,10 @@
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
 import { LayoutProps } from '@/types';
 import { LAYOUT_CONFIG } from '@/lib/constants';
 import Header from '../Header/Header';
+import Navigation from '../Header/Navigation';
 import CustomHeader from '../Header/CustomHeader';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
@@ -15,10 +18,17 @@ const Layout: React.FC<LayoutProps> = ({
   className = '',
   showSidebar = true
 }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <div id="page" className="site">
-      <Header />
+      <Header isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
       <CustomHeader />
+      <Navigation isMenuOpen={isMenuOpen} />
       
       <div id="content" className="site-content container">
         <div id="primary" className="content-area row">
