@@ -32,6 +32,12 @@ const nextConfig: NextConfig = {
         hostname: 'placeholder.co',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.creativecommons.org',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
