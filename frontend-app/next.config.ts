@@ -26,6 +26,12 @@ const nextConfig: NextConfig = {
         hostname: 'davidrobertlewis5.wordpress.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'placeholder.co',
+        port: '',
+        pathname: '/**',
       }
     ],
   },

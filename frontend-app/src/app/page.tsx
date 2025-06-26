@@ -49,9 +49,9 @@ export default function Home() {
                   <p className="card-text">
                     Main blog interface with posts from WordPress.com.
                   </p>
-                  <button className="btn btn-secondary" disabled>
-                    Coming Soon
-                  </button>
+                  <Link href="/blog" className="btn btn-primary">
+                    View Blog
+                  </Link>
                 </div>
               </div>
             </div>
@@ -63,9 +63,9 @@ export default function Home() {
                   <p className="card-text">
                     UI components showcase and testing.
                   </p>
-                  <button className="btn btn-secondary" disabled>
-                    Coming Soon
-                  </button>
+                  <Link href="/components" className="btn btn-primary">
+                    View Components
+                  </Link>
                 </div>
               </div>
             </div>
@@ -89,10 +89,10 @@ export default function Home() {
                 </div>
               </div>
               <div className="col-md-3">
-                <div className="text-warning">
+                <div className="text-success">
                   <strong>Components</strong>
                   <br />
-                  <small>In development</small>
+                  <small>Basic components created</small>
                 </div>
               </div>
               <div className="col-md-3">
