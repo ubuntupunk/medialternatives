@@ -62,6 +62,7 @@ const AdSenseWidget: React.FC<AdSenseWidgetProps> = ({
         }}
         data-ad-layout={adLayout}
         data-ad-format={adFormat}
+        data-full-width-responsive="true"
         data-ad-client={adClient}
         data-ad-slot={adSlot}
       />

@@ -5,6 +5,7 @@ import CategoryCloud from '../Widgets/CategoryCloud';
 import AuthorWidget from '../Widgets/AuthorWidget';
 import AdSenseWidget from '../Widgets/AdSenseWidget';
 import DonateWidget from '../Widgets/DonateWidget';
+import WebringWidget from '../Widgets/WebringWidget';
 
 /**
  * Sidebar component that displays widgets
@@ -18,7 +19,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     <AuthorWidget key="author" authorId={1} />,
     <CategoryCloud key="categories" />,
     <AdSenseWidget key="adsense" />,
-    <DonateWidget key="donate" paypalEmail={process.env.NEXT_PUBLIC_PAYPAL_EMAIL || ''} />
+    <DonateWidget key="donate" paypalHostedButtonId={process.env.NEXT_PUBLIC_PAYPAL_HOSTED_BUTTON_ID || ''} />,
+    <WebringWidget key="webring" />
   ];
 
   return (

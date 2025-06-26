@@ -112,6 +112,11 @@ export interface AdSenseWidgetProps {
 
 export interface DonateWidgetProps {
   title?: string;
-  paypalEmail: string;
+  paypalHostedButtonId: string;
   buttonText?: string;
+}
+
+export interface WebringWidgetProps {
+  title?: string;
+  webringUrl?: string;
 }
