@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { HeaderProps } from '@/types';
 import { SITE_CONFIG } from '@/lib/constants';
 
 /**
@@ -11,15 +10,11 @@ import { SITE_CONFIG } from '@/lib/constants';
 interface HeaderProps {
   siteTitle?: string;
   siteDescription?: string;
-  isMenuOpen: boolean;
-  toggleMenu: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
   siteTitle = SITE_CONFIG.SITE_TITLE,
   siteDescription = SITE_CONFIG.SITE_DESCRIPTION,
-  isMenuOpen,
-  toggleMenu
 }) => {
   // Use hardcoded site info instead of fetching from API
   const siteInfo = {
@@ -48,17 +43,6 @@ const Header: React.FC<HeaderProps> = ({
           </p>
         </div>
       </div>
-{/* 
-      <nav id="site-navigation" className="main-navigation container" role="navigation">
-        <button 
-          className="menu-toggle" 
-          aria-controls="primary-menu"
-          aria-expanded={isMenuOpen}
-          onClick={toggleMenu}
-        >
-          Menu
-        </button>
-      </nav> */}
     </header>
   );
 };

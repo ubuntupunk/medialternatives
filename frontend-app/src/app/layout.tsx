@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SITE_CONFIG } from "@/lib/constants";
+import Layout from "@/components/Layout/Layout"; // Import the custom Layout component
 
 export const metadata: Metadata = {
   title: {
@@ -39,7 +40,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
+        <Layout>
+          {children}
+        </Layout>
       </body>
     </html>
   );

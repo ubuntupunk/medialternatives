@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import { LayoutProps } from '@/types';
 import { LAYOUT_CONFIG } from '@/lib/constants';
 import Header from '../Header/Header';
@@ -14,17 +14,11 @@ const Layout: React.FC<LayoutProps> = ({
   className = '',
   showSidebar = true
 }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
   return (
     <div id="page" className="site">
-      <Header isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+      <Header />
       <CustomHeader />
-      <Navbar isMenuOpen={isMenuOpen} />
+      <Navbar />
       
       <div id="content" className="site-content container">
         <div id="primary" className="content-area row">
