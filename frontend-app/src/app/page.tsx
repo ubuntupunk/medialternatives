@@ -1,5 +1,4 @@
 import React from 'react';
-import Layout from '@/components/Layout/Layout';
 import PostGrid from '@/components/Posts/PostGrid';
 import Pagination from '@/components/UI/Pagination';
 import { wordpressApi } from '@/services/wordpress-api';
@@ -32,7 +31,7 @@ export default async function Home() {
   const totalPages = 5; // In a real implementation, we would get this from API headers
 
   return (
-    <Layout>
+    <>
       {error && (
         <div className="alert alert-warning mb-4">
           <strong>API Error:</strong> {error}
@@ -52,6 +51,6 @@ export default async function Home() {
           />
         </>
       )}
-    </Layout>
+    </>
   );
 }
