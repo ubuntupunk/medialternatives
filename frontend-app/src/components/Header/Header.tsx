@@ -1,45 +1,26 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { HeaderProps } from '@/types';
-import { wordpressApi } from '@/services/wordpress-api';
+import { SITE_CONFIG } from '@/lib/constants';
 
 /**
  * Header component with site branding, navigation and search
  */
 const Header: React.FC<HeaderProps> = ({
-  siteTitle,
-  siteDescription,
+  siteTitle = SITE_CONFIG.SITE_TITLE,
+  siteDescription = SITE_CONFIG.SITE_DESCRIPTION,
   showSearch = true,
   showSocialMenu = true
 }) => {
-  const [siteInfo, setSiteInfo] = useState({
-    title: siteTitle || '',
-    description: siteDescription || ''
-  });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Fetch site info if not provided as props
-  useEffect(() => {
-    if (!siteTitle || !siteDescription) {
-      const fetchSiteInfo = async () => {
-        try {
-          const info = await wordpressApi.getSiteInfo();
-          if (info) {
-            setSiteInfo({
-              title: info.name,
-              description: info.description
-            });
-          }
-        } catch (error) {
-          console.error('Error fetching site info:', error);
-        }
-      };
-      
-      fetchSiteInfo();
-    }
-  }, [siteTitle, siteDescription]);
+  // Use hardcoded site info instead of fetching from API
+  const siteInfo = {
+    title: siteTitle,
+    description: siteDescription
+  };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);

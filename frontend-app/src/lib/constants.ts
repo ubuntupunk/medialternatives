@@ -16,7 +16,9 @@ export const GOOGLE_ANALYTICS_ID = 'G-CZNQG5YM3Z';
 export const SITE_CONFIG = {
   POSTS_PER_PAGE: 10,
   CATEGORIES_PER_PAGE: 50,
-  EXCERPT_LENGTH: 150
+  EXCERPT_LENGTH: 150,
+  SITE_TITLE: 'Medialternatives',
+  SITE_DESCRIPTION: 'Reaching out from the Global South'
 } as const;
 
 // Theme Colors (from additional.css)

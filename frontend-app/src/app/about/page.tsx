@@ -6,9 +6,9 @@ export default function About() {
     <div className="container mt-5">
       <div className="row">
         <div className="col-12">
-          <h1 className="mb-4">About This Project</h1>
+          <h1 className="mb-4">About Medialternatives</h1>
           <p className="lead">
-            WordPress.com Headless CMS Migration - A modern React/Next.js frontend consuming content from WordPress.com via their public API.
+            Reaching out from the Global South - A modern React/Next.js frontend consuming content from WordPress.com via their public API.
           </p>
         </div>
       </div>
