@@ -97,34 +97,7 @@ a {
   background-repeat: no-repeat;
 }
 
-/* Responsive menu styles */
-.menu-toggle {
-  display: none; /* Hide by default */
-}
 
-@media (max-width: 768px) {
-  .menu-toggle {
-    display: block; /* Show on mobile */
-  }
-
-  .blaskan-main-menu {
-    display: none; /* Hide menu by default on mobile */
-  }
-
-  .blaskan-main-menu.active {
-    display: block; /* Show when active */
-  }
-
-  .main-navigation ul {
-    flex-direction: column;
-  }
-}
-
-@media (min-width: 769px) {
-  .blaskan-main-menu {
-    display: block !important; /* Always show on desktop */
-  }
-}
 
 /* Pagination styling (from Blaskan-child) */
 .page_nav .page-numbers {

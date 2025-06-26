@@ -36,8 +36,26 @@
   display: block; /* Show when active */
 }
 
+.menu-toggle {
+  display: none; /* Hide by default */
+}
+
 @media (min-width: 769px) {
   .blaskanMainMenu {
     display: block !important; /* Always show on desktop */
+  }
+
+  .menu {
+    flex-direction: row; /* Ensure horizontal on desktop */
+  }
+}
+
+@media (max-width: 768px) {
+  .menu {
+    flex-direction: column; /* Stack vertically on mobile */
+  }
+
+  .menu-toggle {
+    display: block; /* Show on mobile */
   }
 }

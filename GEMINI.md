@@ -4,6 +4,10 @@
 
 This is a **headless CMS project** migrating from a WordPress site to a modern React/Next.js frontend consuming content from **WordPress.com** via their public API. The site is focused on media activism and will maintain the existing design and functionality while improving performance and developer experience.
 
+## Special Instructions
+Please read TASK.md, .windsurfrules, and .windsurfconfig for more information on the project.
+When a task is complete, mark it as complete in TASK.md, if the task is not complete, mark it as in progress, add it if it is not in the list.
+
 ### Key Technologies
 - **Frontend**: React 18 + Next.js 14 + TypeScript
 - **Styling**: Bootstrap 5 + CSS Modules
