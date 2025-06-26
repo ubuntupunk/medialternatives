@@ -48,7 +48,7 @@ const Header: React.FC<HeaderProps> = ({
           </p>
         </div>
       </div>
-
+{/* 
       <nav id="site-navigation" className="main-navigation container" role="navigation">
         <button 
           className="menu-toggle" 
@@ -58,7 +58,7 @@ const Header: React.FC<HeaderProps> = ({
         >
           Menu
         </button>
-      </nav>
+      </nav> */}
     </header>
   );
 };

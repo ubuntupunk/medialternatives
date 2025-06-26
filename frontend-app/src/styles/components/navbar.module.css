@@ -1,0 +1,13 @@
+.navbar {
+  justify-content: center;
+  background-color: #e3e3e3 !important; /* Match body background */
+  font-family: 'Revalia', serif !important;
+  text-align: center;
+}
+
+.navbar-nav .nav-link {
+  font-family: 'Revalia', serif !important;
+  font-size: 18px;
+  color: #000;
+  text-shadow: 0 0 6px #FFF;
+}
