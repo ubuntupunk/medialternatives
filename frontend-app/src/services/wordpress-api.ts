@@ -78,6 +78,21 @@ class WordPressAPIService {
             message: `HTTP ${response.status}: ${response.statusText}`
           }));
           
+          // Log the error for debugging
+          console.error('WordPress API Error:', {
+            endpoint,
+            status: response.status,
+            message: errorData.message,
+            code: errorData.code
+          });
+          
+          // For authentication errors, provide more helpful message
+          if (response.status === 401 || 
+              errorData.message?.includes('authentication') || 
+              errorData.code === 'rest_not_logged_in') {
+            throw new Error(`WordPress.com API requires authentication for this endpoint. The site may not be properly configured yet.`);
+          }
+          
           throw new Error(`API Error: ${errorData.message}`);
         }
 

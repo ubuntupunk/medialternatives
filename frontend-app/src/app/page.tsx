@@ -1,111 +1,57 @@
-import Link from "next/link";
+import React from 'react';
+import Layout from '@/components/Layout/Layout';
+import PostGrid from '@/components/Posts/PostGrid';
+import Pagination from '@/components/UI/Pagination';
+import { wordpressApi } from '@/services/wordpress-api';
+import { SITE_CONFIG } from '@/lib/constants';
+import { WordPressPost } from '@/types/wordpress';
+import { mockPosts } from '@/utils/mockData';
 
-export default function Home() {
+// This is a server component that fetches data on the server
+export default async function Home() {
+  let posts: WordPressPost[] = [];
+  let error = null;
+  
+  try {
+    // Fetch real posts from WordPress.com API
+    posts = await wordpressApi.getPosts({ 
+      per_page: SITE_CONFIG.POSTS_PER_PAGE,
+      _embed: true
+    });
+  } catch (err) {
+    console.error('Error fetching posts:', err);
+    error = err instanceof Error ? err.message : 'Unknown error fetching posts';
+    
+    // Fallback to mock data if API fails
+    posts = mockPosts;
+  }
+
+  // Get page information
+  const currentPage = 1;
+  // Calculate total pages based on post count or use default
+  const totalPages = 5; // In a real implementation, we would get this from API headers
+
   return (
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-8">
-          <div className="text-center mb-5">
-            <h1 className="display-4 font-display">WordPress.com Headless CMS</h1>
-            <p className="lead">Migration Project - Development Environment</p>
-          </div>
-
-          <div className="row">
-            <div className="col-md-6 mb-4">
-              <div className="card h-100">
-                <div className="card-body">
-                  <h5 className="card-title">API Testing</h5>
-                  <p className="card-text">
-                    Test the WordPress.com API integration and verify data connectivity.
-                  </p>
-                  <Link href="/api-test" className="btn btn-primary me-2">
-                    Test Real API
-                  </Link>
-                  <Link href="/api-test-mock" className="btn btn-outline-primary">
-                    Mock Data
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-md-6 mb-4">
-              <div className="card h-100">
-                <div className="card-body">
-                  <h5 className="card-title">Handbook</h5>
-                  <p className="card-text">
-                    Media Activist's Handbook (to be integrated).
-                  </p>
-                  <button className="btn btn-secondary" disabled>
-                    Coming Soon
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-md-6 mb-4">
-              <div className="card h-100">
-                <div className="card-body">
-                  <h5 className="card-title">Blog Posts</h5>
-                  <p className="card-text">
-                    Main blog interface with posts from WordPress.com.
-                  </p>
-                  <Link href="/blog" className="btn btn-primary">
-                    View Blog
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-md-6 mb-4">
-              <div className="card h-100">
-                <div className="card-body">
-                  <h5 className="card-title">Components</h5>
-                  <p className="card-text">
-                    UI components showcase and testing.
-                  </p>
-                  <Link href="/components" className="btn btn-primary">
-                    View Components
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-5 text-center">
-            <h3>Project Status</h3>
-            <div className="row mt-3">
-              <div className="col-md-3">
-                <div className="text-success">
-                  <strong>Setup Complete</strong>
-                  <br />
-                  <small>Next.js + TypeScript + Bootstrap</small>
-                </div>
-              </div>
-              <div className="col-md-3">
-                <div className="text-success">
-                  <strong>API Service</strong>
-                  <br />
-                  <small>WordPress.com integration</small>
-                </div>
-              </div>
-              <div className="col-md-3">
-                <div className="text-success">
-                  <strong>Components</strong>
-                  <br />
-                  <small>Basic components created</small>
-                </div>
-              </div>
-              <div className="col-md-3">
-                <div className="text-secondary">
-                  <strong>Deployment</strong>
-                  <br />
-                  <small>Pending</small>
-                </div>
-              </div>
-            </div>
-          </div>
+    <Layout>
+      {error && (
+        <div className="alert alert-warning mb-4">
+          <strong>API Error:</strong> {error}
+          <p>Displaying fallback mock data.</p>
         </div>
-      </div>
-    </div>
+      )}
+      
+      {posts.length === 0 ? (
+        <div className="alert alert-info">No posts found.</div>
+      ) : (
+        <>
+          <PostGrid posts={posts} showFeatured={true} />
+          <Pagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            baseUrl="/"
+          />
+        </>
+      )}
+    </Layout>
   );
 }

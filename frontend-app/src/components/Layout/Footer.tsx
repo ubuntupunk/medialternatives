@@ -11,7 +11,7 @@ const Footer: React.FC<FooterProps> = ({
   copyrightText
 }) => {
   const year = new Date().getFullYear();
-  const defaultCopyrightText = `© ${year} - Powered by Next.js and WordPress.com`;
+  const defaultCopyrightText = `© 2005-${year}`;
   
   return (
     <footer id="colophon" className={`site-footer ${className}`} role="contentinfo">
@@ -19,7 +19,7 @@ const Footer: React.FC<FooterProps> = ({
         <div className="container">
           <div className="row">
             <div className="copyright-info col-md-6 col-sm-12">
-              <Link href="https://wordpress.org/">Proudly powered by WordPress</Link>
+              <Link href="https://netbones.co.za/">Proudly powered by Netbones South Africa</Link>
               <span className="sep"> | </span>
               {copyrightText || defaultCopyrightText}
             </div>
@@ -29,13 +29,16 @@ const Footer: React.FC<FooterProps> = ({
                 <nav className="footer-navigation">
                   <ul id="footer-menu" className="menu">
                     <li className="menu-item">
-                      <Link href="/">Home</Link>
+                      <Link href="/">Blog</Link>
                     </li>
                     <li className="menu-item">
                       <Link href="/about">About</Link>
                     </li>
                     <li className="menu-item">
                       <Link href="/handbook">Handbook</Link>
+                    </li>
+                    <li className="menu-item">
+                      <Link href="/components">Components</Link>
                     </li>
                     <li className="menu-item">
                       <Link href="/contact">Contact</Link>

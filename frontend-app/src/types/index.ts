@@ -93,3 +93,10 @@ export interface SEOProps {
   modifiedTime?: string;
   author?: string;
 }
+
+// Global window extensions
+declare global {
+  interface Window {
+    adsbygoogle: any[];
+  }
+}

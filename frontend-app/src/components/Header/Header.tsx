@@ -120,6 +120,9 @@ const Header: React.FC<HeaderProps> = ({
               <Link href="/handbook">Handbook</Link>
             </li>
             <li className="menu-item">
+              <Link href="/components">Components</Link>
+            </li>
+            <li className="menu-item">
               <Link href="/contact">Contact</Link>
             </li>
           </ul>
