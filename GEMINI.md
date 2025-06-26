@@ -6,7 +6,9 @@ This is a **headless CMS project** migrating from a WordPress site to a modern R
 
 ## Special Instructions
 Please read TASK.md, .windsurfrules, and .windsurfconfig for more information on the project.
-When a task is complete, mark it as complete in TASK.md, if the task is not complete, mark it as in progress, add it if it is not in the list.
+When a task is complete, mark it as complete in TASK.md, if the task is not complete, mark it as in progress, add it if it is not in the list. 
+After completing task, write a commit message and commit.
+Add any blockers you encounter to the sprint.
 
 ### Key Technologies
 - **Frontend**: React 18 + Next.js 14 + TypeScript
@@ -24,7 +26,7 @@ The existing WordPress Bedrock structure in this repository serves as reference 
 - `PLAN.md` - Detailed migration plan and architecture
 - `.windsurfrules` - Development standards and guidelines
 
-### New Frontend Structure (To Be Created)
+### New Frontend Structure (Created)
 ```
 frontend-app/
 ├── components/          # React components
@@ -53,13 +55,13 @@ frontend-app/
 - [x] Migration plan created (PLAN.md)
 - [x] Development standards defined (.windsurfrules)
 - [x] Project structure designed
-- [ ] Next.js project initialization
-- [ ] WordPress.com content migration
+- [x] Next.js project initialization
+- [x] WordPress.com content migration
 
 ### Phase 2: Core Components (In Progress)
-- [ ] Layout and Header components
-- [ ] WordPress.com API service layer
-- [ ] Post display components
+- [x] Layout and Header components
+- [x] WordPress.com API service layer
+- [x] Post display components
 - [ ] Navigation and routing
 
 ### Phase 3: Widgets and Features

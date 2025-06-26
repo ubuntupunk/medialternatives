@@ -24,7 +24,7 @@ const Footer: React.FC<FooterProps> = ({
               {copyrightText || defaultCopyrightText}
             </div>
             
-            {showNavigation && (
+            {/* {showNavigation && (
               <div className="main-footer-navigation col-md-6 col-sm-12">
                 <nav className="footer-navigation">
                   <ul id="footer-menu" className="menu">
@@ -46,7 +46,7 @@ const Footer: React.FC<FooterProps> = ({
                   </ul>
                 </nav>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>

@@ -1,6 +1,10 @@
 # Task Management - WordPress.com Headless CMS Migration
 
-## Current Sprint: Project Setup and Planning
+## Current Sprint: Pagination & Categorisation
+**Sprint Duration**: Week 2
+**Sprint Goal**: Develop excellent page & cateogry logic so readers can access content via linear and non-linear methods.
+
+## Sprint Completed: Project Setup and Planning
 
 **Sprint Duration**: Week 1  
 **Sprint Goal**: Complete project planning, setup development environment, and begin core component development
@@ -81,8 +85,7 @@
 - Changed CustomHeader component logic to prioritize local image: public/images/header.jpg, fallback on wordpress.com [X]
 
 **Blockers**:
-- Need access to current WordPress site for content export
-- Waiting for WordPress.com site setup completion
+- Menu component, Pagination, Categories.
 
 ---
 
@@ -107,9 +110,6 @@
 - **Formatted `republish` page**: Extracted content to markdown, used react-markdown, resolved routing issue
 - **Formatted `environment` page**: Fetched blog content, displayed as cards with placeholder images, decoded HTML entities
 
-**Blockers**:
-- Need access to current WordPress site for content export
-- Waiting for WordPress.com site setup completion
 
 ---
 
@@ -149,6 +149,9 @@
 - [x] Sample pages implemented
 - [x] WordPress.com migration completed
 
+## Milestones
+[] working pagination
+
 ---
 
 ## 🔄 Next Sprint Planning
@@ -156,40 +159,40 @@
 ### Upcoming Tasks (Week 2)
 1. **Implement the site-specific pages**
    - Case page
-     -- Format `frontend-app/src/content/case.md`
-     -- Hosting of pdf downloads need to be resolved.
+    [x] -- Format `frontend-app/src/content/case.md`
+    [] -- Hosting of pdf downloads need to be resolved.
    - Environment page
-     -- Format `frontend-app/src/content/environment.md`
-     -- Cards for individual articles, we need to check links are available via our API
+    [x]-- Format `frontend-app/src/content/environment.md`
+    [] -- Cards for individual articles, we need to check links are available via our API
    - Support page
-     -- Format `frontend-app/src/content/support.md`
+    [x]-- Format `frontend-app/src/content/support.md`
    - About page
-     -- Format `frontend-app/src/content/about.md`
+    [x] -- Format `frontend-app/src/content/about.md`
    - Republish page
-     -- Format `frontend-app/src/content/republish.md`
-   - Include header and footer on all pages
+    [x]-- Format `frontend-app/src/content/republish.md`
+   - [ ] Include header and footer on all pages
 
 2. **Enhance WordPress.com API Integration**
-   - Implement pagination with headers
-   - Add category and tag filtering
-   - Optimize data fetching
+   - [] Implement pagination with headers
+   - [] Add category and tag filtering
+   - [] Optimize data fetching
 
 3. **Advanced Component Development**
-   - Single post page
-   - Category and tag pages
-   - Author page
-   - Search functionality
+   - [] Single post page
+   - [] Category and tag pages
+   - [] Author page
+   - [] Search functionality
 
 4. **Handbook Integration**
-   - Static handbook integration (Phase 1)
-   - Handbook navigation
-   - Handbook styling
+   - [] Static handbook integration (Phase 1)
+   - [] Handbook navigation
+   - [] Handbook styling
 
 5. **Deployment Setup**
-   - Vercel configuration
-   - Environment variables
-   - Cloudflare backup
-   - Domain configuration
+   - [] Vercel configuration
+   - [] Enironment variables
+   - [] Cloudflare backup
+   - [] Domain configuration
 
 ---
 
@@ -206,7 +209,7 @@
 - **WordPress.com Limitations**: No custom post types or endpoints
 - **AdSense Integration**: Must be handled entirely in frontend
 - **Analytics**: Need to implement tracking without WordPress plugins
-- **Header Image**: May need to hardcode or use WordPress.com site info API
+- [x] **Header Image**: May need to hardcode or use WordPress.com site info API
 
 ### Solutions Implemented
 - **AdSense**: Hardcoded React components with existing ad slots
@@ -219,7 +222,7 @@
 ## 🐛 Issues and Blockers
 
 ### Current Blockers
-None - WordPress.com migration completed successfully!
+1. Menu Component (we can use mu-icon prebuilt menu?) 
 
 ### Previous Blockers (Resolved)
 1. ✅ **WordPress Content Export**: Successfully exported

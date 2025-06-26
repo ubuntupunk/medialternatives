@@ -28,7 +28,12 @@ const AdSenseWidget: React.FC<AdSenseWidgetProps> = ({
     // Push ad after script is loaded
     const pushAd = () => {
       try {
-        if (window.adsbygoogle) {
+        if (window.adsbygoogle && typeof window.adsbygoogle.push === 'function') {
+          // Clear existing ad content to prevent "already have ads" error
+          const insElement = document.querySelector(`ins.adsbygoogle[data-ad-slot="${adSlot}"]`);
+          if (insElement) {
+            insElement.innerHTML = '';
+          }
           window.adsbygoogle.push({});
         }
       } catch (error) {
@@ -37,14 +42,14 @@ const AdSenseWidget: React.FC<AdSenseWidgetProps> = ({
     };
     
     // Check if script is already loaded
-    if (window.adsbygoogle) {
+    if (typeof window !== 'undefined' && window.adsbygoogle && typeof window.adsbygoogle.push === 'function') {
       pushAd();
     } else {
       // Wait for script to load
       const scriptLoadTimer = setTimeout(pushAd, 100);
       return () => clearTimeout(scriptLoadTimer);
     }
-  }, [adClient]);
+  }, [adClient, adSlot]);
 
   return (
     <div className={`widget adsense-widget ${className}`}>

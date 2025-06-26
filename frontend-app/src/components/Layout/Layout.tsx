@@ -4,15 +4,11 @@ import React, { useState } from 'react';
 import { LayoutProps } from '@/types';
 import { LAYOUT_CONFIG } from '@/lib/constants';
 import Header from '../Header/Header';
-import Navigation from '../Header/Navigation';
 import CustomHeader from '../Header/CustomHeader';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
+import Navbar from '../Header/Navbar';
 
-/**
- * Main layout component that wraps all pages
- * Includes header, footer, and sidebar
- */
 const Layout: React.FC<LayoutProps> = ({
   children,
   className = '',
@@ -28,7 +24,7 @@ const Layout: React.FC<LayoutProps> = ({
     <div id="page" className="site">
       <Header isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
       <CustomHeader />
-      <Navigation isMenuOpen={isMenuOpen} />
+      <Navbar isMenuOpen={isMenuOpen} />
       
       <div id="content" className="site-content container">
         <div id="primary" className="content-area row">
