@@ -91,8 +91,11 @@ export function getFeaturedImageUrl(
   const featuredMedia = post._embedded?.['wp:featuredmedia']?.[0];
   
   if (!featuredMedia) {
-    return null;
+    console.log('No featured media found for post:', post.slug, 'Using placeholder image.');
+    return 'https://placeholder.co/600x400'; // Fallback placeholder image
   }
+  
+  console.log('Featured media for post:', post.slug, featuredMedia);
   
   // Try to get specific size
   if (featuredMedia.media_details?.sizes?.[size]) {
@@ -264,4 +267,27 @@ export function createUrlParams(params: Record<string, any>): URLSearchParams {
   });
   
   return urlParams;
+}
+
+/**
+ * Decode HTML entities
+ */
+export function decodeHtmlEntities(html: string): string {
+  if (typeof window !== 'undefined') {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = html;
+    return textarea.value;
+  }
+  // Server-side fallback (simplified, might not cover all entities)
+  return html
+    .replace(/&/g, '&')
+    .replace(/</g, '<')
+    .replace(/>/g, '>')
+    .replace(/"/g, '"')
+    .replace(/&#039;/g, "'")
+    .replace(/&#8216;/g, '‘')
+    .replace(/&#8217;/g, '’')
+    .replace(/&#8220;/g, '“')
+    .replace(/&#8221;/g, '”')
+    .replace(/&nbsp;/g, ' ');
 }

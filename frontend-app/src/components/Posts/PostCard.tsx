@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PostCardProps } from '@/types';
-import { formatDate, createExcerpt, getFeaturedImageUrl, getPostAuthor } from '@/utils/helpers';
+import { formatDate, createExcerpt, getFeaturedImageUrl, getPostAuthor, decodeHtmlEntities } from '@/utils/helpers';
 import { LAYOUT_CONFIG } from '@/lib/constants';
 
 /**
@@ -63,16 +63,13 @@ const PostCard: React.FC<PostCardProps> = ({
         )}
         
         <h2 className="entry-title">
-          <Link href={`/post/${post.slug}`} dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+          <Link href={`/post/${post.slug}`} dangerouslySetInnerHTML={{ __html: decodeHtmlEntities(post.title.rendered) }} />
         </h2>
       </header>
       
       {showExcerpt && excerpt && (
         <div className="entry-content">
-          <p>{excerpt}</p>
-          <Link href={`/post/${post.slug}`} className="more-link">
-            Continue reading
-          </Link>
+          <div dangerouslySetInnerHTML={{ __html: decodeHtmlEntities(excerpt) }} />
         </div>
       )}
     </article>
