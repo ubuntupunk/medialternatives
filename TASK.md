@@ -64,6 +64,7 @@
 | Create AdSense Widget | ✅ Done | Dev Team | 1h | 0.5h | Main and feed ad slots |
 | Create sample pages | ✅ Done | Dev Team | 2h | 1h | Blog and components showcase |
 | Reorganize site structure | ✅ Done | Dev Team | 1h | 0.5h | Blog as front page, about page created |
+| Update site branding | ✅ Done | Dev Team | 0.5h | 0.5h | Hardcoded title and subtitle |
 
 ---
 

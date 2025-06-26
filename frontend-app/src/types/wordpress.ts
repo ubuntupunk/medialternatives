@@ -225,7 +225,7 @@ export interface PostCardProps {
 }
 
 export interface CategoryCloudProps {
-  categories: WordPressCategory[];
+  categories?: WordPressCategory[];
   maxFontSize?: number;
   minFontSize?: number;
   className?: string;

@@ -7,6 +7,12 @@ import PostCard from '@/components/Posts/PostCard';
 import PostCardBig from '@/components/Posts/PostCardBig';
 import Pagination from '@/components/UI/Pagination';
 import { mockPosts, mockCategories } from '@/utils/mockData';
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Components",
+  description: "UI components showcase for Medialternatives - demonstrating React components used throughout the site.",
+};
 
 export default function ComponentsPage() {
   // Use the first mock post for demonstration

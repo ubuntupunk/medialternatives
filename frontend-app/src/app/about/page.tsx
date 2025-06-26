@@ -1,5 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About",
+  description: "Learn about Medialternatives - Reaching out from the Global South. A modern React/Next.js frontend consuming content from WordPress.com.",
+};
 
 export default function About() {
   return (
