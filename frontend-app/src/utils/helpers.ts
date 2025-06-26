@@ -65,16 +65,20 @@ export function truncateText(text: string, maxLength: number, suffix: string = '
 /**
  * Create excerpt from post content
  */
-export function createExcerpt(post: WordPressPost, maxLength: number = 150): string {
+export function createExcerpt(post: WordPressPost, maxLength: number = 300): string {
   // Use WordPress excerpt if available
   if (post.excerpt?.rendered) {
-    const excerpt = stripHtml(post.excerpt.rendered);
+    let excerpt = post.excerpt.rendered;
+    excerpt = stripHtml(excerpt); // Strip HTML first
+    excerpt = decodeHtmlEntities(excerpt); // Decode entities
     return truncateText(excerpt, maxLength);
   }
   
   // Fallback to content
   if (post.content?.rendered) {
-    const content = stripHtml(post.content.rendered);
+    let content = post.content.rendered;
+    content = stripHtml(content); // Strip HTML first
+    content = decodeHtmlEntities(content); // Decode entities
     return truncateText(content, maxLength);
   }
   

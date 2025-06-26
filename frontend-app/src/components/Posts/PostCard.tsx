@@ -31,7 +31,7 @@ const PostCard: React.FC<PostCardProps> = ({
               <div style={{ position: 'relative', width: '100%', height: '200px' }}>
                 <Image 
                   src={featuredImageUrl}
-                  alt={post.title.rendered}
+                  alt={decodeHtmlEntities(post.title.rendered)}
                   fill
                   style={{ objectFit: 'cover' }}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
