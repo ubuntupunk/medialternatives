@@ -98,7 +98,7 @@ export function getFeaturedImageUrl(
   
   if (!featuredMedia) {
     console.log('No featured media found for post:', post.slug, 'Using placeholder image.');
-    return 'https://picsum.photos/600x400'; // Fallback placeholder image
+    return 'https://picsum.photos/600/400'; // Fallback placeholder image
   }
   
   console.log('Featured media for post:', post.slug, featuredMedia);
