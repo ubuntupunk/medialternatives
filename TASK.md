@@ -78,7 +78,7 @@
 3. Begin WordPress.com API service implementation
 
 ### Discovered During Work:
-- None
+- Changed CustomHeader component logic to prioritize local image: public/images/header.jpg, fallback on wordpress.com [X]
 
 **Blockers**:
 - Need access to current WordPress site for content export

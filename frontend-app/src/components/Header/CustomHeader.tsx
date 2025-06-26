@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { wordpressApi } from '@/services/wordpress-api';
 import { HEADER_CONFIG } from '@/lib/constants';
 
 interface CustomHeaderProps {
@@ -12,37 +11,21 @@ interface CustomHeaderProps {
 
 /**
  * Custom header image component
- * Fetches header image from WordPress.com or uses fallback
+ * Uses a local header image.
  */
 const CustomHeader: React.FC<CustomHeaderProps> = ({
   imageUrl,
   height = HEADER_CONFIG.DEFAULT_HEIGHT
 }) => {
-  const [headerImage, setHeaderImage] = useState<string | null>(imageUrl || null);
+  const localHeaderImage = '/images/header.jpg'; // Path to the local header image
+  const [headerImage, setHeaderImage] = useState<string | null>(imageUrl || localHeaderImage);
 
   useEffect(() => {
-    // If no image URL is provided, try to fetch from WordPress.com
-    if (!imageUrl) {
-      const fetchHeaderImage = async () => {
-        try {
-          const siteInfo = await wordpressApi.getSiteInfo();
-          
-          if (siteInfo?.options?.header_image) {
-            setHeaderImage(siteInfo.options.header_image);
-          } else if (siteInfo?.header_image) {
-            setHeaderImage(siteInfo.header_image);
-          } else {
-            // Use fallback image
-            setHeaderImage(HEADER_CONFIG.FALLBACK_IMAGE);
-          }
-        } catch (error) {
-          console.error('Error fetching header image:', error);
-          // Use fallback image on error
-          setHeaderImage(HEADER_CONFIG.FALLBACK_IMAGE);
-        }
-      };
-      
-      fetchHeaderImage();
+    // If an imageUrl prop is provided, use it. Otherwise, default to the local image.
+    if (imageUrl) {
+      setHeaderImage(imageUrl);
+    } else {
+      setHeaderImage(localHeaderImage);
     }
   }, [imageUrl]);
 
