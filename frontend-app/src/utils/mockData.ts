@@ -41,7 +41,7 @@ export const mockPosts: WordPressPost[] = [
         date: '2023-06-15T12:00:00',
         slug: 'featured-image',
         type: 'attachment',
-        link: 'https://placeholder.co/800x400',
+        link: 'https://picsum.photos/800x400',
         title: { rendered: 'Featured Image' },
         author: 1,
         comment_status: 'open',
@@ -60,7 +60,7 @@ export const mockPosts: WordPressPost[] = [
           sizes: {},
           image_meta: {}
         },
-        source_url: 'https://placeholder.co/800x400'
+        source_url: 'https://picsum.photos/800x400'
       }]
     }
   },
@@ -104,7 +104,7 @@ export const mockPosts: WordPressPost[] = [
         date: '2023-06-10T10:00:00',
         slug: 'featured-image-2',
         type: 'attachment',
-        link: 'https://placeholder.co/800x400',
+        link: 'https://picsum.photos/800x400',
         title: { rendered: 'Featured Image 2' },
         author: 1,
         comment_status: 'open',
@@ -123,7 +123,7 @@ export const mockPosts: WordPressPost[] = [
           sizes: {},
           image_meta: {}
         },
-        source_url: 'https://placeholder.co/800x400'
+        source_url: 'https://picsum.photos/800x400'
       }]
     }
   }

@@ -71,6 +71,7 @@ export function createExcerpt(post: WordPressPost, maxLength: number = 300): str
     let excerpt = post.excerpt.rendered;
     excerpt = stripHtml(excerpt); // Strip HTML first
     excerpt = decodeHtmlEntities(excerpt); // Decode entities
+    console.log('Processed excerpt:', excerpt); // Add console.log
     return truncateText(excerpt, maxLength);
   }
   
@@ -79,6 +80,7 @@ export function createExcerpt(post: WordPressPost, maxLength: number = 300): str
     let content = post.content.rendered;
     content = stripHtml(content); // Strip HTML first
     content = decodeHtmlEntities(content); // Decode entities
+    console.log('Processed content excerpt:', content); // Add console.log
     return truncateText(content, maxLength);
   }
   
@@ -96,7 +98,7 @@ export function getFeaturedImageUrl(
   
   if (!featuredMedia) {
     console.log('No featured media found for post:', post.slug, 'Using placeholder image.');
-    return 'https://placeholder.co/600x400'; // Fallback placeholder image
+    return 'https://picsum.photos/600x400'; // Fallback placeholder image
   }
   
   console.log('Featured media for post:', post.slug, featuredMedia);

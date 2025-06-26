@@ -26,7 +26,7 @@ const mockPosts = [
     _embedded: {
       author: [{ name: "David Robert Lewis" }],
       'wp:featuredmedia': [{
-        source_url: "https://placeholder.co/400x200/007bff/ffffff?text=Featured+Image"
+        source_url: "https://picsum.photos/400/200/007bff/ffffff?text=Featured+Image"
       }]
     }
   },

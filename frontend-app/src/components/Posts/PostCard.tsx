@@ -69,7 +69,7 @@ const PostCard: React.FC<PostCardProps> = ({
       
       {showExcerpt && excerpt && (
         <div className="entry-content">
-          <div dangerouslySetInnerHTML={{ __html: decodeHtmlEntities(excerpt) }} />
+          <p>{excerpt}</p>
         </div>
       )}
     </article>
