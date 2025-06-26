@@ -1,0 +1,38 @@
+import React from 'react';
+import { DonateWidgetProps } from '@/types';
+
+/**
+ * Donate widget component with a PayPal donate button
+ */
+const DonateWidget: React.FC<DonateWidgetProps> = ({
+  title = 'Support Us',
+  paypalEmail,
+  buttonText = 'Donate with PayPal'
+}) => {
+  if (!paypalEmail) {
+    console.warn('PayPal email is not provided for DonateWidget.');
+    return null;
+  }
+
+  return (
+    <div className="widget donate-widget">
+      <h3 className="widget-title">{title}</h3>
+      <div className="donate-button-container">
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+          <input type="hidden" name="cmd" value="_s-xclick" />
+          <input type="hidden" name="hosted_button_id" value={paypalEmail} />
+          <input
+            type="image"
+            src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
+            name="submit"
+            title="PayPal - The safer, easier way to pay online!"
+            alt={buttonText}
+          />
+          <img alt="" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default DonateWidget;

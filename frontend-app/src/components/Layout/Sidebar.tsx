@@ -4,6 +4,7 @@ import { LAYOUT_CONFIG } from '@/lib/constants';
 import CategoryCloud from '../Widgets/CategoryCloud';
 import AuthorWidget from '../Widgets/AuthorWidget';
 import AdSenseWidget from '../Widgets/AdSenseWidget';
+import DonateWidget from '../Widgets/DonateWidget';
 
 /**
  * Sidebar component that displays widgets
@@ -16,7 +17,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   const defaultWidgets = widgets.length > 0 ? widgets : [
     <AuthorWidget key="author" authorId={1} />,
     <CategoryCloud key="categories" />,
-    <AdSenseWidget key="adsense" />
+    <AdSenseWidget key="adsense" />,
+    <DonateWidget key="donate" paypalEmail={process.env.NEXT_PUBLIC_PAYPAL_EMAIL || ''} />
   ];
 
   return (

@@ -1,6 +1,8 @@
 // Re-export all types for easier imports
 export * from './wordpress';
 
+import { WordPressUser } from './wordpress';
+
 // Additional component types
 export interface LayoutProps {
   children: React.ReactNode;
@@ -26,13 +28,6 @@ export interface FooterProps {
   copyrightText?: string;
 }
 
-// AdSense component types
-export interface AuthorWidgetProps {
-  authorId?: number;
-  author?: WordPressUser; // Add this line
-  title?: string;
-  showSocialMenu?: boolean;
-}
 
 // Search component types
 export interface SearchFormProps {
@@ -102,7 +97,7 @@ declare global {
 
 export interface AuthorWidgetProps {
   authorId?: number;
-  author?: WordPressUser; // Add this line
+  author?: WordPressUser;
   title?: string;
   showSocialMenu?: boolean;
 }
@@ -113,4 +108,10 @@ export interface AdSenseWidgetProps {
   adFormat?: string;
   adLayout?: string;
   className?: string;
+}
+
+export interface DonateWidgetProps {
+  title?: string;
+  paypalEmail: string;
+  buttonText?: string;
 }
