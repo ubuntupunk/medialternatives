@@ -1,11 +1,10 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import Layout from '@/components/Layout/Layout';
 import PostGrid from '@/components/Posts/PostGrid';
 import Pagination from '@/components/UI/Pagination';
 import { wordpressApi } from '@/services/wordpress-api';
 import { SITE_CONFIG } from '@/lib/constants';
-import { WordPressPost, WordPressCategory } from '@/types/wordpress';
+import { WordPressPost, WordPressCategory, PaginationInfo } from '@/types/wordpress';
 import { mockPosts } from '@/utils/mockData';
 import Link from 'next/link';
 
@@ -28,13 +27,15 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   
   let category: WordPressCategory | null = null;
   let posts: WordPressPost[] = [];
-  let pagination = {
+  let pagination: PaginationInfo = {
     total: 0,
     totalPages: 1,
     currentPage: currentPage,
     perPage: SITE_CONFIG.POSTS_PER_PAGE,
     hasNext: false,
-    hasPrev: false
+    hasPrev: false,
+    nextPage: undefined,
+    prevPage: undefined
   };
   let error: string | null = null;
 
@@ -90,7 +91,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   }
 
   return (
-    <Layout>
+    <>
       {/* Breadcrumb Navigation */}
       <nav aria-label="breadcrumb" className="mb-4">
         <ol className="breadcrumb">
@@ -173,7 +174,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
           ← Back to All Posts
         </Link>
       </div>
-    </Layout>
+    </>
   );
 }
 
