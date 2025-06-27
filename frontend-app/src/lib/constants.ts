@@ -14,7 +14,7 @@ export const GOOGLE_ANALYTICS_ID = 'G-CZNQG5YM3Z';
 
 // Site Configuration
 export const SITE_CONFIG = {
-  POSTS_PER_PAGE: 10,
+  POSTS_PER_PAGE: 6, // Optimized for load more and pagination
   CATEGORIES_PER_PAGE: 50,
   EXCERPT_LENGTH: 150,
   SITE_TITLE: 'Medialternatives',
@@ -49,8 +49,8 @@ export const HEADER_CONFIG = {
 // API Request Configuration
 export const API_CONFIG = {
   DEFAULT_PARAMS: {
-    _embed: true,
-    per_page: 10
+    _embed: true
+    // per_page will be set by individual calls
   },
   CACHE_TIME: 5 * 60 * 1000, // 5 minutes
   RETRY_ATTEMPTS: 3
