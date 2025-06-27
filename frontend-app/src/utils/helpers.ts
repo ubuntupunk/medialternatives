@@ -1,4 +1,4 @@
-import { WordPressPost, WordPressCategory } from '@/types/wordpress';
+import { WordPressPost, WordPressCategory, WordPressTerm } from '@/types/wordpress';
 
 /**
  * Format date for display
@@ -120,25 +120,25 @@ export function getPostAuthor(post: WordPressPost) {
 }
 
 /**
- * Get categories from post
+ * Get categories from post embedded data
  */
-export function getPostCategories(post: WordPressPost): WordPressCategory[] {
+export function getPostCategories(post: WordPressPost): WordPressTerm[] {
   const terms = post._embedded?.['wp:term'];
-  if (!terms) return [];
+  if (!terms || !terms[0]) return [];
   
-  // Categories are typically the first term array
-  return (terms[0] || []).filter(term => term.taxonomy === 'category') as WordPressCategory[];
+  // Categories are in the first term array
+  return terms[0].filter(term => term.taxonomy === 'category');
 }
 
 /**
- * Get tags from post
+ * Get tags from post embedded data
  */
-export function getPostTags(post: WordPressPost) {
+export function getPostTags(post: WordPressPost): WordPressTerm[] {
   const terms = post._embedded?.['wp:term'];
-  if (!terms) return [];
+  if (!terms || !terms[1]) return [];
   
-  // Tags are typically the second term array
-  return (terms[1] || []).filter(term => term.taxonomy === 'post_tag');
+  // Tags are in the second term array
+  return terms[1].filter(term => term.taxonomy === 'post_tag');
 }
 
 /**
@@ -297,3 +297,4 @@ export function decodeHtmlEntities(html: string): string {
     .replace(/&#8221;/g, '”')
     .replace(/&nbsp;/g, ' ');
 }
+

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { wordpressApi } from '@/services/wordpress-api';
 import { SITE_CONFIG } from '@/lib/constants';
 import { WordPressPost } from '@/types/wordpress';
-import { formatDate, getFeaturedImageUrl, getPostAuthor, decodeHtmlEntities } from '@/utils/helpers';
+import { formatDate, getFeaturedImageUrl, getPostAuthor, decodeHtmlEntities, getPostCategories, getPostTags } from '@/utils/helpers';
 import AuthorWidget from '@/components/Widgets/AuthorWidget';
 import { mockPosts } from '@/utils/mockData';
 
@@ -54,6 +54,8 @@ export default async function PostPage({ params }: PostPageProps) {
 
   const featuredImageUrl = getFeaturedImageUrl(post, 'full');
   const author = getPostAuthor(post);
+  const categories = getPostCategories(post);
+  const tags = getPostTags(post);
 
   return (
     <Layout>
@@ -106,29 +108,29 @@ export default async function PostPage({ params }: PostPageProps) {
           </div>
 
           {/* Categories and Tags */}
-          {post.categories && post.categories.length > 0 && (
+          {categories.length > 0 && (
             <div className="entry-categories mb-2">
               <strong>Categories: </strong>
-              {post.categories.map((categoryId, index) => (
-                <span key={categoryId}>
-                  <Link href={`/category/${categoryId}`} className="category-link">
-                    Category {categoryId}
+              {categories.map((category, index) => (
+                <span key={category.id}>
+                  <Link href={`/category/${category.slug}`} className="category-link">
+                    {category.name}
                   </Link>
-                  {index < post.categories.length - 1 && ', '}
+                  {index < categories.length - 1 && ', '}
                 </span>
               ))}
             </div>
           )}
 
-          {post.tags && post.tags.length > 0 && (
+          {tags.length > 0 && (
             <div className="entry-tags mb-3">
               <strong>Tags: </strong>
-              {post.tags.map((tagId, index) => (
-                <span key={tagId}>
-                  <Link href={`/tag/${tagId}`} className="tag-link">
-                    Tag {tagId}
+              {tags.map((tag, index) => (
+                <span key={tag.id}>
+                  <Link href={`/tag/${tag.slug}`} className="tag-link">
+                    {tag.name}
                   </Link>
-                  {index < post.tags.length - 1 && ', '}
+                  {index < tags.length - 1 && ', '}
                 </span>
               ))}
             </div>
@@ -210,8 +212,8 @@ export default async function PostPage({ params }: PostPageProps) {
               Slug: {post.slug} | 
               Status: {post.status} | 
               Type: {post.type} | 
-              Categories: {post.categories?.length || 0} | 
-              Tags: {post.tags?.length || 0}
+              Categories: {categories.length} ({categories.map(c => c.name).join(', ')}) | 
+              Tags: {tags.length} ({tags.map(t => t.name).join(', ')})
             </small>
           </div>
         )}
