@@ -25,6 +25,13 @@ export default function ComponentsPage() {
           <strong>Note:</strong> This page showcases UI components with sample data. Some components connect to the WordPress.com API.
         </div>
         
+        <div className="mb-4">
+          <a href="/category-demo" className="btn btn-primary me-3">
+            Category Widget Demo
+          </a>
+          <span className="text-muted">Explore different category widget styles and options</span>
+        </div>
+        
         <section className="mb-5">
           <h2>Post Components</h2>
           <div className="row">

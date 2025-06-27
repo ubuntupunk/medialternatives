@@ -120,3 +120,17 @@ export interface WebringWidgetProps {
   title?: string;
   webringUrl?: string;
 }
+
+export interface CategoryCloudProps {
+  categories?: import('./wordpress').WordPressCategory[];
+  maxFontSize?: number;
+  minFontSize?: number;
+  className?: string;
+}
+
+export interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+  className?: string;
+}

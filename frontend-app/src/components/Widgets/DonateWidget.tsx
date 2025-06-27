@@ -23,12 +23,12 @@ const DonateWidget: React.FC<DonateWidgetProps> = ({
           <input
             type="image"
             src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
-            border="0"
             name="submit"
             title="PayPal - The safer, easier way to pay online!"
             alt={buttonText}
+            style={{ border: 0 }}
           />
-          <img alt="" border="0" src="https://www.paypal.com/en_ZA/i/scr/pixel.gif" width="1" height="1" />
+          <img alt="" src="https://www.paypal.com/en_ZA/i/scr/pixel.gif" width="1" height="1" style={{ border: 0 }} />
         </form>
       </div>
     </div>
