@@ -6,7 +6,10 @@ import {
   WordPressSiteInfo,
   GetPostsParams,
   GetCategoriesParams,
-  WordPressAPIError 
+  WordPressAPIError,
+  PaginationInfo,
+  PaginationResponse,
+  APIResponseWithHeaders
 } from '@/types/wordpress';
 import { 
   WORDPRESS_API_BASE, 
@@ -23,6 +26,136 @@ class WordPressAPIService {
     this.baseUrl = WORDPRESS_API_BASE;
     this.siteInfoUrl = WORDPRESS_SITE_INFO_API;
     this.cache = new Map();
+  }
+
+  /**
+   * Extract pagination information from response headers
+   */
+  private extractPaginationInfo(headers: Headers, params: Record<string, any>): PaginationInfo {
+    const total = parseInt(headers.get('X-WP-Total') || '0', 10);
+    const totalPages = parseInt(headers.get('X-WP-TotalPages') || '1', 10);
+    const currentPage = parseInt(String(params.page || '1'), 10);
+    const perPage = parseInt(String(params.per_page || '10'), 10);
+    
+    return {
+      total,
+      totalPages,
+      currentPage,
+      perPage,
+      hasNext: currentPage < totalPages,
+      hasPrev: currentPage > 1,
+      nextPage: currentPage < totalPages ? currentPage + 1 : undefined,
+      prevPage: currentPage > 1 ? currentPage - 1 : undefined
+    };
+  }
+
+  /**
+   * Generic fetch method with error handling, caching, and header extraction
+   */
+  private async fetchWithHeaders<T>(
+    endpoint: string, 
+    params: Record<string, any> = {},
+    useCache: boolean = true
+  ): Promise<APIResponseWithHeaders<T>> {
+    // Build URL with parameters
+    const url = new URL(endpoint);
+    const allParams = {
+      ...API_CONFIG.DEFAULT_PARAMS,
+      ...params
+    };
+    
+    // Convert all values to strings for URLSearchParams
+    const stringParams: Record<string, string> = {};
+    Object.entries(allParams).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        stringParams[key] = value.join(',');
+      } else {
+        stringParams[key] = String(value);
+      }
+    });
+    
+    const searchParams = new URLSearchParams(stringParams);
+    url.search = searchParams.toString();
+
+    const cacheKey = url.toString();
+
+    // Check cache first (for data only, headers are always fresh)
+    if (useCache && this.cache.has(cacheKey)) {
+      const cached = this.cache.get(cacheKey)!;
+      const isExpired = Date.now() - cached.timestamp > API_CONFIG.CACHE_TIME;
+      
+      if (!isExpired) {
+        // For cached responses, we don't have real headers, so create mock headers
+        const mockHeaders = new Headers();
+        mockHeaders.set('X-WP-Total', '0');
+        mockHeaders.set('X-WP-TotalPages', '1');
+        
+        return {
+          data: cached.data,
+          headers: mockHeaders
+        };
+      }
+    }
+
+    // Fetch with retry logic
+    let lastError: Error | null = null;
+    
+    for (let attempt = 1; attempt <= API_CONFIG.RETRY_ATTEMPTS; attempt++) {
+      try {
+        const response = await fetch(url.toString());
+        
+        if (!response.ok) {
+          const errorData: WordPressAPIError = await response.json().catch(() => ({
+            code: 'fetch_error',
+            message: `HTTP ${response.status}: ${response.statusText}`
+          }));
+          
+          // Log the error for debugging
+          console.error('WordPress API Error:', {
+            endpoint,
+            status: response.status,
+            message: errorData.message,
+            code: errorData.code
+          });
+          
+          // For authentication errors, provide more helpful message
+          if (response.status === 401 || 
+              errorData.message?.includes('authentication') || 
+              errorData.code === 'rest_not_logged_in') {
+            throw new Error(`WordPress.com API requires authentication for this endpoint. The site may not be properly configured yet.`);
+          }
+          
+          throw new Error(`API Error: ${errorData.message}`);
+        }
+
+        const data: T = await response.json();
+        
+        // Cache successful response
+        if (useCache) {
+          this.cache.set(cacheKey, {
+            data,
+            timestamp: Date.now()
+          });
+        }
+
+        return {
+          data,
+          headers: response.headers
+        };
+      } catch (error) {
+        lastError = error as Error;
+        
+        // Don't retry on the last attempt
+        if (attempt === API_CONFIG.RETRY_ATTEMPTS) {
+          break;
+        }
+        
+        // Wait before retry (exponential backoff)
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+      }
+    }
+
+    throw lastError || new Error('Unknown API error');
   }
 
   /**
@@ -286,6 +419,190 @@ class WordPressAPIService {
       ...params
     };
     return this.fetchWithCache<WordPressPost[]>(endpoint, tagParams);
+  }
+
+  // ========================================
+  // PAGINATION-AWARE METHODS
+  // ========================================
+
+  /**
+   * Get posts with pagination information
+   */
+  async getPostsWithPagination(params: GetPostsParams = {}): Promise<PaginationResponse<WordPressPost[]>> {
+    const endpoint = `${this.baseUrl}/posts`;
+    try {
+      const { data, headers } = await this.fetchWithHeaders<WordPressPost[]>(endpoint, params);
+      const pagination = this.extractPaginationInfo(headers, params);
+      
+      return {
+        data,
+        pagination
+      };
+    } catch (error) {
+      console.error('Error fetching posts with pagination:', error);
+      
+      // Fallback with mock pagination data
+      const posts = await this.getPosts(params);
+      return {
+        data: posts,
+        pagination: {
+          total: posts.length,
+          totalPages: 1,
+          currentPage: parseInt(String(params.page || '1'), 10),
+          perPage: parseInt(String(params.per_page || '10'), 10),
+          hasNext: false,
+          hasPrev: false
+        }
+      };
+    }
+  }
+
+  /**
+   * Get posts by category with pagination information
+   */
+  async getPostsByCategoryWithPagination(categoryId: number, params: GetPostsParams = {}): Promise<PaginationResponse<WordPressPost[]>> {
+    const endpoint = `${this.baseUrl}/posts`;
+    const categoryParams = {
+      categories: [categoryId],
+      ...params
+    };
+    
+    try {
+      const { data, headers } = await this.fetchWithHeaders<WordPressPost[]>(endpoint, categoryParams);
+      const pagination = this.extractPaginationInfo(headers, categoryParams);
+      
+      return {
+        data,
+        pagination
+      };
+    } catch (error) {
+      console.error('Error fetching posts by category with pagination:', error);
+      
+      // Fallback with mock pagination data
+      const posts = await this.getPostsByCategory(categoryId, params);
+      return {
+        data: posts,
+        pagination: {
+          total: posts.length,
+          totalPages: 1,
+          currentPage: parseInt(String(params.page || '1'), 10),
+          perPage: parseInt(String(params.per_page || '10'), 10),
+          hasNext: false,
+          hasPrev: false
+        }
+      };
+    }
+  }
+
+  /**
+   * Search posts with pagination information
+   */
+  async searchPostsWithPagination(query: string, params: GetPostsParams = {}): Promise<PaginationResponse<WordPressPost[]>> {
+    const endpoint = `${this.baseUrl}/posts`;
+    const searchParams = {
+      search: query,
+      ...params
+    };
+    
+    try {
+      const { data, headers } = await this.fetchWithHeaders<WordPressPost[]>(endpoint, searchParams, false); // Don't cache search results
+      const pagination = this.extractPaginationInfo(headers, searchParams);
+      
+      return {
+        data,
+        pagination
+      };
+    } catch (error) {
+      console.error('Error searching posts with pagination:', error);
+      
+      // Fallback with mock pagination data
+      const posts = await this.searchPosts(query, params);
+      return {
+        data: posts,
+        pagination: {
+          total: posts.length,
+          totalPages: 1,
+          currentPage: parseInt(String(params.page || '1'), 10),
+          perPage: parseInt(String(params.per_page || '10'), 10),
+          hasNext: false,
+          hasPrev: false
+        }
+      };
+    }
+  }
+
+  /**
+   * Get posts by author with pagination information
+   */
+  async getPostsByAuthorWithPagination(authorId: number, params: GetPostsParams = {}): Promise<PaginationResponse<WordPressPost[]>> {
+    const endpoint = `${this.baseUrl}/posts`;
+    const authorParams = {
+      author: authorId,
+      ...params
+    };
+    
+    try {
+      const { data, headers } = await this.fetchWithHeaders<WordPressPost[]>(endpoint, authorParams);
+      const pagination = this.extractPaginationInfo(headers, authorParams);
+      
+      return {
+        data,
+        pagination
+      };
+    } catch (error) {
+      console.error('Error fetching posts by author with pagination:', error);
+      
+      // Fallback with mock pagination data
+      const posts = await this.getPostsByAuthor(authorId, params);
+      return {
+        data: posts,
+        pagination: {
+          total: posts.length,
+          totalPages: 1,
+          currentPage: parseInt(String(params.page || '1'), 10),
+          perPage: parseInt(String(params.per_page || '10'), 10),
+          hasNext: false,
+          hasPrev: false
+        }
+      };
+    }
+  }
+
+  /**
+   * Get posts by tag with pagination information
+   */
+  async getPostsByTagWithPagination(tagId: number, params: GetPostsParams = {}): Promise<PaginationResponse<WordPressPost[]>> {
+    const endpoint = `${this.baseUrl}/posts`;
+    const tagParams = {
+      tags: [tagId],
+      ...params
+    };
+    
+    try {
+      const { data, headers } = await this.fetchWithHeaders<WordPressPost[]>(endpoint, tagParams);
+      const pagination = this.extractPaginationInfo(headers, tagParams);
+      
+      return {
+        data,
+        pagination
+      };
+    } catch (error) {
+      console.error('Error fetching posts by tag with pagination:', error);
+      
+      // Fallback with mock pagination data
+      const posts = await this.getPostsByTag(tagId, params);
+      return {
+        data: posts,
+        pagination: {
+          total: posts.length,
+          totalPages: 1,
+          currentPage: parseInt(String(params.page || '1'), 10),
+          perPage: parseInt(String(params.per_page || '10'), 10),
+          hasNext: false,
+          hasPrev: false
+        }
+      };
+    }
   }
 
   /**

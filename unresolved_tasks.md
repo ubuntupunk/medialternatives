@@ -1,3 +1,5 @@
 ## Persistent Issues
 
-- **Menu Styling Regression**: The navigation menu styling (horizontal layout, centering, spacing, and font) is not applying correctly despite multiple attempts to fix CSS specificity. This issue persists across browser and Next.js cache clears, and server restarts. Further investigation into potential conflicting styles or incorrect CSS module application is required.
+- **Navigation Menu Centering**: Navigation menu styling has been mostly resolved using Bootstrap classes for horizontal layout, spacing, and font styling. Only the centering alignment remains as a minor issue. The Bootstrap approach successfully overcame CSS specificity problems.
+
+- **Pagination Styling**: Current pagination component may need similar Bootstrap-based styling approach to ensure consistent appearance and resolve any potential CSS specificity issues.

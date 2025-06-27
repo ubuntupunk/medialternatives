@@ -28,8 +28,15 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   
   let category: WordPressCategory | null = null;
   let posts: WordPressPost[] = [];
+  let pagination = {
+    total: 0,
+    totalPages: 1,
+    currentPage: currentPage,
+    perPage: SITE_CONFIG.POSTS_PER_PAGE,
+    hasNext: false,
+    hasPrev: false
+  };
   let error: string | null = null;
-  let totalPages = 1;
 
   try {
     // Get category information by slug
@@ -40,15 +47,16 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
     }
 
     // Get posts for this category with pagination
-    posts = await wordpressApi.getPostsByCategory(category.id, {
+    const response = await wordpressApi.getPostsByCategoryWithPagination(category.id, {
       per_page: SITE_CONFIG.POSTS_PER_PAGE,
       page: currentPage,
       _embed: true
     });
 
-    // Calculate total pages (this is a simplified calculation)
-    // In a real implementation, we'd get this from API response headers
-    totalPages = Math.ceil(category.count / SITE_CONFIG.POSTS_PER_PAGE);
+    posts = response.data;
+    pagination = response.pagination;
+    
+    console.log(`Category "${slug}" pagination info:`, pagination);
 
   } catch (err) {
     console.error('Error fetching category data:', err);
@@ -56,7 +64,14 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
     
     // Fallback to mock data for development
     posts = mockPosts.slice(0, SITE_CONFIG.POSTS_PER_PAGE);
-    totalPages = 3;
+    pagination = {
+      total: mockPosts.length,
+      totalPages: Math.ceil(mockPosts.length / SITE_CONFIG.POSTS_PER_PAGE),
+      currentPage: currentPage,
+      perPage: SITE_CONFIG.POSTS_PER_PAGE,
+      hasNext: currentPage < Math.ceil(mockPosts.length / SITE_CONFIG.POSTS_PER_PAGE),
+      hasPrev: currentPage > 1
+    };
   }
 
   // If category is null due to error, create a fallback
@@ -127,12 +142,27 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         <>
           <PostGrid posts={posts} showFeatured={currentPage === 1} />
           
-          {totalPages > 1 && (
+          {pagination.totalPages > 1 && (
             <Pagination 
-              currentPage={currentPage}
-              totalPages={totalPages}
+              currentPage={pagination.currentPage}
+              totalPages={pagination.totalPages}
               baseUrl={`/category/${slug}`}
             />
+          )}
+          
+          {/* Debug info for development */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mt-4 p-3 bg-light border rounded">
+              <h6>Category "{category?.name}" Pagination Debug Info:</h6>
+              <small>
+                Total posts: {pagination.total} | 
+                Total pages: {pagination.totalPages} | 
+                Current page: {pagination.currentPage} | 
+                Per page: {pagination.perPage} | 
+                Has next: {pagination.hasNext ? 'Yes' : 'No'} | 
+                Has prev: {pagination.hasPrev ? 'Yes' : 'No'}
+              </small>
+            </div>
           )}
         </>
       )}

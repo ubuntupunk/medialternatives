@@ -268,3 +268,26 @@ export interface GetCategoriesParams {
   hide_empty?: boolean;
   parent?: number;
 }
+
+// Pagination interfaces
+export interface PaginationInfo {
+  total: number;
+  totalPages: number;
+  currentPage: number;
+  perPage: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+  nextPage?: number;
+  prevPage?: number;
+}
+
+export interface PaginationResponse<T> {
+  data: T;
+  pagination: PaginationInfo;
+}
+
+// Enhanced API response with pagination headers
+export interface APIResponseWithHeaders<T> {
+  data: T;
+  headers: Headers;
+}
