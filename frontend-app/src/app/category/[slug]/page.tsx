@@ -65,13 +65,16 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
     
     // Fallback to mock data for development
     posts = mockPosts.slice(0, SITE_CONFIG.POSTS_PER_PAGE);
+    const totalPages = Math.ceil(mockPosts.length / SITE_CONFIG.POSTS_PER_PAGE);
     pagination = {
       total: mockPosts.length,
-      totalPages: Math.ceil(mockPosts.length / SITE_CONFIG.POSTS_PER_PAGE),
+      totalPages: totalPages,
       currentPage: currentPage,
       perPage: SITE_CONFIG.POSTS_PER_PAGE,
-      hasNext: currentPage < Math.ceil(mockPosts.length / SITE_CONFIG.POSTS_PER_PAGE),
-      hasPrev: currentPage > 1
+      hasNext: currentPage < totalPages,
+      hasPrev: currentPage > 1,
+      nextPage: currentPage < totalPages ? currentPage + 1 : undefined,
+      prevPage: currentPage > 1 ? currentPage - 1 : undefined
     };
   }
 

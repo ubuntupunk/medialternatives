@@ -4,13 +4,13 @@ import PostGrid from '@/components/Posts/PostGrid';
 import Pagination from '@/components/UI/Pagination';
 import { wordpressApi } from '@/services/wordpress-api';
 import { SITE_CONFIG } from '@/lib/constants';
-import { WordPressPost } from '@/types/wordpress';
+import { WordPressPost, PaginationInfo } from '@/types/wordpress';
 import { mockPosts } from '@/utils/mockData';
 
 // This is a server component that fetches data on the server
 export default async function BlogPage() {
   let posts: WordPressPost[] = [];
-  let pagination = {
+  let pagination: PaginationInfo = {
     total: 0,
     totalPages: 1,
     currentPage: 1,
@@ -44,7 +44,9 @@ export default async function BlogPage() {
       currentPage: 1,
       perPage: SITE_CONFIG.POSTS_PER_PAGE,
       hasNext: mockPosts.length > SITE_CONFIG.POSTS_PER_PAGE,
-      hasPrev: false
+      hasPrev: false,
+      nextPage: mockPosts.length > SITE_CONFIG.POSTS_PER_PAGE ? 2 : undefined,
+      prevPage: undefined
     };
   }
 

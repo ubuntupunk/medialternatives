@@ -304,6 +304,7 @@ class WordPressAPIService {
       per_page: 100,
       orderby: 'count',
       order: 'desc',
+      exclude: [1], // Exclude 'Uncategorized' category (ID 1)
       ...params
     };
     return this.fetchWithCache<WordPressCategory[]>(endpoint, defaultParams);
