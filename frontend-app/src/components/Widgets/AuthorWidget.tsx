@@ -70,7 +70,7 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
         <div className="author-avatar">
           <Image
             src={avatarUrl}
-            alt={author.name}
+            alt={author.name || 'Author avatar'}
             width={75}
             height={75}
             style={{ borderRadius: '50%' }}
