@@ -1,5 +1,4 @@
 import React from 'react';
-import Layout from '@/components/Layout/Layout';
 import CategoryCloud from '@/components/Widgets/CategoryCloud';
 import CategoryCloudEnhanced from '@/components/Widgets/CategoryCloudEnhanced';
 import CategoryList from '@/components/Widgets/CategoryList';
@@ -41,7 +40,7 @@ export default async function CategoryDemoPage() {
   }
 
   return (
-    <Layout>
+    <>
       <div className="category-demo-page">
         <h1 className="mb-4">Category Widget Demo</h1>
         <p className="lead mb-5">
@@ -232,6 +231,6 @@ export default async function CategoryDemoPage() {
           </a>
         </div>
       </div>
-    </Layout>
+    </>
   );
 }

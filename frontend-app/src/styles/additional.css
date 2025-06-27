@@ -162,6 +162,9 @@ a.more-link, button {
 .tagcloud a:nth-child(9n+3) { background-color: #D9534F; }
 .tagcloud a:nth-child(9n+4) { background-color: #567E95; }
 .tagcloud a:nth-child(9n+5) { background-color: #B433FF; }
+.tagcloud a:nth-child(9n+6) { background-color: #FF8C00; } /* Dark Orange */
+.tagcloud a:nth-child(9n+7) { background-color: #00CED1; } /* Dark Cyan */
+.tagcloud a:nth-child(9n+8) { background-color: #8B0000; } /* Dark Red */
 
 /* Quote styling */
 .wp-block-quote {

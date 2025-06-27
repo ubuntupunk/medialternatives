@@ -1,7 +1,7 @@
 import React from 'react';
 import { SidebarProps } from '@/types';
 import { LAYOUT_CONFIG } from '@/lib/constants';
-import CategoryCloud from '../Widgets/CategoryCloud';
+import CategoryCloudEnhanced from '../Widgets/CategoryCloudEnhanced';
 import AuthorWidget from '../Widgets/AuthorWidget';
 import AdSenseWidget from '../Widgets/AdSenseWidget';
 import DonateWidget from '../Widgets/DonateWidget';
@@ -17,7 +17,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   // Default widgets if none provided
   const defaultWidgets = widgets.length > 0 ? widgets : [
     <AuthorWidget key="author" authorId={1} />,
-    <CategoryCloud key="categories" />,
+    <CategoryCloudEnhanced key="categories" />,
     <AdSenseWidget key="adsense" />,
     <DonateWidget key="donate" paypalHostedButtonId={process.env.NEXT_PUBLIC_PAYPAL_HOSTED_BUTTON_ID || ''} />,
     <WebringWidget key="webring" />
