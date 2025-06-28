@@ -13,8 +13,12 @@ const OAUTH2_CLIENT = new google.auth.OAuth2(
 
 // Listen for token refresh events
 OAUTH2_CLIENT.on('tokens', (newTokens) => {
-  console.log('AdSense token refreshed, saving new token...');
-  setToken(newTokens);
+  if (newTokens.refresh_token) {
+    console.log('AdSense token refreshed, saving new token with refresh token...');
+    setToken(newTokens);
+  } else {
+    console.log('AdSense token refreshed, but no new refresh token was provided.');
+  }
 });
 
 export async function GET() {

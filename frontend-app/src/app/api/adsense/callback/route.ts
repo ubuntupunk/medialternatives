@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
 
-import { setToken } from '../auth/route';
+import { setToken, getToken } from '../auth/route';
 
 const OAUTH2_CLIENT = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -19,7 +19,15 @@ export async function GET(req: NextRequest) {
   if (code) {
     try {
       const { tokens: newTokens } = await OAUTH2_CLIENT.getToken(code);
-      await setToken(newTokens);
+      
+      // If a refresh token is provided, merge it with the new tokens
+      if (newTokens.refresh_token) {
+        const existingTokens = await getToken();
+        const mergedTokens = { ...existingTokens, ...newTokens };
+        await setToken(mergedTokens);
+      } else {
+        await setToken(newTokens);
+      }
       
       return NextResponse.redirect(new URL('/dashboard/adsense?status=success', req.url));
 
