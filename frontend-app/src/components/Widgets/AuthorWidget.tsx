@@ -57,7 +57,7 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
   }
 
   if (!author) {
-    return <div className="widget author-widget">No author information available.</div>;
+    return <div className="widget author-widget"></div>;
   }
 
   // Get avatar URL with fallback

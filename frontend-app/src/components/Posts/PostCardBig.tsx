@@ -34,7 +34,7 @@ const PostCardBig: React.FC<PostCardProps> = ({
                 {formatDate(post.date)}
               </time>
             )}
-            
+            {' '}
             {showAuthor && (
               <AuthorDisplay author={author} authorId={authorId} showPrefix={true} />
             )}

@@ -14,7 +14,7 @@ const Footer: React.FC<FooterProps> = ({
   const defaultCopyrightText = `© 2005-${year}`;
   
   return (
-    <footer id="colophon" className={`site-footer ${className}`} role="contentinfo">
+    <footer id="colophon" className={`site-footer mt-5 ${className}`} role="contentinfo">
       <div className="site-info">
         <div className="container">
           <div className="row">
