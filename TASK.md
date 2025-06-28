@@ -3,9 +3,16 @@
 ## Current Sprint: Pagination & Categorisation
 **Sprint Duration**: Week 2
 **Sprint Goal**: Develop excellent page & cateogry logic so readers can access content via linear and non-linear methods.
+- [x] Fix AdSense refresh token error
 - [x] Fix category page header duplication
 - [x] Resolve CategoryCloud color cycling issue
 - [x] Suppress 'Uncategorized' category from widgets
+
+### Phase 6: Dashboard Implementation
+| Task | Status | Assignee | Estimate | Actual | Notes |
+|------|--------|----------|----------|--------|-------|
+| Review Dashboard Checklist | ✅ Done | Dev Team | 0.5h | 0.25h | See /docs/dashboard-task-checklist.md |
+| Implement Easy Wins | ⏳ In Progress | Dev Team | 4h | - | Focus on production-ready items |
 
 ## Sprint Completed: Project Setup and Planning
 

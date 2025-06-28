@@ -33,27 +33,40 @@ export default function AdSenseManagementPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/api/adsense/data');
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data.error || 'Failed to fetch AdSense data');
-        }
-        setAdSenseData(data);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/adsense/data');
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch AdSense data');
       }
-    };
+      setAdSenseData(data);
+      setError(null);
+    } catch (err: any) {
+      setError(err.message);
+      setAdSenseData(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
   const handleConnect = () => {
     window.location.href = '/api/adsense/auth';
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await fetch('/api/adsense/auth/logout', { method: 'POST' });
+      setAdSenseData(null);
+      setError('Not authenticated');
+    } catch (err) {
+      console.error('Failed to sign out', err);
+    }
   };
 
   const getReportValue = (metricName: string) => {
@@ -99,6 +112,8 @@ export default function AdSenseManagementPage() {
         <div className="alert alert-danger">
           <strong>Account Disapproved</strong>
           <p>Your AdSense account has been disapproved by Google. Please visit the <a href="https://www.google.com/adsense" target="_blank" rel="noopener noreferrer">AdSense console</a> to resolve any issues.</p>
+          <hr />
+          <button onClick={handleSignOut} className="btn btn-danger">Sign Out of AdSense</button>
         </div>
       );
     }
@@ -125,14 +140,22 @@ export default function AdSenseManagementPage() {
 
       {/* Page Header */}
       <div className="row mb-4">
-        <div className="col-12">
-          <h1 className="h2">
-            <i className="bi bi-currency-dollar me-2 text-warning"></i>
-            AdSense Management
-          </h1>
-          <p className="text-muted">
-            Live data from your Google AdSense account.
-          </p>
+        <div className="col-12 d-flex justify-content-between align-items-center">
+          <div>
+            <h1 className="h2">
+              <i className="bi bi-currency-dollar me-2 text-warning"></i>
+              AdSense Management
+            </h1>
+            <p className="text-muted">
+              Live data from your Google AdSense account.
+            </p>
+          </div>
+          {adSenseData && (
+            <button onClick={handleSignOut} className="btn btn-outline-danger">
+              <i className="bi bi-box-arrow-right me-2"></i>
+              Sign Out of AdSense
+            </button>
+          )}
         </div>
       </div>
 
