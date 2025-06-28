@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 // Routes that require authentication
 const protectedRoutes = [
   '/profile',
-  '/avatar-demo',
+  '/dashboard',
   '/api/avatars/upload',
 ];
 

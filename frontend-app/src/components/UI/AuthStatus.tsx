@@ -78,9 +78,9 @@ const AuthStatus: React.FC<AuthStatusProps> = ({
           </li>
           
           <li>
-            <Link href="/avatar-demo" className="dropdown-item">
-              <i className="bi bi-image me-2"></i>
-              Avatar Manager
+            <Link href="/dashboard" className="dropdown-item">
+              <i className="bi bi-speedometer2 me-2"></i>
+              Dashboard
             </Link>
           </li>
           
