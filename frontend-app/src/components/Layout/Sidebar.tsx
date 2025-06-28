@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { usePathname } from 'next/navigation';
 import { SidebarProps } from '@/types';
 import { LAYOUT_CONFIG } from '@/lib/constants';
 import CategoryCloudEnhanced from '../Widgets/CategoryCloudEnhanced';
@@ -14,14 +17,17 @@ const Sidebar: React.FC<SidebarProps> = ({
   className = '',
   widgets = []
 }) => {
+  const pathname = usePathname();
+  const isDashboardPage = pathname.startsWith('/dashboard');
+
   // Default widgets if none provided
   const defaultWidgets = widgets.length > 0 ? widgets : [
     <AuthorWidget key="author" authorId={1} />,
     <CategoryCloudEnhanced key="categories" />,
-    <AdSenseWidget key="adsense" />,
+    !isDashboardPage && <AdSenseWidget key="adsense" />,
     <DonateWidget key="donate" paypalHostedButtonId={process.env.NEXT_PUBLIC_PAYPAL_HOSTED_BUTTON_ID || ''} />,
     <WebringWidget key="webring" />
-  ];
+  ].filter(Boolean); // Filter out false values
 
   return (
     <aside 
