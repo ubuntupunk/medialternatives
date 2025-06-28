@@ -191,13 +191,13 @@
    - [ ] Include header and footer on all pages
 
 2. **Enhance WordPress.com API Integration**
-   - [] Implement pagination with headers
-   - [] Add category and tag filtering
+   - [x] Implement pagination with headers
+   - [x] Add category and tag filtering
    - [] Optimize data fetching
 
 3. **Advanced Component Development**
-   - [] Single post page
-   - [] Category and tag pages
+   - [x] Single post page
+   - [x] Category and tag pages
    - [] Author page
    - [] Search functionality
 

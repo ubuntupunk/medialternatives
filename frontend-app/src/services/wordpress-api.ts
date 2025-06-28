@@ -379,6 +379,22 @@ class WordPressAPIService {
   }
 
   /**
+   * Get a single user by slug
+   */
+  async getUserBySlug(slug: string): Promise<WordPressUser | null> {
+    try {
+      const users = await this.fetchWithCache<WordPressUser[]>(
+        `${this.baseUrl}/users`,
+        { slug }
+      );
+      return users.length > 0 ? users[0] : null;
+    } catch (error) {
+      console.error('Error fetching user by slug:', error);
+      return null;
+    }
+  }
+
+  /**
    * Get site information
    */
   async getSiteInfo(): Promise<WordPressSiteInfo | null> {

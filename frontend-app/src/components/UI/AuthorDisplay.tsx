@@ -68,16 +68,26 @@ const AuthorDisplay: React.FC<AuthorDisplayProps> = ({
   // We map unknown-error and unknown-author to our default author.
   if (error) {
     return (
-      <span className={`author-error ${className}`}>
-        {showPrefix && 'by '} David Robert Lewis  
+      <span className={`byline author-error ${className}`}>
+        {showPrefix && 'by '}
+        <span className="author vcard">
+          <Link href="/author/david-robert-lewis">
+            David Robert Lewis
+          </Link>
+        </span>
       </span>
     );
   }
 
   if (!author) {
     return (
-      <span className={`author-unknown ${className}`}>
-        {showPrefix && 'by '} David Robert Lewis
+      <span className={`byline author-unknown ${className}`}>
+        {showPrefix && 'by '}
+        <span className="author vcard">
+          <Link href="/author/david-robert-lewis">
+            David Robert Lewis
+          </Link>
+        </span>
       </span>
     );
   }
