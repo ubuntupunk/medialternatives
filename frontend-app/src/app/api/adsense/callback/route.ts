@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
   if (code) {
     try {
       const { tokens: newTokens } = await OAUTH2_CLIENT.getToken(code);
-      setToken(newTokens);
+      await setToken(newTokens);
       
       return NextResponse.redirect(new URL('/dashboard/adsense?status=success', req.url));
 

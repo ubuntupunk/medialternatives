@@ -12,7 +12,7 @@ const OAUTH2_CLIENT = new google.auth.OAuth2(
 );
 
 export async function GET() {
-  const tokens = getToken();
+  const tokens = await getToken();
 
   if (!tokens) {
     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
