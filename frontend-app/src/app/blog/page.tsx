@@ -1,5 +1,5 @@
 import React from 'react';
-import Layout from '@/components/Layout/Layout';
+// import Layout from '@/components/Layout/Layout';
 import PostGrid from '@/components/Posts/PostGrid';
 import Pagination from '@/components/UI/Pagination';
 import { wordpressApi } from '@/services/wordpress-api';
@@ -51,7 +51,7 @@ export default async function BlogPage() {
   }
 
   return (
-    <Layout>
+    <>
       <h1>Blog</h1>
       
       {error && (
@@ -88,6 +88,6 @@ export default async function BlogPage() {
           )}
         </>
       )}
-    </Layout>
+    </>
   );
 }

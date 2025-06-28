@@ -1,6 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import Layout from '@/components/Layout/Layout';
+// import Layout from '@/components/Layout/Layout';
 import Image from 'next/image';
 import Link from 'next/link';
 import { wordpressApi } from '@/services/wordpress-api';
@@ -58,7 +58,7 @@ export default async function PostPage({ params }: PostPageProps) {
   const tags = getPostTags(post);
 
   return (
-    <Layout>
+    <>
       <article id={`post-${post.id}`} className="single-post">
         {/* Breadcrumb Navigation */}
         <nav aria-label="breadcrumb" className="mb-4">
@@ -218,7 +218,7 @@ export default async function PostPage({ params }: PostPageProps) {
           </div>
         )}
       </article>
-    </Layout>
+    </>
   );
 }
 
