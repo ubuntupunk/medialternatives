@@ -116,7 +116,24 @@ export function getFeaturedImageUrl(
  * Get author information from post
  */
 export function getPostAuthor(post: WordPressPost) {
-  return post._embedded?.author?.[0] || null;
+  // First try to get from embedded data
+  const embeddedAuthor = post._embedded?.author?.[0];
+  
+  // Check if embedded author is valid
+  if (embeddedAuthor && embeddedAuthor.name) {
+    return embeddedAuthor;
+  }
+  
+  // If embedded data is not available or is an error, return undefined
+  // The component will need to fetch author data separately using the author ID
+  return undefined;
+}
+
+/**
+ * Get author ID from post
+ */
+export function getPostAuthorId(post: WordPressPost): number | undefined {
+  return post.author || undefined;
 }
 
 /**
@@ -297,4 +314,3 @@ export function decodeHtmlEntities(html: string): string {
     .replace(/&#8221;/g, '”')
     .replace(/&nbsp;/g, ' ');
 }
-

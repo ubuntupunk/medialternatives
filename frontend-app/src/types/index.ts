@@ -95,12 +95,6 @@ declare global {
   }
 }
 
-export interface AuthorWidgetProps {
-  authorId?: number;
-  author?: WordPressUser;
-  title?: string;
-  showSocialMenu?: boolean;
-}
 
 export interface AdSenseWidgetProps {
   adSlot?: string;

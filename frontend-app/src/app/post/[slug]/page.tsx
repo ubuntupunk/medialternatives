@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { wordpressApi } from '@/services/wordpress-api';
 import { SITE_CONFIG } from '@/lib/constants';
 import { WordPressPost } from '@/types/wordpress';
-import { formatDate, getFeaturedImageUrl, getPostAuthor, decodeHtmlEntities, getPostCategories, getPostTags } from '@/utils/helpers';
-import AuthorWidget from '@/components/Widgets/AuthorWidget';
+import { formatDate, getFeaturedImageUrl, getPostAuthor, getPostAuthorId, decodeHtmlEntities, getPostCategories, getPostTags } from '@/utils/helpers';
+import AuthorDisplay from '@/components/UI/AuthorDisplay';
 import { mockPosts } from '@/utils/mockData';
 
 interface PostPageProps {
@@ -54,6 +54,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
   const featuredImageUrl = getFeaturedImageUrl(post, 'full');
   const author = getPostAuthor(post);
+  const authorId = getPostAuthorId(post);
   const categories = getPostCategories(post);
   const tags = getPostTags(post);
 
@@ -93,18 +94,14 @@ export default async function PostPage({ params }: PostPageProps) {
             <time className="entry-date published" dateTime={post.date}>
               Published on {formatDate(post.date)}
             </time>
-            
+            {/* 
             {post.modified !== post.date && (
               <time className="entry-date updated ms-3" dateTime={post.modified}>
                 (Updated {formatDate(post.modified)})
               </time>
-            )}
-            
-            {author && (
-              <div className="author-info mt-2">
-                <AuthorWidget author={author} showSocialMenu={false} title="By" />
-              </div>
-            )}
+            )} */}
+            {' '}
+            <AuthorDisplay author={author} authorId={authorId} showPrefix={true} />
           </div>
 
           {/* Categories and Tags */}

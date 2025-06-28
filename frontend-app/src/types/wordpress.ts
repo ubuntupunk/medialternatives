@@ -233,6 +233,7 @@ export interface CategoryCloudProps {
 
 export interface AuthorWidgetProps {
   authorId?: number;
+  author?: WordPressUser;
   title?: string;
   showSocialMenu?: boolean;
 }

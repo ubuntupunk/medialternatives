@@ -2,9 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PostCardProps } from '@/types';
-import { formatDate, createExcerpt, getFeaturedImageUrl, getPostAuthor, decodeHtmlEntities } from '@/utils/helpers';
+import { formatDate, createExcerpt, getFeaturedImageUrl, getPostAuthor, getPostAuthorId, decodeHtmlEntities } from '@/utils/helpers';
+import AuthorDisplay from '@/components/UI/AuthorDisplay';
 import { LAYOUT_CONFIG } from '@/lib/constants';
-import AuthorWidget from '@/components/Widgets/AuthorWidget';
 
 /**
  * Regular post card component for grid display
@@ -18,6 +18,7 @@ const PostCard: React.FC<PostCardProps> = ({
 }) => {
   const featuredImageUrl = getFeaturedImageUrl(post);
   const author = getPostAuthor(post);
+  const authorId = getPostAuthorId(post);
   const excerpt = createExcerpt(post);
   
   return (
@@ -49,9 +50,9 @@ const PostCard: React.FC<PostCardProps> = ({
                 {formatDate(post.date)}
               </time>
             )}
-            
-            {showAuthor && author && (
-              <AuthorWidget author={author} showSocialMenu={false} title="" />
+            {' '}
+            {showAuthor && (
+              <AuthorDisplay author={author} authorId={authorId} showPrefix={true} />
             )}
           </div>
         )}

@@ -2,7 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PostCardProps } from '@/types';
-import { formatDate, createExcerpt, getFeaturedImageUrl, getPostAuthor } from '@/utils/helpers';
+import { formatDate, createExcerpt, getFeaturedImageUrl, getPostAuthor, getPostAuthorId } from '@/utils/helpers';
+import AuthorDisplay from '@/components/UI/AuthorDisplay';
 import { LAYOUT_CONFIG } from '@/lib/constants';
 
 /**
@@ -17,6 +18,7 @@ const PostCardBig: React.FC<PostCardProps> = ({
 }) => {
   const featuredImageUrl = getFeaturedImageUrl(post, 'full');
   const author = getPostAuthor(post);
+  const authorId = getPostAuthorId(post);
   const excerpt = createExcerpt(post, 250);
   
   return (
@@ -33,15 +35,8 @@ const PostCardBig: React.FC<PostCardProps> = ({
               </time>
             )}
             
-            {showAuthor && author && (
-              <span className="byline">
-                {' by '}
-                <span className="author vcard">
-                  <Link href={`/author/${author.slug}`}>
-                    {author.name}
-                  </Link>
-                </span>
-              </span>
+            {showAuthor && (
+              <AuthorDisplay author={author} authorId={authorId} showPrefix={true} />
             )}
           </div>
         )}
