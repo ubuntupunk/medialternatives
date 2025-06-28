@@ -73,8 +73,11 @@ export async function GET() {
       report: report.data,
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching AdSense data:', error);
+    if (error.message && error.message.includes('disapproved')) {
+      return NextResponse.json({ error: 'Account disapproved' }, { status: 403 });
+    }
     return NextResponse.json({ error: 'Failed to fetch AdSense data' }, { status: 500 });
   }
 }

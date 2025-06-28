@@ -37,16 +37,9 @@ export default function AdSenseManagementPage() {
     const fetchData = async () => {
       try {
         const response = await fetch('/api/adsense/data');
-        if (response.status === 401) {
-          setError('Not authenticated');
-          return;
-        }
-        if (!response.ok) {
-          throw new Error('Failed to fetch AdSense data');
-        }
         const data = await response.json();
-        if (data.error) {
-          throw new Error(data.error);
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to fetch AdSense data');
         }
         setAdSenseData(data);
       } catch (err: any) {
@@ -88,6 +81,34 @@ export default function AdSenseManagementPage() {
     );
   }
 
+  const renderError = () => {
+    if (error === 'Not authenticated') {
+      return (
+        <div className="text-center card p-5">
+          <h3>Connect to Google AdSense</h3>
+          <p>Please connect your AdSense account to view live data.</p>
+          <button onClick={handleConnect} className="btn btn-primary btn-lg mx-auto" style={{maxWidth: '300px'}}>
+            <i className="bi bi-google me-2"></i>
+            Connect to AdSense
+          </button>
+        </div>
+      );
+    }
+    if (error === 'Account disapproved') {
+      return (
+        <div className="alert alert-danger">
+          <strong>Account Disapproved</strong>
+          <p>Your AdSense account has been disapproved by Google. Please visit the <a href="https://www.google.com/adsense" target="_blank" rel="noopener noreferrer">AdSense console</a> to resolve any issues.</p>
+        </div>
+      );
+    }
+    return (
+      <div className="alert alert-danger">
+        <strong>Error:</strong> {error}
+      </div>
+    );
+  };
+
   return (
     <div className="container mt-4">
       {/* Breadcrumb */}
@@ -115,20 +136,7 @@ export default function AdSenseManagementPage() {
         </div>
       </div>
 
-      {error === 'Not authenticated' ? (
-        <div className="text-center card p-5">
-          <h3>Connect to Google AdSense</h3>
-          <p>Please connect your AdSense account to view live data.</p>
-          <button onClick={handleConnect} className="btn btn-primary btn-lg mx-auto" style={{maxWidth: '300px'}}>
-            <i className="bi bi-google me-2"></i>
-            Connect to AdSense
-          </button>
-        </div>
-      ) : error ? (
-        <div className="alert alert-danger">
-          <strong>Error:</strong> {error}
-        </div>
-      ) : adSenseData && adSenseData.accounts && adSenseData.accounts.length > 0 ? (
+      {error ? renderError() : adSenseData && adSenseData.accounts && adSenseData.accounts.length > 0 ? (
         <div>
           {/* Revenue Overview */}
           <div className="row mb-4">
