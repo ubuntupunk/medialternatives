@@ -341,6 +341,22 @@ class WordPressAPIService {
   }
 
   /**
+   * Get a single tag by slug
+   */
+  async getTag(slug: string): Promise<WordPressTag | null> {
+    try {
+      const tags = await this.fetchWithCache<WordPressTag[]>(
+        `${this.baseUrl}/tags`,
+        { slug }
+      );
+      return tags.length > 0 ? tags[0] : null;
+    } catch (error) {
+      console.error('Error fetching tag:', error);
+      return null;
+    }
+  }
+
+  /**
    * Get users/authors
    */
   async getUsers(params: Record<string, any> = {}): Promise<WordPressUser[]> {
