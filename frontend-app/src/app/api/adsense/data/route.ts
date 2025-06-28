@@ -1,7 +1,7 @@
 // frontend-app/src/app/api/adsense/data/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { getToken } from '../auth/route'; // We will export this function from the auth route
+import { getToken } from '../auth/route';
 
 const OAUTH2_CLIENT = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -32,21 +32,39 @@ export async function GET() {
       return NextResponse.json({ accounts: [] });
     }
 
-    // For simplicity, we'll fetch ad units for the first account
     const accountName = accounts[0].name;
+
+    // Fetch Ad Units
     const adClientList = await adsense.accounts.adclients.list({ parent: accountName });
     const adClients = adClientList.data.adClients;
-
-    if (!adClients || adClients.length === 0) {
-      return NextResponse.json({ accounts, adUnits: [] });
+    let adUnits = [];
+    if (adClients && adClients.length > 0) {
+      const adClientName = adClients[0].name;
+      const adUnitList = await adsense.accounts.adclients.adunits.list({ parent: adClientName });
+      adUnits = adUnitList.data.adUnits || [];
     }
 
-    const adClientName = adClients[0].name;
-    const adUnitList = await adsense.accounts.adclients.adunits.list({ parent: adClientName });
-    
+    // Fetch Report Data
+    const today = new Date();
+    const startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+    const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+    const report = await adsense.accounts.reports.generate({
+      account: accountName,
+      dateRange: 'CUSTOM',
+      'dateRange.startDate.year': startDate.getFullYear(),
+      'dateRange.startDate.month': startDate.getMonth() + 1,
+      'dateRange.startDate.day': startDate.getDate(),
+      'dateRange.endDate.year': endDate.getFullYear(),
+      'dateRange.endDate.month': endDate.getMonth() + 1,
+      'dateRange.endDate.day': endDate.getDate(),
+      metrics: ['ESTIMATED_EARNINGS', 'IMPRESSIONS', 'PAGE_VIEWS', 'CLICKS'],
+    });
+
     return NextResponse.json({
       accounts,
-      adUnits: adUnitList.data.adUnits || [],
+      adUnits,
+      report: report.data,
     });
 
   } catch (error) {

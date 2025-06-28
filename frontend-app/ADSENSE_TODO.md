@@ -2,21 +2,21 @@
 
 This document outlines the tasks required to fully implement the AdSense management system within the dashboard.
 
-## Phase 1: Core Integration & Read-Only Data (In Progress)
+## Phase 1: Core Integration & Read-Only Data (Completed)
 
 - [x] **Authentication**: Implement OAuth 2.0 flow to connect to a Google AdSense account.
 - [x] **API Service**: Create an API route to handle AdSense data fetching.
 - [x] **Account Information**: Fetch and display basic AdSense account information (Publisher ID, Time Zone, etc.).
 - [x] **Ad Unit Listing**: Fetch and display a list of existing ad units from the user's account.
-- [ ] **Reporting API**: Fetch basic performance metrics (Estimated Earnings, Impressions, Page Views, CTR) for the overview cards.
-  - [ ] Implement API call to the `accounts.reports.generate` endpoint.
-  - [ ] Update the `/api/adsense/data` route to include reporting data.
+- [x] **Reporting API**: Fetch basic performance metrics (Estimated Earnings, Impressions, Page Views, CTR) for the overview cards.
+  - [x] Implement API call to the `accounts.reports.generate` endpoint.
+  - [x] Update the `/api/adsense/data` route to include reporting data.
 
-## Phase 2: Frontend Implementation & UI Restoration
+## Phase 2: Frontend Implementation & UI Restoration (In Progress)
 
 - [x] **Restore Dashboard UI**: Re-implement the original, more comprehensive dashboard layout.
 - [x] **Display Ad Units**: Integrate the live ad unit data into the "Ad Slots Management" table.
-- [ ] **Display Report Data**: Connect the overview cards (Revenue, Impressions, CTR) to the live data from the reporting API.
+- [x] **Display Report Data**: Connect the overview cards (Revenue, Impressions, CTR) to the live data from the reporting API.
 - [ ] **Performance Chart**: Implement a chart to visualize revenue trends over time.
   - [ ] Choose a charting library (e.g., Chart.js, Recharts).
   - [ ] Fetch historical report data for the chart.

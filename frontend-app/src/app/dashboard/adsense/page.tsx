@@ -16,9 +16,16 @@ interface AdUnit {
   adUnitCode: string;
 }
 
+interface ReportData {
+  headers: { name: string }[];
+  rows: { cells: { value: string }[] }[];
+  totals: { cells: { value: string }[] }[];
+}
+
 interface AdSenseData {
   accounts: AdSenseAccount[];
   adUnits: AdUnit[];
+  report: ReportData;
 }
 
 export default function AdSenseManagementPage() {
@@ -54,6 +61,20 @@ export default function AdSenseManagementPage() {
 
   const handleConnect = () => {
     window.location.href = '/api/adsense/auth';
+  };
+
+  const getReportValue = (metricName: string) => {
+    if (!adSenseData || !adSenseData.report) return '0';
+    const headerIndex = adSenseData.report.headers.findIndex(h => h.name === metricName);
+    if (headerIndex === -1) return '0';
+    return adSenseData.report.totals.cells[headerIndex].value;
+  };
+
+  const calculateCTR = () => {
+    const clicks = parseFloat(getReportValue('CLICKS'));
+    const impressions = parseFloat(getReportValue('IMPRESSIONS'));
+    if (impressions === 0) return '0.00%';
+    return ((clicks / impressions) * 100).toFixed(2) + '%';
   };
 
   if (isLoading) {
@@ -115,8 +136,8 @@ export default function AdSenseManagementPage() {
               <div className="card bg-success text-white">
                 <div className="card-body">
                   <h6 className="card-title">Total Revenue</h6>
-                  <h3 className="mb-0">$0.00</h3>
-                  <small className="opacity-75">This month (API pending)</small>
+                  <h3 className="mb-0">${parseFloat(getReportValue('ESTIMATED_EARNINGS')).toFixed(2)}</h3>
+                  <small className="opacity-75">This month</small>
                 </div>
               </div>
             </div>
@@ -124,8 +145,8 @@ export default function AdSenseManagementPage() {
               <div className="card bg-primary text-white">
                 <div className="card-body">
                   <h6 className="card-title">Impressions</h6>
-                  <h3 className="mb-0">0</h3>
-                   <small className="opacity-75">Total views (API pending)</small>
+                  <h3 className="mb-0">{getReportValue('IMPRESSIONS')}</h3>
+                   <small className="opacity-75">Total views this month</small>
                 </div>
               </div>
             </div>
@@ -133,8 +154,8 @@ export default function AdSenseManagementPage() {
               <div className="card bg-info text-white">
                 <div className="card-body">
                   <h6 className="card-title">Average CTR</h6>
-                  <h3 className="mb-0">0.0%</h3>
-                  <small className="opacity-75">Click-through rate (API pending)</small>
+                  <h3 className="mb-0">{calculateCTR()}</h3>
+                  <small className="opacity-75">Click-through rate this month</small>
                 </div>
               </div>
             </div>
