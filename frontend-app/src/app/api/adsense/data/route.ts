@@ -1,7 +1,7 @@
 // frontend-app/src/app/api/adsense/data/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { getToken } from '../auth/route';
+import { getToken, setToken } from '../auth/route';
 
 const OAUTH2_CLIENT = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -10,6 +10,12 @@ const OAUTH2_CLIENT = new google.auth.OAuth2(
     ? 'https://your-production-url/api/adsense/callback'
     : 'http://localhost:3000/api/adsense/callback'
 );
+
+// Listen for token refresh events
+OAUTH2_CLIENT.on('tokens', (newTokens) => {
+  console.log('AdSense token refreshed, saving new token...');
+  setToken(newTokens);
+});
 
 export async function GET() {
   const tokens = await getToken();
