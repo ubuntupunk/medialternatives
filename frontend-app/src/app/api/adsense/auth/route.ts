@@ -23,6 +23,7 @@ export async function GET() {
   const authUrl = OAUTH2_CLIENT.generateAuthUrl({
     access_type: 'offline',
     scope: ['https://www.googleapis.com/auth/adsense.readonly'],
+    prompt: 'select_account',
   });
   return NextResponse.redirect(authUrl);
 }
