@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ADSENSE_CLIENT_ID, ADSENSE_SLOTS } from '@/lib/constants';
 
 interface AdSenseAccount {
   name: string;
@@ -10,8 +9,16 @@ interface AdSenseAccount {
   timeZone: { id: string };
 }
 
+interface AdUnit {
+  name: string;
+  displayName: string;
+  state: string;
+  adUnitCode: string;
+}
+
 interface AdSenseData {
   accounts: AdSenseAccount[];
+  adUnits: AdUnit[];
 }
 
 export default function AdSenseManagementPage() {
@@ -135,39 +142,61 @@ export default function AdSenseManagementPage() {
               <div className="card bg-warning text-white">
                 <div className="card-body">
                   <h6 className="card-title">Active Ads</h6>
-                  <h3 className="mb-0">0</h3>
-                  <small className="opacity-75">Currently running (API pending)</small>
+                  <h3 className="mb-0">{adSenseData.adUnits?.filter(u => u.state === 'ACTIVE').length || 0}</h3>
+                  <small className="opacity-75">Currently running</small>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="row">
-            {/* AdSense Account Info */}
+            {/* Ad Slots Management */}
             <div className="col-lg-12 mb-4">
               <div className="card">
-                <div className="card-header">
+                <div className="card-header d-flex justify-content-between align-items-center">
                   <h5 className="mb-0">
-                    <i className="bi bi-person-check-fill me-2"></i>
-                    AdSense Account Information
+                    <i className="bi bi-badge-ad me-2"></i>
+                    Ad Slots
                   </h5>
+                  <button className="btn btn-primary btn-sm" disabled>
+                    <i className="bi bi-plus me-1"></i>
+                    Add New Slot
+                  </button>
                 </div>
                 <div className="card-body">
                   <div className="table-responsive">
                     <table className="table table-hover">
                       <thead>
                         <tr>
-                          <th>Account Name</th>
-                          <th>Publisher ID</th>
-                          <th>Time Zone</th>
+                          <th>Ad Slot Name</th>
+                          <th>State</th>
+                          <th>Actions</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {adSenseData.accounts.map((account) => (
-                          <tr key={account.name}>
-                            <td>{account.displayName}</td>
-                            <td>{account.name}</td>
-                            <td>{account.timeZone.id}</td>
+                        {adSenseData.adUnits?.map((unit) => (
+                          <tr key={unit.name}>
+                            <td>
+                              <div>
+                                <strong>{unit.displayName}</strong>
+                                <br />
+                                <small className="text-muted">{unit.name}</small>
+                              </div>
+                            </td>
+                            <td>
+                              <span className={`badge bg-${
+                                unit.state === 'ACTIVE' ? 'success' : 'secondary'
+                              }`}>
+                                {unit.state}
+                              </span>
+                            </td>
+                            <td>
+                              <div className="btn-group btn-group-sm">
+                                <button className="btn btn-outline-primary" disabled>
+                                  <i className="bi bi-pencil"></i>
+                                </button>
+                              </div>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
