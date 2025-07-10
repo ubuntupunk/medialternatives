@@ -49,7 +49,21 @@
   - [ ] Search widget component
   - [ ] Search results page
 
-#### Phase 3C: Content & Graphics Strategy
+#### Phase 3C: URGENT - PDF Content Migration 🚨
+- [ ] **Critical PDF Migration**: 32 legal documents with broken URLs
+  - [ ] Audit current PDF accessibility from broken URLs
+  - [ ] Download all accessible PDFs from current domains
+  - [ ] Choose storage solution (Vercel Blob/GitHub Releases/Cloudflare R2)
+  - [ ] Upload PDFs to new storage location
+  - [ ] Update case.md with new working URLs
+  - [ ] Test all download functionality
+  - [ ] Implement backup storage for redundancy
+- [ ] **PDF URLs Affected**:
+  - 13 files: `https://newsite.medialternatives.com/app/uploads/...` (broken)
+  - 18 files: `https://medialternatives.com/app/uploads/...` (may break)
+  - 1 file: `https://medialternatives.com//app/uploads/...` (double slash)
+
+#### Phase 3D: Content & Graphics Strategy
 - [ ] **Placeholder Image Issue**: Articles missing featured images
   - [ ] Research free LLM options for image generation
   - [ ] Implement automated image generation system
