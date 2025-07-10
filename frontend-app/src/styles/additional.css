@@ -8,7 +8,7 @@ h1.site-title {
     font-size: 40px;
     font-style: italic;
     color: #000;
-    font-family: 'Revalia', cursive;
+    font-family: var(--font-display);
     text-shadow: 0 0 8px #FFF;
 }
 
@@ -16,7 +16,7 @@ h1.site-title {
     font-size: 18px;
     font-style: italic;
     color: #000;
-    font-family: 'Quattrocento', serif !important; 
+    font-family: var(--font-heading) !important; 
     text-shadow: 0 0 6px #FFF;
 }
 
@@ -31,7 +31,7 @@ h1.site-title {
 
 /* Typography */
 .site-content p {
-    font-family: 'Copse', serif;
+    font-family: var(--font-body);
 }
 
 /* Background color */

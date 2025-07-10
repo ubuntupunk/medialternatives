@@ -1,7 +1,30 @@
 import type { Metadata } from "next";
+import { Copse, Quattrocento, Revalia } from "next/font/google";
 import "./globals.css";
 import { SITE_CONFIG } from "@/lib/constants";
 import Layout from "@/components/Layout/Layout"; // Import the custom Layout component
+
+// Configure Google Fonts
+const copse = Copse({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-copse'
+});
+
+const quattrocento = Quattrocento({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-quattrocento'
+});
+
+const revalia = Revalia({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-revalia'
+});
 
 export const metadata: Metadata = {
   title: {
@@ -39,7 +62,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className={`${copse.variable} ${quattrocento.variable} ${revalia.variable}`}>
         <Layout>
           {children}
         </Layout>
