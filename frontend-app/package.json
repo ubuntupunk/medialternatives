@@ -1,5 +1,5 @@
 {
-  "name": "frontend-app",
+  "name": "medialternatives",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -15,10 +15,13 @@
   },
   "dependencies": {
     "@types/bootstrap": "^5.2.10",
+    "@vercel/blob": "^1.1.1",
     "bootstrap": "5",
+    "dotenv": "^17.2.0",
     "googleapis": "^150.0.1",
     "html-react-parser": "^5.2.5",
     "next": "15.3.4",
+    "pcloud-sdk-js": "^2.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
@@ -26,12 +29,12 @@
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
-    "@eslint/eslintrc": "^3"
+    "typescript": "^5"
   }
 }
