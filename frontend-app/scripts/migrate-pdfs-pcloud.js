@@ -75,59 +75,37 @@ const PCLOUD_FOLDERS = {
 };
 
 /**
- * Get OAuth2 access token from pCloud
+ * Get access token from environment or guide user to setup
  */
-async function getOAuth2Token() {
+async function getAccessToken() {
   if (PCLOUD_CONFIG.access_token) {
     console.log('✅ Using existing access token');
     return PCLOUD_CONFIG.access_token;
   }
 
-  if (!PCLOUD_CONFIG.client_id || !PCLOUD_CONFIG.client_secret) {
-    throw new Error('pCloud OAuth2 credentials not found. Set PCLOUD_CLIENT_ID and PCLOUD_CLIENT_SECRET in .env');
-  }
+  throw new Error(`
+❌ pCloud access token not found!
 
-  try {
-    console.log('🔐 Requesting OAuth2 token from pCloud...');
-    
-    const response = await fetch(PCLOUD_CONFIG.oauth_url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        grant_type: 'client_credentials',
-        client_id: PCLOUD_CONFIG.client_id,
-        client_secret: PCLOUD_CONFIG.client_secret
-      })
-    });
+To get an access token:
+1. Run: node scripts/pcloud-simple-auth.js
+2. Follow the browser authorization flow
+3. Copy the token to your .env.local file as:
+   PCLOUD_ACCESS_TOKEN=your_token_here
 
-    if (!response.ok) {
-      throw new Error(`OAuth2 request failed: ${response.status} ${response.statusText}`);
-    }
-
-    const tokenData = await response.json();
-    
-    if (tokenData.error) {
-      throw new Error(`OAuth2 error: ${tokenData.error_description || tokenData.error}`);
-    }
-
-    console.log('✅ OAuth2 token obtained successfully');
-    return tokenData.access_token;
-  } catch (error) {
-    console.error('❌ Failed to get OAuth2 token:', error);
-    throw error;
-  }
+Alternative setup methods:
+- node scripts/pcloud-oauth-server.js (if you have Client ID/Secret)
+- node scripts/setup-pcloud-oauth.js (manual setup)
+`);
 }
 
 /**
- * Initialize pCloud client with OAuth2
+ * Initialize pCloud client with access token
  */
 async function initPCloudClient() {
   try {
-    const accessToken = await getOAuth2Token();
+    const accessToken = await getAccessToken();
     
-    // Initialize pCloud SDK with OAuth2 token
+    // Initialize pCloud SDK with access token
     const client = pcloudSdk.createClient({
       access_token: accessToken
     });
@@ -135,7 +113,7 @@ async function initPCloudClient() {
     // Test the connection
     await client.userinfo();
     
-    console.log('✅ pCloud client initialized successfully with OAuth2');
+    console.log('✅ pCloud client initialized successfully');
     return client;
   } catch (error) {
     console.error('❌ Failed to initialize pCloud client:', error);

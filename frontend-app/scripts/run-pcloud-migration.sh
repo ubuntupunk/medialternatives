@@ -39,9 +39,10 @@ if ! grep -q "PCLOUD_CLIENT_ID\|PCLOUD_ACCESS_TOKEN" .env.local; then
     echo "  2. OR existing Access Token:"
     echo "     PCLOUD_ACCESS_TOKEN=your_access_token"
     echo ""
-    echo "To set up OAuth2 credentials:"
-    echo "  Option A (Recommended): node scripts/pcloud-oauth-server.js"
-    echo "  Option B (Manual): node scripts/setup-pcloud-oauth.js"
+    echo "To set up pCloud access:"
+    echo "  Option A (Simple): node scripts/pcloud-simple-auth.js"
+    echo "  Option B (Full OAuth2): node scripts/pcloud-oauth-server.js"
+    echo "  Option C (Manual): node scripts/setup-pcloud-oauth.js"
     echo "  Then follow the setup instructions"
     echo ""
     read -p "Continue anyway? (y/N): " -n 1 -r
