@@ -8,6 +8,12 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
+  // Reduce memory usage during build
+  experimental: {
+    workerThreads: false,
+    cpus: 1,
+  },
+  
   // Basic image configuration
   images: {
     remotePatterns: [
