@@ -27,19 +27,26 @@ if [ ! -d "node_modules/pcloud-sdk-js" ]; then
     bun add pcloud-sdk-js dotenv
 fi
 
-# Check pCloud credentials
-echo "🔐 Checking pCloud credentials..."
-if ! grep -q "PCLOUD_" .env.local; then
-    echo "⚠️  Warning: No pCloud credentials found in .env.local"
-    echo "Please add either:"
-    echo "  PCLOUD_ACCESS_TOKEN=your_token"
-    echo "  OR"
-    echo "  PCLOUD_USERNAME=your_username"
-    echo "  PCLOUD_PASSWORD=your_password"
+# Check pCloud OAuth2 credentials
+echo "🔐 Checking pCloud OAuth2 credentials..."
+if ! grep -q "PCLOUD_CLIENT_ID\|PCLOUD_ACCESS_TOKEN" .env.local; then
+    echo "⚠️  Warning: No pCloud OAuth2 credentials found in .env.local"
+    echo ""
+    echo "You need either:"
+    echo "  1. OAuth2 App Credentials:"
+    echo "     PCLOUD_CLIENT_ID=your_client_id"
+    echo "     PCLOUD_CLIENT_SECRET=your_client_secret"
+    echo "  2. OR existing Access Token:"
+    echo "     PCLOUD_ACCESS_TOKEN=your_access_token"
+    echo ""
+    echo "To set up OAuth2 credentials:"
+    echo "  1. Run: node scripts/setup-pcloud-oauth.js"
+    echo "  2. Follow the setup instructions"
     echo ""
     read -p "Continue anyway? (y/N): " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Run OAuth2 setup first: node scripts/setup-pcloud-oauth.js"
         exit 1
     fi
 fi

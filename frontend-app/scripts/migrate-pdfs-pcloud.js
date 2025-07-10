@@ -19,12 +19,13 @@ const pcloudSdk = require('pcloud-sdk-js');
 // Load environment variables
 require('dotenv').config();
 
-// pCloud configuration
+// pCloud OAuth2 configuration
 const PCLOUD_CONFIG = {
-  username: process.env.PCLOUD_USERNAME,
-  password: process.env.PCLOUD_PASSWORD,
-  // Alternative: use OAuth token
-  access_token: process.env.PCLOUD_ACCESS_TOKEN
+  client_id: process.env.PCLOUD_CLIENT_ID,
+  client_secret: process.env.PCLOUD_CLIENT_SECRET,
+  access_token: process.env.PCLOUD_ACCESS_TOKEN,
+  refresh_token: process.env.PCLOUD_REFRESH_TOKEN,
+  oauth_url: 'https://api.pcloud.com/oauth2_token'
 };
 
 // List of all PDF URLs (now with fixed URLs)
@@ -74,24 +75,67 @@ const PCLOUD_FOLDERS = {
 };
 
 /**
- * Initialize pCloud client
+ * Get OAuth2 access token from pCloud
+ */
+async function getOAuth2Token() {
+  if (PCLOUD_CONFIG.access_token) {
+    console.log('✅ Using existing access token');
+    return PCLOUD_CONFIG.access_token;
+  }
+
+  if (!PCLOUD_CONFIG.client_id || !PCLOUD_CONFIG.client_secret) {
+    throw new Error('pCloud OAuth2 credentials not found. Set PCLOUD_CLIENT_ID and PCLOUD_CLIENT_SECRET in .env');
+  }
+
+  try {
+    console.log('🔐 Requesting OAuth2 token from pCloud...');
+    
+    const response = await fetch(PCLOUD_CONFIG.oauth_url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        grant_type: 'client_credentials',
+        client_id: PCLOUD_CONFIG.client_id,
+        client_secret: PCLOUD_CONFIG.client_secret
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`OAuth2 request failed: ${response.status} ${response.statusText}`);
+    }
+
+    const tokenData = await response.json();
+    
+    if (tokenData.error) {
+      throw new Error(`OAuth2 error: ${tokenData.error_description || tokenData.error}`);
+    }
+
+    console.log('✅ OAuth2 token obtained successfully');
+    return tokenData.access_token;
+  } catch (error) {
+    console.error('❌ Failed to get OAuth2 token:', error);
+    throw error;
+  }
+}
+
+/**
+ * Initialize pCloud client with OAuth2
  */
 async function initPCloudClient() {
   try {
-    let client;
+    const accessToken = await getOAuth2Token();
     
-    if (PCLOUD_CONFIG.access_token) {
-      // Use OAuth token
-      client = pcloudSdk.createClient(PCLOUD_CONFIG.access_token);
-    } else if (PCLOUD_CONFIG.username && PCLOUD_CONFIG.password) {
-      // Use username/password
-      client = pcloudSdk.createClient();
-      await client.login(PCLOUD_CONFIG.username, PCLOUD_CONFIG.password);
-    } else {
-      throw new Error('pCloud credentials not found. Set PCLOUD_ACCESS_TOKEN or PCLOUD_USERNAME/PCLOUD_PASSWORD in .env');
-    }
+    // Initialize pCloud SDK with OAuth2 token
+    const client = pcloudSdk.createClient({
+      access_token: accessToken
+    });
     
-    console.log('✅ pCloud client initialized successfully');
+    // Test the connection
+    await client.userinfo();
+    
+    console.log('✅ pCloud client initialized successfully with OAuth2');
     return client;
   } catch (error) {
     console.error('❌ Failed to initialize pCloud client:', error);
