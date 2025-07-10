@@ -68,9 +68,9 @@ async function getClientCredentialsToken(clientId, clientSecret) {
 }
 
 /**
- * Generate authorization URL for user consent
+ * Generate authorization URL for user consent (Code flow - recommended for server apps)
  */
-function generateAuthUrl(clientId, redirectUri = 'http://localhost:3000/auth/pcloud/callback') {
+function generateAuthUrl(clientId, redirectUri = 'urn:ietf:wg:oauth:2.0:oob') {
   const params = querystring.stringify({
     response_type: 'code',
     client_id: clientId,
@@ -163,30 +163,10 @@ async function setupPCloudOAuth() {
   console.log('✅ Found OAuth2 credentials');
   console.log(`Client ID: ${clientId.substring(0, 8)}...`);
   
-  // Try client credentials flow first (for app-only access)
-  try {
-    console.log('');
-    console.log('🔄 Attempting client credentials flow...');
-    const tokenResponse = await getClientCredentialsToken(clientId, clientSecret);
-    
-    console.log('✅ Successfully obtained access token!');
-    console.log('');
-    console.log('Add this to your .env.local file:');
-    console.log(`PCLOUD_ACCESS_TOKEN=${tokenResponse.access_token}`);
-    
-    if (tokenResponse.refresh_token) {
-      console.log(`PCLOUD_REFRESH_TOKEN=${tokenResponse.refresh_token}`);
-    }
-    
-    console.log('');
-    console.log(`Token expires in: ${tokenResponse.expires_in} seconds`);
-    console.log(`Token type: ${tokenResponse.token_type}`);
-    
-    return;
-  } catch (error) {
-    console.log('⚠️  Client credentials flow failed:', error.message);
-    console.log('This might be expected if your app requires user authorization.');
-  }
+  console.log('');
+  console.log('📋 pCloud OAuth2 uses Authorization Code Flow for server applications');
+  console.log('This requires user consent to access pCloud storage.');
+  console.log('');
   
   // If client credentials failed, try authorization code flow
   if (authCode) {
@@ -197,7 +177,7 @@ async function setupPCloudOAuth() {
         clientId, 
         clientSecret, 
         authCode, 
-        'http://localhost:3000/auth/pcloud/callback'
+        'urn:ietf:wg:oauth:2.0:oob'
       );
       
       console.log('✅ Successfully obtained access token!');
@@ -214,14 +194,18 @@ async function setupPCloudOAuth() {
     }
   } else {
     console.log('');
-    console.log('🔗 Manual authorization required:');
+    console.log('🔗 Authorization Code Flow Setup:');
     console.log('');
     console.log('1. Visit this URL to authorize the app:');
-    console.log(generateAuthUrl(clientId));
+    console.log('   ' + generateAuthUrl(clientId));
     console.log('');
-    console.log('2. After authorization, copy the "code" parameter from the redirect URL');
-    console.log('3. Add it to your .env.local file as: PCLOUD_AUTH_CODE=your_code');
-    console.log('4. Run this script again');
+    console.log('2. After clicking "Allow", you will see an authorization code');
+    console.log('3. Copy the authorization code from the page');
+    console.log('4. Add it to your .env.local file as:');
+    console.log('   PCLOUD_AUTH_CODE=your_authorization_code');
+    console.log('5. Run this script again to exchange the code for tokens');
+    console.log('');
+    console.log('Note: Using "urn:ietf:wg:oauth:2.0:oob" redirect for server applications');
   }
 }
 

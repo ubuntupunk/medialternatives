@@ -75,17 +75,24 @@ These documents include critical court transcripts from the Lewis v Media24 case
    - Set redirect URI (if using authorization code flow)
 
 3. **Get OAuth2 Credentials**
+
+   pCloud uses **Authorization Code Flow** (recommended for server applications) via:
+   - Authorization URL: `https://my.pcloud.com/oauth2/authorize`
+   - Token endpoint: `https://api.pcloud.com/oauth2_token`
    
-   **Automated Setup (Recommended)**
+   **Option A: Automated Server (Recommended)**
+   ```bash
+   cd frontend-app
+   node scripts/pcloud-oauth-server.js
+   # Opens browser at http://localhost:3000 for OAuth2 flow
+   ```
+   
+   **Option B: Manual Setup**
    ```bash
    cd frontend-app
    node scripts/setup-pcloud-oauth.js
+   # Follow the authorization URL and copy the code
    ```
-   
-   **Manual Setup**
-   - Use Client ID and Client Secret for app authentication
-   - Generate access tokens via OAuth2 flow
-   - pCloud uses standard OAuth2 with `https://api.pcloud.com/oauth2_token`
 
 ### 2. Environment Configuration
 
