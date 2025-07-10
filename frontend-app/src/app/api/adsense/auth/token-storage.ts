@@ -8,11 +8,11 @@ export async function readToken() {
   try {
     const token = await fs.readFile(TOKEN_PATH, 'utf-8');
     return JSON.parse(token);
-  } catch (error) {
+  } catch {
     return null;
   }
 }
 
-export async function writeToken(token: any) {
+export async function writeToken(token: object) {
   await fs.writeFile(TOKEN_PATH, JSON.stringify(token));
 }

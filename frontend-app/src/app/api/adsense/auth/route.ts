@@ -1,5 +1,5 @@
 // frontend-app/src/app/api/adsense/auth/route.ts
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
 import { readToken, writeToken } from './token-storage';
 
@@ -15,7 +15,7 @@ export async function getToken() {
   return await readToken();
 }
 
-export async function setToken(newToken: any) {
+export async function setToken(newToken: object) {
   await writeToken(newToken);
 }
 
