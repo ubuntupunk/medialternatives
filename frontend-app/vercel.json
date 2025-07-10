@@ -1,37 +1,14 @@
 {
-  "version": 2,
-  "name": "medialternatives-frontend",
-  "builds": [
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/robots.txt",
-      "dest": "/api/robots"
+      "source": "/robots.txt",
+      "destination": "/api/robots"
     },
     {
-      "src": "/sitemap.xml",
-      "dest": "/api/sitemap"
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
     }
   ],
-  "env": {
-    "WORDPRESS_API_URL": "@wordpress_api_url",
-    "NEXT_PUBLIC_GOOGLE_ANALYTICS_ID": "@google_analytics_id",
-    "NEXT_PUBLIC_ADSENSE_CLIENT_ID": "@adsense_client_id",
-    "NEXT_PUBLIC_PAYPAL_HOSTED_BUTTON_ID": "@paypal_button_id",
-    "GOOGLE_CLIENT_ID": "@google_client_id",
-    "GOOGLE_CLIENT_SECRET": "@google_client_secret",
-    "ADMIN_PASSWORD": "@admin_password",
-    "BLOB_READ_WRITE_TOKEN": "@blob_read_write_token"
-  },
-  "functions": {
-    "src/app/api/**/*.ts": {
-      "maxDuration": 30
-    }
-  },
   "headers": [
     {
       "source": "/(.*)",

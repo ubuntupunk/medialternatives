@@ -25,3 +25,4 @@ web/wiki/
 
 # WP-CLI
 wp-cli.local.yml
+.vercel
