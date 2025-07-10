@@ -68,11 +68,12 @@ These documents include critical court transcripts from the Lewis v Media24 case
    - Verify email and complete setup
    - Note: Free account provides 10GB storage
 
-2. **Set up OAuth2 App**
+2. **Set up OAuth2 App** (Required)
    - Go to [pCloud Developers](https://docs.pcloud.com/)
    - Create a new app in the pCloud App Console
+   - **Important**: Client ID is required for all pCloud OAuth2 flows
    - Note your Client ID and Client Secret
-   - Set redirect URI (if using authorization code flow)
+   - Set redirect URI: `http://localhost:3000/auth/pcloud/callback`
 
 3. **Get OAuth2 Credentials**
 
