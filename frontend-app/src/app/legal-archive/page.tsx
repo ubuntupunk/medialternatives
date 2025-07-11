@@ -18,6 +18,38 @@ export default function LegalArchivePage() {
     <div className="container my-5">
       <div className="row">
         <div className="col-lg-8 mx-auto">
+          {/* Archive Navigation Header */}
+          <nav aria-label="Legal Archive Navigation" className="mb-5">
+            <div className="card border-0 bg-light">
+              <div className="card-body p-4">
+                <h5 className="card-title text-center mb-3">
+                  <i className="bi bi-archive me-2"></i>
+                  Legal Document Archive
+                </h5>
+                <div className="d-flex justify-content-center gap-3 flex-wrap">
+                  <Link href="/case" className="btn btn-outline-primary btn-sm">
+                    <i className="bi bi-file-text me-1"></i>
+                    Case Overview
+                  </Link>
+                  <span className="btn btn-primary btn-sm">
+                    <i className="bi bi-folder-open me-1"></i>
+                    Document Archive
+                  </span>
+                  <Link href="/legal-archive-timeline" className="btn btn-outline-primary btn-sm">
+                    <i className="bi bi-clock-history me-1"></i>
+                    Timeline View
+                  </Link>
+                </div>
+                <div className="text-center mt-3">
+                  <small className="text-muted">
+                    <i className="bi bi-info-circle me-1"></i>
+                    Comprehensive legal documentation from the Lewis v Media24 case
+                  </small>
+                </div>
+              </div>
+            </div>
+          </nav>
+
           <div className="legal-archive-content">
             <ReactMarkdown
               components={{
