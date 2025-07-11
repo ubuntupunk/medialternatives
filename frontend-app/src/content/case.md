@@ -1,6 +1,6 @@
 # The Case
 
-*For a comprehensive overview of this legal archive with detailed descriptions of each document, see our [Legal Document Archive](/legal-archive).*
+*For a comprehensive overview of this legal archive with detailed descriptions of each document, see our [Legal Document Archive](/legal-archive). For a timeline view of the 18-year legal saga, see the [Legal Archive Timeline](/legal-archive-timeline).*
 
 This section is a repository for documentation and evidence from [Lewis v Media24](http://www.saflii.org/za/cases/ZALC/2010/218.html), an irregular and unlawful proceeding held in a South African kangaroo court, the so-called 'Labour Court of South Africa', from 4 November 2009 - 21 January 2010. The transcripts demonstrate how Lewis was cross-questioned without the aid of an attorney on issues related inter alia, to his secular Jewish identity and his involvement in the struggle for freedom in South Africa.
 

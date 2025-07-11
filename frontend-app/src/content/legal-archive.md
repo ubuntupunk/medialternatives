@@ -2,6 +2,8 @@
 
 ## The Lewis v Media24 Case: A Digital Archive
 
+*For a comprehensive timeline view of this 18-year legal saga across multiple courts and jurisdictions, see the [Legal Archive Timeline](/legal-archive-timeline).*
+
 This comprehensive archive documents the legal battle between David Robert Lewis and Media24, representing a significant case in South African media law and press freedom. The documents are organized chronologically and by type to provide clear insight into the proceedings.
 
 ## Court Transcripts
