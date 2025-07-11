@@ -4,6 +4,7 @@ import React from 'react';
 import { usePathname } from 'next/navigation';
 import { SidebarProps } from '@/types';
 import { LAYOUT_CONFIG } from '@/lib/constants';
+import SearchWidget from '../Widgets/SearchWidget';
 import CategoryCloudEnhanced from '../Widgets/CategoryCloudEnhanced';
 import AuthorWidget from '../Widgets/AuthorWidget';
 import AdSenseWidget from '../Widgets/AdSenseWidget';
@@ -22,6 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   // Default widgets if none provided
   const defaultWidgets = widgets.length > 0 ? widgets : [
+    <SearchWidget key="search" />,
     <AuthorWidget key="author" authorId={1} />,
     <CategoryCloudEnhanced key="categories" />,
     !isDashboardPage && <AdSenseWidget key="adsense" />,
