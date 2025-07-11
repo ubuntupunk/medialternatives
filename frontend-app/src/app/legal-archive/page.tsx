@@ -119,37 +119,7 @@ export default function LegalArchivePage() {
               <div className="small text-muted">Backup Locations</div>
             </div>
           </div>
-
-          {/* Archive Features */}
-          <div className="row mt-4 g-3">
-            <div className="col-12 col-lg-6 mb-3">
-              <div className="card border-0 bg-light h-100">
-                <div className="card-body p-3 p-md-4">
-                  <h6 className="card-title h6">
-                    <i className="bi bi-shield-check text-success me-2"></i>
-                    Verified Integrity
-                  </h6>
-                  <p className="card-text small mb-0">
-                    All documents include SHA256 hash verification and PDF structure validation.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="col-12 col-lg-6 mb-3">
-              <div className="card border-0 bg-light h-100">
-                <div className="card-body p-3 p-md-4">
-                  <h6 className="card-title h6">
-                    <i className="bi bi-cloud-check text-primary me-2"></i>
-                    Multiple Backups
-                  </h6>
-                  <p className="card-text small mb-0">
-                    Documents stored in repository with cold storage backups on pCloud and IceDrive.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
+         
           {/* Research and Academic Use */}
           <div className="alert alert-success mt-4">
             <h6 className="alert-heading">

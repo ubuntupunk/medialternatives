@@ -2,7 +2,7 @@
 
 *For a comprehensive overview of this legal archive with detailed descriptions of each document, see our [Legal Document Archive](/legal-archive). For a timeline view of the 18-year legal saga, see the [Legal Archive Timeline](/legal-archive-timeline).*
 
-This section is a repository for documentation and evidence from [Lewis v Media24](http://www.saflii.org/za/cases/ZALC/2010/218.html), an irregular and unlawful proceeding held in a South African kangaroo court, the so-called 'Labour Court of South Africa', from 4 November 2009 - 21 January 2010. The transcripts demonstrate how Lewis was cross-questioned without the aid of an attorney on issues related inter alia, to his secular Jewish identity and his involvement in the struggle for freedom in South Africa.
+This section is a repository for documentation and evidence from [Lewis v Media24](http://www.saflii.org/za/cases/ZALC/2010/218.html), an irregular and unlawful proceeding held in a South African kangaroo court, the so-called 'Labour Court of South Africa', from 4 November 2009 - 21 January 2010. The transcripts demonstrate how Lewis was cross-questioned without the aid of an attorney on issues related *inter alia* to his secular Jewish identity and his involvement in the struggle for freedom in South Africa.
 
 ## Court Transcripts
 
@@ -36,7 +36,7 @@ This section is a repository for documentation and evidence from [Lewis v Media2
 
 ## The Corruption
 
-[Founding Affidavit](/legal-archive/legal-documents/Founding-Affidavit.pdf)
+[Founding Affidavit](/legal-archive/legal-documents/Founding-Affidavit-High-Court-Corruption.pdf)
 
 [Annexures PAJA-3](/legal-archive/legal-documents/Annexures-PAJA-3.pdf)
 
@@ -92,7 +92,7 @@ In order to escape the issues related to the company's failure to participate, t
 
 ## Related Content
 
-[The Kakness Article - 31 August 2006](https://medialternatives.com/2006/08/31/119/)
+[The FXI write a letter to Hein Brand per Jeenah and Delaney - 29 August 2006](https://medialternatives.com/2006/08/31/119/)
 
 [Video: Living in the Heart of Kakness](https://youtu.be/d3LokP4yZeU)
 
@@ -100,12 +100,6 @@ In order to escape the issues related to the company's failure to participate, t
 
 ---
 
-## Archive Information
 
-**Total Documents**: 32 files  
-**Storage**: Served directly from repository  
-**Backup**: pCloud and IceDrive cold storage  
-**Integrity**: SHA256 verified  
-**Last Updated**: 2024-12-29
 
 For detailed descriptions and context of each document, visit the [Legal Document Archive](/legal-archive).

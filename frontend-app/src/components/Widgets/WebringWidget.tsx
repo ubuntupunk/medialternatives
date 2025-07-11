@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { WebringWidgetProps } from '@/types';
 import styles from './WebringWidget.module.css';
 

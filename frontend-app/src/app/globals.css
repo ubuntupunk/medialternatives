@@ -12,8 +12,8 @@
   --font-display: var(--font-revalia), cursive;
   
   /* Handbook Fonts */
-  --font-handbook-heading: 'Quicksand', sans-serif;
-  --font-handbook-body: 'Roboto', sans-serif;
+  --font-handbook-heading: var(--font-quicksand), sans-serif;
+  --font-handbook-body: var(--font-roboto), sans-serif;
   
   /* Colors from Blaskan theme and additional.css */
   --color-primary: #24221D;

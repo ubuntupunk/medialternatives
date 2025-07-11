@@ -14,9 +14,9 @@ const { put } = require('@vercel/blob');
 
 // List of all PDF URLs that need migration
 const PDF_URLS = [
-  // Transcripts (newsite.medialternatives.com - broken)
+  // Transcripts (medialternatives.com - broken)
   'https://newsite.medialternatives.com/app/uploads/2020/07/Transcripts-Index-1.pdf',
-  'https://newsite.medialternatives.com/app/uploads/2020/07/C88-07-Vol_1-4-November-2009-FP-1.pdf',
+  'https://medialternatives.com/app/uploads/2020/07/C88-07-Vol_1-4-November-2009-FP-1.pdf',
   'https://newsite.medialternatives.com/app/uploads/2020/07/C88-07-Vol_1-4-November-2009-1.pdf',
   'https://newsite.medialternatives.com/app/uploads/2020/07/C88-07-Vol_2-5-November-2009-Letter-to-the-Chief-Registrar-Head-o...-1.pdf',
   'https://newsite.medialternatives.com/app/uploads/2020/07/C88-07-Vol_2-5-November-2009-FP-1.pdf',

@@ -15,8 +15,8 @@ const { spawn, exec } = require('child_process');
 const fs = require('fs').promises;
 const path = require('path');
 
-// Load environment variables
-require('dotenv').config();
+// Load environment variables from project root
+require('dotenv').config({ path: path.resolve(__dirname, '../.env.local') });
 
 const PCLOUD_CONFIG = {
   username: process.env.PCLOUD_USERNAME,
@@ -108,57 +108,74 @@ echo "You can now use: pcloudcc -u username -p"
  * Start pCloud daemon
  */
 async function startPCloudDaemon() {
-  if (!PCLOUD_CONFIG.username || !PCLOUD_CONFIG.password) {
+  const { username, password, mountpoint } = PCLOUD_CONFIG;
+
+  if (!username || !password) {
     throw new Error('PCLOUD_USERNAME and PCLOUD_PASSWORD must be set in .env.local');
   }
-  
-  console.log('🚀 Starting pCloud daemon...');
-  
-  // Create mount point
+
+  console.log(`🚀 Starting pCloud daemon for user: ${username}...`);
+
   try {
-    await fs.mkdir(PCLOUD_CONFIG.mountpoint, { recursive: true });
+    await fs.mkdir(mountpoint, { recursive: true });
   } catch (error) {
-    // Directory might already exist
+    // Directory might already exist, which is fine.
+  }
+
+  const daemon = spawn('pcloudcc', [
+    '-u', username,
+    '-p',
+    '-m', mountpoint,
+    '-d'
+  ], {
+    detached: true, // Allow the parent to exit independently.
+    stdio: ['pipe', 'ignore', 'ignore'] // Only need stdin for the password.
+  });
+
+  // Allow the Node.js event loop to exit even if the child is still running.
+  daemon.unref();
+
+  daemon.on('error', (err) => {
+    console.error('❌ Failed to spawn the pcloudcc process.', err);
+  });
+
+  // Provide the password to the process\'s stdin.
+  console.log('🔑 Providing password to pCloud client via stdin...');
+  daemon.stdin.write(password + '\n');
+  daemon.stdin.end();
+
+  console.log('✅ Daemon process has been launched in the background.');
+  return Promise.resolve();
+}
+
+/**
+ * Wait for pCloud daemon to be ready by polling its status.
+ */
+async function waitForDaemonReady(timeout = 30000) {
+  console.log('⏳ Waiting for pCloud daemon to become responsive...');
+  const startTime = Date.now();
+  let lastError = 'No response yet';
+
+  // Give the daemon a moment to start before the first check.
+  console.log('(Waiting 3s for initial daemon startup...)');
+  await new Promise(resolve => setTimeout(resolve, 3000));
+
+  while (Date.now() - startTime < timeout) {
+    try {
+      // Use 'ls /' as a lightweight command to check if the daemon is responsive.
+      await execPCloudCommand('ls /');
+      console.log('\n✅ pCloud daemon is online and ready.');
+      return;
+    } catch (error) {
+      lastError = error.message.trim();
+      // Log the specific error to diagnose the issue.
+      console.log(`[${new Date().toLocaleTimeString()}] Daemon not ready, trying again. Error: ${lastError}`);
+    }
+    await new Promise(resolve => setTimeout(resolve, 2000));
   }
   
-  return new Promise((resolve, reject) => {
-    const daemon = spawn('pcloudcc', [
-      '-u', PCLOUD_CONFIG.username,
-      '-p', PCLOUD_CONFIG.password,
-      '-m', PCLOUD_CONFIG.mountpoint,
-      '-d'  // daemonize
-    ], {
-      stdio: 'pipe'
-    });
-    
-    let output = '';
-    daemon.stdout.on('data', (data) => {
-      output += data.toString();
-    });
-    
-    daemon.stderr.on('data', (data) => {
-      output += data.toString();
-    });
-    
-    daemon.on('close', (code) => {
-      if (code === 0) {
-        console.log('✅ pCloud daemon started successfully');
-        console.log(`📁 Mount point: ${PCLOUD_CONFIG.mountpoint}`);
-        resolve(true);
-      } else {
-        console.error('❌ Failed to start pCloud daemon');
-        console.error('Output:', output);
-        reject(new Error(`Daemon failed with code ${code}`));
-      }
-    });
-    
-    // Give daemon time to start
-    setTimeout(() => {
-      if (daemon.exitCode === null) {
-        resolve(true);
-      }
-    }, 3000);
-  });
+  console.log('\n'); // Newline after the progress dots
+  throw new Error(`Timeout: pCloud daemon did not become ready in ${timeout / 1000}s. Final error: ${lastError}`);
 }
 
 /**
@@ -238,11 +255,15 @@ async function getPublicLink(remotePath) {
  * Stop pCloud daemon
  */
 async function stopPCloudDaemon() {
+  console.log('🛑 Stopping pCloud daemon...');
   try {
-    await execPCloudCommand('quit');
-    console.log('🛑 pCloud daemon stopped');
+    // 'finalize' is the correct command to stop the daemon process.
+    // 'quit' only exits the interactive client.
+    await execPCloudCommand('finalize');
+    console.log('✅ pCloud daemon stopped successfully.');
   } catch (error) {
-    console.warn('Warning: Failed to stop daemon gracefully');
+    // It's possible the daemon already stopped or was killed, so a warning is appropriate.
+    console.warn(`Warning: Failed to stop daemon gracefully. This might be okay if it was already stopped. Error: ${error.message}`);
   }
 }
 
@@ -291,6 +312,7 @@ async function setupPCloudConsole() {
   try {
     // Start daemon
     await startPCloudDaemon();
+    await waitForDaemonReady();
     
     // Test basic operations
     console.log('🧪 Testing basic operations...');
@@ -339,7 +361,8 @@ module.exports = {
   stopPCloudDaemon,
   uploadFile,
   getPublicLink,
-  execPCloudCommand
+  execPCloudCommand,
+  waitForDaemonReady
 };
 
 // Run setup if called directly

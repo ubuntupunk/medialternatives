@@ -28,7 +28,15 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'davidrobertlewis5.wordpress.com',
-      }
+      },
+      {  
+        protocol: 'https',
+        hostname: 'picsum.photos',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.creativecommons.org',
+      }  
     ],
   },
 };

@@ -89,30 +89,6 @@ This case represents a landmark challenge to media practices in South Africa, to
 - **Academic Freedom**: The intersection of journalism and academic integrity
 - **Truth and Reconciliation**: Ongoing issues from South Africa's transition
 
-## Archive Integrity
-
-All documents in this archive have been:
-- ✅ Downloaded from original sources
-- ✅ Validated for PDF integrity
-- ✅ Backed up to multiple cloud storage providers
-- ✅ Assigned SHA256 hash verification
-- ✅ Organized chronologically and thematically
-
-## Legal Notice
-
-These documents are authentic legal records made available in the public interest. They represent actual court proceedings, legal correspondence, and official documentation. For official legal purposes, always refer to original court records.
-
-## Research and Academic Use
-
-Researchers, journalists, and academics are encouraged to use these documents for:
-- Media law studies
-- Press freedom research
-- South African legal history
-- Case study analysis
-- Academic publications
-
-Please cite appropriately when using these materials in academic or professional work.
-
 ---
 
 **Archive Maintained By**: Medialternatives  

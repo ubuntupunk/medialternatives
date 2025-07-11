@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Copse, Quattrocento, Revalia } from "next/font/google";
+import { Copse, Quattrocento, Revalia, Quicksand, Roboto } from "next/font/google";
 import "./globals.css";
 import { SITE_CONFIG } from "@/lib/constants";
 import Layout from "@/components/Layout/Layout"; // Import the custom Layout component
@@ -24,6 +24,21 @@ const revalia = Revalia({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-revalia'
+});
+
+// Handbook fonts
+const quicksand = Quicksand({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-quicksand'
+});
+
+const roboto = Roboto({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-roboto'
 });
 
 export const metadata: Metadata = {
@@ -70,7 +85,7 @@ export default function RootLayout({
           async
         />
       </head>
-      <body className={`${copse.variable} ${quattrocento.variable} ${revalia.variable}`}>
+      <body className={`${copse.variable} ${quattrocento.variable} ${revalia.variable} ${quicksand.variable} ${roboto.variable}`}>
         <Layout>
           {children}
         </Layout>

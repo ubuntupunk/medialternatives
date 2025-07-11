@@ -193,14 +193,6 @@ export const SearchWidget: React.FC<SearchWidgetProps> = ({ className = '' }) =>
           </div>
         )}
       </div>
-
-      {/* Search Tips */}
-      <div className="search-tips mt-3">
-        <small className="text-muted">
-          <i className="bi bi-lightbulb me-1"></i>
-          <strong>Tips:</strong> Search for articles, legal documents, or case information
-        </small>
-      </div>
     </div>
   );
 };

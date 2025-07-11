@@ -2,7 +2,7 @@
 
 ## The Lewis v Media24 Legal Saga: A Multi-Case Timeline (2006-2024)
 
-This archive documents an 18-year legal battle spanning multiple courts, regulatory bodies, and legal proceedings. The cases are interconnected, stemming from an initial media law labour dispute that escalated into constitutional, equality, and criminal law matters.
+This archive documents an 18-year legal battle spanning multiple courts, regulatory bodies, and legal proceedings. The cases are interconnected, stemming from an initial media law labour dispute that escalated into constitutional, transitional justice, equality, and criminal law matters.
 
 
 ## Detailed Timeline
@@ -117,8 +117,8 @@ This archive documents an 18-year legal battle spanning multiple courts, regulat
 ### Foundation Documents
 
 #### Core Legal Filings
-- **[Founding Affidavit](/legal-archive/legal-documents/Founding-Affidavit.pdf)**
-  - *Summary*: The foundational legal document that initiated the case, outlining core allegations of irregular proceedings, constitutional violations, and media law breaches.
+- **[Founding Affidavit in Corruption Case](/legal-archive/legal-documents/Founding-Affidavit-High-Court-Corruption.pdf)**
+  - *Summary*: The foundational legal document that initiating the corruption case, outlining core allegations of irregular proceedings, constitutional violations, and media law breaches.
 
 - **[Annexures PAJA-3](/legal-archive/legal-documents/Annexures-PAJA-3.pdf)**
   - *Summary*: Supporting annexures under the Promotion of Administrative Justice Act, providing legal framework for challenging irregular administrative and judicial conduct.
@@ -130,45 +130,9 @@ This archive documents an 18-year legal battle spanning multiple courts, regulat
 - **[Naspers Ltd and Media24 Copyright Protection](/legal-archive/legal-documents/NASPERS-LTD-AND-MEDIA24-DIE-BURGER-COPYRIGHT-PROTECTION-IN-THE-NAME-OF....pdf)**
   - *Summary*: Comprehensive documentation of copyright protection issues, including destruction of jazz history materials and violation of intellectual property rights.
 
-#### Additional Evidence
-- **[DOC065-1](/legal-archive/legal-documents/DOC065-1.pdf)**
-  - *Summary*: Additional supporting documentation providing context and evidence for various aspects of the legal proceedings.
-
----
-
-## Missing Documentation Analysis
-
-### Identified Gaps in Archive
-
-#### 1. Labour Appeal Court (2011-2012)
-- **Status**: Documents may be missing
-- **Expected**: Appeal court transcripts, judgments, correspondence
-- **Significance**: Critical for understanding appellate review of irregular proceedings
-
-#### 2. Constitutional Court Filing (2014-2015)
-- **Status**: Documents may be missing  
-- **Expected**: Constitutional Court application, supporting affidavits, court responses
-- **Significance**: Constitutional challenge to Labour Court irregularities
-
-#### 3. SAHRC Case (2014-2016)
-- **Status**: Documents may be missing
-- **Expected**: Human Rights Commission complaint, investigation records, findings
-- **Significance**: Human rights violations in judicial proceedings
-
-#### 4. Equality Court Case (2015)
-- **Status**: Documents may be missing
-- **Expected**: Equality Court application, proceedings, judgment
-- **Significance**: Discrimination and equality issues in legal process
-
-#### 5. LASA Proceedings (2016-2018)
-- **Status**: Sidebar hearing mentioned, outcome 2018
-- **Expected**: Legal Aid South Africa proceedings, decisions, correspondence
-- **Significance**: Access to justice and legal representation issues
-
-#### 6. Corruption Case (Unfiled)
-- **Status**: No support from legal profession
-- **Expected**: Prepared but unfiled corruption charges, supporting evidence
-- **Significance**: Criminal aspects of judicial and legal professional misconduct
+#### Additional Proceedings
+- **[DOC065-1](/legal-archive/legal-documents/DOC065-1-LASA-HIGH-COURT.pdf)**
+  - *Summary*: Additional proceedings and supporting documentation from the LASA High Court case seeking legal representation in matter effecting outcome of Truth & Reconciliation Commission.
 
 ---
 
@@ -176,9 +140,10 @@ This archive documents an 18-year legal battle spanning multiple courts, regulat
 
 ### Primary Threads
 1. **Media Law**: Labour dispute over journalistic freedom and copyright
-2. **Constitutional Law**: Violations of fair trial, equality, and expression rights
+2. **Constitutional Law**: Violations of fair hearing, equality, and expression rights
 3. **Criminal Law**: Perjury, corruption, and professional misconduct
 4. **Administrative Law**: Irregular judicial and regulatory conduct
+5. **Transitional Justice**: Truth & Reconciliation Commission outcome, standing before courts
 
 ### Legal Principles at Stake
 - Press freedom and media independence
@@ -187,31 +152,6 @@ This archive documents an 18-year legal battle spanning multiple courts, regulat
 - Judicial integrity and accountability
 - Intellectual property protection
 - Transitional justice and historical accountability
-
----
-
-## Research & Documentation Needs
-
-### Immediate Priorities
-1. **Locate missing Constitutional Court documents**
-2. **Retrieve SAHRC case files**
-3. **Obtain Equality Court proceedings**
-4. **Document LASA sidebar hearing outcome**
-5. **Compile unfiled corruption case materials**
-
-### Digital Archive Enhancement
-1. **Timeline visualization tool**
-2. **Case interconnection mapping**
-3. **Document cross-referencing system**
-4. **AI-powered document analysis**
-5. **Integration with legal databases**
-
-### Proposed AI Assistant Integration
-- **DeepWiki interface** for repository analysis
-- **Custom chat assistant** for document navigation
-- **Automated document summarization**
-- **Legal precedent identification**
-- **Timeline generation from documents**
 
 ---
 
