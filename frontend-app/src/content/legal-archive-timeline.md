@@ -4,27 +4,6 @@
 
 This archive documents an 18-year legal battle spanning multiple courts, regulatory bodies, and legal proceedings. The cases are interconnected, stemming from an initial media law labour dispute that escalated into constitutional, equality, and criminal law matters.
 
-## Timeline Overview
-
-### Phase 1: Initial Dispute & Gagging Attempt (2006)
-**Media Law Labour Dispute Begins**
-
-### Phase 2: Labour Court Proceedings (2009-2010)
-**Lewis v Media24 - Case C88/07**
-
-### Phase 3: Appeals & Professional Complaints (2011-2014)
-**Labour Appeal Court, Cape Law Society Complaint**
-
-### Phase 4: Constitutional & Human Rights (2014-2015)
-**Constitutional Court Filing, SAHRC Case, Equality Court**
-
-### Phase 5: Criminal & Professional Misconduct (2016-2018)
-**Perjury Case, LASA Proceedings**
-
-### Phase 6: Ongoing Documentation (2019-2024)
-**Corruption Evidence, Additional Filings**
-
----
 
 ## Detailed Timeline
 
