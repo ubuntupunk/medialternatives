@@ -117,6 +117,27 @@ export default function LegalArchivePage() {
             </div>
           </div>
 
+          {/* Research and Academic Use */}
+          <div className="alert alert-success mt-4">
+            <h6 className="alert-heading">
+              <i className="bi bi-mortarboard me-2"></i>
+              Research and Academic Use
+            </h6>
+            <p className="mb-2 small">
+              Researchers, journalists, and academics are encouraged to use these documents for:
+            </p>
+            <ul className="mb-2 small">
+              <li>Media law studies</li>
+              <li>Press freedom research</li>
+              <li>South African legal history</li>
+              <li>Case study analysis</li>
+              <li>Academic publications</li>
+            </ul>
+            <p className="mb-0 small">
+              <strong>Please cite appropriately when using these materials in academic or professional work.</strong>
+            </p>
+          </div>
+
           {/* Legal Notice */}
           <div className="alert alert-info mt-4">
             <h6 className="alert-heading">
