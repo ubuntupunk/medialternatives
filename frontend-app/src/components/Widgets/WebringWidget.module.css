@@ -7,6 +7,74 @@
   text-align: center;
 }
 
+.webringLogo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 0 auto 0.5rem;
+  display: block;
+  object-fit: cover;
+}
+
+.webringContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.surferImageContainer {
+  flex-shrink: 0;
+}
+
+.surferImage {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #0d6efd;
+}
+
+.webringText {
+  text-align: left;
+  flex-grow: 1;
+}
+
+.webringIntro {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.webringName {
+  margin: 0.25rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.webringName a {
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.webringName a:hover {
+  text-decoration: underline;
+}
+
+.webringMembers {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.webringNavigation {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
 .widgetTitle {
   font-size: 1.1rem;
   font-weight: 600;
@@ -22,28 +90,39 @@
   gap: 0.5rem;
 }
 
-.webringDescription {
-  font-size: 0.9rem;
-  color: #6c757d;
+.webringImage {
   margin-bottom: 0.5rem;
 }
 
-.webringDescription a {
-  color: #0d6efd;
-  text-decoration: none;
-  font-weight: 500;
+.webringLogo {
+  max-width: 120px;
+  height: auto;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.webringDescription a:hover {
-  text-decoration: underline;
+.webringImage {
+  margin-bottom: 0.5rem;
 }
 
-.webringLinks {
-  display: flex;
-  justify-content: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
+.webringLogo {
+  max-width: 120px;
+  height: auto;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
+
+.webringImage {
+  margin-bottom: 0.75rem;
+}
+
+.webringBannerImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
 
 .webringLink {
   display: inline-block;
@@ -73,13 +152,27 @@
 
 /* Responsive adjustments */
 @media (max-width: 576px) {
-  .webringLinks {
+  .webringContent {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .webringText {
+    text-align: center;
+  }
+  
+  .webringNavigation {
     gap: 0.5rem;
   }
   
   .webringLink {
     padding: 0.25rem 0.5rem;
     font-size: 0.8rem;
+  }
+  
+  .surferImage {
+    width: 50px;
+    height: 50px;
   }
 }
 

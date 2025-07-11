@@ -10,6 +10,13 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
     <div className={`widget ${styles.webringWidget}`}>
       <h3 className={styles.widgetTitle}>{title}</h3>
       <div className={styles.webringBanner}>
+        <div className={styles.webringImage}>
+          <img 
+            src="https://meshring.netlify.app/assets/meshring.png" 
+            alt="MuizenMesh Webring" 
+            className={styles.webringLogo}
+          />
+        </div>
         <p className={styles.webringDescription}>
           Member of the <a href={webringUrl}>MuizenMesh Webring</a>
         </p>
