@@ -47,9 +47,38 @@ export default function OverviewPage() {
   const [recentPosts, setRecentPosts] = useState<WordPressPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [analyticsData, setAnalyticsData] = useState<any>(null);
+  const [performanceData, setPerformanceData] = useState<any>(null);
+  const [dataLoading, setDataLoading] = useState(true);
 
-  // Mock overview stats - in production, these would come from various APIs
-  const [stats] = useState<OverviewStats>({
+  // Fetch real-time data from APIs
+  const fetchDashboardData = async () => {
+    setDataLoading(true);
+    try {
+      // Fetch analytics data
+      const analyticsResponse = await fetch('/api/analytics?period=7d');
+      const analyticsResult = await analyticsResponse.json();
+      if (analyticsResult.success) {
+        setAnalyticsData(analyticsResult.data);
+      }
+
+      // Fetch performance data
+      const performanceResponse = await fetch('/api/performance');
+      const performanceResult = await performanceResponse.json();
+      if (performanceResult.success) {
+        setPerformanceData(performanceResult.data);
+      }
+
+      setLastUpdated(new Date());
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+    } finally {
+      setDataLoading(false);
+    }
+  };
+
+  // Mock overview stats - enhanced with real data when available
+  const getStats = (): OverviewStats => ({
     posts: {
       total: 247,
       published: 245,
@@ -57,18 +86,18 @@ export default function OverviewPage() {
       thisMonth: 12
     },
     analytics: {
-      visitors: 8420,
-      pageviews: 15680,
-      bounceRate: 68.5,
-      avgSessionDuration: '2m 34s',
-      topPage: '/post/piers-morgan-calls-out-sophie-mokoena',
-      topPageViews: 2340
+      visitors: analyticsData?.visitors || 8420,
+      pageviews: analyticsData?.pageviews || 15680,
+      bounceRate: analyticsData?.bounceRate || 68.5,
+      avgSessionDuration: analyticsData?.avgSessionDuration || '2m 34s',
+      topPage: analyticsData?.topPages?.[0]?.page || '/post/piers-morgan-calls-out-sophie-mokoena',
+      topPageViews: analyticsData?.topPages?.[0]?.views || 2340
     },
     performance: {
-      lighthouseScore: 94,
-      loadTime: 1.8,
-      uptime: 99.9,
-      coreWebVitals: 'good'
+      lighthouseScore: performanceData?.lighthouse?.performance || 94,
+      loadTime: performanceData?.loadTime || 1.8,
+      uptime: 99.9, // This would come from uptime monitoring service
+      coreWebVitals: performanceData?.coreWebVitals?.status || 'good'
     },
     revenue: {
       thisMonth: 89.50,
@@ -102,14 +131,14 @@ export default function OverviewPage() {
       }
     };
 
+    // Fetch both posts and dashboard data on component mount
     fetchRecentPosts();
+    fetchDashboardData();
 
-    // Update timestamp every minute
-    const interval = setInterval(() => {
-      setLastUpdated(new Date());
-    }, 60000);
+    // Set up auto-refresh for dashboard data every 5 minutes
+    const dashboardInterval = setInterval(fetchDashboardData, 5 * 60 * 1000);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(dashboardInterval);
   }, []);
 
   const getPerformanceColor = (score: number) => {
@@ -128,6 +157,7 @@ export default function OverviewPage() {
     };
   };
 
+  const stats = getStats();
   const revenueChange = getRevenueChange();
 
   return (
@@ -162,10 +192,20 @@ export default function OverviewPage() {
           </div>
           <button 
             className="btn btn-outline-primary btn-sm mt-2"
-            onClick={() => setLastUpdated(new Date())}
+            onClick={fetchDashboardData}
+            disabled={dataLoading}
           >
-            <i className="bi bi-arrow-clockwise me-1"></i>
-            Refresh
+            {dataLoading ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                Refreshing...
+              </>
+            ) : (
+              <>
+                <i className="bi bi-arrow-clockwise me-1"></i>
+                Refresh Data
+              </>
+            )}
           </button>
         </div>
       </div>
