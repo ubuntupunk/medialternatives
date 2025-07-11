@@ -16,32 +16,32 @@ export default function LegalArchivePage() {
   const markdownContent = readFileSync(markdownPath, 'utf8');
 
   return (
-    <div className="container my-5">
+    <div className="container-fluid my-5">
       <div className="row">
-        <div className="col-lg-8 mx-auto">
+        <div className="col-12 col-xl-10 mx-auto px-3 px-md-4">
           {/* Archive Navigation Header */}
-          <nav aria-label="Legal Archive Navigation" className="mb-5">
+          <nav aria-label="Legal Archive Navigation" className="mb-4 mb-md-5">
             <div className="card border-0 bg-light">
-              <div className="card-body p-4">
-                <h5 className="card-title text-center mb-3">
+              <div className="card-body p-3 p-md-4">
+                <h5 className="card-title text-center mb-3 h6 h-md-5">
                   <i className="bi bi-archive me-2"></i>
                   Legal Document Archive
                 </h5>
-                <div className="d-flex justify-content-center gap-3 flex-wrap">
+                <div className="d-flex justify-content-center gap-2 gap-md-3 flex-wrap">
                   <Link href="/case" className="btn btn-outline-primary btn-sm">
-                    <i className="bi bi-file-text me-1"></i>
-                    Case Overview
+                    <i className="bi bi-file-text me-1 d-none d-sm-inline"></i>
+                    <span className="d-none d-sm-inline">Case </span>Overview
                   </Link>
                   <span className="btn btn-primary btn-sm">
-                    <i className="bi bi-folder-open me-1"></i>
-                    Document Archive
+                    <i className="bi bi-folder-open me-1 d-none d-sm-inline"></i>
+                    <span className="d-none d-sm-inline">Document </span>Archive
                   </span>
                   <Link href="/legal-archive-timeline" className="btn btn-outline-primary btn-sm">
-                    <i className="bi bi-clock-history me-1"></i>
-                    Timeline View
+                    <i className="bi bi-clock-history me-1 d-none d-sm-inline"></i>
+                    <span className="d-none d-sm-inline">Timeline </span>View
                   </Link>
                 </div>
-                <div className="text-center mt-3">
+                <div className="text-center mt-3 d-none d-md-block">
                   <small className="text-muted">
                     <i className="bi bi-info-circle me-1"></i>
                     Comprehensive legal documentation from the Lewis v Media24 case
@@ -101,48 +101,48 @@ export default function LegalArchivePage() {
           </div>
 
           {/* Archive Statistics */}
-          <div className="row mt-5 pt-4 border-top">
-            <div className="col-md-3 text-center mb-3">
-              <div className="h4 text-primary">32</div>
+          <div className="row mt-4 mt-md-5 pt-3 pt-md-4 border-top">
+            <div className="col-6 col-md-3 text-center mb-3">
+              <div className="h5 h-md-4 text-primary">32</div>
               <div className="small text-muted">Total Documents</div>
             </div>
-            <div className="col-md-3 text-center mb-3">
-              <div className="h4 text-primary">114.79 MB</div>
+            <div className="col-6 col-md-3 text-center mb-3">
+              <div className="h5 h-md-4 text-primary">114.79 MB</div>
               <div className="small text-muted">Archive Size</div>
             </div>
-            <div className="col-md-3 text-center mb-3">
-              <div className="h4 text-primary">96.9%</div>
+            <div className="col-6 col-md-3 text-center mb-3">
+              <div className="h5 h-md-4 text-primary">96.9%</div>
               <div className="small text-muted">Validation Rate</div>
             </div>
-            <div className="col-md-3 text-center mb-3">
-              <div className="h4 text-primary">3</div>
+            <div className="col-6 col-md-3 text-center mb-3">
+              <div className="h5 h-md-4 text-primary">3</div>
               <div className="small text-muted">Backup Locations</div>
             </div>
           </div>
 
           {/* Archive Features */}
-          <div className="row mt-4">
-            <div className="col-md-6 mb-3">
+          <div className="row mt-4 g-3">
+            <div className="col-12 col-lg-6 mb-3">
               <div className="card border-0 bg-light h-100">
-                <div className="card-body">
-                  <h5 className="card-title">
+                <div className="card-body p-3 p-md-4">
+                  <h6 className="card-title h6">
                     <i className="bi bi-shield-check text-success me-2"></i>
                     Verified Integrity
-                  </h5>
-                  <p className="card-text small">
+                  </h6>
+                  <p className="card-text small mb-0">
                     All documents include SHA256 hash verification and PDF structure validation.
                   </p>
                 </div>
               </div>
             </div>
-            <div className="col-md-6 mb-3">
+            <div className="col-12 col-lg-6 mb-3">
               <div className="card border-0 bg-light h-100">
-                <div className="card-body">
-                  <h5 className="card-title">
+                <div className="card-body p-3 p-md-4">
+                  <h6 className="card-title h6">
                     <i className="bi bi-cloud-check text-primary me-2"></i>
                     Multiple Backups
-                  </h5>
-                  <p className="card-text small">
+                  </h6>
+                  <p className="card-text small mb-0">
                     Documents stored in repository with cold storage backups on pCloud and IceDrive.
                   </p>
                 </div>
