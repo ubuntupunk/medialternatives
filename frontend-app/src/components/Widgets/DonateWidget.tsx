@@ -17,7 +17,7 @@ const DonateWidget: React.FC<DonateWidgetProps> = ({
   return (
     <div className="widget donate-widget">
       <h3 className="widget-title">{title}</h3>
-      <div className="donate-button-container">
+      <div className="donate-button-container text-center">
         <form action="https://www.paypal.com/donate" method="post" target="_top">
           <input type="hidden" name="hosted_button_id" value={paypalHostedButtonId} />
           <input
@@ -27,6 +27,7 @@ const DonateWidget: React.FC<DonateWidgetProps> = ({
             title="PayPal - The safer, easier way to pay online!"
             alt={buttonText}
             style={{ border: 0 }}
+            className="mx-auto d-block"
           />
           <img alt="" src="https://www.paypal.com/en_ZA/i/scr/pixel.gif" width="1" height="1" style={{ border: 0 }} />
         </form>
