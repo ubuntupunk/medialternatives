@@ -70,21 +70,28 @@ async function validatePDF(filePath) {
     const buffer = await fs.readFile(filePath, { encoding: null });
     
     // Check PDF header
-    const pdfHeader = buffer.slice(0, 4).toString();
+    const pdfHeader = buffer.slice(0, 4).toString('ascii');
     const hasPDFHeader = pdfHeader === '%PDF';
     
-    // Check for PDF trailer
-    const fileContent = buffer.toString('binary');
-    const hasTrailer = fileContent.includes('%%EOF');
+    // Check for PDF trailer - look in last 1024 bytes for %%EOF
+    const trailerSection = buffer.slice(-1024);
+    const hasTrailer = trailerSection.includes(Buffer.from('%%EOF', 'ascii'));
     
     // Basic size validation (PDFs should be at least 1KB)
     const minSize = buffer.length > 1024;
     
+    // Additional check: look for PDF version in header
+    const headerSection = buffer.slice(0, 20).toString('ascii');
+    const versionMatch = headerSection.match(/%PDF-(\d+\.\d+)/);
+    const hasVersion = versionMatch !== null;
+    
     return {
-      isValid: hasPDFHeader && hasTrailer && minSize,
+      isValid: hasPDFHeader && hasTrailer && minSize && hasVersion,
       hasPDFHeader,
       hasTrailer,
       minSize,
+      hasVersion,
+      version: versionMatch ? versionMatch[1] : null,
       actualSize: buffer.length
     };
   } catch (error) {

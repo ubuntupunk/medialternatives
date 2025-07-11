@@ -2,7 +2,7 @@
   "metadata": {
     "title": "Medialternatives Legal Documents Manifest",
     "description": "Comprehensive catalog of downloaded legal PDFs for pCloud migration",
-    "created": "2025-07-11T06:47:48.364Z",
+    "created": "2025-07-11T06:50:41.691Z",
     "version": "1.0.0",
     "generator": "create-legal-pdfs-manifest.js",
     "baseDirectory": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs"
@@ -44,7 +44,7 @@
       "originalName": "Supplement-Affidavit-CBC-Kahanovitz-9-MAY-2017-TUE-.doc-0BycjkxOoSHFeRV8zOTl6NjZYbGM.pdf",
       "reason": "Removed problematic characters and Google Drive ID suffix",
       "renamedBy": "manual",
-      "date": "2025-07-11T06:47:48.364Z"
+      "date": "2025-07-11T06:50:41.691Z"
     }
   },
   "contents": [
@@ -87,6 +87,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 433576
           }
         },
@@ -112,6 +114,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 90598
           }
         },
@@ -137,6 +141,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 526568
           }
         },
@@ -162,6 +168,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 70011
           }
         },
@@ -187,6 +195,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 73817
           }
         },
@@ -212,6 +222,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 364073
           }
         },
@@ -237,6 +249,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 70001
           }
         },
@@ -262,6 +276,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 73338
           }
         },
@@ -287,6 +303,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 631468
           }
         },
@@ -312,6 +330,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 76301
           }
         },
@@ -337,6 +357,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 159005
           }
         },
@@ -362,6 +384,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 381136
           }
         },
@@ -387,6 +411,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
             "actualSize": 680492
           }
         },
@@ -412,6 +438,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.4",
             "actualSize": 133924
           }
         }
@@ -457,6 +485,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.4",
             "actualSize": 116859
           }
         },
@@ -482,6 +512,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.4",
             "actualSize": 26161064
           }
         },
@@ -507,6 +539,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
             "actualSize": 783576
           }
         },
@@ -532,6 +566,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.4",
             "actualSize": 228356
           }
         },
@@ -557,6 +593,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
             "actualSize": 8857447
           }
         },
@@ -582,6 +620,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 25647065
           }
         },
@@ -607,6 +647,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
             "actualSize": 3039108
           }
         },
@@ -632,6 +674,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
             "actualSize": 1724222
           }
         },
@@ -657,6 +701,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 1165255
           }
         },
@@ -682,6 +728,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 338905
           }
         },
@@ -707,6 +755,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 416953
           }
         },
@@ -732,6 +782,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 93909
           }
         },
@@ -757,6 +809,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
             "actualSize": 22741161
           }
         },
@@ -782,6 +836,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
             "actualSize": 1095901
           }
         },
@@ -807,6 +863,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
             "actualSize": 965320
           }
         },
@@ -832,6 +890,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
             "actualSize": 992289
           }
         },
@@ -857,6 +917,8 @@
             "hasPDFHeader": true,
             "hasTrailer": false,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
             "actualSize": 17661952
           }
         },
@@ -882,6 +944,8 @@
             "hasPDFHeader": true,
             "hasTrailer": true,
             "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
             "actualSize": 4567792
           }
         }
