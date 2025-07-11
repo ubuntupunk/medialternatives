@@ -1,36 +1,31 @@
 #!/usr/bin/env node
 
 /**
- * PDF Migration Script for Medialternatives - pCloud Storage
+ * PDF Download Script for Medialternatives - Manual pCloud Upload
  * 
- * This script downloads PDFs from fixed URLs and uploads them to pCloud
+ * This script downloads PDFs from medialternatives.com to a local folder
+ * for manual upload to pCloud storage
  * Run with: node scripts/migrate-pdfs-pcloud.js
  * 
  * Requirements:
- * - pcloud-sdk-js package
- * - pCloud account credentials in .env
+ * - Internet connection to download PDFs
+ * - Local storage space (~250MB estimated)
  */
 
 const fs = require('fs').promises;
 const path = require('path');
 const https = require('https');
-const pcloudSdk = require('pcloud-sdk-js');
 
-// Load environment variables
-require('dotenv').config();
-
-// pCloud OAuth2 configuration
-const PCLOUD_CONFIG = {
-  client_id: process.env.PCLOUD_CLIENT_ID,
-  client_secret: process.env.PCLOUD_CLIENT_SECRET,
-  access_token: process.env.PCLOUD_ACCESS_TOKEN,
-  refresh_token: process.env.PCLOUD_REFRESH_TOKEN,
-  oauth_url: 'https://api.pcloud.com/oauth2_token'
+// Download configuration
+const DOWNLOAD_CONFIG = {
+  outputDir: path.join(__dirname, '../downloads/legal-pdfs'),
+  transcriptsDir: 'court-transcripts',
+  legalDir: 'legal-documents'
 };
 
-// List of all PDF URLs (now with fixed URLs)
+// List of all PDF URLs (all using working medialternatives.com structure)
 const PDF_URLS = [
-  // Court Transcripts (now fixed to medialternatives.com)
+  // Court Transcripts (2020/07 - these will go in court-transcripts folder)
   'https://medialternatives.com/app/uploads/2020/07/Transcripts-Index-1.pdf',
   'https://medialternatives.com/app/uploads/2020/07/C88-07-Vol_1-4-November-2009-FP-1.pdf',
   'https://medialternatives.com/app/uploads/2020/07/C88-07-Vol_1-4-November-2009-1.pdf',
@@ -46,7 +41,7 @@ const PDF_URLS = [
   'https://medialternatives.com/app/uploads/2020/07/C88-07-Vol_5-21-January-2010-1.pdf',
   'https://medialternatives.com/app/uploads/2020/07/Cheadle-Report-to-Cape-Law-Society-6-September-2011-1.pdf',
   
-  // Legal Documents
+  // Legal Documents (2022-2024 - these will go in legal-documents folder)
   'https://medialternatives.com/app/uploads/2022/07/Founding-Affidavit.pdf',
   'https://medialternatives.com/app/uploads/2022/07/Annexures-PAJA-3.pdf',
   'https://medialternatives.com/app/uploads/2022/06/Affidavit-20-November-2017-Addendum-4.pdf',
@@ -67,116 +62,80 @@ const PDF_URLS = [
   'https://medialternatives.com/app/uploads/2022/08/DOC065-1.pdf'
 ];
 
-// pCloud folder structure
-const PCLOUD_FOLDERS = {
-  root: '/medialternatives-legal-docs',
-  transcripts: '/medialternatives-legal-docs/court-transcripts',
-  legal: '/medialternatives-legal-docs/legal-documents'
+// Local folder structure (mirrors intended pCloud structure)
+const LOCAL_FOLDERS = {
+  transcripts: path.join(DOWNLOAD_CONFIG.outputDir, DOWNLOAD_CONFIG.transcriptsDir),
+  legal: path.join(DOWNLOAD_CONFIG.outputDir, DOWNLOAD_CONFIG.legalDir)
 };
 
 /**
- * Get access token from environment or guide user to setup
+ * Create local folder structure
  */
-async function getAccessToken() {
-  if (PCLOUD_CONFIG.access_token) {
-    console.log('✅ Using existing access token');
-    return PCLOUD_CONFIG.access_token;
-  }
-
-  throw new Error(`
-❌ pCloud access token not found!
-
-To get an access token:
-1. Run: node scripts/pcloud-simple-auth.js
-2. Follow the browser authorization flow
-3. Copy the token to your .env.local file as:
-   PCLOUD_ACCESS_TOKEN=your_token_here
-
-Alternative setup methods:
-- node scripts/pcloud-oauth-server.js (if you have Client ID/Secret)
-- node scripts/setup-pcloud-oauth.js (manual setup)
-`);
-}
-
-/**
- * Initialize pCloud client with access token
- */
-async function initPCloudClient() {
+async function createLocalFolderStructure() {
   try {
-    const accessToken = await getAccessToken();
+    console.log('📁 Creating local folder structure...');
     
-    // Initialize pCloud SDK with access token
-    const client = pcloudSdk.createClient({
-      access_token: accessToken
-    });
+    // Create main output directory
+    await fs.mkdir(DOWNLOAD_CONFIG.outputDir, { recursive: true });
+    console.log(`✅ Created: ${DOWNLOAD_CONFIG.outputDir}`);
     
-    // Test the connection
-    await client.userinfo();
+    // Create subfolders
+    await fs.mkdir(LOCAL_FOLDERS.transcripts, { recursive: true });
+    console.log(`✅ Created: ${LOCAL_FOLDERS.transcripts}`);
     
-    console.log('✅ pCloud client initialized successfully');
-    return client;
+    await fs.mkdir(LOCAL_FOLDERS.legal, { recursive: true });
+    console.log(`✅ Created: ${LOCAL_FOLDERS.legal}`);
+    
   } catch (error) {
-    console.error('❌ Failed to initialize pCloud client:', error);
+    console.error('❌ Error creating local folders:', error);
     throw error;
   }
 }
 
 /**
- * Create folder structure in pCloud
+ * Download a file from URL to local file
  */
-async function createFolderStructure(client) {
-  try {
-    console.log('📁 Creating folder structure in pCloud...');
-    
-    // Create root folder
-    await client.createfolder(PCLOUD_FOLDERS.root);
-    console.log(`✅ Created: ${PCLOUD_FOLDERS.root}`);
-    
-    // Create subfolders
-    await client.createfolder(PCLOUD_FOLDERS.transcripts);
-    console.log(`✅ Created: ${PCLOUD_FOLDERS.transcripts}`);
-    
-    await client.createfolder(PCLOUD_FOLDERS.legal);
-    console.log(`✅ Created: ${PCLOUD_FOLDERS.legal}`);
-    
-  } catch (error) {
-    // Folders might already exist, that's okay
-    if (error.result && error.result === 2004) {
-      console.log('📁 Folders already exist, continuing...');
-    } else {
-      console.error('❌ Error creating folders:', error);
-      throw error;
-    }
-  }
-}
-
-/**
- * Download a file from URL to buffer
- */
-async function downloadFileToBuffer(url) {
+async function downloadFile(url, outputPath) {
   return new Promise((resolve, reject) => {
+    const file = require('fs').createWriteStream(outputPath);
+    
     https.get(url, (response) => {
       if (response.statusCode !== 200) {
         reject(new Error(`Failed to download ${url}: ${response.statusCode}`));
         return;
       }
       
-      const chunks = [];
-      response.on('data', (chunk) => chunks.push(chunk));
-      response.on('end', () => resolve(Buffer.concat(chunks)));
-      response.on('error', reject);
-    }).on('error', reject);
+      response.pipe(file);
+      
+      file.on('finish', () => {
+        file.close();
+        resolve(outputPath);
+      });
+      
+      file.on('error', (err) => {
+        fs.unlink(outputPath);
+        reject(err);
+      });
+    }).on('error', (err) => {
+      reject(err);
+    });
   });
 }
 
 /**
- * Get file category based on URL
+ * Get file category and local folder based on URL
  */
 function getFileCategory(url) {
   if (url.includes('/2020/07/')) {
-    return 'transcripts';
+    return {
+      category: 'transcripts',
+      folder: LOCAL_FOLDERS.transcripts
+    };
   }
-  return 'legal';
+  return {
+    category: 'legal',
+    folder: LOCAL_FOLDERS.legal
+  };
 }
 
 /**
@@ -187,193 +146,147 @@ function getFilename(url) {
 }
 
 /**
- * Upload file to pCloud
+ * Get file size from local file
  */
-async function uploadToPCloud(client, fileBuffer, filename, category) {
+async function getFileSize(filePath) {
   try {
-    const folder = category === 'transcripts' ? PCLOUD_FOLDERS.transcripts : PCLOUD_FOLDERS.legal;
-    
-    // Upload file
-    const result = await client.uploadfile(
-      fileBuffer,
-      filename,
-      folder
-    );
-    
-    // Get public link
-    const linkResult = await client.getfilelink(result.metadata[0].fileid);
-    
-    return {
-      fileid: result.metadata[0].fileid,
-      path: `${folder}/${filename}`,
-      publicLink: linkResult.link,
-      size: result.metadata[0].size
-    };
+    const stats = await fs.stat(filePath);
+    return stats.size;
   } catch (error) {
-    console.error(`Failed to upload ${filename} to pCloud:`, error);
-    throw error;
+    return 0;
   }
 }
 
 /**
- * Get pCloud account info
+ * Main download function
  */
-async function getPCloudAccountInfo(client) {
-  try {
-    const userInfo = await client.userinfo();
-    const quota = userInfo.quota;
-    const used = userInfo.usedquota;
-    const available = quota - used;
-    
-    return {
-      quota: (quota / (1024 * 1024 * 1024)).toFixed(2) + ' GB',
-      used: (used / (1024 * 1024 * 1024)).toFixed(2) + ' GB',
-      available: (available / (1024 * 1024 * 1024)).toFixed(2) + ' GB',
-      usedPercent: ((used / quota) * 100).toFixed(1) + '%'
-    };
-  } catch (error) {
-    console.error('Failed to get account info:', error);
-    return null;
-  }
-}
-
-/**
- * Main migration function
- */
-async function migratePDFsToPCloud() {
-  console.log('🚀 Starting PDF migration to pCloud...');
-  console.log(`📄 Found ${PDF_URLS.length} PDFs to migrate`);
-  
-  let client;
+async function downloadPDFsLocally() {
+  console.log('🚀 Starting PDF download for manual pCloud upload...');
+  console.log(`📄 Found ${PDF_URLS.length} PDFs to download`);
+  console.log(`📁 Download location: ${DOWNLOAD_CONFIG.outputDir}`);
+  console.log('');
   
   try {
-    // Initialize pCloud client
-    client = await initPCloudClient();
-    
-    // Get account info
-    const accountInfo = await getPCloudAccountInfo(client);
-    if (accountInfo) {
-      console.log('💾 pCloud Account Info:');
-      console.log(`   Total: ${accountInfo.quota}`);
-      console.log(`   Used: ${accountInfo.used} (${accountInfo.usedPercent})`);
-      console.log(`   Available: ${accountInfo.available}`);
-    }
-    
-    // Create folder structure
-    await createFolderStructure(client);
+    // Create local folder structure
+    await createLocalFolderStructure();
     
     const results = {
       downloaded: [],
-      uploaded: [],
       failed: [],
       totalSize: 0
     };
     
     for (const url of PDF_URLS) {
       const filename = getFilename(url);
-      const category = getFileCategory(url);
+      const fileInfo = getFileCategory(url);
+      const outputPath = path.join(fileInfo.folder, filename);
       
       try {
         console.log(`⬇️  Downloading: ${filename}`);
-        const fileBuffer = await downloadFileToBuffer(url);
-        results.downloaded.push({ url, filename, size: fileBuffer.length });
-        console.log(`✅ Downloaded: ${filename} (${(fileBuffer.length / 1024 / 1024).toFixed(2)} MB)`);
+        console.log(`    From: ${url}`);
+        console.log(`    To: ${outputPath}`);
         
-        // Upload to pCloud
-        console.log(`⬆️  Uploading to pCloud: ${filename}`);
-        const uploadResult = await uploadToPCloud(client, fileBuffer, filename, category);
+        await downloadFile(url, outputPath);
+        const fileSize = await getFileSize(outputPath);
         
-        results.uploaded.push({
-          filename,
-          category,
-          oldUrl: url,
-          newUrl: uploadResult.publicLink,
-          pcloudPath: uploadResult.path,
-          fileid: uploadResult.fileid,
-          size: uploadResult.size
+        results.downloaded.push({ 
+          url, 
+          filename, 
+          localPath: outputPath,
+          category: fileInfo.category,
+          size: fileSize 
         });
         
-        results.totalSize += uploadResult.size;
-        console.log(`✅ Uploaded: ${filename} -> ${uploadResult.publicLink}`);
+        results.totalSize += fileSize;
+        console.log(`✅ Downloaded: ${filename} (${(fileSize / 1024 / 1024).toFixed(2)} MB)`);
+        console.log('');
         
-        // Small delay to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Small delay to be respectful to the server
+        await new Promise(resolve => setTimeout(resolve, 500));
         
       } catch (error) {
         console.error(`❌ Failed: ${filename} - ${error.message}`);
         results.failed.push({ url, filename, error: error.message });
+        console.log('');
       }
     }
     
     // Generate comprehensive report
-    console.log('\n📊 Migration Report:');
-    console.log(`✅ Successfully migrated: ${results.uploaded.length}`);
+    console.log('📊 Download Report:');
+    console.log('==================');
+    console.log(`✅ Successfully downloaded: ${results.downloaded.length}`);
     console.log(`❌ Failed: ${results.failed.length}`);
-    console.log(`💾 Total size uploaded: ${(results.totalSize / 1024 / 1024).toFixed(2)} MB`);
+    console.log(`💾 Total size downloaded: ${(results.totalSize / 1024 / 1024).toFixed(2)} MB`);
+    console.log('');
+    
+    // Show breakdown by category
+    const transcripts = results.downloaded.filter(item => item.category === 'transcripts');
+    const legal = results.downloaded.filter(item => item.category === 'legal');
+    
+    console.log('📋 Files by category:');
+    console.log(`  📋 Court Transcripts: ${transcripts.length} files`);
+    console.log(`  ⚖️  Legal Documents: ${legal.length} files`);
+    console.log('');
     
     if (results.failed.length > 0) {
-      console.log('\n❌ Failed files:');
+      console.log('❌ Failed downloads:');
       results.failed.forEach(item => {
         console.log(`  - ${item.filename}: ${item.error}`);
       });
+      console.log('');
     }
     
-    // Save detailed mapping for updating content
-    const urlMapping = {};
-    const pcloudMapping = {};
-    
-    results.uploaded.forEach(item => {
-      urlMapping[item.oldUrl] = item.newUrl;
-      pcloudMapping[item.filename] = {
-        publicUrl: item.newUrl,
-        pcloudPath: item.pcloudPath,
-        fileid: item.fileid,
-        category: item.category,
-        size: item.size
-      };
-    });
-    
-    // Save mappings
-    await fs.writeFile(
-      path.join(__dirname, '../pdf-url-mapping-pcloud.json'),
-      JSON.stringify(urlMapping, null, 2)
-    );
+    // Save download report
+    const downloadReport = {
+      timestamp: new Date().toISOString(),
+      totalFiles: PDF_URLS.length,
+      downloaded: results.downloaded.length,
+      failed: results.failed.length,
+      totalSize: results.totalSize,
+      downloadLocation: DOWNLOAD_CONFIG.outputDir,
+      files: results.downloaded,
+      failures: results.failed
+    };
     
     await fs.writeFile(
-      path.join(__dirname, '../pcloud-file-mapping.json'),
-      JSON.stringify(pcloudMapping, null, 2)
+      path.join(__dirname, '../download-report.json'),
+      JSON.stringify(downloadReport, null, 2)
     );
     
-    await fs.writeFile(
-      path.join(__dirname, '../migration-report-pcloud.json'),
-      JSON.stringify(results, null, 2)
-    );
+    console.log('💾 Download report saved: download-report.json');
+    console.log('');
     
-    console.log('\n💾 Files saved:');
-    console.log('  - pdf-url-mapping-pcloud.json (for updating case.md)');
-    console.log('  - pcloud-file-mapping.json (detailed pCloud info)');
-    console.log('  - migration-report-pcloud.json (full migration report)');
-    
-    console.log('\n🔄 Next steps:');
-    console.log('  1. Update case.md with new pCloud URLs');
-    console.log('  2. Test all download links');
-    console.log('  3. Update download component to handle pCloud URLs');
-    console.log('  4. Consider implementing download analytics');
+    console.log('🔄 Next steps for pCloud upload:');
+    console.log('================================');
+    console.log('1. Open pCloud web interface or desktop app');
+    console.log('2. Create folder structure:');
+    console.log('   /medialternatives-legal-docs/');
+    console.log('   ├── court-transcripts/');
+    console.log('   └── legal-documents/');
+    console.log('');
+    console.log('3. Upload files:');
+    console.log(`   📋 Court Transcripts (${transcripts.length} files):`);
+    console.log(`      From: ${LOCAL_FOLDERS.transcripts}`);
+    console.log('      To: /medialternatives-legal-docs/court-transcripts/');
+    console.log('');
+    console.log(`   ⚖️  Legal Documents (${legal.length} files):`);
+    console.log(`      From: ${LOCAL_FOLDERS.legal}`);
+    console.log('      To: /medialternatives-legal-docs/legal-documents/');
+    console.log('');
+    console.log('4. Generate public links for each file');
+    console.log('5. Update case.md with new pCloud URLs');
+    console.log('');
+    console.log(`📁 All files are ready in: ${DOWNLOAD_CONFIG.outputDir}`);
     
   } catch (error) {
-    console.error('💥 Migration failed:', error);
+    console.error('💥 Download failed:', error);
     process.exit(1);
-  } finally {
-    if (client && client.logout) {
-      await client.logout();
-      console.log('👋 Logged out of pCloud');
-    }
   }
 }
 
-// Run migration
+// Run download
 if (require.main === module) {
-  migratePDFsToPCloud().catch(console.error);
+  downloadPDFsLocally().catch(console.error);
 }
 
-module.exports = { migratePDFsToPCloud, PDF_URLS, PCLOUD_FOLDERS };
+module.exports = { downloadPDFsLocally, PDF_URLS, LOCAL_FOLDERS };
