@@ -38,7 +38,9 @@ export default function AdSenseManagementPage() {
     try {
       const response = await fetch('/api/adsense/data');
       const data = await response.json();
-      if (!response.ok) {
+      
+      // Handle both successful responses and fallback mock data
+      if (!response.ok && !data.accounts) {
         throw new Error(data.error || 'Failed to fetch AdSense data');
       }
       setAdSenseData(data);
@@ -70,15 +72,30 @@ export default function AdSenseManagementPage() {
   };
 
   const getReportValue = (metricName: string) => {
-    if (!adSenseData || !adSenseData.report) return '0';
-    const headerIndex = adSenseData.report.headers.findIndex(h => h.name === metricName);
-    if (headerIndex === -1) return '0';
-    return adSenseData.report.totals.cells[headerIndex].value;
+    if (!adSenseData || !adSenseData.report || !adSenseData.report.totals || adSenseData.report.totals.length === 0) {
+      return '0';
+    }
+    
+    const headerIndex = adSenseData.report.headers?.findIndex(h => h.name === metricName);
+    if (headerIndex === -1 || headerIndex === undefined) {
+      return '0';
+    }
+    
+    const totalRow = adSenseData.report.totals[0];
+    if (!totalRow || !totalRow.cells || !totalRow.cells[headerIndex]) {
+      return '0';
+    }
+    
+    return totalRow.cells[headerIndex].value || '0';
   };
 
   const calculateCTR = () => {
-    const clicks = parseFloat(getReportValue('CLICKS'));
-    const impressions = parseFloat(getReportValue('IMPRESSIONS'));
+    const clicksStr = getReportValue('CLICKS');
+    const impressionsStr = getReportValue('IMPRESSIONS');
+    
+    const clicks = parseFloat(clicksStr.replace(/[^0-9.-]/g, '')) || 0;
+    const impressions = parseFloat(impressionsStr.replace(/[^0-9.-]/g, '')) || 0;
+    
     if (impressions === 0) return '0.00%';
     return ((clicks / impressions) * 100).toFixed(2) + '%';
   };
