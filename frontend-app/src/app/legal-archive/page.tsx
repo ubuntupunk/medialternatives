@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import ReactMarkdown from 'react-markdown';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Legal Document Archive - Medialternatives',
