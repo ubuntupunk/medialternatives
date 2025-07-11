@@ -27,8 +27,62 @@ export async function GET(request: NextRequest) {
     const url = searchParams.get('url') || 'https://medialternatives.com';
     const strategy = searchParams.get('strategy') || 'mobile'; // mobile or desktop
     
-    // TODO: Replace with actual PageSpeed Insights API integration
-    // For now, return realistic mock data
+    // PageSpeed Insights API integration - API key available in environment
+    const apiKey = process.env.PAGESPEED_API_KEY;
+    
+    if (apiKey && url) {
+      try {
+        // Make real PageSpeed Insights API call
+        const apiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${apiKey}&strategy=${strategy}&category=performance&category=accessibility&category=best-practices&category=seo&category=pwa`;
+        
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        
+        if (data.lighthouseResult) {
+          const realData: PerformanceData = {
+            lighthouse: {
+              performance: Math.round((data.lighthouseResult.categories.performance?.score || 0) * 100),
+              accessibility: Math.round((data.lighthouseResult.categories.accessibility?.score || 0) * 100),
+              bestPractices: Math.round((data.lighthouseResult.categories['best-practices']?.score || 0) * 100),
+              seo: Math.round((data.lighthouseResult.categories.seo?.score || 0) * 100),
+              pwa: Math.round((data.lighthouseResult.categories.pwa?.score || 0) * 100),
+            },
+            coreWebVitals: {
+              lcp: data.lighthouseResult.audits['largest-contentful-paint']?.numericValue / 1000 || 2.5,
+              fid: data.lighthouseResult.audits['max-potential-fid']?.numericValue || 100,
+              cls: data.lighthouseResult.audits['cumulative-layout-shift']?.numericValue || 0.1,
+              status: 'good' as const,
+            },
+            loadTime: data.lighthouseResult.audits['speed-index']?.numericValue / 1000 || 2.0,
+            pageSize: Math.round(data.lighthouseResult.audits['total-byte-weight']?.numericValue / 1024) || 1000,
+            requests: data.lighthouseResult.audits['network-requests']?.details?.items?.length || 50,
+            lastChecked: new Date().toISOString(),
+          };
+          
+          // Determine Core Web Vitals status
+          if (realData.coreWebVitals.lcp > 2.5 || realData.coreWebVitals.fid > 100 || realData.coreWebVitals.cls > 0.1) {
+            realData.coreWebVitals.status = 'needs-improvement';
+          }
+          if (realData.coreWebVitals.lcp > 4.0 || realData.coreWebVitals.fid > 300 || realData.coreWebVitals.cls > 0.25) {
+            realData.coreWebVitals.status = 'poor';
+          }
+          
+          return NextResponse.json({
+            success: true,
+            data: realData,
+            url,
+            strategy,
+            source: 'PageSpeed Insights API',
+            note: 'Live data from Google PageSpeed Insights'
+          });
+        }
+      } catch (apiError) {
+        console.error('PageSpeed Insights API error:', apiError);
+        // Fall through to mock data
+      }
+    }
+    
+    // Fallback to realistic mock data
     
     const mockData: PerformanceData = {
       lighthouse: {
