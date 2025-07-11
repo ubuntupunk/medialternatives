@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import Link from 'next/link';
+import './timeline.css';
 
 export const metadata: Metadata = {
   title: 'Legal Archive Timeline - Medialternatives',
@@ -36,6 +37,61 @@ export default function LegalArchiveTimelinePage() {
               </span>
             </div>
           </nav>
+
+          {/* Timeline Phase Slider */}
+          <div className="timeline-phases mb-5">
+            <h3 className="h5 mb-3 text-center">Legal Saga Timeline (2006-2024)</h3>
+            <div className="row g-0">
+              <div className="col-2">
+                <div className="phase-card bg-danger text-white text-center p-3 h-100 d-flex flex-column justify-content-center">
+                  <div className="fw-bold small">Phase 1</div>
+                  <div className="small">2006</div>
+                  <div className="tiny">Initial Dispute</div>
+                </div>
+              </div>
+              <div className="col-2">
+                <div className="phase-card bg-warning text-dark text-center p-3 h-100 d-flex flex-column justify-content-center">
+                  <div className="fw-bold small">Phase 2</div>
+                  <div className="small">2009-2010</div>
+                  <div className="tiny">Labour Court</div>
+                </div>
+              </div>
+              <div className="col-2">
+                <div className="phase-card bg-info text-white text-center p-3 h-100 d-flex flex-column justify-content-center">
+                  <div className="fw-bold small">Phase 3</div>
+                  <div className="small">2011-2014</div>
+                  <div className="tiny">Appeals</div>
+                </div>
+              </div>
+              <div className="col-2">
+                <div className="phase-card bg-primary text-white text-center p-3 h-100 d-flex flex-column justify-content-center">
+                  <div className="fw-bold small">Phase 4</div>
+                  <div className="small">2014-2015</div>
+                  <div className="tiny">Constitutional</div>
+                </div>
+              </div>
+              <div className="col-2">
+                <div className="phase-card bg-secondary text-white text-center p-3 h-100 d-flex flex-column justify-content-center">
+                  <div className="fw-bold small">Phase 5</div>
+                  <div className="small">2016-2018</div>
+                  <div className="tiny">Criminal</div>
+                </div>
+              </div>
+              <div className="col-2">
+                <div className="phase-card bg-success text-white text-center p-3 h-100 d-flex flex-column justify-content-center">
+                  <div className="fw-bold small">Phase 6</div>
+                  <div className="small">2019-2024</div>
+                  <div className="tiny">Documentation</div>
+                </div>
+              </div>
+            </div>
+            <div className="text-center mt-2">
+              <small className="text-muted">
+                <i className="bi bi-arrow-left-right me-1"></i>
+                18-year legal saga across multiple courts and jurisdictions
+              </small>
+            </div>
+          </div>
 
           {/* Timeline Content */}
           <div className="legal-timeline-content">
@@ -94,27 +150,27 @@ export default function LegalArchiveTimelinePage() {
 
           {/* Timeline Statistics */}
           <div className="row mt-5 pt-4 border-top">
-            <div className="col-md-2 text-center mb-3">
+            <div className="col-6 col-md-2 text-center mb-3">
               <div className="h4 text-primary">18</div>
               <div className="small text-muted">Years Span</div>
             </div>
-            <div className="col-md-2 text-center mb-3">
+            <div className="col-6 col-md-2 text-center mb-3">
               <div className="h4 text-primary">6</div>
               <div className="small text-muted">Legal Phases</div>
             </div>
-            <div className="col-md-2 text-center mb-3">
+            <div className="col-6 col-md-2 text-center mb-3">
               <div className="h4 text-primary">32</div>
               <div className="small text-muted">Documents</div>
             </div>
-            <div className="col-md-2 text-center mb-3">
+            <div className="col-6 col-md-2 text-center mb-3">
               <div className="h4 text-warning">6</div>
               <div className="small text-muted">Missing Cases</div>
             </div>
-            <div className="col-md-2 text-center mb-3">
+            <div className="col-6 col-md-2 text-center mb-3">
               <div className="h4 text-success">4</div>
               <div className="small text-muted">Legal Areas</div>
             </div>
-            <div className="col-md-2 text-center mb-3">
+            <div className="col-6 col-md-2 text-center mb-3">
               <div className="h4 text-info">Multiple</div>
               <div className="small text-muted">Jurisdictions</div>
             </div>

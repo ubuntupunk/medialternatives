@@ -1,0 +1,36 @@
+
+/* Timeline Phase Slider Styles */
+.phase-card {
+  min-height: 80px;
+  border-right: 1px solid rgba(255,255,255,0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.phase-card:last-child {
+  border-right: none;
+}
+
+.phase-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 10;
+  position: relative;
+}
+
+.tiny {
+  font-size: 0.7rem;
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  .phase-card {
+    min-height: 60px;
+    font-size: 0.8rem;
+  }
+  
+  .tiny {
+    font-size: 0.6rem;
+  }
+}
+
