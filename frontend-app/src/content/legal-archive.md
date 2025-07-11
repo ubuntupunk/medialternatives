@@ -114,5 +114,5 @@ Please cite appropriately when using these materials in academic or professional
 ---
 
 **Archive Maintained By**: Medialternatives  
-**Last Updated**: ${new Date().toISOString().split('T')[0]}  
+**Last Updated**: 2024-12-29  
 **Contact**: For questions about this archive, please contact through the official channels listed on the main website.

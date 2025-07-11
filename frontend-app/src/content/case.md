@@ -106,6 +106,6 @@ In order to escape the issues related to the company's failure to participate, t
 **Storage**: Served directly from repository  
 **Backup**: pCloud and IceDrive cold storage  
 **Integrity**: SHA256 verified  
-**Last Updated**: ${new Date().toISOString().split('T')[0]}
+**Last Updated**: 2024-12-29
 
 For detailed descriptions and context of each document, visit the [Legal Document Archive](/legal-archive).

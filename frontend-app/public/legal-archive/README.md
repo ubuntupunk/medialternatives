@@ -54,7 +54,7 @@ These documents are authentic legal records. They are provided for informational
 
 ---
 
-**Last Updated**: ${new Date().toISOString().split('T')[0]}  
+**Last Updated**: 2024-12-29  
 **Total Files**: 32  
 **Total Size**: 114.79 MB  
 **Validation Rate**: 96.9%
