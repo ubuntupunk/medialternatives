@@ -49,7 +49,7 @@ export default function LegalArchiveTimelinePage() {
                 >
                   <div className="fw-bold small">Phase 1</div>
                   <div className="small">2006</div>
-                  <div className="tiny">Initial Dispute</div>
+                  <div className="tiny">Initial</div>
                 </a>
               </div>
               <div className="col-2">
@@ -60,7 +60,7 @@ export default function LegalArchiveTimelinePage() {
                 >
                   <div className="fw-bold small">Phase 2</div>
                   <div className="small">2009-2010</div>
-                  <div className="tiny">Labour Court</div>
+                  <div className="tiny">Labour</div>
                 </a>
               </div>
               <div className="col-2">
