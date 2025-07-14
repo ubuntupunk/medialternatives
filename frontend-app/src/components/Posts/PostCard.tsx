@@ -64,7 +64,7 @@ const PostCard: React.FC<PostCardProps> = ({
       
       {showExcerpt && excerpt && (
         <div className="entry-content">
-          <p>{excerpt}</p>
+          <p className="text-pretty">{excerpt}</p>
         </div>
       )}
     </article>

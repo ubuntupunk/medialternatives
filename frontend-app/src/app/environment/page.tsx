@@ -38,8 +38,8 @@ const EnvironmentPage: React.FC = async () => {
     <div className="container my-4">
       <div className="row mb-4">
         <div className="col-12">
-          <h1 className="display-4 mb-3">Environment</h1>
-          <p className="lead text-muted">
+          <h1 className="display-4 mb-3 text-balance">Environment</h1>
+          <p className="lead text-muted text-balance">
             Explore our environmental coverage and climate activism content.
           </p>
         </div>

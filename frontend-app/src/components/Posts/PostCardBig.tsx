@@ -65,7 +65,7 @@ const PostCardBig: React.FC<PostCardProps> = ({
       
       {showExcerpt && excerpt && (
         <div className="entry-content">
-          <p>{excerpt}</p>
+          <p className="text-pretty">{excerpt}</p>
           <Link href={`/post/${post.slug}`} className="more-link">
             Continue reading
           </Link>

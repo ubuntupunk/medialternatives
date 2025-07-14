@@ -119,7 +119,59 @@ a {
   padding: 15px 18px 14px 18px;
 }
 
+/* Typography improvements - prevent widows and orphans */
+p, .entry-content p, .card-text, .excerpt {
+  /* Prevent widows and orphans */
+  orphans: 2;
+  widows: 2;
+  
+  /* Better word breaking */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  
+  /* Prevent awkward line breaks */
+  text-wrap: pretty;
+}
+
+/* Headings should avoid breaking */
+h1, h2, h3, h4, h5, h6, .entry-title {
+  /* Keep headings together */
+  page-break-after: avoid;
+  break-after: avoid;
+  
+  /* Prevent orphaned headings */
+  orphans: 3;
+  widows: 3;
+  
+  /* Better text wrapping for headings */
+  text-wrap: balance;
+}
+
+/* Prevent breaking in specific content areas */
+.entry-meta, .post-meta, .author-info {
+  /* Keep meta information together */
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* Better text flow for excerpts and descriptions */
+.lead, .subheadline, .entry-content > p:first-child {
+  text-wrap: balance;
+  orphans: 3;
+  widows: 3;
+}
+
 /* Utility classes */
 .text-balance {
   text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+.no-break {
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
