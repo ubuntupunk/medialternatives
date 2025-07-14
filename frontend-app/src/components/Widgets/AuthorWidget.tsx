@@ -92,7 +92,7 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
               {/* For now, we'll use placeholder links */}
               <li>
                 <a href="#" target="_blank" rel="noopener noreferrer">
-                  Twitter
+                  X.com
                 </a>
               </li>
               <li>

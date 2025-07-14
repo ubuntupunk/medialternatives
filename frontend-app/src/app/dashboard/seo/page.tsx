@@ -347,7 +347,7 @@ export default function SEOSocialPage() {
                 </a>
                 
                 <a 
-                  href="https://cards-dev.twitter.com/validator"
+                  href="https://cards-dev.x.com/validator"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-outline-info btn-sm"

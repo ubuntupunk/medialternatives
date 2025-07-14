@@ -39,7 +39,7 @@
 
 3. **Social Media Integration**
    - [ ] Facebook Graph API for share counts
-   - [ ] Twitter API for engagement metrics
+   - [ ] X.com API for engagement metrics
    - [ ] LinkedIn API for professional shares
    - [ ] Aggregate social media data
 
