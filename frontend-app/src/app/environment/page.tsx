@@ -57,7 +57,7 @@ const EnvironmentPage: React.FC = async () => {
             
             {/* Remaining Stories - Two Columns */}
             {validPosts.slice(1).map((post) => (
-              <div key={post.id} className="col-lg-6 col-md-6">
+              <div key={post.id} className="col-md-6 col-sm-12">
                 <PostCard post={post} />
               </div>
             ))}
