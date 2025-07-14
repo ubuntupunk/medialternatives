@@ -24,10 +24,10 @@ const HandbookPage: React.FC = () => {
           <div className="row">
             <div className="col-12 col-md-7 pt-5 mb-5 align-self-center">
               <div className="promo pe-md-3 pe-lg-5">
-                <h1 className="headline mb-3">
+                <h1 className="headline mb-3 text-balance">
                   The Media Activist Handbook
                 </h1>
-                <div className="subheadline mb-4">
+                <div className="subheadline mb-4 text-pretty">
                   This handbook contains coursework, essays and case histories drawn from the South African resistance to the apartheid regime. A must read for any serious student of alternative and mainstream media.
                 </div>
                 
@@ -81,8 +81,8 @@ const HandbookPage: React.FC = () => {
                 <div className={styles.iconHolder}>
                   <i className="fas fa-bullhorn fa-3x"></i>
                 </div>
-                <h5 className={styles.benefitTitle}>Media Strategy</h5>
-                <div className={styles.benefitDesc}>
+                <h5 className={`${styles.benefitTitle} text-balance`}>Media Strategy</h5>
+                <div className={`${styles.benefitDesc} text-pretty`}>
                   Learn proven strategies for effective media activism and communication campaigns.
                 </div>
               </div>
