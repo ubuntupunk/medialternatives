@@ -35,16 +35,29 @@ const EnvironmentPage: React.FC = async () => {
 
   return (
     <div className="container my-4">
-      <h1 className="mb-4">Environment</h1>
-      <div className="row">
+      <div className="row mb-4">
+        <div className="col-12">
+          <h1 className="display-4 mb-3">Environment</h1>
+          <p className="lead text-muted">
+            Explore our environmental coverage and climate activism content.
+          </p>
+        </div>
+      </div>
+      
+      <div className="row g-4">
         {validPosts.length > 0 ? (
           validPosts.map((post) => (
-            <div key={post.id} className="col-md-6 col-lg-4 mb-4">
+            <div key={post.id} className="col-xl-4 col-lg-6 col-md-6">
               <PostCard post={post} />
             </div>
           ))
         ) : (
-          <p>No environmental posts found.</p>
+          <div className="col-12">
+            <div className="alert alert-info text-center">
+              <i className="bi bi-info-circle me-2"></i>
+              No environmental posts found. Check back soon for new content!
+            </div>
+          </div>
         )}
       </div>
     </div>
