@@ -3,6 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { wordpressApi } from '@/services/wordpress-api';
 import PostCard from '@/components/Posts/PostCard';
+import PostCardBig from '@/components/Posts/PostCardBig';
 import { WordPressPost } from '@/types/wordpress';
 
 const EnvironmentPage: React.FC = async () => {
@@ -46,11 +47,21 @@ const EnvironmentPage: React.FC = async () => {
       
       <div className="row g-4">
         {validPosts.length > 0 ? (
-          validPosts.map((post) => (
-            <div key={post.id} className="col-xl-4 col-lg-6 col-md-6">
-              <PostCard post={post} />
-            </div>
-          ))
+          <>
+            {/* Featured Story - Full Width */}
+            {validPosts[0] && (
+              <div className="col-12 mb-4">
+                <PostCardBig post={validPosts[0]} />
+              </div>
+            )}
+            
+            {/* Remaining Stories - Two Columns */}
+            {validPosts.slice(1).map((post) => (
+              <div key={post.id} className="col-lg-6 col-md-6">
+                <PostCard post={post} />
+              </div>
+            ))}
+          </>
         ) : (
           <div className="col-12">
             <div className="alert alert-info text-center">
