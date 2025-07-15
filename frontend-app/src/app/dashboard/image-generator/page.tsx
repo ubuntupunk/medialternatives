@@ -11,6 +11,13 @@ export default function ImageGeneratorPage() {
   const [loading, setLoading] = useState(true);
   const [bulkProcessing, setBulkProcessing] = useState(false);
   const [processedCount, setProcessedCount] = useState(0);
+  const [processingPosts, setProcessingPosts] = useState<Set<number>>(new Set());
+  const [generationSettings, setGenerationSettings] = useState({
+    style: 'photorealistic',
+    aspectRatio: '16:9',
+    quality: 'high',
+    includeText: false
+  });
 
   // Require authentication
   requireAuth();
@@ -50,8 +57,20 @@ export default function ImageGeneratorPage() {
     await fetchPosts(); // Refresh the list
   };
 
-  const generateImageForPost = async (post: any) => {
+  const generateImageForPost = async (post: any, customSettings?: any) => {
+    // Add post to processing set
+    setProcessingPosts(prev => new Set(prev).add(post.id));
+    
     try {
+      // Update post status to generating
+      setPosts(prevPosts => 
+        prevPosts.map(p => 
+          p.id === post.id 
+            ? { ...p, status: 'generating', progress: 0 }
+            : p
+        )
+      );
+
       const response = await fetch('/api/generate-post-image', {
         method: 'POST',
         headers: {
@@ -61,7 +80,8 @@ export default function ImageGeneratorPage() {
           postId: post.id,
           title: post.title.rendered,
           content: post.content?.rendered || '',
-          excerpt: post.excerpt?.rendered || ''
+          excerpt: post.excerpt?.rendered || '',
+          settings: customSettings || generationSettings
         }),
       });
       
@@ -72,11 +92,18 @@ export default function ImageGeneratorPage() {
       
       const result = await response.json();
       
-      // Update the post in the local state to reflect the change
+      // Update the post with the new image and success status
       setPosts(prevPosts => 
         prevPosts.map(p => 
           p.id === post.id 
-            ? { ...p, featured_image_url: result.imageUrl, needs_image: false }
+            ? { 
+                ...p, 
+                featured_image_url: result.imageUrl, 
+                needs_image: false,
+                status: 'completed',
+                progress: 100,
+                generated_at: new Date().toISOString()
+              }
             : p
         )
       );
@@ -84,7 +111,24 @@ export default function ImageGeneratorPage() {
       return result;
     } catch (error) {
       console.error(`Error generating image for post ${post.id}:`, error);
+      
+      // Update post status to error
+      setPosts(prevPosts => 
+        prevPosts.map(p => 
+          p.id === post.id 
+            ? { ...p, status: 'error', progress: 0, error: error instanceof Error ? error.message : 'Unknown error' }
+            : p
+        )
+      );
+      
       throw error;
+    } finally {
+      // Remove post from processing set
+      setProcessingPosts(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(post.id);
+        return newSet;
+      });
     }
   };
 
@@ -201,6 +245,81 @@ export default function ImageGeneratorPage() {
         </div>
       </div>
 
+      {/* Generation Settings */}
+      <div className="row mb-4">
+        <div className="col-12">
+          <div className="card">
+            <div className="card-header">
+              <h6 className="mb-0">
+                <i className="bi bi-gear me-2"></i>
+                Default Generation Settings
+              </h6>
+            </div>
+            <div className="card-body">
+              <div className="row">
+                <div className="col-md-3 mb-3">
+                  <label htmlFor="defaultStyle" className="form-label">Style</label>
+                  <select
+                    className="form-select"
+                    id="defaultStyle"
+                    value={generationSettings.style}
+                    onChange={(e) => setGenerationSettings({...generationSettings, style: e.target.value})}
+                  >
+                    <option value="photorealistic">Photorealistic</option>
+                    <option value="illustration">Illustration</option>
+                    <option value="abstract">Abstract</option>
+                    <option value="minimalist">Minimalist</option>
+                    <option value="vintage">Vintage</option>
+                    <option value="modern">Modern</option>
+                  </select>
+                </div>
+                <div className="col-md-3 mb-3">
+                  <label htmlFor="defaultAspectRatio" className="form-label">Aspect Ratio</label>
+                  <select
+                    className="form-select"
+                    id="defaultAspectRatio"
+                    value={generationSettings.aspectRatio}
+                    onChange={(e) => setGenerationSettings({...generationSettings, aspectRatio: e.target.value})}
+                  >
+                    <option value="16:9">16:9 (Landscape)</option>
+                    <option value="4:3">4:3 (Standard)</option>
+                    <option value="1:1">1:1 (Square)</option>
+                    <option value="9:16">9:16 (Portrait)</option>
+                  </select>
+                </div>
+                <div className="col-md-3 mb-3">
+                  <label htmlFor="defaultQuality" className="form-label">Quality</label>
+                  <select
+                    className="form-select"
+                    id="defaultQuality"
+                    value={generationSettings.quality}
+                    onChange={(e) => setGenerationSettings({...generationSettings, quality: e.target.value})}
+                  >
+                    <option value="standard">Standard</option>
+                    <option value="high">High</option>
+                    <option value="ultra">Ultra</option>
+                  </select>
+                </div>
+                <div className="col-md-3 mb-3">
+                  <div className="form-check mt-4">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      id="defaultIncludeText"
+                      checked={generationSettings.includeText}
+                      onChange={(e) => setGenerationSettings({...generationSettings, includeText: e.target.checked})}
+                    />
+                    <label className="form-check-label" htmlFor="defaultIncludeText">
+                      Include title in image
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Posts with Placeholder Images */}
       <div className="row">
         <div className="col-12">
@@ -208,7 +327,7 @@ export default function ImageGeneratorPage() {
             <div className="card-header d-flex justify-content-between align-items-center">
               <h5 className="mb-0">
                 <i className="bi bi-images me-2"></i>
-                Posts Needing Images
+                Posts Needing Images ({posts.length})
               </h5>
               <button 
                 className="btn btn-outline-primary btn-sm"
@@ -237,10 +356,10 @@ export default function ImageGeneratorPage() {
                   <table className="table table-hover">
                     <thead>
                       <tr>
-                        <th>Post</th>
-                        <th>Current Image</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th style={{ width: '40%' }}>Post</th>
+                        <th style={{ width: '20%' }}>Current Image</th>
+                        <th style={{ width: '20%' }}>Status</th>
+                        <th style={{ width: '20%' }}>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -252,38 +371,116 @@ export default function ImageGeneratorPage() {
                               <small className="text-muted">
                                 {new Date(post.date).toLocaleDateString()}
                               </small>
+                              {/* Progress bar for individual post */}
+                              {processingPosts.has(post.id) && (
+                                <div className="progress mt-2" style={{ height: '3px' }}>
+                                  <div 
+                                    className="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+                                    role="progressbar" 
+                                    style={{ width: '100%' }}
+                                  ></div>
+                                </div>
+                              )}
+                              {post.status === 'completed' && (
+                                <div className="mt-1">
+                                  <small className="text-success">
+                                    <i className="bi bi-check-circle me-1"></i>
+                                    Generated {new Date(post.generated_at).toLocaleTimeString()}
+                                  </small>
+                                </div>
+                              )}
+                              {post.status === 'error' && (
+                                <div className="mt-1">
+                                  <small className="text-danger">
+                                    <i className="bi bi-exclamation-triangle me-1"></i>
+                                    {post.error}
+                                  </small>
+                                </div>
+                              )}
                             </div>
                           </td>
                           <td>
-                            <img 
-                              src={post.featured_image_url || 'https://picsum.photos/100/60'} 
-                              alt="Current featured image"
-                              className="img-thumbnail"
-                              style={{ width: '100px', height: '60px', objectFit: 'cover' }}
-                            />
+                            <div className="position-relative">
+                              <img 
+                                src={post.featured_image_url || 'https://picsum.photos/100/60'} 
+                                alt="Current featured image"
+                                className="img-thumbnail"
+                                style={{ width: '100px', height: '60px', objectFit: 'cover' }}
+                              />
+                              {processingPosts.has(post.id) && (
+                                <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50 rounded">
+                                  <div className="spinner-border spinner-border-sm text-light" role="status">
+                                    <span className="visually-hidden">Generating...</span>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
                           </td>
                           <td>
-                            <span className="badge bg-warning">
-                              Placeholder
-                            </span>
+                            {processingPosts.has(post.id) ? (
+                              <span className="badge bg-primary">
+                                <i className="bi bi-arrow-repeat me-1"></i>
+                                Generating...
+                              </span>
+                            ) : post.status === 'completed' ? (
+                              <span className="badge bg-success">
+                                <i className="bi bi-check-circle me-1"></i>
+                                Complete
+                              </span>
+                            ) : post.status === 'error' ? (
+                              <span className="badge bg-danger">
+                                <i className="bi bi-exclamation-triangle me-1"></i>
+                                Error
+                              </span>
+                            ) : (
+                              <span className="badge bg-warning">
+                                <i className="bi bi-image me-1"></i>
+                                Placeholder
+                              </span>
+                            )}
                           </td>
                           <td>
-                            <button 
-                              className="btn btn-primary btn-sm"
-                              onClick={async () => {
-                                try {
-                                  await generateImageForPost(post);
-                                  // Optionally show success message
-                                } catch (error) {
-                                  // Optionally show error message
-                                  alert(`Failed to generate image: ${error instanceof Error ? error.message : 'Unknown error'}`);
-                                }
-                              }}
-                              disabled={bulkProcessing}
-                            >
-                              <i className="bi bi-magic me-1"></i>
-                              Generate
-                            </button>
+                            <div className="d-flex flex-column gap-1">
+                              <button 
+                                className="btn btn-primary btn-sm"
+                                onClick={async () => {
+                                  try {
+                                    await generateImageForPost(post);
+                                  } catch (error) {
+                                    // Error is already handled in the function
+                                  }
+                                }}
+                                disabled={bulkProcessing || processingPosts.has(post.id)}
+                              >
+                                {processingPosts.has(post.id) ? (
+                                  <>
+                                    <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                                    Generating...
+                                  </>
+                                ) : (
+                                  <>
+                                    <i className="bi bi-magic me-1"></i>
+                                    Generate
+                                  </>
+                                )}
+                              </button>
+                              {post.status === 'error' && (
+                                <button 
+                                  className="btn btn-outline-secondary btn-sm"
+                                  onClick={async () => {
+                                    try {
+                                      await generateImageForPost(post);
+                                    } catch (error) {
+                                      // Error is already handled in the function
+                                    }
+                                  }}
+                                  disabled={bulkProcessing || processingPosts.has(post.id)}
+                                >
+                                  <i className="bi bi-arrow-clockwise me-1"></i>
+                                  Retry
+                                </button>
+                              )}
+                            </div>
                           </td>
                         </tr>
                       ))}

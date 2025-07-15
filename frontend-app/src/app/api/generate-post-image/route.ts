@@ -5,11 +5,17 @@ interface GeneratePostImageRequest {
   title: string;
   content: string;
   excerpt?: string;
+  settings?: {
+    style: string;
+    aspectRatio: string;
+    quality: string;
+    includeText: boolean;
+  };
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const { postId, title, content, excerpt }: GeneratePostImageRequest = await request.json();
+    const { postId, title, content, excerpt, settings }: GeneratePostImageRequest = await request.json();
 
     if (!postId || !title?.trim()) {
       return NextResponse.json(
@@ -27,7 +33,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         title,
         content: excerpt || content,
-        settings: {
+        settings: settings || {
           style: 'photorealistic',
           aspectRatio: '16:9',
           quality: 'high',
