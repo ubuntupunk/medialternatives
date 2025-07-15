@@ -22,21 +22,10 @@ export async function GET(request: NextRequest) {
     console.log('📡 Testing with simple text generation...');
     
     try {
-      // Test with text generation first (faster and more reliable)
-      const textResult = await hf.textGeneration({
-        model: 'gpt2',
-        inputs: 'The quick brown fox',
-        parameters: {
-          max_new_tokens: 10,
-          temperature: 0.7,
-        }
-      });
-
-      console.log('✅ Text generation successful:', textResult);
-
-      // Now test image generation with a simple model
-      console.log('🎨 Testing image generation...');
+      // Skip text generation and go straight to image generation
+      console.log('🎨 Testing image generation directly...');
       
+      // Try with the most reliable Stable Diffusion model
       const imageResult = await hf.textToImage({
         model: "runwayml/stable-diffusion-v1-5",
         inputs: "a simple red apple on white background",
@@ -58,10 +47,11 @@ export async function GET(request: NextRequest) {
         message: 'Hugging Face client is working!',
         debug: {
           tokenValid: true,
-          textGeneration: textResult.generated_text,
           imageGenerated: true,
           imageSize: imageResult.size,
-          imagePreview: `data:image/jpeg;base64,${base64.substring(0, 100)}...` // Just preview
+          imagePreview: `data:image/jpeg;base64,${base64.substring(0, 100)}...`, // Just preview
+          model: "runwayml/stable-diffusion-v1-5",
+          note: "Skipped text generation, focused on image generation"
         }
       });
 
