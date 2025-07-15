@@ -168,23 +168,32 @@ export default function ImageGeneratorPage() {
           </p>
         </div>
         <div className="col-md-4 text-end">
-          <button 
-            className="btn btn-success"
-            onClick={handleBulkGeneration}
-            disabled={bulkProcessing || posts.length === 0}
-          >
-            {bulkProcessing ? (
-              <>
-                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Processing... ({processedCount}/{posts.length})
-              </>
-            ) : (
-              <>
-                <i className="bi bi-lightning-fill me-2"></i>
-                Bulk Generate ({posts.length} posts)
-              </>
-            )}
-          </button>
+          <div className="d-flex gap-2 justify-content-end">
+            <Link 
+              href="/dashboard/image-generator/debug"
+              className="btn btn-outline-warning btn-sm"
+            >
+              <i className="bi bi-bug me-1"></i>
+              Debug
+            </Link>
+            <button 
+              className="btn btn-success"
+              onClick={handleBulkGeneration}
+              disabled={bulkProcessing || posts.length === 0}
+            >
+              {bulkProcessing ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Processing... ({processedCount}/{posts.length})
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-lightning-fill me-2"></i>
+                  Bulk Generate ({posts.length} posts)
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
