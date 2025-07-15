@@ -45,7 +45,7 @@ const ImageGenerator: React.FC<ImageGeneratorProps> = ({
     setGeneratedImageUrl('');
 
     try {
-      const response = await fetch('/api/generate-image', {
+      const response = await fetch('/api/generate-image-hf', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

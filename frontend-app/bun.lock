@@ -4,6 +4,7 @@
     "": {
       "name": "frontend-app",
       "dependencies": {
+        "@huggingface/inference": "^4.5.1",
         "@types/bootstrap": "^5.2.10",
         "@vercel/blob": "^1.1.1",
         "bootstrap": "5",
@@ -239,6 +240,12 @@
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.3.3", "", { "dependencies": { "@eslint/core": "^0.15.1", "levn": "^0.4.1" } }, "sha512-1+WqvgNMhmlAambTvT3KPtCl/Ibr68VldY2XY40SL1CE0ZXiakFR/cbTspaF5HsnpDMvcYYoJHfl4980NBjGag=="],
 
     "@fastify/busboy": ["@fastify/busboy@2.1.1", "", {}, "sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA=="],
+
+    "@huggingface/inference": ["@huggingface/inference@4.5.1", "", { "dependencies": { "@huggingface/jinja": "^0.5.1", "@huggingface/tasks": "^0.19.23" } }, "sha512-eMuugf8LfyqRyZxcdXH2sTk2Isb7+2B1lxHwdmHAOfaclfoNDC/OegZZ12Fp61WdgTXr+R/gM7oATMr3HXlN2g=="],
+
+    "@huggingface/jinja": ["@huggingface/jinja@0.5.1", "", {}, "sha512-yUZLld4lrM9iFxHCwFQ7D1HW2MWMwSbeB7WzWqFYDWK+rEb+WldkLdAJxUPOmgICMHZLzZGVcVjFh3w/YGubng=="],
+
+    "@huggingface/tasks": ["@huggingface/tasks@0.19.23", "", {}, "sha512-akJDLpcgf1rz+9ddH8cA+JdpSU6aDiStV59JoaMeMuni8g5Q0tbgbFBxW1Jnm/m7LENy5UumtbS6Ie36havZmQ=="],
 
     "@humanfs/core": ["@humanfs/core@0.19.1", "", {}, "sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA=="],
 
