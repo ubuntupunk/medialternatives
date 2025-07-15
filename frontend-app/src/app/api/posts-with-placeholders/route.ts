@@ -60,6 +60,12 @@ function getFeaturedImageUrl(post: any): string | null {
     return null;
   }
   
+  // Check if there's a featured_media ID but no embedded data
+  if (post.featured_media && post.featured_media !== 0) {
+    // Has featured media but not embedded - might need separate API call
+    return null;
+  }
+  
   // No featured image found
   return null;
 }

@@ -50,25 +50,42 @@ export default function ImageGeneratorPage() {
     await fetchPosts(); // Refresh the list
   };
 
-  const generateImageForPost = async (post) => {
-    const response = await fetch('/api/generate-post-image', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        postId: post.id,
-        title: post.title.rendered,
-        content: post.content.rendered,
-        excerpt: post.excerpt.rendered
-      }),
-    });
-    
-    if (!response.ok) {
-      throw new Error('Failed to generate image');
+  const generateImageForPost = async (post: any) => {
+    try {
+      const response = await fetch('/api/generate-post-image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          postId: post.id,
+          title: post.title.rendered,
+          content: post.content?.rendered || '',
+          excerpt: post.excerpt?.rendered || ''
+        }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to generate image');
+      }
+      
+      const result = await response.json();
+      
+      // Update the post in the local state to reflect the change
+      setPosts(prevPosts => 
+        prevPosts.map(p => 
+          p.id === post.id 
+            ? { ...p, featured_image_url: result.imageUrl, needs_image: false }
+            : p
+        )
+      );
+      
+      return result;
+    } catch (error) {
+      console.error(`Error generating image for post ${post.id}:`, error);
+      throw error;
     }
-    
-    return response.json();
   };
 
   if (!user) {
@@ -253,7 +270,16 @@ export default function ImageGeneratorPage() {
                           <td>
                             <button 
                               className="btn btn-primary btn-sm"
-                              onClick={() => generateImageForPost(post)}
+                              onClick={async () => {
+                                try {
+                                  await generateImageForPost(post);
+                                  // Optionally show success message
+                                } catch (error) {
+                                  // Optionally show error message
+                                  alert(`Failed to generate image: ${error instanceof Error ? error.message : 'Unknown error'}`);
+                                }
+                              }}
+                              disabled={bulkProcessing}
                             >
                               <i className="bi bi-magic me-1"></i>
                               Generate
