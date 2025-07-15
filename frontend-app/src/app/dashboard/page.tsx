@@ -32,6 +32,14 @@ const dashboardSections = [
     href: '/dashboard/analytics'
   },
   {
+    id: 'image-generator',
+    title: 'Image Generator',
+    icon: 'bi-image',
+    description: 'AI-powered image generation for blog posts',
+    color: 'warning',
+    href: '/dashboard/image-generator'
+  },
+  {
     id: 'adsense',
     title: 'AdSense',
     icon: 'bi-currency-dollar',
