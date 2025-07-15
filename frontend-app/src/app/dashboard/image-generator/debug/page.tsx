@@ -52,17 +52,23 @@ export default function ImageGeneratorDebugPage() {
     }
   };
 
-  const checkEnvironment = () => {
-    const envInfo = {
-      nodeEnv: process.env.NODE_ENV,
-      hasHfToken: !!process.env.HUGGINGFACE_API_TOKEN,
-      timestamp: new Date().toISOString()
-    };
-    
-    setDebugInfo({
-      environment: envInfo,
-      note: 'Environment check completed'
-    });
+  const checkEnvironment = async () => {
+    try {
+      // Check environment via API call since client-side can't access server env vars
+      const response = await fetch('/api/test-hf-token');
+      const data = await response.json();
+      
+      setDebugInfo({
+        environment: data,
+        timestamp: new Date().toISOString(),
+        note: 'Environment check via API completed'
+      });
+    } catch (error) {
+      setDebugInfo({
+        error: 'Failed to check environment: ' + (error instanceof Error ? error.message : 'Unknown error'),
+        timestamp: new Date().toISOString()
+      });
+    }
   };
 
   return (
@@ -138,6 +144,33 @@ export default function ImageGeneratorDebugPage() {
                 >
                   <i className="bi bi-gear me-2"></i>
                   Check Environment
+                </button>
+                <button
+                  className="btn btn-outline-warning"
+                  onClick={async () => {
+                    setLoading(true);
+                    try {
+                      const response = await fetch('/api/test-hf-simple');
+                      const data = await response.json();
+                      setDebugInfo({
+                        tokenValidation: data,
+                        timestamp: new Date().toISOString(),
+                        note: 'HF Token validation test'
+                      });
+                    } catch (error) {
+                      setDebugInfo({
+                        error: error instanceof Error ? error.message : 'Unknown error',
+                        timestamp: new Date().toISOString(),
+                        note: 'Token validation failed'
+                      });
+                    } finally {
+                      setLoading(false);
+                    }
+                  }}
+                  disabled={loading}
+                >
+                  <i className="bi bi-shield-check me-2"></i>
+                  Test Token
                 </button>
               </div>
             </div>
