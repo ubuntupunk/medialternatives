@@ -33,7 +33,7 @@ const PostCard: React.FC<PostCardProps> = ({
               <div style={{ position: 'relative', width: '100%', height: '200px' }}>
                 <Image 
                   src={featuredImageUrl}
-                  alt={decodeHtmlEntities(post.title.rendered)}
+                  alt={post.title.rendered}
                   fill
                   style={{ objectFit: 'cover' }}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -58,7 +58,7 @@ const PostCard: React.FC<PostCardProps> = ({
         )}
         
         <h2 className="entry-title">
-          <Link href={`/post/${post.slug}`} dangerouslySetInnerHTML={{ __html: decodeHtmlEntities(post.title.rendered) }} />
+          <Link href={`/post/${post.slug}`} dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
         </h2>
       </header>
       

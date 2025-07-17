@@ -58,27 +58,60 @@ const LoadMore: React.FC<LoadMoreProps> = ({
 
       {/* Load More Button */}
       {pagination.hasNext && (
-        <div className="text-center mt-4">
+        <div className="text-center mt-5 mb-4">
           <button
             onClick={loadMorePosts}
             disabled={isLoading}
-            className="btn btn-primary btn-lg"
+            className="btn btn-lg load-more-btn"
             style={{
-              minWidth: '200px',
-              backgroundColor: '#04AA6D',
-              borderColor: '#04AA6D',
-              color: '#00e7ff',
-              fontWeight: 'bold',
-              textTransform: 'uppercase'
+              minWidth: '240px',
+              padding: '0.75rem 2rem',
+              backgroundColor: isLoading ? '#6c757d' : '#ffffff',
+              borderColor: isLoading ? '#6c757d' : '#0d6efd',
+              color: isLoading ? '#ffffff' : '#0d6efd',
+              fontWeight: '600',
+              fontSize: '1rem',
+              borderRadius: '0.375rem',
+              border: '2px solid',
+              transition: 'all 0.2s ease',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+              textTransform: 'none',
+              letterSpacing: '0.3px'
+            }}
+            onMouseEnter={(e) => {
+              if (!isLoading) {
+                e.currentTarget.style.backgroundColor = '#0d6efd';
+                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 2px 6px rgba(13, 110, 253, 0.25)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isLoading) {
+                e.currentTarget.style.backgroundColor = '#ffffff';
+                e.currentTarget.style.color = '#0d6efd';
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
+              }
             }}
           >
             {isLoading ? (
               <>
                 <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Loading...
+                Loading More Posts...
               </>
             ) : (
-              `Load More Posts (${pagination.total - posts.length} remaining)`
+              <>
+                Load More Posts
+                <span style={{ 
+                  fontSize: '0.85em', 
+                  opacity: 0.8, 
+                  marginLeft: '8px',
+                  fontWeight: '500'
+                }}>
+                  ({pagination.total - posts.length} remaining)
+                </span>
+              </>
             )}
           </button>
         </div>
@@ -86,11 +119,28 @@ const LoadMore: React.FC<LoadMoreProps> = ({
 
       {/* Error Display */}
       {error && (
-        <div className="alert alert-warning mt-3">
+        <div className="alert alert-warning mt-3" style={{ borderRadius: '0.5rem' }}>
           <strong>Error:</strong> {error}
           <button 
             onClick={loadMorePosts}
-            className="btn btn-sm btn-outline-warning ms-2"
+            className="btn btn-sm ms-2"
+            style={{
+              backgroundColor: '#ffffff',
+              borderColor: '#f0ad4e',
+              color: '#f0ad4e',
+              fontWeight: '600',
+              borderRadius: '0.375rem',
+              border: '2px solid',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#f0ad4e';
+              e.currentTarget.style.color = '#ffffff';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#ffffff';
+              e.currentTarget.style.color = '#f0ad4e';
+            }}
           >
             Try Again
           </button>

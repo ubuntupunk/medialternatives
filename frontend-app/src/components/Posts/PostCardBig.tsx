@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { PostCardProps } from '@/types';
 import { formatDate, createExcerpt, getFeaturedImageUrl, getPostAuthor, getPostAuthorId } from '@/utils/helpers';
 import AuthorDisplay from '@/components/UI/AuthorDisplay';
+import InteractiveButton from '@/components/UI/InteractiveButton';
 import { LAYOUT_CONFIG } from '@/lib/constants';
 
 /**
@@ -66,9 +67,11 @@ const PostCardBig: React.FC<PostCardProps> = ({
       {showExcerpt && excerpt && (
         <div className="entry-content">
           <p className="text-pretty">{excerpt}</p>
-          <Link href={`/post/${post.slug}`} className="more-link">
-            Continue reading
-          </Link>
+          <div className="mt-3 mb-4">
+            <InteractiveButton href={`/post/${post.slug}`}>
+              Continue Reading &rarr;
+            </InteractiveButton>
+          </div>
         </div>
       )}
     </article>

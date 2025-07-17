@@ -71,7 +71,6 @@ export function createExcerpt(post: WordPressPost, maxLength: number = 300): str
     let excerpt = post.excerpt.rendered;
     excerpt = stripHtml(excerpt); // Strip HTML first
     excerpt = decodeHtmlEntities(excerpt); // Decode entities
-    console.log('Processed excerpt:', excerpt); // Add console.log
     return truncateText(excerpt, maxLength);
   }
   
@@ -80,7 +79,6 @@ export function createExcerpt(post: WordPressPost, maxLength: number = 300): str
     let content = post.content.rendered;
     content = stripHtml(content); // Strip HTML first
     content = decodeHtmlEntities(content); // Decode entities
-    console.log('Processed content excerpt:', content); // Add console.log
     return truncateText(content, maxLength);
   }
   
@@ -293,24 +291,19 @@ export function createUrlParams(params: Record<string, any>): URLSearchParams {
 }
 
 /**
- * Decode HTML entities
+ * Decode HTML entities - consistent server/client implementation
  */
 export function decodeHtmlEntities(html: string): string {
-  if (typeof window !== 'undefined') {
-    const textarea = document.createElement('textarea');
-    textarea.innerHTML = html;
-    return textarea.value;
-  }
-  // Server-side fallback (simplified, might not cover all entities)
+  // Use consistent implementation for both server and client
   return html
-    .replace(/&/g, '&')
-    .replace(/</g, '<')
-    .replace(/>/g, '>')
-    .replace(/"/g, '"')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
     .replace(/&#039;/g, "'")
-    .replace(/&#8216;/g, '‘')
-    .replace(/&#8217;/g, '’')
-    .replace(/&#8220;/g, '“')
-    .replace(/&#8221;/g, '”')
+    .replace(/&#8216;/g, "'")
+    .replace(/&#8217;/g, "'")
+    .replace(/&#8220;/g, '"')
+    .replace(/&#8221;/g, '"')
     .replace(/&nbsp;/g, ' ');
 }
