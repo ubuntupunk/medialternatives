@@ -86,9 +86,19 @@ class WordPressAPIService {
       
       if (!isExpired) {
         // For cached responses, we don't have real headers, so create mock headers
+        // Use realistic values based on cached data length
         const mockHeaders = new Headers();
-        mockHeaders.set('X-WP-Total', '0');
-        mockHeaders.set('X-WP-TotalPages', '1');
+        const dataLength = Array.isArray(cached.data) ? cached.data.length : 0;
+        const perPage = parseInt(String(params.per_page || '10'), 10);
+        const currentPage = parseInt(String(params.page || '1'), 10);
+        
+        // Estimate total based on current page and data length
+        // If we got a full page of results, assume there might be more
+        const estimatedTotal = dataLength === perPage ? (currentPage * perPage) + 1 : (currentPage - 1) * perPage + dataLength;
+        const estimatedTotalPages = Math.ceil(estimatedTotal / perPage);
+        
+        mockHeaders.set('X-WP-Total', String(estimatedTotal));
+        mockHeaders.set('X-WP-TotalPages', String(estimatedTotalPages));
         
         return {
           data: cached.data,
@@ -476,15 +486,24 @@ class WordPressAPIService {
       
       // Fallback with mock pagination data
       const posts = await this.getPosts(params);
+      const perPage = parseInt(String(params.per_page || '10'), 10);
+      const currentPage = parseInt(String(params.page || '1'), 10);
+      
+      // If we got a full page of results, assume there might be more
+      const estimatedTotal = posts.length === perPage ? (currentPage * perPage) + 1 : (currentPage - 1) * perPage + posts.length;
+      const estimatedTotalPages = Math.ceil(estimatedTotal / perPage);
+      
       return {
         data: posts,
         pagination: {
-          total: posts.length,
-          totalPages: 1,
-          currentPage: parseInt(String(params.page || '1'), 10),
-          perPage: parseInt(String(params.per_page || '10'), 10),
-          hasNext: false,
-          hasPrev: false
+          total: estimatedTotal,
+          totalPages: estimatedTotalPages,
+          currentPage,
+          perPage,
+          hasNext: currentPage < estimatedTotalPages,
+          hasPrev: currentPage > 1,
+          nextPage: currentPage < estimatedTotalPages ? currentPage + 1 : undefined,
+          prevPage: currentPage > 1 ? currentPage - 1 : undefined
         }
       };
     }
