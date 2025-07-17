@@ -71,8 +71,9 @@
 .webringNavigation {
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
+  margin-top: 1rem;
 }
 
 .widgetTitle {
@@ -126,24 +127,25 @@
 
 .webringLink {
   display: inline-block;
-  padding: 0.375rem 0.75rem;
-  background: #0d6efd;
-  color: white;
+  padding: 0.5rem 1rem;
+  background: #ffffff;
+  color: #0d6efd;
   text-decoration: none;
-  border-radius: 0.25rem;
+  border-radius: 0.375rem;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   transition: all 0.2s ease;
-  border: 1px solid #0d6efd;
+  border: 2px solid #0d6efd;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .webringLink:hover {
-  background: #0b5ed7;
-  border-color: #0a58ca;
-  color: white;
+  background: #0d6efd;
+  border-color: #0d6efd;
+  color: #ffffff !important;
   text-decoration: none;
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 8px rgba(13, 110, 253, 0.3);
 }
 
 .webringLink:active {
