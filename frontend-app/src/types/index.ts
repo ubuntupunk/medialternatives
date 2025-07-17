@@ -122,6 +122,11 @@ export interface CategoryCloudProps {
   className?: string;
 }
 
+export interface CreativeCommonsWidgetProps {
+  title?: string;
+  className?: string;
+}
+
 export interface PaginationProps {
   currentPage: number;
   totalPages: number;

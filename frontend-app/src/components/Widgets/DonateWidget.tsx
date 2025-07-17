@@ -15,7 +15,7 @@ const DonateWidget: React.FC<DonateWidgetProps> = ({
   }
 
   return (
-    <div className="widget donate-widget">
+    <div className="widget donate-widget" style={{ marginTop: '30px' }}>
       <h3 className="widget-title">{title}</h3>
       <div className="donate-button-container text-center">
         <form action="https://www.paypal.com/donate" method="post" target="_top">

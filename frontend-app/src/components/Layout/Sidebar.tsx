@@ -8,6 +8,7 @@ import SearchWidget from '../Widgets/SearchWidget';
 import CategoryCloudEnhanced from '../Widgets/CategoryCloudEnhanced';
 import AuthorWidget from '../Widgets/AuthorWidget';
 import AdSenseWidget from '../Widgets/AdSenseWidget';
+import CreativeCommonsWidget from '../Widgets/CreativeCommonsWidget';
 import DonateWidget from '../Widgets/DonateWidget';
 import WebringWidget from '../Widgets/WebringWidget';
 
@@ -28,7 +29,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     <CategoryCloudEnhanced key="categories" />,
     !isDashboardPage && <AdSenseWidget key="adsense" />,
     <DonateWidget key="donate" paypalHostedButtonId={process.env.NEXT_PUBLIC_PAYPAL_HOSTED_BUTTON_ID || ''} />,
-    <WebringWidget key="webring" />
+    <WebringWidget key="webring" />,
+    <CreativeCommonsWidget key="creative-commons" />
   ].filter(Boolean); // Filter out false values
 
   return (

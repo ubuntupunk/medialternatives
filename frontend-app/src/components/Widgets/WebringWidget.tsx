@@ -10,28 +10,34 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
   return (
     <div className={`widget ${styles.webringWidget}`}>
       <h3 className={styles.widgetTitle}>{title}</h3>
-      <div className={styles.webringBanner}>
-        <div className={styles.webringImage}>
-          <img 
-            src="https://meshring.netlify.app/assets/meshring.png" 
-            alt="MuizenMesh Webring" 
-            className={styles.webringLogo}
+      <div className={styles.webringContent}>
+        <div className={styles.surferImageContainer}>
+          <Image
+            src="/images/surfer.jpg"
+            alt="Surfer"
+            width={60}
+            height={60}
+            className={styles.surferImage}
           />
         </div>
-        <p className={styles.webringDescription}>
-          Member of the <a href={webringUrl}>MuizenMesh Webring</a>
-        </p>
-        <div className={styles.webringLinks}>
-          <a href={`${webringUrl}/prev`} className={styles.webringLink}>
-            &larr; Previous
-          </a>
-          <a href={`${webringUrl}/random`} className={styles.webringLink}>
-            Random
-          </a>
-          <a href={`${webringUrl}/next`} className={styles.webringLink}>
-            Next &rarr;
-          </a>
+        <div className={styles.webringText}>
+          <p className={styles.webringIntro}>Member of the</p>
+          <h4 className={styles.webringName}>
+            <a href={webringUrl}>MuizenMesh Webring</a>
+          </h4>
+          <p className={styles.webringMembers}>A community of independent websites</p>
         </div>
+      </div>
+      <div className={styles.webringNavigation}>
+        <a href={`${webringUrl}/prev`} className={styles.webringLink}>
+          &larr; Previous
+        </a>
+        <a href={`${webringUrl}/random`} className={styles.webringLink}>
+          Random
+        </a>
+        <a href={`${webringUrl}/next`} className={styles.webringLink}>
+          Next &rarr;
+        </a>
       </div>
     </div>
   );

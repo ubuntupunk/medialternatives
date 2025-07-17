@@ -65,7 +65,7 @@ const CategoryCloudEnhanced: React.FC<CategoryCloudEnhancedProps> = ({
   }
 
   return (
-    <div className={`widget category-cloud-enhanced ${className}`}>
+    <div className={`widget category-cloud-enhanced ${className}`} style={{ marginTop: '30px' }}>
       <h3 className="widget-title">Categories</h3>
       <div className={`tagcloud ${layout === 'list' ? 'tagcloud-list' : layout === 'grid' ? 'tagcloud-grid' : ''}`}>
         {categories.map((category, index) => {
