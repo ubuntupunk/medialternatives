@@ -1,7 +1,7 @@
 import React from 'react';
 // import Layout from '@/components/Layout/Layout';
 import PostGrid from '@/components/Posts/PostGrid';
-import Pagination from '@/components/UI/Pagination';
+import LoadMore from '@/components/UI/LoadMore';
 import { wordpressApi } from '@/services/wordpress-api';
 import { SITE_CONFIG } from '@/lib/constants';
 import { WordPressPost, PaginationInfo } from '@/types/wordpress';
@@ -64,29 +64,10 @@ export default async function BlogPage() {
       {posts.length === 0 ? (
         <div className="alert alert-info">No posts found.</div>
       ) : (
-        <>
-          <PostGrid posts={posts} showFeatured={true} />
-          <Pagination 
-            currentPage={pagination.currentPage}
-            totalPages={pagination.totalPages}
-            baseUrl="/blog"
-          />
-          
-          {/* Debug info for development */}
-          {process.env.NODE_ENV === 'development' && (
-            <div className="mt-4 p-3 bg-light border rounded">
-              <h6>Blog Pagination Debug Info:</h6>
-              <small>
-                Total posts: {pagination.total} | 
-                Total pages: {pagination.totalPages} | 
-                Current page: {pagination.currentPage} | 
-                Per page: {pagination.perPage} | 
-                Has next: {pagination.hasNext ? 'Yes' : 'No'} | 
-                Has prev: {pagination.hasPrev ? 'Yes' : 'No'}
-              </small>
-            </div>
-          )}
-        </>
+        <LoadMore 
+          initialPosts={posts}
+          initialPagination={pagination}
+        />
       )}
     </>
   );

@@ -69,7 +69,7 @@ async function generateImageWithHfClient(prompt: string, settings: GenerationSet
   try {
     // TODO: Uncomment once @huggingface/inference is installed
     
-    import { HfInference } from '@huggingface/inference';
+    const { HfInference } = await import('@huggingface/inference');
     
     const hf = new HfInference(HF_TOKEN);
     
