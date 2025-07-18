@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { BetaAnalyticsDataClient } from '@google-analytics/data';
 
 // Google Analytics Data API v1 integration
 // This would require setting up Google Analytics Data API credentials
@@ -27,11 +28,17 @@ export async function GET(request: NextRequest) {
     
     if (propertyId && serviceAccountKey) {
       try {
-        // TODO: Implement Google Analytics Data API v1 integration
-        // const analyticsData = await getGoogleAnalyticsData(propertyId, serviceAccountKey, period);
-        // return NextResponse.json({ success: true, data: analyticsData, source: 'Google Analytics API' });
+        console.log('Attempting Google Analytics Data API integration...');
+        const analyticsData = await getGoogleAnalyticsData(propertyId, serviceAccountKey, period);
         
-        console.log('Google Analytics credentials found but API not yet implemented');
+        return NextResponse.json({
+          success: true,
+          data: analyticsData,
+          period,
+          lastUpdated: new Date().toISOString(),
+          source: 'Google Analytics Data API',
+          note: 'Live data from Google Analytics'
+        });
       } catch (error) {
         console.error('Google Analytics API error:', error);
       }
@@ -63,6 +70,90 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+/**
+ * Get real Google Analytics data using the Data API
+ */
+async function getGoogleAnalyticsData(propertyId: string, serviceAccountKey: string, period: string): Promise<AnalyticsData> {
+  try {
+    // Parse the service account key
+    const credentials = JSON.parse(Buffer.from(serviceAccountKey, 'base64').toString());
+    
+    // Initialize the Analytics Data client
+    const analyticsDataClient = new BetaAnalyticsDataClient({
+      credentials,
+      projectId: credentials.project_id,
+    });
+
+    // Calculate date range based on period
+    const endDate = 'today';
+    const startDate = period === '7d' ? '7daysAgo' : period === '30d' ? '30daysAgo' : '90daysAgo';
+
+    // Get basic metrics
+    const [response] = await analyticsDataClient.runReport({
+      property: `properties/${propertyId}`,
+      dateRanges: [{ startDate, endDate }],
+      metrics: [
+        { name: 'activeUsers' },
+        { name: 'screenPageViews' },
+        { name: 'bounceRate' },
+        { name: 'averageSessionDuration' }
+      ],
+    });
+
+    // Get top pages
+    const [pagesResponse] = await analyticsDataClient.runReport({
+      property: `properties/${propertyId}`,
+      dateRanges: [{ startDate, endDate }],
+      dimensions: [{ name: 'pagePath' }],
+      metrics: [{ name: 'screenPageViews' }],
+      orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }],
+      limit: 10,
+    });
+
+    // Get real-time users
+    const [realtimeResponse] = await analyticsDataClient.runRealtimeReport({
+      property: `properties/${propertyId}`,
+      metrics: [{ name: 'activeUsers' }],
+    });
+
+    // Parse the response data
+    const visitors = parseInt(response.rows?.[0]?.metricValues?.[0]?.value || '0');
+    const pageviews = parseInt(response.rows?.[0]?.metricValues?.[1]?.value || '0');
+    const bounceRate = parseFloat(response.rows?.[0]?.metricValues?.[2]?.value || '0') * 100;
+    const avgSessionDuration = formatDuration(parseFloat(response.rows?.[0]?.metricValues?.[3]?.value || '0'));
+    
+    const topPages = pagesResponse.rows?.map(row => ({
+      page: row.dimensionValues?.[0]?.value || '',
+      views: parseInt(row.metricValues?.[0]?.value || '0')
+    })) || [];
+
+    const realTimeUsers = parseInt(realtimeResponse.rows?.[0]?.metricValues?.[0]?.value || '0');
+
+    return {
+      visitors,
+      pageviews,
+      bounceRate,
+      avgSessionDuration,
+      topPages,
+      realTimeUsers,
+      sessionsToday: Math.floor(visitors * 0.12) // Estimate based on visitors
+    };
+
+  } catch (error) {
+    console.error('Google Analytics Data API error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Format duration from seconds to MM:SS format
+ */
+function formatDuration(seconds: number): string {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
 /**
