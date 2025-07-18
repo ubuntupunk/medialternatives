@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { GOOGLE_ANALYTICS_ID } from '@/lib/constants';
 
@@ -20,11 +20,13 @@ export default function AnalyticsPage() {
   const [selectedPeriod, setSelectedPeriod] = useState('30d');
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState(new Date());
   
   // Fetch analytics data from API
   const fetchAnalyticsData = async (period: string = selectedPeriod) => {
     setLoading(true);
+    setError(null);
     try {
       const response = await fetch(`/api/analytics?period=${period}`);
       const result = await response.json();
@@ -356,11 +358,98 @@ if (!analyticsData) {
             <div className="card-body">
               <div className="text-center py-5">
                 <i className="bi bi-graph-up text-muted" style={{ fontSize: '4rem' }}></i>
-                <p className="text-muted mt-3">
-                  Traffic chart would be displayed here
-                  <br />
-                  <small>Integration with Google Analytics API required</small>
-                </p>
+                {loading ? (
+                  <div className="text-center py-4">
+                    <div className="spinner-border text-primary mb-3" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                    <p className="text-muted">Loading traffic data...</p>
+                  </div>
+                ) : analyticsData ? (
+                  <div>
+                    {/* Traffic Summary */}
+                    <div className="row mb-4">
+                      <div className="col-md-3">
+                        <div className="text-center">
+                          <h4 className="text-primary mb-1">{analyticsData.visitors?.toLocaleString()}</h4>
+                          <small className="text-muted">Visitors</small>
+                        </div>
+                      </div>
+                      <div className="col-md-3">
+                        <div className="text-center">
+                          <h4 className="text-success mb-1">{analyticsData.pageviews?.toLocaleString()}</h4>
+                          <small className="text-muted">Pageviews</small>
+                        </div>
+                      </div>
+                      <div className="col-md-3">
+                        <div className="text-center">
+                          <h4 className="text-warning mb-1">{analyticsData.bounceRate?.toFixed(1)}%</h4>
+                          <small className="text-muted">Bounce Rate</small>
+                        </div>
+                      </div>
+                      <div className="col-md-3">
+                        <div className="text-center">
+                          <h4 className="text-info mb-1">{analyticsData.avgSessionDuration}</h4>
+                          <small className="text-muted">Avg. Session</small>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Simple Visual Chart Representation */}
+                    <div className="mb-4">
+                      <h6 className="mb-3">Top Pages</h6>
+                      <div className="row">
+                        {analyticsData.topPages?.slice(0, 5).map((page: any, index: number) => {
+                          const percentage = (page.views / analyticsData.pageviews) * 100;
+                          return (
+                            <div key={index} className="col-12 mb-2">
+                              <div className="d-flex justify-content-between align-items-center mb-1">
+                                <small className="text-muted">{page.page}</small>
+                                <small className="text-muted">{page.views.toLocaleString()} views</small>
+                              </div>
+                              <div className="progress" style={{ height: '8px' }}>
+                                <div 
+                                  className={`progress-bar bg-${index === 0 ? 'primary' : index === 1 ? 'success' : index === 2 ? 'info' : index === 3 ? 'warning' : 'secondary'}`}
+                                  style={{ width: `${Math.max(percentage, 5)}%` }}
+                                ></div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Data Source Info */}
+                    <div className="alert alert-info">
+                      <div className="d-flex align-items-center">
+                        <i className="bi bi-info-circle me-2"></i>
+                        <div>
+                          <strong>Data Source:</strong> {analyticsData.source || 'Google Analytics'}
+                          {analyticsData.note && (
+                            <div>
+                              <small className="text-muted">{analyticsData.note}</small>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-4">
+                    <i className="bi bi-exclamation-triangle fs-1 text-warning mb-3"></i>
+                    <h5 className="text-muted">No Traffic Data Available</h5>
+                    <p className="text-muted mb-3">
+                      Unable to load analytics data. Check your Google Analytics integration.
+                    </p>
+                    <button 
+                      className="btn btn-outline-primary"
+                      onClick={() => fetchAnalyticsData(selectedPeriod)}
+                    >
+                      <i className="bi bi-arrow-clockwise me-1"></i>
+                      Retry
+                    </button>
+                  </div>
+                )}
                 <a 
                   href={`https://analytics.google.com/analytics/web/#/p${GOOGLE_ANALYTICS_ID}`}
                   target="_blank"
