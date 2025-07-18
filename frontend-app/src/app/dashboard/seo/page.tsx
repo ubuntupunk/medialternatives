@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { SITE_CONFIG } from '@/lib/constants';
 
@@ -17,17 +17,10 @@ interface SEOMetrics {
 }
 
 export default function SEOSocialPage() {
-  const [seoMetrics] = useState<SEOMetrics>({
-    searchConsoleClicks: 3420,
-    searchConsoleImpressions: 45600,
-    averagePosition: 12.4,
-    indexedPages: 247,
-    socialShares: {
-      facebook: 1240,
-      twitter: 890,
-      linkedin: 340
-    }
-  });
+  const [seoMetrics, setSeoMetrics] = useState<SEOMetrics | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState(new Date());
 
   const [seoSettings, setSeoSettings] = useState({
     siteTitle: SITE_CONFIG.SITE_TITLE,
@@ -38,6 +31,40 @@ export default function SEOSocialPage() {
     facebookPage: 'medialternatives',
     linkedinPage: 'medialternatives'
   });
+
+  // Fetch SEO data from API
+  const fetchSEOData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/seo/metrics');
+      const result = await response.json();
+      
+
+  useEffect(() => {
+    fetchSEOData();
+  }, []);
+      
+      if (result.success) {
+        setSeoMetrics(result.data);
+      } else {
+        throw new Error(result.error || 'Failed to fetch SEO data');
+      }
+    } catch (err) {
+      console.error('Error fetching SEO data:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch SEO data');
+      
+      // Set static fallback data
+      setSeoMetrics(getStaticSEOMetrics());
+    } finally {
+      setLoading(false);
+      setLastUpdated(new Date());
+    }
+  };
+
+  React.useEffect(() => {
+    fetchSEOData();
+  }, []);
 
   const seoChecklist = [
     { item: 'Site Title Optimized', status: true, description: 'Title includes main keywords' },
@@ -89,7 +116,7 @@ export default function SEOSocialPage() {
           <div className="card bg-primary text-white">
             <div className="card-body text-center">
               <i className="bi bi-cursor-fill fs-2 mb-2"></i>
-              <h4 className="mb-0">{seoMetrics.searchConsoleClicks.toLocaleString()}</h4>
+              <h4 className="mb-0">{seoMetrics?.searchConsoleClicks?.toLocaleString() || '0'}</h4>
               <small>Search Clicks</small>
             </div>
           </div>
@@ -99,7 +126,7 @@ export default function SEOSocialPage() {
           <div className="card bg-success text-white">
             <div className="card-body text-center">
               <i className="bi bi-eye fs-2 mb-2"></i>
-              <h4 className="mb-0">{seoMetrics.searchConsoleImpressions.toLocaleString()}</h4>
+              <h4 className="mb-0">{seoMetrics?.searchConsoleImpressions?.toLocaleString() || '0'}</h4>
               <small>Impressions</small>
             </div>
           </div>
@@ -109,7 +136,7 @@ export default function SEOSocialPage() {
           <div className="card bg-warning text-white">
             <div className="card-body text-center">
               <i className="bi bi-trophy fs-2 mb-2"></i>
-              <h4 className="mb-0">{seoMetrics.averagePosition}</h4>
+              <h4 className="mb-0">{seoMetrics?.averagePosition?.toFixed(1) || '0.0'}</h4>
               <small>Avg. Position</small>
             </div>
           </div>
@@ -119,7 +146,7 @@ export default function SEOSocialPage() {
           <div className="card bg-info text-white">
             <div className="card-body text-center">
               <i className="bi bi-files fs-2 mb-2"></i>
-              <h4 className="mb-0">{seoMetrics.indexedPages}</h4>
+              <h4 className="mb-0">{seoMetrics?.indexedPages || '0'}</h4>
               <small>Indexed Pages</small>
             </div>
           </div>
@@ -271,7 +298,7 @@ export default function SEOSocialPage() {
                     <i className="bi bi-facebook text-primary me-2"></i>
                     Facebook
                   </span>
-                  <span className="badge bg-primary">{seoMetrics.socialShares.facebook}</span>
+                  <span className="badge bg-primary">{seoMetrics?.socialShares?.facebook || '0'}</span>
                 </div>
                 <div className="progress">
                   <div className="progress-bar bg-primary" style={{ width: '60%' }}></div>
@@ -284,7 +311,7 @@ export default function SEOSocialPage() {
                     <i className="bi bi-twitter text-info me-2"></i>
                     Twitter/X
                   </span>
-                  <span className="badge bg-info">{seoMetrics.socialShares.twitter}</span>
+                  <span className="badge bg-info">{seoMetrics?.socialShares?.twitter || '0'}</span>
                 </div>
                 <div className="progress">
                   <div className="progress-bar bg-info" style={{ width: '43%' }}></div>
@@ -297,7 +324,7 @@ export default function SEOSocialPage() {
                     <i className="bi bi-linkedin text-primary me-2"></i>
                     LinkedIn
                   </span>
-                  <span className="badge bg-secondary">{seoMetrics.socialShares.linkedin}</span>
+                  <span className="badge bg-secondary">{seoMetrics?.socialShares?.linkedin || '0'}</span>
                 </div>
                 <div className="progress">
                   <div className="progress-bar bg-secondary" style={{ width: '16%' }}></div>

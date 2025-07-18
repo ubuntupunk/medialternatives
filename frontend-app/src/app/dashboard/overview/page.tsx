@@ -49,6 +49,8 @@ export default function OverviewPage() {
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [analyticsData, setAnalyticsData] = useState<any>(null);
   const [performanceData, setPerformanceData] = useState<any>(null);
+  const [adSenseData, setAdSenseData] = useState<any>(null);
+  const [seoData, setSeoData] = useState<any>(null);
   const [dataLoading, setDataLoading] = useState(true);
 
   // Fetch real-time data from APIs
@@ -67,6 +69,20 @@ export default function OverviewPage() {
       const performanceResult = await performanceResponse.json();
       if (performanceResult.success) {
         setPerformanceData(performanceResult.data);
+      }
+
+      // Fetch AdSense data
+      const adSenseResponse = await fetch('/api/adsense/data');
+      const adSenseResult = await adSenseResponse.json();
+      if (adSenseResult.report) {
+        setAdSenseData(adSenseResult);
+      }
+
+      // Fetch SEO data
+      const seoResponse = await fetch('/api/seo/metrics?period=30d');
+      const seoResult = await seoResponse.json();
+      if (seoResult.success) {
+        setSeoData(seoResult.data);
       }
 
       setLastUpdated(new Date());

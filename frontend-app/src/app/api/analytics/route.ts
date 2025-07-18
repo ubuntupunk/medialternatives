@@ -21,32 +21,35 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const period = searchParams.get('period') || '7d'; // 7d, 30d, 90d
     
-    // Note: Google Analytics Data API requires service account setup
-    // Using enhanced mock data with realistic patterns based on G-CZNQG5YM3Z
-    // To enable real data: Set up service account and add GOOGLE_SERVICE_ACCOUNT_KEY
+    // Check for Google Analytics API credentials
+    const propertyId = process.env.GOOGLE_ANALYTICS_PROPERTY_ID;
+    const serviceAccountKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
     
-    const mockData: AnalyticsData = {
-      visitors: Math.floor(Math.random() * 5000) + 2000,
-      pageviews: Math.floor(Math.random() * 15000) + 8000,
-      bounceRate: Math.floor(Math.random() * 30) + 40, // 40-70%
-      avgSessionDuration: `${Math.floor(Math.random() * 3) + 2}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`,
-      topPages: [
-        { page: '/', views: Math.floor(Math.random() * 2000) + 1000 },
-        { page: '/about', views: Math.floor(Math.random() * 800) + 400 },
-        { page: '/handbook', views: Math.floor(Math.random() * 600) + 300 },
-        { page: '/support', views: Math.floor(Math.random() * 500) + 250 },
-        { page: '/case', views: Math.floor(Math.random() * 400) + 200 },
-      ],
-      realTimeUsers: Math.floor(Math.random() * 50) + 10,
-      sessionsToday: Math.floor(Math.random() * 500) + 200,
-    };
+    if (propertyId && serviceAccountKey) {
+      try {
+        // TODO: Implement Google Analytics Data API v1 integration
+        // const analyticsData = await getGoogleAnalyticsData(propertyId, serviceAccountKey, period);
+        // return NextResponse.json({ success: true, data: analyticsData, source: 'Google Analytics API' });
+        
+        console.log('Google Analytics credentials found but API not yet implemented');
+      } catch (error) {
+        console.error('Google Analytics API error:', error);
+      }
+    }
+    
+    // Return realistic static data instead of random mock data
+    // This provides consistent data for development and demo purposes
+    const staticData: AnalyticsData = getStaticAnalyticsData(period);
 
     return NextResponse.json({
       success: true,
-      data: mockData,
+      data: staticData,
       period,
       lastUpdated: new Date().toISOString(),
-      note: 'Mock data - Google Analytics API integration required for live data'
+      source: propertyId && serviceAccountKey ? 'Static data (API ready)' : 'Static data (API credentials needed)',
+      note: propertyId && serviceAccountKey ? 
+        'Google Analytics API integration ready - implementation pending' : 
+        'Add GOOGLE_ANALYTICS_PROPERTY_ID and GOOGLE_SERVICE_ACCOUNT_KEY for live data'
     });
 
   } catch (error) {
@@ -60,6 +63,52 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+/**
+ * Get static analytics data based on period
+ * Provides consistent, realistic data for development and demo
+ */
+function getStaticAnalyticsData(period: string): AnalyticsData {
+  const baseData = {
+    '7d': {
+      visitors: 2840,
+      pageviews: 8920,
+      bounceRate: 58.2,
+      avgSessionDuration: '2:34',
+      realTimeUsers: 23,
+      sessionsToday: 340
+    },
+    '30d': {
+      visitors: 12450,
+      pageviews: 38600,
+      bounceRate: 61.8,
+      avgSessionDuration: '2:18',
+      realTimeUsers: 23,
+      sessionsToday: 340
+    },
+    '90d': {
+      visitors: 35200,
+      pageviews: 112800,
+      bounceRate: 64.1,
+      avgSessionDuration: '2:12',
+      realTimeUsers: 23,
+      sessionsToday: 340
+    }
+  };
+
+  const data = baseData[period as keyof typeof baseData] || baseData['7d'];
+  
+  return {
+    ...data,
+    topPages: [
+      { page: '/', views: Math.floor(data.pageviews * 0.18) },
+      { page: '/about', views: Math.floor(data.pageviews * 0.12) },
+      { page: '/handbook', views: Math.floor(data.pageviews * 0.09) },
+      { page: '/support', views: Math.floor(data.pageviews * 0.07) },
+      { page: '/case', views: Math.floor(data.pageviews * 0.05) }
+    ]
+  };
 }
 
 // Future implementation guide for Google Analytics Data API:
