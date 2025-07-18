@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     const period = searchParams.get('period') || '7d'; // 7d, 30d, 90d
     
     // Check for Google Analytics API credentials
-    const propertyId = process.env.GOOGLE_ANALYTICS_PROPERTY_ID;
+    const propertyId = process.env.GOOGLE_ANALYTICS_PROPERTY_ID || '251633919';
     const serviceAccountKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
     
     if (propertyId && serviceAccountKey) {
