@@ -15,38 +15,42 @@ const Footer: React.FC<FooterProps> = ({
   
   return (
     <footer id="colophon" className={`site-footer mt-5 ${className}`} role="contentinfo">
-      <div className="site-info">
+      {/* Divider */}
+      <div className="footer-divider">
         <div className="container">
-          <div className="row">
-            <div className="copyright-info col-md-6 col-sm-12">
-              <Link href="https://netbones.co.za/" className="text-nowrap">Proudly powered by Netbones South Africa</Link>
-              <span className="sep">  </span>
-              {copyrightText || defaultCopyrightText}
+          <hr className="border-secondary opacity-25" />
+        </div>
+      </div>
+      
+      <div className="site-info py-4">
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-md-8 col-sm-12 mb-2 mb-md-0">
+              <p className="mb-0" style={{ 
+                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                fontSize: '14px',
+                color: '#6c757d'
+              }}>
+                {copyrightText || defaultCopyrightText} Medialternatives
+              </p>
             </div>
             
-            {/* {showNavigation && (
-              <div className="main-footer-navigation col-md-6 col-sm-12">
-                <nav className="footer-navigation">
-                  <ul id="footer-menu" className="menu">
-                    <li className="menu-item">
-                      <Link href="/">Blog</Link>
-                    </li>
-                    <li className="menu-item">
-                      <Link href="/about">About</Link>
-                    </li>
-                    <li className="menu-item">
-                      <Link href="/handbook">Handbook</Link>
-                    </li>
-                    <li className="menu-item">
-                      <Link href="/components">Components</Link>
-                    </li>
-                    <li className="menu-item">
-                      <Link href="/contact">Contact</Link>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
-            )} */}
+            <div className="col-md-4 col-sm-12 text-md-end">
+              <Link 
+                href="https://netbones.co.za/" 
+                className="text-decoration-none text-nowrap"
+                style={{ 
+                  fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                  fontSize: '13px',
+                  color: '#8B008B',
+                  fontWeight: '500'
+                }}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Powered by Netbones South&nbsp;Africa
+              </Link>
+            </div>
           </div>
         </div>
       </div>
