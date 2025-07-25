@@ -59,6 +59,11 @@ a:link {
 div.entry-meta {
     color: #0031FF;
     font-size: 14px;
+    margin-top: 16px;
+}
+
+.entry-thumbnail {
+    margin-bottom: 20px;
 }
 
 aside {
