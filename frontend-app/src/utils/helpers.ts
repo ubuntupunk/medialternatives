@@ -95,8 +95,9 @@ export function getFeaturedImageUrl(
   const featuredMedia = post._embedded?.['wp:featuredmedia']?.[0];
   
   if (!featuredMedia) {
-    console.log('No featured media found for post:', post.slug, 'Using placeholder image.');
-    return 'https://picsum.photos/600/400'; // Fallback placeholder image
+    console.log('No featured media found for post:', post.slug, 'Using unique placeholder image.');
+    // Generate unique placeholder image using post ID as seed
+    return `https://picsum.photos/seed/${post.id}/600/400`; // Unique fallback placeholder image
   }
   
   console.log('Featured media for post:', post.slug, featuredMedia);
