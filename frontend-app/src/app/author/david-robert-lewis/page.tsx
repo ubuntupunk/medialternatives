@@ -1,6 +1,5 @@
 import React from 'react';
-import PostGrid from '@/components/Posts/PostGrid';
-import Pagination from '@/components/UI/Pagination';
+import LoadMore from '@/components/UI/LoadMore';
 import { wordpressApi } from '@/services/wordpress-api';
 import { SITE_CONFIG } from '@/lib/constants';
 import { WordPressPost, PaginationInfo } from '@/types/wordpress';
@@ -161,35 +160,14 @@ export default async function DavidRobertLewisPage({ searchParams }: DavidRobert
           </Link>
         </div>
       ) : (
-        <>
-          <div className="posts-section">
-            <h3 className="mb-4 text-primary">Latest Posts</h3>
-            <PostGrid posts={posts} showFeatured={currentPage === 1} />
-          </div>
-          
-          {pagination.totalPages > 1 && (
-            <Pagination 
-              currentPage={pagination.currentPage}
-              totalPages={pagination.totalPages}
-              baseUrl="/author/david-robert-lewis"
-            />
-          )}
-          
-          {/* Debug info for development */}
-          {process.env.NODE_ENV === 'development' && (
-            <div className="mt-4 p-3 bg-light border rounded">
-              <h6>David Robert Lewis Pagination Debug Info:</h6>
-              <small>
-                Total posts: {pagination.total} | 
-                Total pages: {pagination.totalPages} | 
-                Current page: {pagination.currentPage} | 
-                Per page: {pagination.perPage} | 
-                Has next: {pagination.hasNext ? 'Yes' : 'No'} | 
-                Has prev: {pagination.hasPrev ? 'Yes' : 'No'}
-              </small>
-            </div>
-          )}
-        </>
+        <div className="posts-section">
+          <h3 className="mb-4 text-primary">Latest Posts</h3>
+          <LoadMore 
+            initialPosts={posts}
+            initialPagination={pagination}
+            authorId={1}
+          />
+        </div>
       )}
 
       {/* Back to Blog Link */}

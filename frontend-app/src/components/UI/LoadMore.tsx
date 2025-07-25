@@ -10,6 +10,9 @@ interface LoadMoreProps {
   initialPosts: WordPressPost[];
   initialPagination: PaginationInfo;
   className?: string;
+  categoryId?: number;
+  authorId?: number;
+  tagId?: number;
 }
 
 /**
@@ -19,7 +22,10 @@ interface LoadMoreProps {
 const LoadMore: React.FC<LoadMoreProps> = ({
   initialPosts,
   initialPagination,
-  className = ''
+  className = '',
+  categoryId,
+  authorId,
+  tagId
 }) => {
   const [posts, setPosts] = useState<WordPressPost[]>(initialPosts);
   const [pagination, setPagination] = useState<PaginationInfo>(initialPagination);
@@ -33,11 +39,33 @@ const LoadMore: React.FC<LoadMoreProps> = ({
     setError(null);
 
     try {
-      const response = await wordpressApi.getPostsWithPagination({
-        per_page: SITE_CONFIG.POSTS_PER_PAGE,
-        page: pagination.nextPage,
-        _embed: true
-      });
+      let response;
+      
+      if (categoryId) {
+        response = await wordpressApi.getPostsByCategoryWithPagination(categoryId, {
+          per_page: SITE_CONFIG.POSTS_PER_PAGE,
+          page: pagination.nextPage,
+          _embed: true
+        });
+      } else if (authorId) {
+        response = await wordpressApi.getPostsByAuthorWithPagination(authorId, {
+          per_page: SITE_CONFIG.POSTS_PER_PAGE,
+          page: pagination.nextPage,
+          _embed: true
+        });
+      } else if (tagId) {
+        response = await wordpressApi.getPostsByTagWithPagination(tagId, {
+          per_page: SITE_CONFIG.POSTS_PER_PAGE,
+          page: pagination.nextPage,
+          _embed: true
+        });
+      } else {
+        response = await wordpressApi.getPostsWithPagination({
+          per_page: SITE_CONFIG.POSTS_PER_PAGE,
+          page: pagination.nextPage,
+          _embed: true
+        });
+      }
 
       // Append new posts to existing posts
       setPosts(prevPosts => [...prevPosts, ...response.data]);

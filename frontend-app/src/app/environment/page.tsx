@@ -35,7 +35,7 @@ const EnvironmentPage: React.FC = async () => {
   const validPosts = posts.filter((post): post is WordPressPost => post !== null);
 
   return (
-    <div className="container-fluid px-3 px-md-4 px-lg-5 my-4">
+    <>
       <div className="row mb-4">
         <div className="col-12">
           <h1 className="display-4 mb-3 text-balance">Environment</h1>
@@ -45,21 +45,17 @@ const EnvironmentPage: React.FC = async () => {
         </div>
       </div>
       
-      <div className="row g-4">
+      <div className="row">
         {validPosts.length > 0 ? (
           <>
             {/* Featured Story - Full Width */}
             {validPosts[0] && (
-              <div className="col-12 mb-4">
-                <PostCardBig post={validPosts[0]} />
-              </div>
+              <PostCardBig post={validPosts[0]} />
             )}
             
-            {/* Remaining Stories - Responsive Two Columns */}
+            {/* Remaining Stories - Same as front page layout */}
             {validPosts.slice(1).map((post) => (
-              <div key={post.id} className="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                <PostCard post={post} />
-              </div>
+              <PostCard key={post.id} post={post} />
             ))}
           </>
         ) : (
@@ -71,7 +67,7 @@ const EnvironmentPage: React.FC = async () => {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

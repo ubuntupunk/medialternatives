@@ -1,7 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import PostGrid from '@/components/Posts/PostGrid';
-import Pagination from '@/components/UI/Pagination';
+import LoadMore from '@/components/UI/LoadMore';
 import { wordpressApi } from '@/services/wordpress-api';
 import { SITE_CONFIG } from '@/lib/constants';
 import { WordPressPost, WordPressUser, PaginationInfo } from '@/types/wordpress';
@@ -166,32 +165,11 @@ export default async function AuthorPage({ params, searchParams }: AuthorPagePro
           </Link>
         </div>
       ) : (
-        <>
-          <PostGrid posts={posts} showFeatured={currentPage === 1} />
-          
-          {pagination.totalPages > 1 && (
-            <Pagination 
-              currentPage={pagination.currentPage}
-              totalPages={pagination.totalPages}
-              baseUrl={`/author/${slug}`}
-            />
-          )}
-          
-          {/* Debug info for development */}
-          {process.env.NODE_ENV === 'development' && (
-            <div className="mt-4 p-3 bg-light border rounded">
-              <h6>Author "{author?.name}" Pagination Debug Info:</h6>
-              <small>
-                Total posts: {pagination.total} | 
-                Total pages: {pagination.totalPages} | 
-                Current page: {pagination.currentPage} | 
-                Per page: {pagination.perPage} | 
-                Has next: {pagination.hasNext ? 'Yes' : 'No'} | 
-                Has prev: {pagination.hasPrev ? 'Yes' : 'No'}
-              </small>
-            </div>
-          )}
-        </>
+        <LoadMore 
+          initialPosts={posts}
+          initialPagination={pagination}
+          authorId={author?.id}
+        />
       )}
 
       {/* Back to Blog Link */}

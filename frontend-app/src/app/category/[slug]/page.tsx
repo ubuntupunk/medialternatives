@@ -1,7 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import PostGrid from '@/components/Posts/PostGrid';
-import Pagination from '@/components/UI/Pagination';
+import LoadMore from '@/components/UI/LoadMore';
 import { wordpressApi } from '@/services/wordpress-api';
 import { SITE_CONFIG } from '@/lib/constants';
 import { WordPressPost, WordPressCategory, PaginationInfo } from '@/types/wordpress';
@@ -143,32 +142,11 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
           </Link>
         </div>
       ) : (
-        <>
-          <PostGrid posts={posts} showFeatured={currentPage === 1} />
-          
-          {pagination.totalPages > 1 && (
-            <Pagination 
-              currentPage={pagination.currentPage}
-              totalPages={pagination.totalPages}
-              baseUrl={`/category/${slug}`}
-            />
-          )}
-          
-          {/* Debug info for development */}
-          {process.env.NODE_ENV === 'development' && (
-            <div className="mt-4 p-3 bg-light border rounded">
-              <h6>Category "{category?.name}" Pagination Debug Info:</h6>
-              <small>
-                Total posts: {pagination.total} | 
-                Total pages: {pagination.totalPages} | 
-                Current page: {pagination.currentPage} | 
-                Per page: {pagination.perPage} | 
-                Has next: {pagination.hasNext ? 'Yes' : 'No'} | 
-                Has prev: {pagination.hasPrev ? 'Yes' : 'No'}
-              </small>
-            </div>
-          )}
-        </>
+        <LoadMore 
+          initialPosts={posts}
+          initialPagination={pagination}
+          categoryId={category?.id}
+        />
       )}
 
       {/* Back to Categories Link */}
