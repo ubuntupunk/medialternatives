@@ -263,11 +263,14 @@ ins.adsbygoogle {
         justify-content: center !important;
     }
     
-    /* Smaller buttons on mobile */
+    /* Normal horizontal buttons on mobile */
     .entry-footer .btn-sm {
-        padding: 0.25rem 0.5rem !important;
+        padding: 0.375rem 0.75rem !important;
         font-size: 0.875rem !important;
-        width: 100%;
+        width: auto !important;
+        min-width: 0 !important;
+        height: auto !important;
+        white-space: nowrap;
     }
     
     .entry-footer .btn-sm svg {
