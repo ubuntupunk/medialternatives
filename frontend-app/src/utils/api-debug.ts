@@ -62,7 +62,7 @@ export async function testEndpoint(url: string): Promise<APITestResult> {
 /**
  * Test multiple WordPress.com API endpoints
  */
-export async function testWordPressEndpoints(siteUrl: string = 'davidrobertlewis5.wordpress.com'): Promise<APITestResult[]> {
+export async function testWordPressEndpoints(siteUrl: string = 'medialternatives.wordpress.com'): Promise<APITestResult[]> {
   const baseUrl = `https://public-api.wordpress.com/wp/v2/sites/${siteUrl}`;
   const siteInfoUrl = `https://public-api.wordpress.com/rest/v1.1/sites/${siteUrl}`;
   
@@ -97,7 +97,7 @@ export async function testWordPressEndpoints(siteUrl: string = 'davidrobertlewis
 /**
  * Validate WordPress.com site setup
  */
-export async function validateSiteSetup(siteUrl: string = 'davidrobertlewis5.wordpress.com'): Promise<{
+export async function validateSiteSetup(siteUrl: string = 'medialternatives.wordpress.com'): Promise<{
   isSetup: boolean;
   issues: string[];
   recommendations: string[];

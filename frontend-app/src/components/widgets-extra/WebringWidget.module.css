@@ -1,0 +1,306 @@
+/* Webring Widget Styles */
+.webringWidget {
+  background: var(--webring-bg, #f8f9fa);
+  border: 1px solid var(--webring-border, #dee2e6);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  color: var(--webring-text, #495057);
+  transition: all 0.3s ease;
+  max-width: 480px;
+  box-shadow: 0 2px 4px 0 rgba(14, 30, 37, 0.12);
+}
+
+/* Size Variations */
+.sizeSmall {
+  padding: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.sizeMedium {
+  padding: 1rem;
+  font-size: 1rem;
+}
+
+.sizeLarge {
+  padding: 1.25rem;
+  font-size: 1.125rem;
+}
+
+.webringLogo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 0 auto 0.5rem;
+  display: block;
+  object-fit: cover;
+}
+
+.webringContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.surferImageContainer {
+  flex-shrink: 0;
+}
+
+.surferImage {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #0d6efd;
+}
+
+.webringText {
+  text-align: left;
+  flex-grow: 1;
+}
+
+.webringIntro {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--webring-text, #495057);
+}
+
+.webringName {
+  margin: 0.25rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.webringName a {
+  color: var(--webring-link, #0d6efd);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.webringName a:hover {
+  color: var(--webring-link-hover, #0b5ed7);
+  text-decoration: underline;
+}
+
+.webringMembers {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--webring-text, #495057);
+}
+
+.webringInfoContainer {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.webringInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: 2px solid #DDD;
+  background: var(--webring-bg, #f8f9fa);
+  width: 1.25rem;
+  height: 1.25rem;
+  font-size: 0.75rem;
+  text-align: center;
+  color: #666;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.webringInfo:hover,
+.webringInfo:focus {
+  color: var(--webring-accent, #0d6efd);
+  border-color: var(--webring-accent, #0d6efd);
+  text-decoration: none;
+}
+
+.webringTooltip {
+  position: absolute;
+  bottom: 130%;
+  right: 0;
+  background: linear-gradient(135deg, var(--webring-accent, #0d6efd), #6610f2);
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+  z-index: 1000;
+  pointer-events: none;
+  animation: tooltipFadeIn 0.3s ease;
+}
+
+.webringTooltipArrow {
+  position: absolute;
+  bottom: 120%;
+  right: 0.75rem;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--webring-accent, #0d6efd);
+  z-index: 1000;
+  pointer-events: none;
+  animation: tooltipFadeIn 0.3s ease;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.webringNavigation {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.widgetTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--webring-accent, #495057);
+  text-align: center;
+}
+
+.webringBanner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.webringImage {
+  margin-bottom: 0.5rem;
+}
+
+.webringLogo {
+  max-width: 120px;
+  height: auto;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.webringImage {
+  margin-bottom: 0.5rem;
+}
+
+.webringLogo {
+  max-width: 120px;
+  height: auto;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.webringImage {
+  margin-bottom: 0.75rem;
+}
+
+.webringBannerImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+
+.webringLink {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: var(--webring-button-bg, #ffffff);
+  color: var(--webring-button-text, #0d6efd);
+  text-decoration: none;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: 2px solid var(--webring-button-text, #0d6efd);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.webringLink:hover {
+  background: var(--webring-button-hover, #0d6efd);
+  border-color: var(--webring-button-hover, #0d6efd);
+  color: var(--webring-button-bg, #ffffff) !important;
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.webringLink:active {
+  transform: translateY(0);
+}
+
+/* Size-specific button adjustments */
+.sizeSmall .webringLink {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.sizeLarge .webringLink {
+  padding: 0.625rem 1.25rem;
+  font-size: 0.95rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .webringContent {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .webringText {
+    text-align: center;
+  }
+  
+  .webringNavigation {
+    gap: 0.5rem;
+  }
+  
+  .webringLink {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .surferImage {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .webringInfo {
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 0.875rem;
+    top: -0.25rem;
+    right: -0.25rem;
+  }
+}
+
+/* Alternative styling for embedded script content */
+.webringWidget :global(.webring-embed) {
+  text-align: center;
+}
+
+.webringWidget :global(.webring-embed a) {
+  color: #0d6efd;
+  text-decoration: none;
+  margin: 0 0.25rem;
+}
+
+.webringWidget :global(.webring-embed a:hover) {
+  text-decoration: underline;
+}

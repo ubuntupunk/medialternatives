@@ -10,9 +10,9 @@ import AuthorWidget from '../Widgets/AuthorWidget';
 import AdSenseWidget from '../Widgets/AdSenseWidget';
 import CreativeCommonsWidget from '../Widgets/CreativeCommonsWidget';
 import DonateWidget from '../Widgets/DonateWidget';
-import WebringWidget from '../Widgets/WebringWidget';
+import WebringWidget from '../widgets-extra/WebringWidget';
 
-/**
+/*
  * Sidebar component that displays widgets
  */
 const Sidebar: React.FC<SidebarProps> = ({

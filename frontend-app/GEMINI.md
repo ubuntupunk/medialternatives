@@ -46,7 +46,7 @@ frontend-app/
 
 ### WordPress.com Backend
 - **Site**: davidrobertlewis5.wordpress.com
-- **API Base**: https://public-api.wordpress.com/wp/v2/sites/davidrobertlewis5.wordpress.com
+- **API Base**: WORDPRESS_API_URL=https://public-api.wordpress.com/wp/v2/sites/medialternatives.wordpress.com
 - **Content**: Migrated from current site via XML export/import
 
 ## Migration Status
@@ -118,7 +118,7 @@ The project includes an `additional.css` file in the root directory with critica
 ### Environment Variables
 ```bash
 # Development
-WORDPRESS_API_URL=https://public-api.wordpress.com/wp/v2/sites/davidrobertlewis5.wordpress.com
+WORDPRESS_API_URL=WORDPRESS_API_URL=https://public-api.wordpress.com/wp/v2/sites/medialternatives.wordpress.com
 NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-CZNQG5YM3Z
 NEXT_PUBLIC_ADSENSE_CLIENT_ID=ca-pub-1630578712653878
 NODE_ENV=development

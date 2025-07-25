@@ -224,7 +224,7 @@ npm run dev
 #### Environment Variables
 ```bash
 # .env.local (development)
-WORDPRESS_API_URL=https://public-api.wordpress.com/wp/v2/sites/davidrobertlewis5.wordpress.com
+WORDPRESS_API_URL=WORDPRESS_API_URL=https://public-api.wordpress.com/wp/v2/sites/medialternatives.wordpress.com
 NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-CZNQG5YM3Z
 NEXT_PUBLIC_ADSENSE_CLIENT_ID=ca-pub-1630578712653878
 NODE_ENV=development

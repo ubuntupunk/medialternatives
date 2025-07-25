@@ -36,6 +36,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'i.creativecommons.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'meshring.netlify.app',
       }  
     ],
   },

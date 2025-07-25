@@ -338,13 +338,124 @@ export default function ContentManagementPage() {
                   )}
 
                   {selectedTab === 'popular' && (
-                    <div className="text-center py-5">
-                      <i className="bi bi-graph-up text-muted" style={{ fontSize: '3rem' }}></i>
-                      <p className="text-muted mt-3">
-                        Popular posts analytics would be displayed here
-                        <br />
-                        <small>Integration with Google Analytics required</small>
-                      </p>
+                    <div>
+                      {analyticsLoading ? (
+                        <div className="text-center py-5">
+                          <div className="spinner-border text-primary" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                          </div>
+                          <p className="text-muted mt-3">Loading popular posts...</p>
+                        </div>
+                      ) : analyticsError ? (
+                        <div className="alert alert-warning">
+                          <i className="bi bi-exclamation-triangle me-2"></i>
+                          <strong>Analytics Error:</strong> {analyticsError}
+                          <br />
+                          <small className="text-muted">Showing estimated data based on recent posts</small>
+                        </div>
+                      ) : null}
+                      
+                      {popularPosts.length > 0 ? (
+                        <div className="table-responsive">
+                          <table className="table table-hover">
+                            <thead>
+                              <tr>
+                                <th>Rank</th>
+                                <th>Title</th>
+                                <th>Views</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {popularPosts.map((post, index) => (
+                                <tr key={post.id || post.slug}>
+                                  <td>
+                                    <span className="badge bg-primary rounded-pill">#{index + 1}</span>
+                                  </td>
+                                  <td>
+                                    <div>
+                                      <strong className="text-truncate d-block" style={{ maxWidth: '300px' }}>
+                                        {post.title?.rendered || post.title}
+                                      </strong>
+                                      {post.isAnalyticsOnly && (
+                                        <small className="text-muted">Analytics path: {post.analyticsPath}</small>
+                                      )}
+                                      {post.isEstimated && (
+                                        <small className="text-warning">
+                                          <i className="bi bi-exclamation-triangle me-1"></i>
+                                          Estimated views
+                                        </small>
+                                      )}
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <strong className="text-success">
+                                      {post.views?.toLocaleString() || 'N/A'}
+                                    </strong>
+                                    <br />
+                                    <small className="text-muted">views</small>
+                                  </td>
+                                  <td>
+                                    <small>
+                                      {post.date ? formatDate(post.date) : 'N/A'}
+                                    </small>
+                                  </td>
+                                  <td>
+                                    <div className="btn-group btn-group-sm">
+                                      {!post.isAnalyticsOnly && (
+                                        <>
+                                          <Link 
+                                            href={`/post/${post.slug}`}
+                                            className="btn btn-outline-primary"
+                                            title="View Post"
+                                          >
+                                            <i className="bi bi-eye"></i>
+                                          </Link>
+                                          <a 
+                                            href={`https://davidrobertlewis5.wordpress.com/wp-admin/post.php?post=${post.id}&action=edit`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="btn btn-outline-secondary"
+                                            title="Edit in WordPress"
+                                          >
+                                            <i className="bi bi-pencil"></i>
+                                          </a>
+                                        </>
+                                      )}
+                                      <a 
+                                        href={post.link || `https://davidrobertlewis5.wordpress.com${post.analyticsPath}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn btn-outline-info"
+                                        title="View Live"
+                                      >
+                                        <i className="bi bi-box-arrow-up-right"></i>
+                                      </a>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      ) : !analyticsLoading && (
+                        <div className="text-center py-5">
+                          <i className="bi bi-graph-up text-muted" style={{ fontSize: '3rem' }}></i>
+                          <p className="text-muted mt-3">
+                            No popular posts data available
+                            <br />
+                            <small>Try refreshing or check analytics integration</small>
+                          </p>
+                          <button 
+                            onClick={fetchPopularPosts}
+                            className="btn btn-outline-primary"
+                          >
+                            <i className="bi bi-arrow-clockwise me-1"></i>
+                            Retry Loading
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
 

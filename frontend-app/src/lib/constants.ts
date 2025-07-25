@@ -1,6 +1,6 @@
 // WordPress.com API Configuration
-export const WORDPRESS_API_BASE = 'https://public-api.wordpress.com/wp/v2/sites/davidrobertlewis5.wordpress.com';
-export const WORDPRESS_SITE_INFO_API = 'https://public-api.wordpress.com/rest/v1.1/sites/davidrobertlewis5.wordpress.com';
+export const WORDPRESS_API_BASE = process.env.WORDPRESS_API_URL || 'https://public-api.wordpress.com/wp/v2/sites/medialternatives.wordpress.com';
+export const WORDPRESS_SITE_INFO_API = process.env.WORDPRESS_API_URL?.replace('/wp/v2/sites/', '/rest/v1.1/sites/') || 'https://public-api.wordpress.com/rest/v1.1/sites/medialternatives.wordpress.com';
 
 // AdSense Configuration
 export const ADSENSE_CLIENT_ID = 'ca-pub-1630578712653878';
