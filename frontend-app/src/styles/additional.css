@@ -183,3 +183,19 @@ a.more-link, button {
 ins.adsbygoogle {
     background: transparent !important;
 }
+
+/* Social share button hover effects */
+.share-btn-twitter:hover {
+    background-color: #0d8bd9 !important;
+    border-color: #0d8bd9 !important;
+}
+
+.share-btn-facebook:hover {
+    background-color: #166fe5 !important;
+    border-color: #166fe5 !important;
+}
+
+.share-btn-linkedin:hover {
+    background-color: #005885 !important;
+    border-color: #005885 !important;
+}
