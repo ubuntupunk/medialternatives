@@ -7,6 +7,7 @@ import Header from '../Header/Header';
 import CustomHeader from '../Header/CustomHeader';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
+import AddToHomeScreen from '../UI/AddToHomeScreen';
 
 const Layout: React.FC<LayoutProps> = ({
   children,
@@ -33,6 +34,7 @@ const Layout: React.FC<LayoutProps> = ({
       </div>
       
       <Footer />
+      <AddToHomeScreen />
     </div>
   );
 };
