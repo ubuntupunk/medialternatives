@@ -24,6 +24,14 @@ const dashboardSections = [
     href: '/dashboard/avatar'
   },
   {
+    id: 'charts',
+    title: 'Charts & Visualizations',
+    icon: 'bi-bar-chart',
+    description: 'Interactive data visualization with MCP Chart Tools',
+    color: 'success',
+    href: '/dashboard/charts'
+  },
+  {
     id: 'analytics',
     title: 'Analytics',
     icon: 'bi-graph-up',
