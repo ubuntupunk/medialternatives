@@ -199,3 +199,8 @@ ins.adsbygoogle {
     background-color: #005885 !important;
     border-color: #005885 !important;
 }
+
+.share-btn-reddit:hover {
+    background-color: #cc3700 !important;
+    border-color: #cc3700 !important;
+}
