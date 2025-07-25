@@ -166,7 +166,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
         {/* Post Footer */}
         <footer className="entry-footer mt-5 pt-4 border-top">
-          <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 gap-md-4">
             {/* Back Button - Left Side */}
             <div className="post-navigation">
               <Link 
@@ -192,7 +192,7 @@ export default async function PostPage({ params }: PostPageProps) {
             </div>
 
             {/* Share Buttons - Right Side */}
-            <div className="share-buttons d-flex align-items-center gap-2">
+            <div className="share-buttons d-flex align-items-center flex-wrap gap-2 justify-content-center justify-content-md-end">
               <span 
                 className="text-muted me-2" 
                 style={{
