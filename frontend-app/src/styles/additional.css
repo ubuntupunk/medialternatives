@@ -220,6 +220,13 @@ ins.adsbygoogle {
     box-shadow: 0 2px 4px rgba(4, 170, 109, 0.3);
 }
 
+/* Mobile typography improvements */
+@media (max-width: 767.98px) {
+    .entry-title {
+        font-weight: 500 !important;
+    }
+}
+
 /* Mobile responsiveness for post footer */
 @media (max-width: 767.98px) {
     .entry-footer .d-flex {
