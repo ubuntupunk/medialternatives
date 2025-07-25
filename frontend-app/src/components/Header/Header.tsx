@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { SITE_CONFIG } from '@/lib/constants';
+import Navbar from './Navbar';
 
 /**
  * Header component with site branding, navigation and search
@@ -42,6 +43,8 @@ const Header: React.FC<HeaderProps> = ({
             {siteInfo.description}
           </p>
         </div>
+        
+        <Navbar />
       </div>
     </header>
   );

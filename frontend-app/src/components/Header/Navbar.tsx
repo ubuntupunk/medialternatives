@@ -5,9 +5,9 @@ import styles from '../../styles/components/navbar.module.css';
 const Navbar: React.FC = () => {
   return (
     <nav className={`navbar navbar-expand-lg navbar-light ${styles.navbar}`}>
-      <div className="container-fluid">
+      <div className="container justify-content-center">
         <button
-          className="navbar-toggler"
+          className="navbar-toggler mx-auto"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNav"
@@ -17,13 +17,8 @@ const Navbar: React.FC = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
+        <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
           <ul className="navbar-nav">
-            <li className="nav-item">
-              <Link href="/" className={`nav-link active ${styles.navLink}`} aria-current="page">
-                Home
-              </Link>
-            </li>
             <li className="nav-item">
               <Link href="/about" className={`nav-link ${styles.navLink}`}>
                 About

@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
     const response = await fetch(MCP_CHART_URL, {
       method: 'GET',
       headers: {
+        'Accept': 'application/json, text/event-stream',
         'User-Agent': 'Medialternatives-Dashboard/1.0',
       },
       signal: controller.signal,
@@ -69,6 +70,7 @@ export async function POST(request: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json, text/event-stream',
         'User-Agent': 'Medialternatives-Dashboard/1.0',
       },
       body: JSON.stringify(testChart),

@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import ChartRenderer from './ChartRenderer';
+import { initializeMCPTools } from './mcp-chart-loader';
 
 interface ChartData {
   type: string;
@@ -112,15 +114,63 @@ export default function ChartsPage() {
     }
   };
 
-  // Generate chart using MCP tools
+  // Generate chart using direct MCP tools
   const generateChart = async (chartKey: string) => {
     setLoading(true);
     const config = chartConfigs[chartKey];
     
     try {
-      console.log(`Generating ${config.type} chart via MCP service:`, config.data);
+      console.log(`Generating ${config.type} chart directly via MCP tools:`, config.data);
       
-      // Call our API endpoint which connects to MCP chart service
+      // Use the direct MCP chart tools that we know work
+      let chartResult;
+      
+      switch (config.type) {
+        case 'bar':
+          chartResult = await window.mcpTools?.bar?.(config.data);
+          break;
+        case 'line':
+          chartResult = await window.mcpTools?.line?.(config.data);
+          break;
+        case 'pie':
+          chartResult = await window.mcpTools?.pie?.(config.data);
+          break;
+        case 'doughnut':
+          chartResult = await window.mcpTools?.doughnut?.(config.data);
+          break;
+        case 'radar':
+          chartResult = await window.mcpTools?.radar?.(config.data);
+          break;
+        default:
+          throw new Error(`Chart type ${config.type} not supported`);
+      }
+      
+      if (chartResult) {
+        setChartData({
+          type: config.type,
+          title: config.title,
+          description: config.description,
+          chartResult: chartResult,
+          data: config.data,
+          isRendered: true,
+          timestamp: new Date().toISOString()
+        });
+      } else {
+        // Fallback to API call if direct tools not available
+        console.log('Direct MCP tools not available, falling back to API...');
+        await generateChartViaAPI(config);
+      }
+    } catch (error) {
+      console.error('Error with direct MCP tools, trying API fallback:', error);
+      await generateChartViaAPI(config);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fallback API method
+  const generateChartViaAPI = async (config: ChartData) => {
+    try {
       const response = await fetch('/api/charts', {
         method: 'POST',
         headers: {
@@ -149,11 +199,9 @@ export default function ChartsPage() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      // Check if response is an image
       const contentType = response.headers.get('content-type');
       
       if (contentType?.startsWith('image/')) {
-        // Create object URL for the image
         const blob = await response.blob();
         const imageUrl = URL.createObjectURL(blob);
         
@@ -166,7 +214,6 @@ export default function ChartsPage() {
           isImage: true
         });
       } else {
-        // Handle JSON response
         const result = await response.json();
         
         if (result.success) {
@@ -176,14 +223,15 @@ export default function ChartsPage() {
             description: config.description,
             chartResult: result.chart,
             data: config.data,
-            timestamp: result.timestamp
+            timestamp: result.timestamp,
+            fallback: result.fallback
           });
         } else {
           throw new Error(result.error || 'Failed to generate chart');
         }
       }
     } catch (error) {
-      console.error('Error generating chart:', error);
+      console.error('Error generating chart via API:', error);
       setChartData({
         type: config.type,
         title: config.title,
@@ -191,12 +239,12 @@ export default function ChartsPage() {
         error: error instanceof Error ? error.message : 'Unknown error occurred',
         data: config.data
       });
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
+    // Initialize MCP tools
+    initializeMCPTools();
     generateChart(selectedChart);
   }, [selectedChart]);
 
@@ -306,7 +354,7 @@ export default function ChartsPage() {
               ) : (
                 <div className="chart-container">
                   {/* Chart Display Area */}
-                  <div className="bg-light rounded p-4" style={{ minHeight: '400px' }}>
+                  <div className="bg-white rounded border p-4" style={{ minHeight: '400px' }}>
                     {chartData?.error ? (
                       // Error State
                       <div className="d-flex flex-column justify-content-center align-items-center h-100 text-center">
@@ -321,56 +369,24 @@ export default function ChartsPage() {
                           Try Again
                         </button>
                       </div>
-                    ) : chartData?.isImage && chartData?.imageUrl ? (
-                      // Image Chart Display
-                      <div className="text-center">
-                        <img 
-                          src={chartData.imageUrl} 
-                          alt={chartData.title}
-                          className="img-fluid rounded"
-                          style={{ maxHeight: '400px', width: 'auto' }}
-                        />
-                        <div className="mt-3">
-                          <small className="text-muted">
-                            Generated via MCP Chart Service • {chartData.type.toUpperCase()}
-                          </small>
-                        </div>
-                      </div>
-                    ) : chartData?.chartResult ? (
-                      // JSON Chart Result Display
-                      <div className="text-center">
-                        <div className="alert alert-success">
-                          <i className="bi bi-check-circle me-2"></i>
-                          <strong>Chart Generated Successfully!</strong>
-                        </div>
-                        <div className="bg-white rounded p-3">
-                          <pre className="text-start small">
-                            {JSON.stringify(chartData.chartResult, null, 2)}
-                          </pre>
-                        </div>
-                        {chartData.timestamp && (
-                          <small className="text-muted d-block mt-2">
-                            Generated: {new Date(chartData.timestamp).toLocaleString()}
-                          </small>
-                        )}
-                      </div>
                     ) : (
-                      // Default/Placeholder State
-                      <div className="d-flex flex-column justify-content-center align-items-center h-100 text-center">
-                        <i className={`bi bi-${
-                          chartConfigs[selectedChart]?.type === 'bar' ? 'bar-chart' :
-                          chartConfigs[selectedChart]?.type === 'line' ? 'graph-up' :
-                          chartConfigs[selectedChart]?.type === 'pie' ? 'pie-chart' :
-                          chartConfigs[selectedChart]?.type === 'doughnut' ? 'circle' :
-                          chartConfigs[selectedChart]?.type === 'radar' ? 'diagram-3' : 'graph-up'
-                        } display-1 text-muted mb-3`}></i>
-                        <h4 className="text-muted mb-2">{chartConfigs[selectedChart]?.title}</h4>
-                        <p className="text-muted mb-3">{chartConfigs[selectedChart]?.description}</p>
-                        <div className="alert alert-info">
-                          <i className="bi bi-info-circle me-2"></i>
-                          <strong>MCP Integration Active:</strong> Click refresh to generate chart via MCP service.
-                        </div>
-                      </div>
+                      // Render Chart using ChartRenderer
+                      <ChartRenderer
+                        type={chartConfigs[selectedChart]?.type}
+                        data={chartConfigs[selectedChart]?.data}
+                        title={chartConfigs[selectedChart]?.title}
+                        onChartGenerated={(chartUrl) => {
+                          setChartData({
+                            type: chartConfigs[selectedChart]?.type,
+                            title: chartConfigs[selectedChart]?.title,
+                            description: chartConfigs[selectedChart]?.description,
+                            chartUrl: chartUrl,
+                            data: chartConfigs[selectedChart]?.data,
+                            isRendered: true,
+                            timestamp: new Date().toISOString()
+                          });
+                        }}
+                      />
                     )}
                   </div>
                   
@@ -388,11 +404,13 @@ export default function ChartsPage() {
                             <small className="text-muted d-block">Status:</small>
                             <span className={`badge ${
                               chartData?.error ? 'bg-danger' : 
-                              chartData?.imageUrl || chartData?.chartResult ? 'bg-success' : 
+                              chartData?.isRendered || chartData?.chartUrl ? 'bg-success' : 
+                              loading ? 'bg-warning' :
                               'bg-secondary'
                             }`}>
                               {chartData?.error ? 'Error' : 
-                               chartData?.imageUrl || chartData?.chartResult ? 'Generated' : 
+                               chartData?.isRendered || chartData?.chartUrl ? 'Rendered' : 
+                               loading ? 'Generating' :
                                'Ready'}
                             </span>
                           </div>

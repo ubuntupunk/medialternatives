@@ -7,7 +7,6 @@ import Header from '../Header/Header';
 import CustomHeader from '../Header/CustomHeader';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
-import Navbar from '../Header/Navbar';
 
 const Layout: React.FC<LayoutProps> = ({
   children,
@@ -18,7 +17,6 @@ const Layout: React.FC<LayoutProps> = ({
     <div id="page" className="site">
       <Header />
       <CustomHeader />
-      <Navbar />
       
       <div id="content" className="site-content container">
         <div id="primary" className="content-area row">

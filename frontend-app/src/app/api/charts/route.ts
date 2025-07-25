@@ -14,11 +14,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Prepare the chart request for MCP service
+    // Prepare the chart request for MCP service in JSON-RPC format
     const chartRequest = {
-      type,
-      data,
-      ...options
+      jsonrpc: "2.0",
+      method: type, // bar, line, pie, etc.
+      params: {
+        data,
+        ...options
+      },
+      id: Date.now()
     };
 
     console.log('Sending chart request to MCP:', chartRequest);
@@ -33,7 +37,9 @@ export async function POST(request: NextRequest) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json, text/event-stream',
           'User-Agent': 'Medialternatives-Dashboard/1.0',
+          'Mcp-Session-Id': `dashboard-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         },
         body: JSON.stringify(chartRequest),
         signal: controller.signal,
@@ -53,21 +59,34 @@ export async function POST(request: NextRequest) {
       clearTimeout(timeoutId);
       console.error('MCP Fetch error details:', fetchError);
       
-      // Fallback: Return a mock chart response for development
-      console.log('Falling back to mock chart generation');
-      return NextResponse.json({
-        success: true,
-        chart: {
-          type: chartRequest.type,
-          data: chartRequest.data,
-          mockGenerated: true,
-          message: `Mock ${chartRequest.type} chart generated (MCP service unavailable)`,
-          timestamp: new Date().toISOString(),
-          originalError: fetchError instanceof Error ? fetchError.message : 'Unknown fetch error'
-        },
-        fallback: true,
-        timestamp: new Date().toISOString(),
-      });
+      // Fallback: Generate actual SVG chart
+      console.log('MCP service unavailable, generating SVG fallback chart');
+      try {
+        const fallbackResponse = await fetch(`${request.url.replace('/api/charts', '/api/charts/generate')}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ type, data, options }),
+        });
+
+        if (fallbackResponse.ok) {
+          const fallbackResult = await fallbackResponse.json();
+          return NextResponse.json(fallbackResult);
+        } else {
+          throw new Error('Fallback chart generation failed');
+        }
+      } catch (fallbackError) {
+        console.error('Fallback chart generation failed:', fallbackError);
+        return NextResponse.json({
+          success: false,
+          error: 'Both MCP service and fallback chart generation failed',
+          details: {
+            mcpError: fetchError instanceof Error ? fetchError.message : 'Unknown MCP error',
+            fallbackError: fallbackError instanceof Error ? fallbackError.message : 'Unknown fallback error'
+          }
+        }, { status: 500 });
+      }
     }
 
     // Check if response is an image
