@@ -210,16 +210,14 @@ ins.adsbygoogle {
     border-color: #5a6268 !important;
 }
 
-/* Read more link styling */
-.read-more-link {
-    display: inline-block;
-    margin-top: 0.5rem;
-    transition: color 0.2s ease;
-}
-
-.read-more-link:hover {
-    color: blueviolet !important;
+/* Read more pill button styling */
+.read-more-pill:hover {
+    background-color: #038a5a !important;
+    border-color: #038a5a !important;
+    color: #00e7ff !important;
     text-decoration: none !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(4, 170, 109, 0.3);
 }
 
 /* Mobile responsiveness for post footer */

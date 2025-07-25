@@ -65,19 +65,27 @@ const PostCard: React.FC<PostCardProps> = ({
       {showExcerpt && excerpt && (
         <div className="entry-content">
           <p className="text-pretty">{excerpt}</p>
-          <Link 
-            href={`/post/${post.slug}`}
-            className="read-more-link"
-            style={{
-              color: '#0031FF',
-              textDecoration: 'none',
-              fontWeight: '500',
-              fontSize: '14px',
-              fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif'
-            }}
-          >
-            Read full story →
-          </Link>
+          <div className="mt-2">
+            <Link 
+              href={`/post/${post.slug}`}
+              className="btn btn-sm read-more-pill"
+              style={{
+                backgroundColor: '#04AA6D',
+                borderColor: '#04AA6D',
+                color: '#00e7ff',
+                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+                fontWeight: '600',
+                fontSize: '12px',
+                padding: '0.25rem 0.75rem',
+                textDecoration: 'none',
+                textTransform: 'uppercase',
+                borderRadius: '12px',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              Read Full Story
+            </Link>
+          </div>
         </div>
       )}
     </article>
