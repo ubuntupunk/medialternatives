@@ -8,6 +8,7 @@ import CustomHeader from '../Header/CustomHeader';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
 import AddToHomeScreen from '../UI/AddToHomeScreen';
+import OfflineIndicator from '../UI/OfflineIndicator';
 
 const Layout: React.FC<LayoutProps> = ({
   children,
@@ -16,6 +17,7 @@ const Layout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <div id="page" className="site">
+      <OfflineIndicator />
       <Header />
       <CustomHeader />
       
