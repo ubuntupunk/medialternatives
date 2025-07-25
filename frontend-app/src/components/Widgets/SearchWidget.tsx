@@ -95,7 +95,7 @@ export const SearchWidget: React.FC<SearchWidgetProps> = ({ className = '' }) =>
   };
 
   return (
-    <div className={`search-widget ${className}`}>
+    <div className={`search-widget mt-4 ${className}`}>
       <div className="widget-header mb-3">
         <h5 className="widget-title text-center">
           <i className="bi bi-search me-2"></i>
