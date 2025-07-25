@@ -69,7 +69,7 @@ const PostCardBig: React.FC<PostCardProps> = ({
           <p className="text-pretty">{excerpt}</p>
           <div className="mt-3 mb-4">
             <InteractiveButton href={`/post/${post.slug}`}>
-              Continue Reading &rarr;
+              Read full story &rarr;
             </InteractiveButton>
           </div>
         </div>

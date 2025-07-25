@@ -210,6 +210,18 @@ ins.adsbygoogle {
     border-color: #5a6268 !important;
 }
 
+/* Read more link styling */
+.read-more-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    transition: color 0.2s ease;
+}
+
+.read-more-link:hover {
+    color: blueviolet !important;
+    text-decoration: none !important;
+}
+
 /* Mobile responsiveness for post footer */
 @media (max-width: 767.98px) {
     .entry-footer .d-flex {
@@ -229,6 +241,7 @@ ins.adsbygoogle {
         justify-content: center !important;
         flex-wrap: wrap;
         gap: 0.5rem !important;
+        max-width: 100%;
     }
     
     .entry-footer .share-buttons span {
@@ -238,10 +251,18 @@ ins.adsbygoogle {
         margin-right: 0 !important;
     }
     
+    /* Two buttons per row on mobile */
+    .entry-footer .share-buttons a {
+        flex: 0 0 calc(50% - 0.25rem);
+        max-width: calc(50% - 0.25rem);
+        justify-content: center !important;
+    }
+    
     /* Smaller buttons on mobile */
     .entry-footer .btn-sm {
         padding: 0.25rem 0.5rem !important;
         font-size: 0.875rem !important;
+        width: 100%;
     }
     
     .entry-footer .btn-sm svg {
