@@ -10,6 +10,9 @@ import { formatDate, getFeaturedImageUrl, getPostAuthor, getPostAuthorId, decode
 import AuthorDisplay from '@/components/UI/AuthorDisplay';
 import { mockPosts } from '@/utils/mockData';
 
+// Enable ISR - revalidate every 10 minutes for individual posts
+export const revalidate = 600; // 10 minutes
+
 interface PostPageProps {
   params: {
     slug: string;

@@ -7,6 +7,9 @@ import { SITE_CONFIG } from '@/lib/constants';
 import { WordPressPost, PaginationInfo } from '@/types/wordpress';
 import { mockPosts } from '@/utils/mockData';
 
+// Enable ISR - revalidate every 5 minutes
+export const revalidate = 300; // 5 minutes
+
 // This is a server component that fetches data on the server
 export default async function BlogPage() {
   let posts: WordPressPost[] = [];

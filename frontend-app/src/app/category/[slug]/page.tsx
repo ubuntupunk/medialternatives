@@ -7,6 +7,9 @@ import { WordPressPost, WordPressCategory, PaginationInfo } from '@/types/wordpr
 import { mockPosts } from '@/utils/mockData';
 import Link from 'next/link';
 
+// Enable ISR - revalidate every 5 minutes for category pages
+export const revalidate = 300; // 5 minutes
+
 interface CategoryPageProps {
   params: {
     slug: string;
