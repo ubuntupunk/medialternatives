@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { wordpressApi } from '@/services/wordpress-api';
 import { WordPressPost } from '@/types/wordpress';
 import { formatDate } from '@/utils/helpers';
+import { WORDPRESS_URLS } from '@/lib/wordpress-urls';
 
 export default function ContentManagementPage() {
   const [posts, setPosts] = useState<WordPressPost[]>([]);
@@ -152,7 +153,7 @@ export default function ContentManagementPage() {
         </div>
         <div className="col-md-4 text-end">
           <a 
-            href="https://davidrobertlewis5.wordpress.com/wp-admin/post-new.php"
+            href="{WORDPRESS_URLS.NEW_POST}"
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-primary"
@@ -291,7 +292,7 @@ export default function ContentManagementPage() {
                                     <i className="bi bi-eye"></i>
                                   </Link>
                                   <a 
-                                    href={`https://davidrobertlewis5.wordpress.com/wp-admin/post.php?post=${post.id}&action=edit`}
+                                    href={`{WORDPRESS_URLS.getEditPostUrl(post.id)}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="btn btn-outline-secondary"
@@ -326,7 +327,7 @@ export default function ContentManagementPage() {
                         <small>WordPress.com API doesn't expose draft posts in public API</small>
                       </p>
                       <a 
-                        href="https://davidrobertlewis5.wordpress.com/wp-admin/edit.php?post_status=draft"
+                        href={WORDPRESS_URLS.DRAFT_POSTS}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn btn-outline-primary"
@@ -413,7 +414,7 @@ export default function ContentManagementPage() {
                                             <i className="bi bi-eye"></i>
                                           </Link>
                                           <a 
-                                            href={`https://davidrobertlewis5.wordpress.com/wp-admin/post.php?post=${post.id}&action=edit`}
+                                            href={`{WORDPRESS_URLS.getEditPostUrl(post.id)}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="btn btn-outline-secondary"
@@ -424,7 +425,7 @@ export default function ContentManagementPage() {
                                         </>
                                       )}
                                       <a 
-                                        href={post.link || `https://davidrobertlewis5.wordpress.com${post.analyticsPath}`}
+                                        href={WORDPRESS_URLS.getPostUrl(post)}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="btn btn-outline-info"
@@ -468,7 +469,7 @@ export default function ContentManagementPage() {
                         <small>WordPress.com media API integration needed</small>
                       </p>
                       <a 
-                        href="https://davidrobertlewis5.wordpress.com/wp-admin/upload.php"
+                        href={WORDPRESS_URLS.MEDIA}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn btn-outline-primary"
@@ -499,7 +500,7 @@ export default function ContentManagementPage() {
               <div className="row">
                 <div className="col-md-3 mb-2">
                   <a 
-                    href="https://davidrobertlewis5.wordpress.com/wp-admin/post-new.php"
+                    href="{WORDPRESS_URLS.NEW_POST}"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn-outline-primary w-100"
@@ -510,7 +511,7 @@ export default function ContentManagementPage() {
                 </div>
                 <div className="col-md-3 mb-2">
                   <a 
-                    href="https://davidrobertlewis5.wordpress.com/wp-admin/edit.php"
+                    href={WORDPRESS_URLS.EDIT_POSTS}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn-outline-secondary w-100"
@@ -521,7 +522,7 @@ export default function ContentManagementPage() {
                 </div>
                 <div className="col-md-3 mb-2">
                   <a 
-                    href="https://davidrobertlewis5.wordpress.com/wp-admin/edit-tags.php?taxonomy=category"
+                    href={WORDPRESS_URLS.CATEGORIES}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn-outline-info w-100"
@@ -532,7 +533,7 @@ export default function ContentManagementPage() {
                 </div>
                 <div className="col-md-3 mb-2">
                   <a 
-                    href="https://davidrobertlewis5.wordpress.com/wp-admin/upload.php"
+                    href={WORDPRESS_URLS.MEDIA}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn-outline-warning w-100"

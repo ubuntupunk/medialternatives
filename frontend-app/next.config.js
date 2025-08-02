@@ -105,7 +105,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'davidrobertlewis5.wordpress.com',
+        hostname: process.env.WORDPRESS_API_URL?.includes('davidrobertlewis5') ? 'davidrobertlewis5.wordpress.com' : 'medialternatives.wordpress.com',
       },
       {  
         protocol: 'https',

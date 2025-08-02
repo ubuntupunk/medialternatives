@@ -392,7 +392,7 @@ export default function OverviewPage() {
                                 <i className="bi bi-eye"></i>
                               </Link>
                               <a 
-                                href={`https://davidrobertlewis5.wordpress.com/wp-admin/post.php?post=${post.id}&action=edit`}
+                                href={WORDPRESS_URLS.getEditPostUrl(post.id)}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="btn btn-outline-secondary"
