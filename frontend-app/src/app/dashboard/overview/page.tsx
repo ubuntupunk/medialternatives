@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { wordpressApi } from '@/services/wordpress-api';
 import { WordPressPost } from '@/types/wordpress';
+import { WORDPRESS_URLS } from '@/lib/wordpress-urls';
 import { formatDate } from '@/utils/helpers';
 
 interface OverviewStats {
