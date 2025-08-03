@@ -2,6 +2,26 @@
 export const WORDPRESS_API_BASE = process.env.WORDPRESS_API_URL || 'https://public-api.wordpress.com/wp/v2/sites/medialternatives.wordpress.com';
 export const WORDPRESS_SITE_INFO_API = process.env.WORDPRESS_API_URL?.replace('/wp/v2/sites/', '/rest/v1.1/sites/') || 'https://public-api.wordpress.com/rest/v1.1/sites/medialternatives.wordpress.com';
 
+// Jetpack Analytics Configuration
+export const JETPACK_API_BASE = 'https://public-api.wordpress.com/rest/v1.1/sites/medialternatives.wordpress.com';
+export const JETPACK_ENDPOINTS = {
+  STATS: '/stats',
+  STATS_SUMMARY: '/stats/summary',
+  STATS_TOP_POSTS: '/stats/top-posts',
+  STATS_REFERRERS: '/stats/referrers',
+  STATS_SEARCH_TERMS: '/stats/search-terms',
+  STATS_VISITS: '/stats/visits'
+} as const;
+
+// WordPress.com OAuth Configuration
+export const WORDPRESS_COM_OAUTH = {
+  CLIENT_ID: process.env.WORDPRESS_COM_CLIENT_ID,
+  AUTHORIZE_URL: 'https://public-api.wordpress.com/oauth2/authorize',
+  TOKEN_URL: 'https://public-api.wordpress.com/oauth2/token',
+  SCOPE: 'read:stats,read:posts',
+  REDIRECT_URI: process.env.WORDPRESS_COM_REDIRECT_URI
+} as const;
+
 // AdSense Configuration
 export const ADSENSE_CLIENT_ID = 'ca-pub-1630578712653878';
 export const ADSENSE_SLOTS = {

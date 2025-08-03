@@ -3,6 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { GOOGLE_ANALYTICS_ID } from '@/lib/constants';
+import { 
+  initiateWordPressOAuth, 
+  handleOAuthCallback, 
+  getAuthStatus, 
+  clearStoredToken,
+  makeAuthenticatedRequest,
+  WORDPRESS_API_ENDPOINTS 
+} from '@/utils/wordpressImplicitAuth';
+import { useClientOnly } from '@/hooks/useClientOnly';
 
 interface AnalyticsData {
   period: string;
@@ -37,6 +46,12 @@ export default function AnalyticsPage() {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [activeTab, setActiveTab] = useState<'google' | 'jetpack'>('google');
+  const [jetpackData, setJetpackData] = useState<any>(null);
+  const [jetpackLoading, setJetpackLoading] = useState(false);
+  const [jetpackAuthStatus, setJetpackAuthStatus] = useState<any>(null);
+  const [jetpackAuthLoading, setJetpackAuthLoading] = useState(false);
+  const [wpAuthStatus, setWpAuthStatus] = useState<any>({ isAuthenticated: false }); // Default state
+  const isClient = useClientOnly();
   
   // Fetch analytics data from API
   const fetchAnalyticsData = async (period: string = selectedPeriod) => {
@@ -120,9 +135,163 @@ React.useEffect(() => {
   return () => clearInterval(interval);
 }, []);
 
+// Fetch Jetpack authentication status
+const fetchJetpackAuthStatus = async () => {
+  setJetpackAuthLoading(true);
+  try {
+    const response = await fetch('/api/jetpack-auth');
+    const result = await response.json();
+    
+    if (result.success) {
+      setJetpackAuthStatus(result.data);
+    }
+  } catch (error) {
+    console.error('Error fetching Jetpack auth status:', error);
+  } finally {
+    setJetpackAuthLoading(false);
+  }
+};
+
+// Check for WordPress.com OAuth callback on page load (client-side only)
+useEffect(() => {
+  if (!isClient) return;
+  
+  // Check if we're returning from OAuth
+  const authResult = handleOAuthCallback();
+  if (authResult.isAuthenticated) {
+    console.log('WordPress.com OAuth successful!', authResult.token);
+    setWpAuthStatus(authResult);
+    // Automatically fetch Jetpack data with new token
+    fetchJetpackDataWithAuth(authResult.token);
+  } else if (authResult.error) {
+    console.error('OAuth error:', authResult.error);
+  }
+  
+  // Check existing auth status
+  const currentAuth = getAuthStatus();
+  setWpAuthStatus(currentAuth);
+}, [isClient]);
+
+// Initiate WordPress.com implicit OAuth flow (Grasshopper-style)
+const initiateWordPressImplicitOAuth = () => {
+  setJetpackAuthLoading(true);
+  try {
+    initiateWordPressOAuth();
+  } catch (error) {
+    console.error('Error initiating OAuth:', error);
+    setJetpackAuthLoading(false);
+  }
+};
+
+// Fetch Jetpack data with authentication token
+const fetchJetpackDataWithAuth = async (token?: any) => {
+  setJetpackLoading(true);
+  try {
+    const authToken = token || wpAuthStatus?.token;
+    if (!authToken) {
+      throw new Error('No authentication token available');
+    }
+
+    const periodDays = selectedPeriod === '7d' ? '7' : selectedPeriod === '30d' ? '30' : selectedPeriod === '90d' ? '90' : '365';
+    
+    // Use WordPress.com API directly with authentication
+    const [summaryResponse, topPostsResponse, referrersResponse] = await Promise.all([
+      makeAuthenticatedRequest(WORDPRESS_API_ENDPOINTS.SITE_STATS_SUMMARY(authToken.siteId, periodDays)),
+      makeAuthenticatedRequest(WORDPRESS_API_ENDPOINTS.SITE_STATS_TOP_POSTS(authToken.siteId, periodDays)),
+      makeAuthenticatedRequest(WORDPRESS_API_ENDPOINTS.SITE_STATS_REFERRERS(authToken.siteId, periodDays))
+    ]);
+
+    if (summaryResponse.ok) {
+      const summaryData = await summaryResponse.json();
+      const topPostsData = topPostsResponse.ok ? await topPostsResponse.json() : null;
+      const referrersData = referrersResponse.ok ? await referrersResponse.json() : null;
+
+      // Transform real WordPress.com data
+      const realJetpackData = {
+        views: summaryData.views || 0,
+        visitors: summaryData.visitors || 0,
+        visits: summaryData.visits || 0,
+        topPosts: topPostsData?.days?.[0]?.postviews?.map((post: any) => ({
+          title: post.title,
+          url: post.href,
+          views: post.views,
+          percentage: parseFloat(((post.views / summaryData.views) * 100).toFixed(1))
+        })) || [],
+        referrers: referrersData?.days?.[0]?.groups?.map((ref: any) => ({
+          name: ref.name,
+          views: ref.views,
+          percentage: parseFloat(((ref.views / summaryData.views) * 100).toFixed(1))
+        })) || [],
+        searchTerms: [], // Would need additional API call
+        summary: {
+          period: `${periodDays} days`,
+          views: summaryData.views || 0,
+          visitors: summaryData.visitors || 0,
+          likes: summaryData.likes || 0,
+          comments: summaryData.comments || 0
+        }
+      };
+
+      setJetpackData(realJetpackData);
+      console.log('Real WordPress.com data loaded:', realJetpackData);
+    } else {
+      throw new Error('Failed to fetch WordPress.com stats');
+    }
+  } catch (error) {
+    console.error('Error fetching authenticated Jetpack data:', error);
+    // Fall back to mock data
+    fetchJetpackData();
+  } finally {
+    setJetpackLoading(false);
+  }
+};
+
+// Disconnect WordPress.com authentication
+const disconnectWordPress = () => {
+  clearStoredToken();
+  setWpAuthStatus({ isAuthenticated: false });
+  setJetpackData(null);
+};
+
+// Fetch Jetpack analytics data
+const fetchJetpackData = async (period: string = selectedPeriod) => {
+  setJetpackLoading(true);
+  try {
+    const periodDays = period === '7d' ? '7' : period === '30d' ? '30' : period === '90d' ? '90' : '365';
+    const response = await fetch(`/api/jetpack-analytics?period=${periodDays}`);
+    const result = await response.json();
+    
+    if (result.success) {
+      setJetpackData(result.data);
+    }
+  } catch (error) {
+    console.error('Error fetching Jetpack data:', error);
+  } finally {
+    setJetpackLoading(false);
+  }
+};
+
 const handlePeriodChange = (period: string) => {
   setSelectedPeriod(period);
   fetchAnalyticsData(period);
+  if (activeTab === 'jetpack') {
+    fetchJetpackData(period);
+  }
+};
+
+const handleTabChange = (tab: 'google' | 'jetpack') => {
+  setActiveTab(tab);
+  if (tab === 'jetpack' && isClient) {
+    // Check WordPress.com auth status (client-side only)
+    const currentAuth = getAuthStatus();
+    setWpAuthStatus(currentAuth);
+    
+    if (currentAuth.isAuthenticated && !jetpackData) {
+      fetchJetpackDataWithAuth(currentAuth.token);
+    } else if (!currentAuth.isAuthenticated && !jetpackData) {
+      fetchJetpackData(); // Load demo data
+    }
+  }
 };
 
 if (!analyticsData) {
@@ -185,8 +354,41 @@ if (!analyticsData) {
         </div>
       </div>
 
-      {/* Key Metrics */}
+      {/* Analytics Source Tabs */}
       <div className="row mb-4">
+        <div className="col-12">
+          <ul className="nav nav-tabs" role="tablist">
+            <li className="nav-item" role="presentation">
+              <button 
+                className={`nav-link ${activeTab === 'google' ? 'active' : ''}`}
+                onClick={() => handleTabChange('google')}
+                type="button"
+              >
+                <i className="bi bi-google me-2"></i>
+                Google Analytics
+              </button>
+            </li>
+            <li className="nav-item" role="presentation">
+              <button 
+                className={`nav-link ${activeTab === 'jetpack' ? 'active' : ''}`}
+                onClick={() => handleTabChange('jetpack')}
+                type="button"
+              >
+                <i className="bi bi-wordpress me-2"></i>
+                Jetpack Analytics
+                {jetpackLoading && <span className="spinner-border spinner-border-sm ms-2" role="status"></span>}
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Tab Content */}
+      <div className="tab-content">
+        {/* Google Analytics Tab */}
+        <div className={`tab-pane fade ${activeTab === 'google' ? 'show active' : ''}`}>
+          {/* Key Metrics */}
+          <div className="row mb-4">
         <div className="col-lg-2 col-md-4 col-6 mb-3">
           <div className="card bg-primary text-white">
             <div className="card-body text-center">
@@ -281,7 +483,7 @@ if (!analyticsData) {
                         </td>
                         <td className="text-end">{page.views.toLocaleString()}</td>
                         <td className="text-end">
-                          <span className="badge bg-primary">{page.percentage}%</span>
+                          <span className="badge bg-primary">{page.percentage.toFixed(1)}%</span>
                         </td>
                       </tr>
                     ))}
@@ -356,7 +558,7 @@ if (!analyticsData) {
                     </div>
                     <div className="text-end">
                       <div className="fw-bold">{device.visitors?.toLocaleString() || 0}</div>
-                      <small className="text-muted">{device.percentage}%</small>
+                      <small className="text-muted">{device.percentage.toFixed(1)}%</small>
                     </div>
                   </div>
                   <div className="progress" style={{ height: '10px' }}>
@@ -489,6 +691,358 @@ if (!analyticsData) {
           </div>
         </div>
       </div>
+        </div>
+
+        {/* Jetpack Analytics Tab */}
+        <div className={`tab-pane fade ${activeTab === 'jetpack' ? 'show active' : ''}`}>
+          {jetpackLoading ? (
+            <div className="text-center py-5">
+              <div className="spinner-border text-primary mb-3" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+              <p className="text-muted">Loading Jetpack analytics data...</p>
+            </div>
+          ) : jetpackData ? (
+            <>
+              {/* Jetpack Key Metrics */}
+              <div className="row mb-4">
+                <div className="col-lg-3 col-md-6 mb-3">
+                  <div className="card bg-info text-white">
+                    <div className="card-body text-center">
+                      <i className="bi bi-eye fs-2 mb-2"></i>
+                      <h4 className="mb-0">{jetpackData.views?.toLocaleString()}</h4>
+                      <small>Views</small>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-lg-3 col-md-6 mb-3">
+                  <div className="card bg-success text-white">
+                    <div className="card-body text-center">
+                      <i className="bi bi-people fs-2 mb-2"></i>
+                      <h4 className="mb-0">{jetpackData.visitors?.toLocaleString()}</h4>
+                      <small>Visitors</small>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-lg-3 col-md-6 mb-3">
+                  <div className="card bg-warning text-white">
+                    <div className="card-body text-center">
+                      <i className="bi bi-heart fs-2 mb-2"></i>
+                      <h4 className="mb-0">{jetpackData.summary?.likes?.toLocaleString()}</h4>
+                      <small>Likes</small>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-lg-3 col-md-6 mb-3">
+                  <div className="card bg-primary text-white">
+                    <div className="card-body text-center">
+                      <i className="bi bi-chat fs-2 mb-2"></i>
+                      <h4 className="mb-0">{jetpackData.summary?.comments?.toLocaleString()}</h4>
+                      <small>Comments</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="row">
+                {/* Top Posts */}
+                <div className="col-lg-6 mb-4">
+                  <div className="card">
+                    <div className="card-header">
+                      <h5 className="mb-0">
+                        <i className="bi bi-file-text me-2"></i>
+                        Top Posts
+                      </h5>
+                    </div>
+                    <div className="card-body">
+                      <div className="table-responsive">
+                        <table className="table table-sm">
+                          <thead>
+                            <tr>
+                              <th>Post</th>
+                              <th className="text-end">Views</th>
+                              <th className="text-end">%</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {jetpackData.topPosts?.map((post: any, index: number) => (
+                              <tr key={index}>
+                                <td>
+                                  <div className="text-truncate" style={{ maxWidth: '200px' }}>
+                                    {post.title}
+                                  </div>
+                                </td>
+                                <td className="text-end">{post.views?.toLocaleString()}</td>
+                                <td className="text-end">
+                                  <span className="badge bg-info">{post.percentage?.toFixed(1)}%</span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Referrers */}
+                <div className="col-lg-6 mb-4">
+                  <div className="card">
+                    <div className="card-header">
+                      <h5 className="mb-0">
+                        <i className="bi bi-link-45deg me-2"></i>
+                        Top Referrers
+                      </h5>
+                    </div>
+                    <div className="card-body">
+                      {jetpackData.referrers?.map((referrer: any, index: number) => (
+                        <div key={index} className="d-flex justify-content-between align-items-center mb-3">
+                          <div className="d-flex align-items-center">
+                            <span className="me-2">{index + 1}.</span>
+                            <span>{referrer.name}</span>
+                          </div>
+                          <div className="text-end">
+                            <div className="fw-bold">{referrer.views?.toLocaleString()}</div>
+                            <small className="text-muted">{referrer.percentage?.toFixed(1)}%</small>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Search Terms */}
+                <div className="col-lg-6 mb-4">
+                  <div className="card">
+                    <div className="card-header">
+                      <h5 className="mb-0">
+                        <i className="bi bi-search me-2"></i>
+                        Search Terms
+                      </h5>
+                    </div>
+                    <div className="card-body">
+                      {jetpackData.searchTerms?.map((term: any, index: number) => (
+                        <div key={index} className="d-flex justify-content-between align-items-center mb-3">
+                          <div className="d-flex align-items-center">
+                            <span className="me-2">{index + 1}.</span>
+                            <span className="text-muted">"{term.term}"</span>
+                          </div>
+                          <div className="text-end">
+                            <div className="fw-bold">{term.views?.toLocaleString()}</div>
+                            <small className="text-muted">{term.percentage?.toFixed(1)}%</small>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Summary Stats */}
+                <div className="col-lg-6 mb-4">
+                  <div className="card">
+                    <div className="card-header">
+                      <h5 className="mb-0">
+                        <i className="bi bi-bar-chart me-2"></i>
+                        Summary ({jetpackData.summary?.period})
+                      </h5>
+                    </div>
+                    <div className="card-body">
+                      <div className="row">
+                        <div className="col-6 mb-3">
+                          <div className="text-center">
+                            <h4 className="text-info mb-1">{jetpackData.summary?.views?.toLocaleString()}</h4>
+                            <small className="text-muted">Total Views</small>
+                          </div>
+                        </div>
+                        <div className="col-6 mb-3">
+                          <div className="text-center">
+                            <h4 className="text-success mb-1">{jetpackData.summary?.visitors?.toLocaleString()}</h4>
+                            <small className="text-muted">Unique Visitors</small>
+                          </div>
+                        </div>
+                        <div className="col-6 mb-3">
+                          <div className="text-center">
+                            <h4 className="text-warning mb-1">{jetpackData.summary?.likes?.toLocaleString()}</h4>
+                            <small className="text-muted">Total Likes</small>
+                          </div>
+                        </div>
+                        <div className="col-6 mb-3">
+                          <div className="text-center">
+                            <h4 className="text-primary mb-1">{jetpackData.summary?.comments?.toLocaleString()}</h4>
+                            <small className="text-muted">Total Comments</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="row">
+              <div className="col-12">
+                <div className="card">
+                  <div className="card-header">
+                    <h5 className="card-title mb-0">
+                      <i className="bi bi-wordpress me-2"></i>
+                      Jetpack Analytics
+                    </h5>
+                  </div>
+                  <div className="card-body">
+                    <div className="text-center py-5">
+                      <i className="bi bi-wordpress text-primary" style={{ fontSize: '4rem' }}></i>
+                      <h4 className="mt-3 mb-3">Jetpack Analytics Integration</h4>
+                      <p className="text-muted mb-4">
+                        Connect to WordPress.com Jetpack for additional analytics insights including:
+                      </p>
+                      <div className="row">
+                        <div className="col-md-3">
+                          <div className="mb-3">
+                            <i className="bi bi-eye fs-4 text-info"></i>
+                            <div className="mt-2">
+                              <strong>Views & Visitors</strong>
+                              <br />
+                              <small className="text-muted">Daily traffic patterns</small>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-3">
+                          <div className="mb-3">
+                            <i className="bi bi-search fs-4 text-success"></i>
+                            <div className="mt-2">
+                              <strong>Search Terms</strong>
+                              <br />
+                              <small className="text-muted">What brings visitors</small>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-3">
+                          <div className="mb-3">
+                            <i className="bi bi-link-45deg fs-4 text-warning"></i>
+                            <div className="mt-2">
+                              <strong>Referrers</strong>
+                              <br />
+                              <small className="text-muted">Traffic sources</small>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-3">
+                          <div className="mb-3">
+                            <i className="bi bi-file-text fs-4 text-primary"></i>
+                            <div className="mt-2">
+                              <strong>Top Content</strong>
+                              <br />
+                              <small className="text-muted">Popular posts & pages</small>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {/* WordPress.com Authentication Status */}
+                      <div className="mb-4">
+                        <div className={`alert ${wpAuthStatus.isAuthenticated ? 'alert-success' : 'alert-info'}`}>
+                          <div className="d-flex align-items-center justify-content-between">
+                            <div className="d-flex align-items-center">
+                              <i className={`bi ${wpAuthStatus.isAuthenticated ? 'bi-check-circle' : 'bi-info-circle'} me-2`}></i>
+                              <div>
+                                <strong>
+                                  {wpAuthStatus.isAuthenticated ? 'WordPress.com Connected' : 'WordPress.com Authentication'}
+                                </strong>
+                                <div className="small">
+                                  {wpAuthStatus.isAuthenticated && isClient ? (
+                                    <>
+                                      Method: Implicit OAuth (Grasshopper-style) | 
+                                      Site ID: {wpAuthStatus.token?.siteId} |
+                                      Expires: {wpAuthStatus.token?.expiresAt ? new Date(wpAuthStatus.token.expiresAt).toLocaleString() : 'Unknown'}
+                                    </>
+                                  ) : (
+                                    'Click "Connect WordPress.com" to access live analytics data'
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            {wpAuthStatus.isAuthenticated && isClient && (
+                              <button 
+                                className="btn btn-sm btn-outline-secondary"
+                                onClick={disconnectWordPress}
+                              >
+                                <i className="bi bi-x-circle me-1"></i>
+                                Disconnect
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-4">
+                        {wpAuthStatus.isAuthenticated && isClient ? (
+                          <button 
+                            className="btn btn-success me-2"
+                            onClick={() => fetchJetpackDataWithAuth()}
+                            disabled={jetpackLoading}
+                          >
+                            <i className="bi bi-arrow-clockwise me-2"></i>
+                            {jetpackLoading ? 'Loading...' : 'Refresh Live Data'}
+                          </button>
+                        ) : (
+                          <button 
+                            className="btn btn-primary me-2"
+                            onClick={initiateWordPressImplicitOAuth}
+                            disabled={jetpackAuthLoading || !isClient}
+                          >
+                            <i className="bi bi-wordpress me-2"></i>
+                            {!isClient ? 'Loading...' : jetpackAuthLoading ? 'Connecting...' : 'Connect WordPress.com'}
+                          </button>
+                        )}
+                        
+                        <button 
+                          className="btn btn-outline-info me-2"
+                          onClick={() => fetchJetpackData()}
+                          disabled={jetpackLoading}
+                        >
+                          <i className="bi bi-play me-2"></i>
+                          {jetpackLoading ? 'Loading...' : 'Demo Mode'}
+                        </button>
+                        
+                        <div className="btn-group">
+                          <a 
+                            href="https://github.com/automattic/grasshopper"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-outline-secondary"
+                          >
+                            <i className="bi bi-github me-2"></i>
+                            Grasshopper
+                          </a>
+                          <a 
+                            href="https://github.com/Automattic/jetpack/blob/trunk/docs/rest-api.md"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-outline-secondary"
+                          >
+                            <i className="bi bi-book me-2"></i>
+                            API Docs
+                          </a>
+                        </div>
+                      </div>
+                      
+                      <div className="alert alert-info mt-4">
+                        <i className="bi bi-info-circle me-2"></i>
+                        <strong>Authentication Required:</strong> Jetpack analytics requires WordPress.com OAuth or nonce-based authentication.
+                        <div className="mt-2 small">
+                          <strong>Environment Variables Needed:</strong><br/>
+                          • <code>WORDPRESS_COM_ACCESS_TOKEN</code> - OAuth access token<br/>
+                          • <code>WP_API_NONCE</code> - WordPress REST API nonce<br/>
+                          • <code>WP_AUTH_COOKIE</code> - WordPress authentication cookie
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Analytics Configuration */}
       <div className="row">
@@ -501,29 +1055,154 @@ if (!analyticsData) {
               </h5>
             </div>
             <div className="card-body">
-              <div className="row">
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="form-label">Google Analytics ID</label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
-                      value={GOOGLE_ANALYTICS_ID}
-                      readOnly
-                    />
-                    <small className="text-muted">Your GA4 measurement ID</small>
+              {/* Google Analytics Configuration */}
+              <div className="mb-4">
+                <h6 className="mb-3">
+                  <i className="bi bi-google me-2"></i>
+                  Google Analytics
+                </h6>
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label">Google Analytics ID</label>
+                      <input 
+                        type="text" 
+                        className="form-control" 
+                        value={GOOGLE_ANALYTICS_ID}
+                        readOnly
+                      />
+                      <small className="text-muted">Your GA4 measurement ID</small>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label">Tracking Status</label>
+                      <div className="form-control-plaintext">
+                        <span className="badge bg-success">
+                          <i className="bi bi-check-circle me-1"></i>
+                          Active
+                        </span>
+                      </div>
+                      <small className="text-muted">Analytics is properly configured</small>
+                    </div>
                   </div>
                 </div>
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="form-label">Tracking Status</label>
-                    <div className="form-control-plaintext">
-                      <span className="badge bg-success">
-                        <i className="bi bi-check-circle me-1"></i>
-                        Active
-                      </span>
+              </div>
+
+              {/* Jetpack Analytics Configuration */}
+              <div className="mb-4">
+                <h6 className="mb-3">
+                  <i className="bi bi-wordpress me-2"></i>
+                  Jetpack Analytics
+                </h6>
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label">WordPress.com Site</label>
+                      <input 
+                        type="text" 
+                        className="form-control" 
+                        value="medialternatives.wordpress.com"
+                        readOnly
+                      />
+                      <small className="text-muted">Your WordPress.com site identifier</small>
                     </div>
-                    <small className="text-muted">Analytics is properly configured</small>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label">Connection Status</label>
+                      <div className="form-control-plaintext">
+                        <span className="badge bg-warning">
+                          <i className="bi bi-exclamation-triangle me-1"></i>
+                          Demo Mode
+                        </span>
+                      </div>
+                      <small className="text-muted">Using mock data for development</small>
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-12">
+                    <div className="alert alert-info">
+                      <h6 className="alert-heading">
+                        <i className="bi bi-info-circle me-2"></i>
+                        Jetpack Authentication Setup
+                      </h6>
+                      <p className="mb-2">Choose one of these authentication methods:</p>
+                      
+                      <div className="row">
+                        <div className="col-md-6">
+                          <h6 className="text-primary">Method 1: OAuth (Recommended)</h6>
+                          <ol className="mb-3">
+                            <li>Set up WordPress.com OAuth app</li>
+                            <li>Configure environment variables:
+                              <ul className="mt-1">
+                                <li><code>WORDPRESS_COM_CLIENT_ID</code></li>
+                                <li><code>WORDPRESS_COM_CLIENT_SECRET</code></li>
+                                <li><code>WORDPRESS_COM_REDIRECT_URI</code></li>
+                              </ul>
+                            </li>
+                            <li>Use "Connect WordPress.com" button above</li>
+                          </ol>
+                        </div>
+                        <div className="col-md-6">
+                          <h6 className="text-warning">Method 2: Nonce + Cookie</h6>
+                          <ol className="mb-3">
+                            <li>Access WordPress admin dashboard</li>
+                            <li>Extract from browser console:
+                              <ul className="mt-1">
+                                <li><code>window.Initial_State.WP_API_nonce</code></li>
+                                <li>WordPress auth cookie from requests</li>
+                              </ul>
+                            </li>
+                            <li>Set environment variables:
+                              <ul className="mt-1">
+                                <li><code>WP_API_NONCE</code></li>
+                                <li><code>WP_AUTH_COOKIE</code></li>
+                              </ul>
+                            </li>
+                          </ol>
+                        </div>
+                      </div>
+                      
+                      <div className="d-flex gap-2 flex-wrap">
+                        <a 
+                          href="https://developer.wordpress.com/docs/oauth2/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-sm btn-outline-primary"
+                        >
+                          <i className="bi bi-shield-lock me-1"></i>
+                          OAuth Setup Guide
+                        </a>
+                        <a 
+                          href="https://wordpress.com/stats"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-sm btn-outline-info"
+                        >
+                          <i className="bi bi-bar-chart me-1"></i>
+                          WordPress.com Stats
+                        </a>
+                        <a 
+                          href="https://github.com/Automattic/jetpack/blob/trunk/docs/rest-api.md"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-sm btn-outline-secondary"
+                        >
+                          <i className="bi bi-book me-1"></i>
+                          API Documentation
+                        </a>
+                        <button 
+                          className="btn btn-sm btn-outline-success"
+                          onClick={fetchJetpackAuthStatus}
+                          disabled={jetpackAuthLoading}
+                        >
+                          <i className="bi bi-arrow-clockwise me-1"></i>
+                          Check Status
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
