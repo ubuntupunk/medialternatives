@@ -35,14 +35,30 @@ export function initiateWordPressOAuth(): void {
   
   // Build OAuth URL
   const authUrl = new URL('https://public-api.wordpress.com/oauth2/authorize');
-  authUrl.searchParams.set('client_id', '69634'); // WordPress.com public client ID
   
-  // Try common redirect URIs that might be pre-registered
-  const redirectUri = window.location.origin; // Just the origin, not the full path
+  // Use your registered WordPress.com OAuth app client ID
+  const clientId = process.env.NEXT_PUBLIC_WORDPRESS_COM_CLIENT_ID;
+  
+  if (!clientId) {
+    throw new Error('WordPress.com Client ID not configured. Add NEXT_PUBLIC_WORDPRESS_COM_CLIENT_ID to .env.local');
+  }
+  
+  authUrl.searchParams.set('client_id', clientId);
+  console.log('Using WordPress.com Client ID:', clientId);
+  
+  // Use the full analytics page URL as redirect URI
+  const redirectUri = window.location.origin + '/dashboard/analytics';
   authUrl.searchParams.set('redirect_uri', redirectUri);
   
   authUrl.searchParams.set('response_type', 'token');
-  authUrl.searchParams.set('scope', 'read');
+  
+  // Start with basic WordPress.com supported scopes
+  // Based on https://developer.wordpress.com/docs/oauth2/#token-scope
+  const scopes = [
+    'read'               // Basic read access (includes stats, posts, etc.)
+  ].join(',');
+  
+  authUrl.searchParams.set('scope', scopes);
   authUrl.searchParams.set('blog', 'medialternatives.wordpress.com');
   authUrl.searchParams.set('state', state);
   

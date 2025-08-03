@@ -156,8 +156,14 @@ const fetchJetpackAuthStatus = async () => {
 useEffect(() => {
   if (!isClient) return;
   
+  console.log('Checking for OAuth callback...');
+  console.log('Current URL:', window.location.href);
+  console.log('URL Hash:', window.location.hash);
+  
   // Check if we're returning from OAuth
   const authResult = handleOAuthCallback();
+  console.log('OAuth callback result:', authResult);
+  
   if (authResult.isAuthenticated) {
     console.log('WordPress.com OAuth successful!', authResult.token);
     setWpAuthStatus(authResult);
@@ -165,11 +171,12 @@ useEffect(() => {
     fetchJetpackDataWithAuth(authResult.token);
   } else if (authResult.error) {
     console.error('OAuth error:', authResult.error);
+  } else {
+    // Check existing auth status
+    const currentAuth = getAuthStatus();
+    console.log('Existing auth status:', currentAuth);
+    setWpAuthStatus(currentAuth);
   }
-  
-  // Check existing auth status
-  const currentAuth = getAuthStatus();
-  setWpAuthStatus(currentAuth);
 }, [isClient]);
 
 // Initiate WordPress.com implicit OAuth flow (Grasshopper-style)
