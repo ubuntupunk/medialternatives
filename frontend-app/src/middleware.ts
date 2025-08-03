@@ -17,9 +17,19 @@ const adminRoutes = [
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
-  // Note: URL redirects are now handled by Next.js rewrites in next.config.js
-  // Clean URLs like /south-africas-trade-pivot are rewritten to /post/south-africas-trade-pivot internally
-  // This provides better SEO and user experience with clean URLs
+  // Handle legacy date-based URLs from WordPress.com
+  // Format: /2015/05/08/apartheid-the-nazis-and-mcebo-dlamini/
+  // These should be handled by the [year]/[month]/[day]/[slug] route
+  
+  // Check for date-based URL pattern
+  const dateUrlPattern = /^\/(\d{4})\/(\d{1,2})\/(\d{1,2})\/([^\/]+)\/?$/;
+  const dateMatch = pathname.match(dateUrlPattern);
+  
+  if (dateMatch) {
+    // This is a date-based URL, let Next.js routing handle it
+    // The [year]/[month]/[day]/[slug]/page.tsx will process it
+    return NextResponse.next();
+  }
   
   // Check if the route needs protection
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
