@@ -86,9 +86,14 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
-  // Clean URL rewrites - remove /post/ prefix
+  // Clean URL rewrites and legacy URL handling
   async rewrites() {
     return [
+      // Handle legacy date-based URLs first (higher priority)
+      {
+        source: '/:year(\\d{4})/:month(\\d{1,2})/:day(\\d{1,2})/:slug',
+        destination: '/:year/:month/:day/:slug',
+      },
       // Rewrite clean URLs to /post/[slug] internally
       {
         source: '/:slug',
