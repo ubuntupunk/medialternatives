@@ -17,6 +17,10 @@ const adminRoutes = [
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
+  // Note: URL redirects are now handled by Next.js rewrites in next.config.js
+  // Clean URLs like /south-africas-trade-pivot are rewritten to /post/south-africas-trade-pivot internally
+  // This provides better SEO and user experience with clean URLs
+  
   // Check if the route needs protection
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
   const isAdminRoute = adminRoutes.some(route => pathname.startsWith(route));

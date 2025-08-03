@@ -48,10 +48,10 @@ export async function GET() {
     <priority>0.5</priority>
   </url>
   
-  <!-- Posts with new URLs -->
+  <!-- Posts with clean URLs -->
   ${posts.map(post => `
   <url>
-    <loc>${baseUrl}/post/${post.slug}</loc>
+    <loc>${baseUrl}/${post.slug}</loc>
     <lastmod>${new Date(post.modified).toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

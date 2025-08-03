@@ -58,7 +58,7 @@ const PostCard: React.FC<PostCardProps> = ({
         )}
         
         <h2 className="entry-title">
-          <Link href={`/post/${post.slug}`} dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+          <Link href={`/${post.slug}`} dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
         </h2>
       </header>
       

@@ -86,6 +86,23 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
+  // Clean URL rewrites - remove /post/ prefix
+  async rewrites() {
+    return [
+      // Rewrite clean URLs to /post/[slug] internally
+      {
+        source: '/:slug',
+        destination: '/post/:slug',
+        has: [
+          {
+            type: 'host',
+            value: '(?!.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$).*',
+          },
+        ],
+      },
+    ];
+  },
+  
   // Reduce memory usage during build
   experimental: {
     workerThreads: false,
