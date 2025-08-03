@@ -1,0 +1,154 @@
+import React from 'react';
+import { WordPressPost } from '@/types/wordpress';
+import { getFeaturedImageUrl, getPostAuthor, decodeHtmlEntities } from '@/utils/helpers';
+import { SITE_CONFIG } from '@/lib/constants';
+
+interface StructuredDataProps {
+  post?: WordPressPost;
+  type?: 'article' | 'website' | 'organization' | 'breadcrumb';
+  breadcrumbs?: Array<{ name: string; url: string }>;
+}
+
+export default function StructuredData({ post, type = 'website', breadcrumbs }: StructuredDataProps) {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://medialternatives.com';
+  
+  const generateStructuredData = () => {
+    const structuredData: any[] = [];
+
+    // Organization Schema
+    const organization = {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": SITE_CONFIG.SITE_TITLE,
+      "description": SITE_CONFIG.SITE_DESCRIPTION,
+      "url": baseUrl,
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${baseUrl}/images/site-logo.svg`,
+        "width": 200,
+        "height": 60
+      },
+      "sameAs": [
+        // Add your social media profiles here
+        // "https://twitter.com/medialternatives",
+        // "https://facebook.com/medialternatives"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "editorial",
+        "email": "contact@medialternatives.com"
+      }
+    };
+    structuredData.push(organization);
+
+    // Website Schema
+    const website = {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": SITE_CONFIG.SITE_TITLE,
+      "description": SITE_CONFIG.SITE_DESCRIPTION,
+      "url": baseUrl,
+      "publisher": {
+        "@type": "Organization",
+        "name": SITE_CONFIG.SITE_TITLE
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": `${baseUrl}/search?q={search_term_string}`
+        },
+        "query-input": "required name=search_term_string"
+      }
+    };
+    structuredData.push(website);
+
+    // Article Schema (for blog posts)
+    if (post && type === 'article') {
+      const author = getPostAuthor(post);
+      const featuredImage = getFeaturedImageUrl(post);
+      
+      const article = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": decodeHtmlEntities(post.title.rendered),
+        "description": post.excerpt?.rendered 
+          ? decodeHtmlEntities(post.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 160))
+          : `Read ${decodeHtmlEntities(post.title.rendered)} on ${SITE_CONFIG.SITE_TITLE}`,
+        "url": `${baseUrl}/${post.slug}`,
+        "datePublished": post.date,
+        "dateModified": post.modified,
+        "author": {
+          "@type": "Person",
+          "name": author?.name || "Media Alternatives",
+          "url": author ? `${baseUrl}/author/${author.slug}` : baseUrl
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": SITE_CONFIG.SITE_TITLE,
+          "logo": {
+            "@type": "ImageObject",
+            "url": `${baseUrl}/images/site-logo.svg`,
+            "width": 200,
+            "height": 60
+          }
+        },
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": `${baseUrl}/${post.slug}`
+        }
+      };
+
+      // Add featured image if available
+      if (featuredImage) {
+        article.image = {
+          "@type": "ImageObject",
+          "url": featuredImage,
+          "width": 800,
+          "height": 400
+        };
+      }
+
+      // Add article body (first 500 chars)
+      if (post.content?.rendered) {
+        const textContent = post.content.rendered.replace(/<[^>]*>/g, '').substring(0, 500);
+        article.articleBody = decodeHtmlEntities(textContent);
+      }
+
+      structuredData.push(article);
+    }
+
+    // Breadcrumb Schema
+    if (breadcrumbs && breadcrumbs.length > 0) {
+      const breadcrumbList = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": breadcrumbs.map((crumb, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "name": crumb.name,
+          "item": `${baseUrl}${crumb.url}`
+        }))
+      };
+      structuredData.push(breadcrumbList);
+    }
+
+    return structuredData;
+  };
+
+  const structuredData = generateStructuredData();
+
+  return (
+    <>
+      {structuredData.map((data, index) => (
+        <script
+          key={index}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(data, null, 2)
+          }}
+        />
+      ))}
+    </>
+  );
+}

@@ -8,6 +8,7 @@ import { WordPressPost } from '@/types/wordpress';
 import { formatDate, getFeaturedImageUrl, getPostAuthor, getPostAuthorId, decodeHtmlEntities, getPostCategories, getPostTags } from '@/utils/helpers';
 import AuthorDisplay from '@/components/UI/AuthorDisplay';
 import { mockPosts } from '@/utils/mockData';
+import StructuredData from '@/components/SEO/StructuredData';
 
 // Enable ISR - revalidate every 10 minutes for individual posts
 export const revalidate = 600; // 10 minutes
@@ -104,7 +105,19 @@ export default async function PostPage({ params }: PostPageProps) {
   const tags = getPostTags(post);
 
   return (
-    <article className="container my-4">
+    <>
+      {/* SEO Structured Data */}
+      <StructuredData 
+        post={post} 
+        type="article" 
+        breadcrumbs={[
+          { name: 'Home', url: '/' },
+          { name: 'Blog', url: '/blog' },
+          { name: decodeHtmlEntities(post.title.rendered), url: `/${post.slug}` }
+        ]}
+      />
+      
+      <article className="container my-4">
       {error && (
         <div className="alert alert-warning mb-4">
           <strong>API Error:</strong> {error}
@@ -339,6 +352,7 @@ export default async function PostPage({ params }: PostPageProps) {
         </div>
       </div>
     </article>
+    </>
   );
 }
 
