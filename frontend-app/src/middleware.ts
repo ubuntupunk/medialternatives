@@ -17,8 +17,8 @@ const adminRoutes = [
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
-  // Handle legacy date-based URLs from WordPress.com
-  // Format: /2015/05/08/apartheid-the-nazis-and-mcebo-dlamini/
+  // Handle ALL legacy date-based URLs from WordPress.com
+  // Format: /YYYY/MM/DD/post-slug/
   
   // Check for date-based URL pattern
   const dateUrlPattern = /^\/(\d{4})\/(\d{1,2})\/(\d{1,2})\/([^\/]+)\/?$/;
@@ -26,16 +26,12 @@ export function middleware(request: NextRequest) {
   
   if (dateMatch) {
     const [, year, month, day, slug] = dateMatch;
-    console.log(`Middleware detected date-based URL: /${year}/${month}/${day}/${slug}/`);
+    console.log(`Legacy URL detected: /${year}/${month}/${day}/${slug}/`);
     
-    // For now, redirect directly to clean URL for the specific problematic post
-    if (slug === 'apartheid-the-nazis-and-mcebo-dlamini') {
-      const redirectUrl = new URL('/apartheid-the-nazis-and-mcebo-dlamini', request.url);
-      return NextResponse.redirect(redirectUrl, 301);
-    }
-    
-    // For other date-based URLs, let Next.js routing handle it
-    return NextResponse.next();
+    // Redirect ALL date-based URLs to clean URLs
+    // This handles hundreds of legacy URLs automatically
+    const redirectUrl = new URL(`/${slug}`, request.url);
+    return NextResponse.redirect(redirectUrl, 301);
   }
   
   // Check if the route needs protection
