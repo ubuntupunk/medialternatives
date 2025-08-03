@@ -292,19 +292,40 @@ export function createUrlParams(params: Record<string, any>): URLSearchParams {
 }
 
 /**
- * Decode HTML entities - consistent server/client implementation
+ * Decode HTML entities - comprehensive server/client implementation
  */
-export function decodeHtmlEntities(html: string): string {
-  // Use consistent implementation for both server and client
-  return html
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#039;/g, "'")
-    .replace(/&#8216;/g, "'")
-    .replace(/&#8217;/g, "'")
-    .replace(/&#8220;/g, '"')
-    .replace(/&#8221;/g, '"')
-    .replace(/&nbsp;/g, ' ');
+export function decodeHtmlEntities(text: string): string {
+  if (!text) return '';
+  
+  if (typeof window !== 'undefined') {
+    // Client-side: use DOM for comprehensive decoding
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+  } else {
+    // Server-side: comprehensive manual replacement for common entities
+    return text
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#039;/g, "'")
+      .replace(/&#8217;/g, "'") // Right single quotation mark
+      .replace(/&#8216;/g, "'") // Left single quotation mark
+      .replace(/&#8220;/g, '"') // Left double quotation mark
+      .replace(/&#8221;/g, '"') // Right double quotation mark
+      .replace(/&#8211;/g, '–') // En dash
+      .replace(/&#8212;/g, '—') // Em dash
+      .replace(/&#8230;/g, '…') // Horizontal ellipsis
+      .replace(/&nbsp;/g, ' ')  // Non-breaking space
+      .replace(/&hellip;/g, '…') // Ellipsis
+      .replace(/&mdash;/g, '—')  // Em dash
+      .replace(/&ndash;/g, '–')  // En dash
+      .replace(/&rsquo;/g, "'")  // Right single quote
+      .replace(/&lsquo;/g, "'")  // Left single quote
+      .replace(/&rdquo;/g, '"')  // Right double quote
+      .replace(/&ldquo;/g, '"')  // Left double quote
+      .replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec)) // Numeric entities
+      .replace(/&#x([a-fA-F0-9]+);/g, (match, hex) => String.fromCharCode(parseInt(hex, 16))); // Hex entities
+  }
 }

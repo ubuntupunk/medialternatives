@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { wordpressApi } from '@/services/wordpress-api';
 import { WordPressPost } from '@/types/wordpress';
-import { formatDate } from '@/utils/helpers';
+import { formatDate, decodeHtmlEntities } from '@/utils/helpers';
 import { WORDPRESS_URLS } from '@/lib/wordpress-urls';
 
 export default function ContentManagementPage() {
@@ -262,7 +262,7 @@ export default function ContentManagementPage() {
                               <td>
                                 <div>
                                   <strong className="text-truncate d-block" style={{ maxWidth: '300px' }}>
-                                    {post.title.rendered}
+                                    {decodeHtmlEntities(post.title.rendered)}
                                   </strong>
                                   <small className="text-muted">ID: {post.id}</small>
                                 </div>
@@ -377,7 +377,7 @@ export default function ContentManagementPage() {
                                   <td>
                                     <div>
                                       <strong className="text-truncate d-block" style={{ maxWidth: '300px' }}>
-                                        {post.title?.rendered || post.title}
+                                        {decodeHtmlEntities(post.title?.rendered || post.title)}
                                       </strong>
                                       {post.isAnalyticsOnly && (
                                         <small className="text-muted">Analytics path: {post.analyticsPath}</small>

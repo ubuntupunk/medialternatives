@@ -6,7 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { wordpressApi } from '@/services/wordpress-api';
 import { WordPressPost } from '@/types/wordpress';
 import { WORDPRESS_URLS } from '@/lib/wordpress-urls';
-import { formatDate } from '@/utils/helpers';
+import { formatDate, decodeHtmlEntities } from '@/utils/helpers';
 
 interface OverviewStats {
   posts: {
@@ -370,7 +370,7 @@ export default function OverviewPage() {
                         <tr key={post.id}>
                           <td>
                             <div className="text-truncate" style={{ maxWidth: '300px' }}>
-                              <strong>{post.title.rendered}</strong>
+                              <strong>{decodeHtmlEntities(post.title.rendered)}</strong>
                             </div>
                           </td>
                           <td>
