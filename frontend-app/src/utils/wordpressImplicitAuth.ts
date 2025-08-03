@@ -36,11 +36,18 @@ export function initiateWordPressOAuth(): void {
   // Build OAuth URL
   const authUrl = new URL('https://public-api.wordpress.com/oauth2/authorize');
   authUrl.searchParams.set('client_id', '69634'); // WordPress.com public client ID
-  authUrl.searchParams.set('redirect_uri', window.location.origin + '/dashboard/analytics');
+  
+  // Try common redirect URIs that might be pre-registered
+  const redirectUri = window.location.origin; // Just the origin, not the full path
+  authUrl.searchParams.set('redirect_uri', redirectUri);
+  
   authUrl.searchParams.set('response_type', 'token');
   authUrl.searchParams.set('scope', 'read');
   authUrl.searchParams.set('blog', 'medialternatives.wordpress.com');
   authUrl.searchParams.set('state', state);
+  
+  console.log('OAuth URL:', authUrl.toString());
+  console.log('Redirect URI:', redirectUri);
   
   // Redirect to WordPress.com
   window.location.href = authUrl.toString();
