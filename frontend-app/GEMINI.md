@@ -67,14 +67,14 @@ frontend-app/
 ### Phase 3: Widgets and Features
 - [ ] Sidebar widgets (Author, Categories, etc.)
 - [ ] AdSense integration (see `frontend-app/ADSENSE_TODO.md`)
-- [ ] Search functionality
-- [ ] Pagination
+- [x] Search functionality
+- [x] Pagination
 
 ### Phase 4: Optimization and Deployment
 - [ ] SEO implementation
 - [ ] Performance optimization
-- [ ] Vercel deployment setup
-- [ ] Domain configuration
+- [x] Vercel deployment setup
+- [x] Domain configuration
 
 ## Key Features to Migrate
 
