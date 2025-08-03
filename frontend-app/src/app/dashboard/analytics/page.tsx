@@ -13,7 +13,21 @@ interface AnalyticsData {
   avgSessionDuration: string;
   topPages: Array<{ page: string; views: number; percentage: number }>;
   topCountries: Array<{ country: string; visitors: number; percentage: number }>;
-  deviceTypes: Array<{ device: string; percentage: number }>;
+  deviceTypes: Array<{ device: string; visitors: number; percentage: number }>;
+  comparisons?: {
+    previousPeriod?: {
+      visitors: number;
+      pageviews: number;
+      change: number;
+      changeType: 'increase' | 'decrease' | 'same';
+    };
+    yearOverYear?: {
+      visitors: number;
+      pageviews: number;
+      change: number;
+      changeType: 'increase' | 'decrease' | 'same';
+    };
+  };
 }
 
 export default function AnalyticsPage() {
@@ -22,6 +36,7 @@ export default function AnalyticsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [activeTab, setActiveTab] = useState<'google' | 'jetpack'>('google');
   
   // Fetch analytics data from API
   const fetchAnalyticsData = async (period: string = selectedPeriod) => {
@@ -34,7 +49,7 @@ export default function AnalyticsPage() {
       if (result.success) {
         // Transform API data to match our interface
         const transformedData: AnalyticsData = {
-          period: period === '7d' ? '7 days' : period === '30d' ? '30 days' : '90 days',
+          period: period === '7d' ? '7 days' : period === '30d' ? '30 days' : period === '90d' ? '90 days' : '1 year',
           visitors: result.data.visitors,
           pageviews: result.data.pageviews,
           sessions: Math.floor(result.data.visitors * 1.1), // Estimate sessions
@@ -43,20 +58,21 @@ export default function AnalyticsPage() {
           topPages: result.data.topPages.map((page: any, index: number) => ({
             page: page.page,
             views: page.views,
-            percentage: ((page.views / result.data.pageviews) * 100)
+            percentage: parseFloat(((page.views / result.data.pageviews) * 100).toFixed(1))
           })),
-          topCountries: [
+          topCountries: result.data.topCountries || [
             { country: 'South Africa', visitors: Math.floor(result.data.visitors * 0.45), percentage: 45 },
             { country: 'United States', visitors: Math.floor(result.data.visitors * 0.25), percentage: 25 },
             { country: 'United Kingdom', visitors: Math.floor(result.data.visitors * 0.15), percentage: 15 },
             { country: 'Canada', visitors: Math.floor(result.data.visitors * 0.08), percentage: 8 },
             { country: 'Australia', visitors: Math.floor(result.data.visitors * 0.07), percentage: 7 }
           ],
-          deviceTypes: [
-            { device: 'Mobile', percentage: 65 },
-            { device: 'Desktop', percentage: 28 },
-            { device: 'Tablet', percentage: 7 }
-          ]
+          deviceTypes: result.data.deviceTypes || [
+            { device: 'Mobile', visitors: Math.floor(result.data.visitors * 0.65), percentage: 65 },
+            { device: 'Desktop', visitors: Math.floor(result.data.visitors * 0.28), percentage: 28 },
+            { device: 'Tablet', visitors: Math.floor(result.data.visitors * 0.07), percentage: 7 }
+          ],
+          comparisons: result.data.comparisons
         };
         setAnalyticsData(transformedData);
         setLastUpdated(new Date());
@@ -158,7 +174,7 @@ if (!analyticsData) {
           <select 
             className="form-select" 
             value={selectedPeriod}
-            onChange={(e) => setSelectedPeriod(e.target.value)}
+            onChange={(e) => handlePeriodChange(e.target.value)}
           >
             {periods.map(period => (
               <option key={period.value} value={period.value}>
@@ -205,7 +221,7 @@ if (!analyticsData) {
           <div className="card bg-warning text-white">
             <div className="card-body text-center">
               <i className="bi bi-arrow-return-left fs-2 mb-2"></i>
-              <h4 className="mb-0">{analyticsData.bounceRate}%</h4>
+              <h4 className="mb-0">{analyticsData.bounceRate.toFixed(1)}%</h4>
               <small>Bounce Rate</small>
             </div>
           </div>
@@ -222,11 +238,14 @@ if (!analyticsData) {
         </div>
         
         <div className="col-lg-2 col-md-4 col-6 mb-3">
-          <div className="card bg-dark text-white">
+          <div className={`card text-white ${analyticsData.comparisons?.previousPeriod?.changeType === 'increase' ? 'bg-success' : analyticsData.comparisons?.previousPeriod?.changeType === 'decrease' ? 'bg-danger' : 'bg-secondary'}`}>
             <div className="card-body text-center">
-              <i className="bi bi-graph-up fs-2 mb-2"></i>
-              <h4 className="mb-0">+12.5%</h4>
-              <small>Growth</small>
+              <i className={`bi ${analyticsData.comparisons?.previousPeriod?.changeType === 'increase' ? 'bi-arrow-up' : analyticsData.comparisons?.previousPeriod?.changeType === 'decrease' ? 'bi-arrow-down' : 'bi-dash'} fs-2 mb-2`}></i>
+              <h4 className="mb-0">
+                {analyticsData.comparisons?.previousPeriod?.changeType === 'increase' ? '+' : ''}
+                {analyticsData.comparisons?.previousPeriod?.change || 0}%
+              </h4>
+              <small>vs Previous Period</small>
             </div>
           </div>
         </div>
@@ -330,13 +349,19 @@ if (!analyticsData) {
             <div className="card-body">
               {analyticsData.deviceTypes.map((device, index) => (
                 <div key={index} className="mb-3">
-                  <div className="d-flex justify-content-between mb-1">
-                    <span>{device.device}</span>
-                    <span>{device.percentage}%</span>
+                  <div className="d-flex justify-content-between mb-2">
+                    <div className="d-flex align-items-center">
+                      <i className={`bi ${device.device.toLowerCase() === 'mobile' ? 'bi-phone' : device.device.toLowerCase() === 'desktop' ? 'bi-laptop' : 'bi-tablet'} me-2`}></i>
+                      <span className="text-capitalize">{device.device}</span>
+                    </div>
+                    <div className="text-end">
+                      <div className="fw-bold">{device.visitors?.toLocaleString() || 0}</div>
+                      <small className="text-muted">{device.percentage}%</small>
+                    </div>
                   </div>
-                  <div className="progress">
+                  <div className="progress" style={{ height: '10px' }}>
                     <div 
-                      className={`progress-bar bg-${index === 0 ? 'primary' : index === 1 ? 'success' : 'info'}`}
+                      className={`progress-bar ${device.device.toLowerCase() === 'mobile' ? 'bg-success' : device.device.toLowerCase() === 'desktop' ? 'bg-primary' : 'bg-info'}`}
                       style={{ width: `${device.percentage}%` }}
                     ></div>
                   </div>

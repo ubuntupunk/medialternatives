@@ -13,8 +13,32 @@ interface AnalyticsData {
     page: string;
     views: number;
   }>;
+  topCountries: Array<{
+    country: string;
+    visitors: number;
+    percentage: number;
+  }>;
+  deviceTypes: Array<{
+    device: string;
+    visitors: number;
+    percentage: number;
+  }>;
   realTimeUsers: number;
   sessionsToday: number;
+  comparisons?: {
+    previousPeriod?: {
+      visitors: number;
+      pageviews: number;
+      change: number;
+      changeType: 'increase' | 'decrease' | 'same';
+    };
+    yearOverYear?: {
+      visitors: number;
+      pageviews: number;
+      change: number;
+      changeType: 'increase' | 'decrease' | 'same';
+    };
+  };
 }
 
 export async function GET(request: NextRequest) {
@@ -88,7 +112,26 @@ async function getGoogleAnalyticsData(propertyId: string, serviceAccountKey: str
 
     // Calculate date range based on period
     const endDate = 'today';
-    const startDate = period === '7d' ? '7daysAgo' : period === '30d' ? '30daysAgo' : '90daysAgo';
+    let startDate: string;
+    
+    switch (period) {
+      case '7d':
+        startDate = '7daysAgo';
+        break;
+      case '30d':
+        startDate = '30daysAgo';
+        break;
+      case '90d':
+        startDate = '90daysAgo';
+        break;
+      case '1y':
+        // Year to date (January 1st to today)
+        const currentYear = new Date().getFullYear();
+        startDate = `${currentYear}-01-01`;
+        break;
+      default:
+        startDate = '30daysAgo';
+    }
 
     // Get basic metrics
     const [response] = await analyticsDataClient.runReport({
@@ -112,6 +155,47 @@ async function getGoogleAnalyticsData(propertyId: string, serviceAccountKey: str
       limit: 10,
     });
 
+    // Get top countries
+    const [countriesResponse] = await analyticsDataClient.runReport({
+      property: `properties/${propertyId}`,
+      dateRanges: [{ startDate, endDate }],
+      dimensions: [{ name: 'country' }],
+      metrics: [{ name: 'activeUsers' }],
+      orderBys: [{ metric: { metricName: 'activeUsers' }, desc: true }],
+      limit: 10,
+    });
+
+    // Get device categories
+    const [devicesResponse] = await analyticsDataClient.runReport({
+      property: `properties/${propertyId}`,
+      dateRanges: [{ startDate, endDate }],
+      dimensions: [{ name: 'deviceCategory' }],
+      metrics: [{ name: 'activeUsers' }],
+      orderBys: [{ metric: { metricName: 'activeUsers' }, desc: true }],
+    });
+
+    // Get comparison data (previous period)
+    const { previousStartDate, previousEndDate } = calculatePreviousPeriod(period, startDate, endDate);
+    const [previousPeriodResponse] = await analyticsDataClient.runReport({
+      property: `properties/${propertyId}`,
+      dateRanges: [{ startDate: previousStartDate, endDate: previousEndDate }],
+      metrics: [
+        { name: 'activeUsers' },
+        { name: 'screenPageViews' }
+      ],
+    });
+
+    // Get year-over-year comparison
+    const { yearAgoStartDate, yearAgoEndDate } = calculateYearOverYearPeriod(period, startDate, endDate);
+    const [yearOverYearResponse] = await analyticsDataClient.runReport({
+      property: `properties/${propertyId}`,
+      dateRanges: [{ startDate: yearAgoStartDate, endDate: yearAgoEndDate }],
+      metrics: [
+        { name: 'activeUsers' },
+        { name: 'screenPageViews' }
+      ],
+    });
+
     // Get real-time users
     const [realtimeResponse] = await analyticsDataClient.runRealtimeReport({
       property: `properties/${propertyId}`,
@@ -129,6 +213,39 @@ async function getGoogleAnalyticsData(propertyId: string, serviceAccountKey: str
       views: parseInt(row.metricValues?.[0]?.value || '0')
     })) || [];
 
+    // Parse countries data
+    const totalCountryVisitors = countriesResponse.rows?.reduce((sum, row) => 
+      sum + parseInt(row.metricValues?.[0]?.value || '0'), 0) || 1;
+    
+    const topCountries = countriesResponse.rows?.map(row => {
+      const countryVisitors = parseInt(row.metricValues?.[0]?.value || '0');
+      return {
+        country: row.dimensionValues?.[0]?.value || 'Unknown',
+        visitors: countryVisitors,
+        percentage: Math.round((countryVisitors / totalCountryVisitors) * 100)
+      };
+    }) || [];
+
+    // Parse device data
+    const totalDeviceVisitors = devicesResponse.rows?.reduce((sum, row) => 
+      sum + parseInt(row.metricValues?.[0]?.value || '0'), 0) || 1;
+    
+    const deviceTypes = devicesResponse.rows?.map(row => {
+      const deviceVisitors = parseInt(row.metricValues?.[0]?.value || '0');
+      return {
+        device: row.dimensionValues?.[0]?.value || 'Unknown',
+        visitors: deviceVisitors,
+        percentage: Math.round((deviceVisitors / totalDeviceVisitors) * 100)
+      };
+    }) || [];
+
+    // Parse comparison data
+    const previousVisitors = parseInt(previousPeriodResponse.rows?.[0]?.metricValues?.[0]?.value || '0');
+    const previousPageviews = parseInt(previousPeriodResponse.rows?.[0]?.metricValues?.[1]?.value || '0');
+    
+    const yearAgoVisitors = parseInt(yearOverYearResponse.rows?.[0]?.metricValues?.[0]?.value || '0');
+    const yearAgoPageviews = parseInt(yearOverYearResponse.rows?.[0]?.metricValues?.[1]?.value || '0');
+
     const realTimeUsers = parseInt(realtimeResponse.rows?.[0]?.metricValues?.[0]?.value || '0');
 
     return {
@@ -137,8 +254,24 @@ async function getGoogleAnalyticsData(propertyId: string, serviceAccountKey: str
       bounceRate,
       avgSessionDuration,
       topPages,
+      topCountries,
+      deviceTypes,
       realTimeUsers,
-      sessionsToday: Math.floor(visitors * 0.12) // Estimate based on visitors
+      sessionsToday: Math.floor(visitors * 0.12), // Estimate based on visitors
+      comparisons: {
+        previousPeriod: {
+          visitors: previousVisitors,
+          pageviews: previousPageviews,
+          change: previousVisitors > 0 ? Math.round(((visitors - previousVisitors) / previousVisitors) * 100) : 0,
+          changeType: visitors > previousVisitors ? 'increase' : visitors < previousVisitors ? 'decrease' : 'same'
+        },
+        yearOverYear: {
+          visitors: yearAgoVisitors,
+          pageviews: yearAgoPageviews,
+          change: yearAgoVisitors > 0 ? Math.round(((visitors - yearAgoVisitors) / yearAgoVisitors) * 100) : 0,
+          changeType: visitors > yearAgoVisitors ? 'increase' : visitors < yearAgoVisitors ? 'decrease' : 'same'
+        }
+      }
     };
 
   } catch (error) {
@@ -154,6 +287,111 @@ function formatDuration(seconds: number): string {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = Math.floor(seconds % 60);
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
+/**
+ * Calculate previous period dates for comparison
+ */
+function calculatePreviousPeriod(period: string, startDate: string, endDate: string) {
+  const today = new Date();
+  
+  switch (period) {
+    case '7d':
+      return {
+        previousStartDate: '14daysAgo',
+        previousEndDate: '8daysAgo'
+      };
+    case '30d':
+      return {
+        previousStartDate: '60daysAgo',
+        previousEndDate: '31daysAgo'
+      };
+    case '90d':
+      return {
+        previousStartDate: '180daysAgo',
+        previousEndDate: '91daysAgo'
+      };
+    case '1y':
+      const lastYear = today.getFullYear() - 1;
+      return {
+        previousStartDate: `${lastYear}-01-01`,
+        previousEndDate: `${lastYear}-12-31`
+      };
+    default:
+      return {
+        previousStartDate: '60daysAgo',
+        previousEndDate: '31daysAgo'
+      };
+  }
+}
+
+/**
+ * Calculate year-over-year comparison dates
+ */
+function calculateYearOverYearPeriod(period: string, startDate: string, endDate: string) {
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const lastYear = currentYear - 1;
+  
+  switch (period) {
+    case '7d':
+      const sevenDaysAgo = new Date(today);
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      const yearAgoSevenDays = new Date(sevenDaysAgo);
+      yearAgoSevenDays.setFullYear(lastYear);
+      
+      const yearAgoToday = new Date(today);
+      yearAgoToday.setFullYear(lastYear);
+      
+      return {
+        yearAgoStartDate: yearAgoSevenDays.toISOString().split('T')[0],
+        yearAgoEndDate: yearAgoToday.toISOString().split('T')[0]
+      };
+    case '30d':
+      const thirtyDaysAgo = new Date(today);
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      const yearAgoThirtyDays = new Date(thirtyDaysAgo);
+      yearAgoThirtyDays.setFullYear(lastYear);
+      
+      const yearAgoTodayThirty = new Date(today);
+      yearAgoTodayThirty.setFullYear(lastYear);
+      
+      return {
+        yearAgoStartDate: yearAgoThirtyDays.toISOString().split('T')[0],
+        yearAgoEndDate: yearAgoTodayThirty.toISOString().split('T')[0]
+      };
+    case '90d':
+      const ninetyDaysAgo = new Date(today);
+      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+      const yearAgoNinetyDays = new Date(ninetyDaysAgo);
+      yearAgoNinetyDays.setFullYear(lastYear);
+      
+      const yearAgoTodayNinety = new Date(today);
+      yearAgoTodayNinety.setFullYear(lastYear);
+      
+      return {
+        yearAgoStartDate: yearAgoNinetyDays.toISOString().split('T')[0],
+        yearAgoEndDate: yearAgoTodayNinety.toISOString().split('T')[0]
+      };
+    case '1y':
+      return {
+        yearAgoStartDate: `${lastYear}-01-01`,
+        yearAgoEndDate: `${lastYear}-12-31`
+      };
+    default:
+      const defaultThirtyDaysAgo = new Date(today);
+      defaultThirtyDaysAgo.setDate(defaultThirtyDaysAgo.getDate() - 30);
+      const defaultYearAgo = new Date(defaultThirtyDaysAgo);
+      defaultYearAgo.setFullYear(lastYear);
+      
+      const defaultYearAgoToday = new Date(today);
+      defaultYearAgoToday.setFullYear(lastYear);
+      
+      return {
+        yearAgoStartDate: defaultYearAgo.toISOString().split('T')[0],
+        yearAgoEndDate: defaultYearAgoToday.toISOString().split('T')[0]
+      };
+  }
 }
 
 /**
@@ -185,6 +423,14 @@ function getStaticAnalyticsData(period: string): AnalyticsData {
       avgSessionDuration: '2:12',
       realTimeUsers: 23,
       sessionsToday: 340
+    },
+    '1y': {
+      visitors: 125000,
+      pageviews: 380000,
+      bounceRate: 59.8,
+      avgSessionDuration: '2:45',
+      realTimeUsers: 23,
+      sessionsToday: 340
     }
   };
 
@@ -198,7 +444,33 @@ function getStaticAnalyticsData(period: string): AnalyticsData {
       { page: '/handbook', views: Math.floor(data.pageviews * 0.09) },
       { page: '/support', views: Math.floor(data.pageviews * 0.07) },
       { page: '/case', views: Math.floor(data.pageviews * 0.05) }
-    ]
+    ],
+    topCountries: [
+      { country: 'South Africa', visitors: Math.floor(data.visitors * 0.45), percentage: 45 },
+      { country: 'United States', visitors: Math.floor(data.visitors * 0.25), percentage: 25 },
+      { country: 'United Kingdom', visitors: Math.floor(data.visitors * 0.15), percentage: 15 },
+      { country: 'Canada', visitors: Math.floor(data.visitors * 0.08), percentage: 8 },
+      { country: 'Australia', visitors: Math.floor(data.visitors * 0.07), percentage: 7 }
+    ],
+    deviceTypes: [
+      { device: 'mobile', visitors: Math.floor(data.visitors * 0.65), percentage: 65 },
+      { device: 'desktop', visitors: Math.floor(data.visitors * 0.28), percentage: 28 },
+      { device: 'tablet', visitors: Math.floor(data.visitors * 0.07), percentage: 7 }
+    ],
+    comparisons: {
+      previousPeriod: {
+        visitors: Math.floor(data.visitors * 0.85), // 15% decrease from previous period
+        pageviews: Math.floor(data.pageviews * 0.82), // 18% decrease from previous period
+        change: -15,
+        changeType: 'decrease' as const
+      },
+      yearOverYear: {
+        visitors: Math.floor(data.visitors * 0.75), // 25% increase year over year
+        pageviews: Math.floor(data.pageviews * 0.78), // 22% increase year over year
+        change: 25,
+        changeType: 'increase' as const
+      }
+    }
   };
 }
 

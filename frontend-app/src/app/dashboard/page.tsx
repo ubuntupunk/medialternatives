@@ -72,6 +72,14 @@ const dashboardSections = [
     href: '/dashboard/seo'
   },
   {
+    id: 'dead-links',
+    title: 'Dead Link Checker',
+    icon: 'bi-link-45deg',
+    description: 'Check for broken external links in posts',
+    color: 'danger',
+    href: '/dashboard/dead-links'
+  },
+  {
     id: 'performance',
     title: 'Performance',
     icon: 'bi-lightning',

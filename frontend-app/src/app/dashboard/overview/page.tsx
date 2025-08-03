@@ -429,7 +429,7 @@ export default function OverviewPage() {
                   <small className="text-muted">Page Views</small>
                 </div>
                 <div className="col-6 mb-3">
-                  <h4 className="text-success">{stats.analytics.bounceRate}%</h4>
+                  <h4 className="text-success">{stats.analytics.bounceRate.toFixed(1)}%</h4>
                   <small className="text-muted">Bounce Rate</small>
                 </div>
                 <div className="col-6 mb-3">
