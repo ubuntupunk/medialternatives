@@ -35,17 +35,136 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const period = searchParams.get('period') || '30'; // days
     
-    // WordPress.com site identifier
-    const siteId = 'medialternatives.wordpress.com';
+    // For GET requests, return mock data (demo mode)
+    return getMockDataResponse(period);
+  } catch (error) {
+    console.error('Jetpack Analytics GET error:', error);
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Failed to fetch Jetpack analytics data',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { token, action, period } = body;
     
-    // Check for authentication credentials
-    const wpApiNonce = process.env.WP_API_NONCE;
-    const wpApiRoot = process.env.WP_API_ROOT || `https://${siteId}/wp-json/wp/v2`;
-    const wpAuthCookie = process.env.WP_AUTH_COOKIE;
+    if (action === 'fetch_stats' && token) {
+      return await fetchAuthenticatedStats(token, period || '30');
+    }
     
-    // For WordPress.com hosted sites, we need OAuth or API key authentication
-    const wpcomApiKey = process.env.WORDPRESS_COM_API_KEY;
-    const wpcomAccessToken = process.env.WORDPRESS_COM_ACCESS_TOKEN;
+    return NextResponse.json(
+      { success: false, error: 'Invalid request' },
+      { status: 400 }
+    );
+  } catch (error) {
+    console.error('Jetpack Analytics POST error:', error);
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Failed to process request',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
+    );
+  }
+}
+
+async function fetchAuthenticatedStats(token: any, period: string) {
+  try {
+    console.log('🔐 Backend: Fetching authenticated stats for site:', token.siteId);
+    
+    const headers = {
+      'Authorization': `Bearer ${token.accessToken}`,
+      'Content-Type': 'application/json'
+    };
+    
+    // Make requests from backend (no CORS issues)
+    const [summaryResponse, topPostsResponse, referrersResponse] = await Promise.all([
+      fetch(`https://public-api.wordpress.com/rest/v1.1/sites/${token.siteId}/stats/summary?period=${period}`, { headers }),
+      fetch(`https://public-api.wordpress.com/rest/v1.1/sites/${token.siteId}/stats/top-posts?period=${period}`, { headers }),
+      fetch(`https://public-api.wordpress.com/rest/v1.1/sites/${token.siteId}/stats/referrers?period=${period}`, { headers })
+    ]);
+
+    console.log('📊 WordPress.com API responses:', {
+      summary: { ok: summaryResponse.ok, status: summaryResponse.status },
+      topPosts: { ok: topPostsResponse.ok, status: topPostsResponse.status },
+      referrers: { ok: referrersResponse.ok, status: referrersResponse.status }
+    });
+
+    if (!summaryResponse.ok) {
+      const errorText = await summaryResponse.text();
+      console.error('❌ WordPress.com API error:', errorText);
+      throw new Error(`WordPress.com API error: ${summaryResponse.status}`);
+    }
+
+    const summaryData = await summaryResponse.json();
+    const topPostsData = topPostsResponse.ok ? await topPostsResponse.json() : null;
+    const referrersData = referrersResponse.ok ? await referrersResponse.json() : null;
+
+    console.log('📈 WordPress.com data received:', { summaryData, topPostsData, referrersData });
+
+    // Transform real WordPress.com data
+    const realJetpackData = {
+      views: summaryData.views || 0,
+      visitors: summaryData.visitors || 0,
+      visits: summaryData.visits || 0,
+      topPosts: topPostsData?.days?.[0]?.postviews?.map((post: any) => ({
+        title: post.title,
+        url: post.href,
+        views: post.views,
+        percentage: parseFloat(((post.views / summaryData.views) * 100).toFixed(1))
+      })) || [],
+      referrers: referrersData?.days?.[0]?.groups?.map((ref: any) => ({
+        name: ref.name,
+        views: ref.views,
+        percentage: parseFloat(((ref.views / summaryData.views) * 100).toFixed(1))
+      })) || [],
+      searchTerms: [], // Would need additional API call
+      summary: {
+        period: `${period} days`,
+        views: summaryData.views || 0,
+        visitors: summaryData.visitors || 0,
+        likes: summaryData.likes || 0,
+        comments: summaryData.comments || 0
+      }
+    };
+
+    return NextResponse.json({
+      success: true,
+      data: realJetpackData,
+      source: 'WordPress.com API (authenticated)',
+      period: `${period} days`,
+      lastUpdated: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('❌ Backend authentication error:', error);
+    
+    // Fall back to mock data
+    return getMockDataResponse(period);
+  }
+}
+
+function getMockDataResponse(period: string) {
+    const periodNum = parseInt(period);
+    const mockData = getJetpackMockData(period);
+    
+    return NextResponse.json({
+      success: true,
+      data: mockData,
+      source: 'Mock data (demo mode)',
+      period: `${period} days`,
+      lastUpdated: new Date().toISOString(),
+      note: 'Connect WordPress.com for live data'
+    });
+}
     
     if (wpcomAccessToken || wpApiNonce) {
       try {

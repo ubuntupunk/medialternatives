@@ -229,16 +229,40 @@ export async function makeAuthenticatedRequest(endpoint: string, options: Reques
     throw new Error('No authentication token available');
   }
   
+  console.log('🔐 Making authenticated request to:', endpoint);
+  console.log('🎫 Using token:', token.accessToken.substring(0, 20) + '...');
+  
   const headers = {
     'Authorization': `Bearer ${token.accessToken}`,
     'Content-Type': 'application/json',
+    // Remove User-Agent header - causes CORS issues
     ...options.headers
   };
   
-  return fetch(endpoint, {
+  const response = await fetch(endpoint, {
     ...options,
     headers
   });
+  
+  console.log('📡 Response status:', response.status, response.statusText);
+  
+  // Check if response is JSON
+  const contentType = response.headers.get('content-type');
+  console.log('📄 Content-Type:', contentType);
+  
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('❌ API Error Response:', errorText);
+    throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+  }
+  
+  if (!contentType || !contentType.includes('application/json')) {
+    const responseText = await response.text();
+    console.error('❌ Non-JSON response received:', responseText.substring(0, 500));
+    throw new Error('API returned non-JSON response');
+  }
+  
+  return response;
 }
 
 /**
