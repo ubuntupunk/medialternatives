@@ -153,127 +153,17 @@ async function fetchAuthenticatedStats(token: any, period: string) {
 }
 
 function getMockDataResponse(period: string) {
-    const periodNum = parseInt(period);
-    const mockData = getJetpackMockData(period);
-    
-    return NextResponse.json({
-      success: true,
-      data: mockData,
-      source: 'Mock data (demo mode)',
-      period: `${period} days`,
-      lastUpdated: new Date().toISOString(),
-      note: 'Connect WordPress.com for live data'
-    });
-}
-    
-    if (wpcomAccessToken || wpApiNonce) {
-      try {
-        console.log('Attempting authenticated Jetpack API calls...');
-        
-        // Try WordPress.com REST API with authentication
-        const headers: Record<string, string> = {
-          'User-Agent': 'Medialternatives-Dashboard/1.0',
-          'Accept': 'application/json'
-        };
-        
-        if (wpcomAccessToken) {
-          headers['Authorization'] = `Bearer ${wpcomAccessToken}`;
-        }
-        
-        if (wpApiNonce) {
-          headers['X-WP-Nonce'] = wpApiNonce;
-        }
-        
-        if (wpAuthCookie) {
-          headers['Cookie'] = wpAuthCookie;
-        }
-        
-        // Use WordPress.com public API for hosted sites
-        const apiBase = 'https://public-api.wordpress.com/rest/v1.1/sites';
-        const statsResponse = await fetch(`${apiBase}/${siteId}/stats/summary?period=${period}`, {
-          headers
-        });
-      
-      if (statsResponse.ok) {
-        const statsData = await statsResponse.json();
-        
-        // Fetch additional data
-        const [topPostsResponse, referrersResponse] = await Promise.all([
-          fetch(`${apiBase}/${siteId}/stats/top-posts?period=${period}`),
-          fetch(`${apiBase}/${siteId}/stats/referrers?period=${period}`)
-        ]);
-        
-        const topPostsData = topPostsResponse.ok ? await topPostsResponse.json() : null;
-        const referrersData = referrersResponse.ok ? await referrersResponse.json() : null;
-        
-        // Transform data to match our interface
-        const jetpackData: JetpackAnalyticsData = {
-          visits: statsData.visits || 0,
-          views: statsData.views || 0,
-          visitors: statsData.visitors || 0,
-          topPosts: topPostsData?.days?.[0]?.postviews?.map((post: any, index: number) => ({
-            title: post.title,
-            url: post.href,
-            views: post.views,
-            percentage: parseFloat(((post.views / statsData.views) * 100).toFixed(1))
-          })) || [],
-          referrers: referrersData?.days?.[0]?.groups?.map((ref: any, index: number) => ({
-            name: ref.name,
-            views: ref.views,
-            percentage: parseFloat(((ref.views / statsData.views) * 100).toFixed(1))
-          })) || [],
-          searchTerms: [], // Would need search-terms endpoint
-          summary: {
-            period: `${period} days`,
-            views: statsData.views || 0,
-            visitors: statsData.visitors || 0,
-            likes: statsData.likes || 0,
-            comments: statsData.comments || 0
-          }
-        };
-        
-        return NextResponse.json({
-          success: true,
-          data: jetpackData,
-          source: 'Jetpack Analytics API',
-          period: `${period} days`,
-          lastUpdated: new Date().toISOString()
-        });
-        
-      } else {
-        // API call failed, return mock data with realistic structure
-        throw new Error('Jetpack API authentication required');
-      }
-      
-    } catch (error) {
-      console.error('Jetpack Analytics API error:', error);
-      
-      // Return realistic mock data for development
-      const mockData = getJetpackMockData(period);
-      
-      return NextResponse.json({
-        success: true,
-        data: mockData,
-        source: 'Mock data (Jetpack authentication needed)',
-        period: `${period} days`,
-        lastUpdated: new Date().toISOString(),
-        note: 'Connect WordPress.com account for live Jetpack analytics data',
-        authenticationRequired: true,
-        error: error instanceof Error ? error.message : 'Authentication required'
-      });
-    }
-    
-  } catch (error) {
-    console.error('Jetpack Analytics error:', error);
-    return NextResponse.json(
-      { 
-        success: false, 
-        error: 'Failed to fetch Jetpack analytics data',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
-    );
-  }
+  const periodNum = parseInt(period);
+  const mockData = getJetpackMockData(period);
+  
+  return NextResponse.json({
+    success: true,
+    data: mockData,
+    source: 'Mock data (demo mode)',
+    period: `${period} days`,
+    lastUpdated: new Date().toISOString(),
+    note: 'Connect WordPress.com for live data'
+  });
 }
 
 /**
