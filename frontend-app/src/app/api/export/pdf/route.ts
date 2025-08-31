@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * API endpoint to generate PDF reports from HTML
- * Note: This is a simplified implementation
- * In production, you'd use libraries like Puppeteer, Playwright, or jsPDF
+ * POST /api/export/pdf - Generate PDF from HTML content
+ *
+ * Converts HTML content to PDF format for report generation.
+ * Currently uses mock implementation - requires PDF library integration.
+ *
+ * @param {NextRequest} request - Next.js request with HTML content and filename
+ * @returns {Promise<NextResponse>} PDF file response or error
  */
 export async function POST(request: NextRequest) {
   try {
@@ -45,6 +49,8 @@ export async function POST(request: NextRequest) {
 /**
  * Generate PDF from HTML
  * This is a mock implementation - replace with actual PDF generation
+ * @param {string} html - HTML content to convert to PDF
+ * @returns {Promise<Buffer>} PDF buffer data
  */
 async function generatePDFFromHTML(html: string): Promise<Buffer> {
   // Mock PDF generation
@@ -106,8 +112,13 @@ async function generatePDFFromHTML(html: string): Promise<Buffer> {
 }
 
 /**
- * Alternative: Generate PDF using jsPDF (client-side approach)
- * This would be implemented in the frontend
+ * GET /api/export/pdf - PDF generation endpoint information
+ *
+ * Returns information about PDF generation capabilities and alternatives.
+ * Use POST method with HTML content for actual PDF generation.
+ *
+ * @param {NextRequest} request - Next.js request object
+ * @returns {Promise<NextResponse>} Endpoint information and alternatives
  */
 export async function GET(request: NextRequest) {
   return NextResponse.json({
