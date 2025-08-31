@@ -11,6 +11,11 @@ if (!ADMIN_PASSWORD) {
   console.error('Please set ADMIN_PASSWORD in your .env file for security.');
 }
 
+/**
+ * POST /api/auth/login - Admin authentication endpoint
+ * @param {NextRequest} request - Next.js request object containing password
+ * @returns {Promise<NextResponse>} Authentication response with session cookie
+ */
 export async function POST(request: NextRequest) {
   try {
     const { password } = await request.json();
