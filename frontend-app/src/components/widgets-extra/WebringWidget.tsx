@@ -16,22 +16,58 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
   const [showTooltip, setShowTooltip] = useState(false);
   const [isKeyboardNav, setIsKeyboardNav] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState<string>('default');
+  const [hoverTheme, setHoverTheme] = useState<string | null>(null);
+  const [themeCycleIndex, setThemeCycleIndex] = useState(0);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const infoButtonRef = useRef<HTMLAnchorElement>(null);
+  const themeCycleRef = useRef<NodeJS.Timeout | null>(null);
   const isClient = useClientOnly();
   
+  // Available themes for cycling
+  const availableThemes = ['default', 'minimal', 'ocean', 'sunset', 'dark', 'tokyo', 'dracula', 'disco'];
+
   // Handle random theme selection on client side only
   useEffect(() => {
     if (isClient && theme === 'random') {
-      const availableThemes = ['default', 'minimal', 'ocean', 'sunset', 'dark', 'tokyo', 'dracula', 'disco'];
       const randomIndex = Math.floor(Math.random() * availableThemes.length);
       setSelectedTheme(availableThemes[randomIndex]);
     } else if (theme !== 'random') {
       setSelectedTheme(theme);
     }
   }, [isClient, theme]);
+
+  // Theme cycling function
+  const cycleTheme = () => {
+    const nextIndex = (themeCycleIndex + 1) % availableThemes.length;
+    setThemeCycleIndex(nextIndex);
+    setHoverTheme(availableThemes[nextIndex]);
+  };
+
+  // Start theme cycling on tooltip hover
+  const startThemeCycling = () => {
+    if (themeCycleRef.current) return; // Already cycling
+
+    // Start with a random theme
+    const randomStart = Math.floor(Math.random() * availableThemes.length);
+    setThemeCycleIndex(randomStart);
+    setHoverTheme(availableThemes[randomStart]);
+
+    // Cycle every 800ms
+    themeCycleRef.current = setInterval(cycleTheme, 800);
+  };
+
+  // Stop theme cycling and revert to original theme
+  const stopThemeCycling = () => {
+    if (themeCycleRef.current) {
+      clearInterval(themeCycleRef.current);
+      themeCycleRef.current = null;
+    }
+    setHoverTheme(null);
+    setThemeCycleIndex(0);
+  };
   
-  const currentTheme = webringThemes[selectedTheme] || webringThemes.default;
+  // Use hover theme if available, otherwise use selected theme
+  const currentTheme = webringThemes[hoverTheme || selectedTheme] || webringThemes.default;
   
   const getSizeClass = () => {
     switch (size) {
@@ -67,13 +103,23 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && showTooltip) {
         setShowTooltip(false);
+        stopThemeCycling();
         infoButtonRef.current?.focus();
       }
     };
-    
+
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
   }, [showTooltip]);
+
+  // Cleanup theme cycling on unmount
+  useEffect(() => {
+    return () => {
+      if (themeCycleRef.current) {
+        clearInterval(themeCycleRef.current);
+      }
+    };
+  }, []);
 
   const themeStyles = {
     '--webring-bg': currentTheme.colors.background,
@@ -88,8 +134,8 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
   } as React.CSSProperties;
 
   return (
-    <aside 
-      className={`widget ${styles.webringWidget} ${getSizeClass()} ${styles[`theme-${selectedTheme}`]} ${className} ${isKeyboardNav ? styles.keyboardNav : ''}`}
+    <aside
+      className={`widget ${styles.webringWidget} ${getSizeClass()} ${styles[`theme-${selectedTheme}`]} ${className} ${isKeyboardNav ? styles.keyboardNav : ''} ${hoverTheme ? styles.themeCycling : ''}`}
       style={themeStyles}
       role="complementary"
       aria-labelledby="webring-title"
@@ -139,20 +185,33 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
         </div>
         
         <div className={styles.webringInfoContainer}>
-          <a 
+          <a
             ref={infoButtonRef}
             href="https://en.wikipedia.org/wiki/Webring"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.webringInfo}
             aria-describedby={showTooltip ? "webring-tooltip" : undefined}
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
-            onFocus={() => setShowTooltip(true)}
-            onBlur={() => setShowTooltip(false)}
+            onMouseEnter={() => {
+              setShowTooltip(true);
+              startThemeCycling();
+            }}
+            onMouseLeave={() => {
+              setShowTooltip(false);
+              stopThemeCycling();
+            }}
+            onFocus={() => {
+              setShowTooltip(true);
+              startThemeCycling();
+            }}
+            onBlur={() => {
+              setShowTooltip(false);
+              stopThemeCycling();
+            }}
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
                 setShowTooltip(false);
+                stopThemeCycling();
               }
             }}
             title=""

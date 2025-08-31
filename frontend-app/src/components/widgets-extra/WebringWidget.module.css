@@ -6,9 +6,25 @@
   padding: 1rem;
   text-align: center;
   color: var(--webring-text, #495057);
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
   max-width: 480px;
   box-shadow: 0 2px 4px 0 rgba(14, 30, 37, 0.12);
+}
+
+/* Theme cycling animation */
+.themeCycling {
+  animation: themePulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes themePulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 2px 4px 0 rgba(14, 30, 37, 0.12);
+  }
+  100% {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px 0 rgba(14, 30, 37, 0.2);
+  }
 }
 
 /* Size Variations */
@@ -66,6 +82,7 @@
   margin: 0;
   font-size: 0.85rem;
   color: var(--webring-text, #495057);
+  transition: color 0.5s ease;
 }
 
 .webringName {
@@ -77,18 +94,20 @@
 .webringName a {
   color: var(--webring-link, #0d6efd);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color 0.5s ease;
 }
 
 .webringName a:hover {
   color: var(--webring-link-hover, #0b5ed7);
   text-decoration: underline;
+  transition: color 0.2s ease;
 }
 
 .webringMembers {
   margin: 0;
   font-size: 0.8rem;
   color: var(--webring-text, #495057);
+  transition: color 0.5s ease;
 }
 
 .webringInfoContainer {
@@ -175,6 +194,7 @@
   margin-bottom: 0.75rem;
   color: var(--webring-accent, #495057);
   text-align: center;
+  transition: color 0.5s ease;
 }
 
 .webringBanner {
@@ -227,7 +247,7 @@
   border-radius: 0.375rem;
   font-size: 0.875rem;
   font-weight: 600;
-  transition: all 0.2s ease;
+  transition: all 0.5s ease;
   border: 2px solid var(--webring-button-text, #0d6efd);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
