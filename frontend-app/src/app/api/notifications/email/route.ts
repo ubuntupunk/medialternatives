@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * API endpoint to send email notifications for dead links
+ * POST /api/notifications/email - Send email notification for dead links
+ *
+ * Sends HTML and text email notifications containing dead link reports.
+ * Currently uses mock implementation - requires email service integration.
+ *
+ * @param {NextRequest} request - Next.js request with email and notification data
+ * @returns {Promise<NextResponse>} Email sending result or error response
  */
 export async function POST(request: NextRequest) {
   try {
@@ -57,6 +63,8 @@ export async function POST(request: NextRequest) {
 
 /**
  * Generate email content for dead link notification
+ * @param {any} notification - Dead link notification data
+ * @returns {Object} Email content with subject, HTML, and text versions
  */
 function generateEmailContent(notification: any) {
   const { totalDeadLinks, postsAffected, summary, details, timestamp } = notification;
@@ -154,6 +162,9 @@ View the full report: ${process.env.NEXT_PUBLIC_SITE_URL || 'https://medialterna
 /**
  * Mock email sending function
  * Replace with actual email service integration
+ * @param {string} email - Recipient email address
+ * @param {any} content - Email content with subject, HTML, and text
+ * @returns {Promise<boolean>} True if email sent successfully
  */
 async function sendEmail(email: string, content: any): Promise<boolean> {
   try {
