@@ -4,6 +4,20 @@ import { BetaAnalyticsDataClient } from '@google-analytics/data';
 // Google Analytics Data API v1 integration
 // This would require setting up Google Analytics Data API credentials
 
+/**
+ * Analytics data structure for Google Analytics metrics
+ * @interface AnalyticsData
+ * @property {number} visitors - Total number of unique visitors
+ * @property {number} pageviews - Total number of page views
+ * @property {number} bounceRate - Bounce rate percentage
+ * @property {string} avgSessionDuration - Average session duration (MM:SS format)
+ * @property {Array<{page: string, views: number}>} topPages - Top performing pages
+ * @property {Array<{country: string, visitors: number, percentage: number}>} topCountries - Top countries by visitors
+ * @property {Array<{device: string, visitors: number, percentage: number}>} deviceTypes - Visitors by device type
+ * @property {number} realTimeUsers - Current real-time active users
+ * @property {number} sessionsToday - Sessions for today
+ * @property {{previousPeriod?: {visitors: number, pageviews: number, change: number, changeType: 'increase' | 'decrease' | 'same'}, yearOverYear?: {visitors: number, pageviews: number, change: number, changeType: 'increase' | 'decrease' | 'same'}}} [comparisons] - Period comparison data
+ */
 interface AnalyticsData {
   visitors: number;
   pageviews: number;
@@ -41,6 +55,11 @@ interface AnalyticsData {
   };
 }
 
+/**
+ * GET /api/analytics - Fetch Google Analytics data
+ * @param {NextRequest} request - Next.js request object
+ * @returns {Promise<NextResponse>} Analytics data response
+ */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -98,6 +117,10 @@ export async function GET(request: NextRequest) {
 
 /**
  * Get real Google Analytics data using the Data API
+ * @param {string} propertyId - Google Analytics property ID
+ * @param {string} serviceAccountKey - Base64 encoded service account key
+ * @param {string} period - Time period (7d, 30d, 90d, 1y)
+ * @returns {Promise<AnalyticsData>} Analytics data from Google Analytics
  */
 async function getGoogleAnalyticsData(propertyId: string, serviceAccountKey: string, period: string): Promise<AnalyticsData> {
   try {
@@ -282,6 +305,8 @@ async function getGoogleAnalyticsData(propertyId: string, serviceAccountKey: str
 
 /**
  * Format duration from seconds to MM:SS format
+ * @param {number} seconds - Duration in seconds
+ * @returns {string} Formatted duration string (MM:SS)
  */
 function formatDuration(seconds: number): string {
   const minutes = Math.floor(seconds / 60);
@@ -291,6 +316,10 @@ function formatDuration(seconds: number): string {
 
 /**
  * Calculate previous period dates for comparison
+ * @param {string} period - Current period (7d, 30d, 90d, 1y)
+ * @param {string} startDate - Current period start date
+ * @param {string} endDate - Current period end date
+ * @returns {{previousStartDate: string, previousEndDate: string}} Previous period date range
  */
 function calculatePreviousPeriod(period: string, startDate: string, endDate: string) {
   const today = new Date();
@@ -327,6 +356,10 @@ function calculatePreviousPeriod(period: string, startDate: string, endDate: str
 
 /**
  * Calculate year-over-year comparison dates
+ * @param {string} period - Current period (7d, 30d, 90d, 1y)
+ * @param {string} startDate - Current period start date
+ * @param {string} endDate - Current period end date
+ * @returns {{yearAgoStartDate: string, yearAgoEndDate: string}} Year-over-year date range
  */
 function calculateYearOverYearPeriod(period: string, startDate: string, endDate: string) {
   const today = new Date();
@@ -397,6 +430,8 @@ function calculateYearOverYearPeriod(period: string, startDate: string, endDate:
 /**
  * Get static analytics data based on period
  * Provides consistent, realistic data for development and demo
+ * @param {string} period - Time period (7d, 30d, 90d, 1y)
+ * @returns {AnalyticsData} Static analytics data for the specified period
  */
 function getStaticAnalyticsData(period: string): AnalyticsData {
   const baseData = {
