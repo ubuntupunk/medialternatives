@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Test endpoint to verify PageSpeed Insights API integration
+/**
+ * GET /api/test-performance - Test PageSpeed Insights API integration
+ *
+ * Tests the PageSpeed Insights API connection and validates API key.
+ * Returns configuration status and sample performance data.
+ *
+ * @param {NextRequest} request - Next.js request object
+ * @returns {Promise<NextResponse>} API test results or error response
+ */
 export async function GET(request: NextRequest) {
   try {
     const apiKey = process.env.PAGESPEED_API_KEY;
