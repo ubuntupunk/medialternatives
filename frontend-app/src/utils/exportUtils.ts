@@ -4,6 +4,15 @@
 
 import { DeadLink, LinkCheckResult } from './deadLinkChecker';
 
+/**
+ * Options for exporting dead link results
+ * @interface ExportOptions
+ * @property {'csv' | 'json' | 'pdf'} format - Export format
+ * @property {boolean} includeContext - Whether to include link context
+ * @property {boolean} includeSuggestions - Whether to include suggestions
+ * @property {boolean} includeArchiveLinks - Whether to include archive links
+ * @property {boolean} groupByPost - Whether to group results by post
+ */
 export interface ExportOptions {
   format: 'csv' | 'json' | 'pdf';
   includeContext: boolean;
@@ -14,6 +23,9 @@ export interface ExportOptions {
 
 /**
  * Export dead links to CSV format
+ * @param {DeadLink[]} deadLinks - Array of dead links to export
+ * @param {ExportOptions} [options] - Export options
+ * @returns {string} CSV formatted string
  */
 export function exportToCSV(
   deadLinks: DeadLink[],
@@ -73,6 +85,10 @@ export function exportToCSV(
 
 /**
  * Export dead links to JSON format
+ * @param {DeadLink[]} deadLinks - Array of dead links to export
+ * @param {any} [summary] - Optional summary data
+ * @param {ExportOptions} [options] - Export options
+ * @returns {string} JSON formatted string
  */
 export function exportToJSON(
   deadLinks: DeadLink[],
@@ -134,6 +150,10 @@ export function exportToJSON(
 
 /**
  * Generate PDF report (returns HTML that can be converted to PDF)
+ * @param {DeadLink[]} deadLinks - Array of dead links to include in report
+ * @param {any} [summary] - Optional summary statistics
+ * @param {ExportOptions} [options] - Export options
+ * @returns {string} HTML string that can be converted to PDF
  */
 export function generatePDFHTML(
   deadLinks: DeadLink[],
@@ -281,6 +301,10 @@ export function generatePDFHTML(
 
 /**
  * Download file with given content
+ * @param {string} content - File content
+ * @param {string} filename - Name of the file to download
+ * @param {string} mimeType - MIME type of the file
+ * @returns {void}
  */
 export function downloadFile(content: string, filename: string, mimeType: string): void {
   const blob = new Blob([content], { type: mimeType });
@@ -300,6 +324,10 @@ export function downloadFile(content: string, filename: string, mimeType: string
 
 /**
  * Export dead links with the specified options
+ * @param {DeadLink[]} deadLinks - Array of dead links to export
+ * @param {any} summary - Summary statistics
+ * @param {ExportOptions} options - Export options
+ * @returns {void}
  */
 export function exportDeadLinks(
   deadLinks: DeadLink[],
@@ -329,6 +357,9 @@ export function exportDeadLinks(
 
 /**
  * Generate PDF report via server
+ * @param {string} htmlContent - HTML content to convert to PDF
+ * @param {string} filename - Desired filename for the PDF
+ * @returns {Promise<void>}
  */
 async function generatePDFReport(htmlContent: string, filename: string): Promise<void> {
   try {
@@ -366,6 +397,7 @@ async function generatePDFReport(htmlContent: string, filename: string): Promise
 
 /**
  * Get default export options
+ * @returns {ExportOptions} Default export configuration
  */
 export function getDefaultExportOptions(): ExportOptions {
   return {
