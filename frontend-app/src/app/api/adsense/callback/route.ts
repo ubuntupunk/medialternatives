@@ -12,6 +12,15 @@ const OAUTH2_CLIENT = new google.auth.OAuth2(
     : 'http://localhost:3000/api/adsense/callback'
 );
 
+/**
+ * GET /api/adsense/callback - Handle AdSense OAuth callback
+ *
+ * Processes OAuth authorization code from Google and exchanges it for access tokens.
+ * Stores tokens securely and redirects to dashboard with status.
+ *
+ * @param {NextRequest} req - Next.js request with OAuth code parameter
+ * @returns {NextResponse} Redirect response to dashboard with status
+ */
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get('code');
