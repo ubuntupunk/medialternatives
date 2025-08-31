@@ -88,10 +88,14 @@ export function useAuthenticatedAPI() {
     return response.json();
   };
 
-  /**
-   * Get top posts (requires read permission)
-   */
-  const getTopPosts = async (period: string = '30') => {
+   /**
+    * Get top posts (requires read permission)
+    * @async
+    * @param {string} [period='30'] - Time period in days
+    * @returns {Promise<Object>} Top posts data
+    * @throws {Error} If not authenticated or insufficient permissions
+    */
+   const getTopPosts = async (period: string = '30') => {
     if (!checkPermission('read')) {
       throw new Error('Insufficient permissions for top posts');
     }
@@ -111,10 +115,14 @@ export function useAuthenticatedAPI() {
     return response.json();
   };
 
-  /**
-   * Get referrers (requires read permission)
-   */
-  const getReferrers = async (period: string = '30') => {
+   /**
+    * Get referrers (requires read permission)
+    * @async
+    * @param {string} [period='30'] - Time period in days
+    * @returns {Promise<Object>} Referrer data
+    * @throws {Error} If not authenticated or insufficient permissions
+    */
+   const getReferrers = async (period: string = '30') => {
     if (!checkPermission('read')) {
       throw new Error('Insufficient permissions for referrers');
     }
@@ -134,10 +142,14 @@ export function useAuthenticatedAPI() {
     return response.json();
   };
 
-  /**
-   * Get user information (requires read permission)
-   */
-  const getUser = async (userId: number = 1) => {
+   /**
+    * Get user information (requires read permission)
+    * @async
+    * @param {number} [userId=1] - User ID to fetch
+    * @returns {Promise<Object>} User information
+    * @throws {Error} If not authenticated or insufficient permissions
+    */
+   const getUser = async (userId: number = 1) => {
     if (!checkPermission('read')) {
       throw new Error('Insufficient permissions for user data');
     }
