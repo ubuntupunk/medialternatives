@@ -1,5 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+/**
+ * Generate post image request interface
+ * @interface GeneratePostImageRequest
+ * @property {number} postId - WordPress post ID
+ * @property {string} title - Post title for image generation
+ * @property {string} content - Post content for context
+ * @property {string} [excerpt] - Post excerpt (used if available)
+ * @property {{style: string, aspectRatio: string, quality: string, includeText: boolean}} [settings] - Image generation settings
+ */
 interface GeneratePostImageRequest {
   postId: number;
   title: string;
@@ -13,6 +22,15 @@ interface GeneratePostImageRequest {
   };
 }
 
+/**
+ * POST /api/generate-post-image - Generate featured image for WordPress post
+ *
+ * Generates an AI-powered image for a WordPress post based on its content.
+ * Currently generates image but doesn't upload to WordPress (requires integration).
+ *
+ * @param {NextRequest} request - Next.js request with post data and settings
+ * @returns {Promise<NextResponse>} Generated image data or error response
+ */
 export async function POST(request: NextRequest) {
   try {
     const { postId, title, content, excerpt, settings }: GeneratePostImageRequest = await request.json();
@@ -80,7 +98,12 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Helper function to update WordPress post with new featured image
+/**
+ * Update WordPress post with new featured image
+ * @param {number} postId - WordPress post ID
+ * @param {string} imageUrl - URL of the generated image
+ * @returns {Promise<boolean>} True if update successful
+ */
 async function updateWordPressPostImage(postId: number, imageUrl: string): Promise<boolean> {
   try {
     // TODO: Implement WordPress.com API call to update featured image
