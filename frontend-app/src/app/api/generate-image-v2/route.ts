@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// This will be the updated version once @huggingface/inference is installed
+/**
+ * Image generation settings interface
+ * @interface GenerationSettings
+ * @property {string} style - Image style (photorealistic, illustration, abstract, etc.)
+ * @property {string} aspectRatio - Image aspect ratio (16:9, 4:3, 1:1, etc.)
+ * @property {string} quality - Generation quality (low, medium, high, ultra)
+ * @property {boolean} includeText - Whether to include text in the image
+ */
 interface GenerationSettings {
   style: string;
   aspectRatio: string;
@@ -8,12 +15,28 @@ interface GenerationSettings {
   includeText: boolean;
 }
 
+/**
+ * Generate image request interface
+ * @interface GenerateImageRequest
+ * @property {string} title - Title for image generation
+ * @property {string} [content] - Optional content for context
+ * @property {GenerationSettings} settings - Image generation settings
+ */
 interface GenerateImageRequest {
   title: string;
   content?: string;
   settings: GenerationSettings;
 }
 
+/**
+ * POST /api/generate-image-v2 - Generate image using Hugging Face v2
+ *
+ * Enhanced image generation endpoint using official Hugging Face client.
+ * Supports multiple models and advanced prompt engineering.
+ *
+ * @param {NextRequest} request - Next.js request with title, content, and settings
+ * @returns {Promise<NextResponse>} Generated image data or error response
+ */
 export async function POST(request: NextRequest) {
   try {
     const { title, content, settings }: GenerateImageRequest = await request.json();
@@ -58,6 +81,12 @@ export async function POST(request: NextRequest) {
   }
 }
 
+/**
+ * Generate image using Hugging Face client
+ * @param {string} prompt - Generated prompt for image creation
+ * @param {GenerationSettings} settings - Image generation settings
+ * @returns {Promise<string>} Base64 encoded image data URL
+ */
 async function generateImageWithHfClient(prompt: string, settings: GenerationSettings): Promise<string> {
   const HF_TOKEN = process.env.HUGGINGFACE_API_TOKEN;
   
@@ -104,6 +133,13 @@ async function generateImageWithHfClient(prompt: string, settings: GenerationSet
   }
 }
 
+/**
+ * Create comprehensive image generation prompt
+ * @param {string} title - Image title
+ * @param {string} [content=''] - Additional content for context
+ * @param {GenerationSettings} settings - Image generation settings
+ * @returns {string} Generated prompt for AI image generation
+ */
 function createImagePrompt(title: string, content: string = '', settings: GenerationSettings): string {
   // Same prompt generation logic as before
   const cleanTitle = title.replace(/<[^>]*>/g, '').trim();
@@ -161,11 +197,21 @@ function createImagePrompt(title: string, content: string = '', settings: Genera
   return prompt;
 }
 
+/**
+ * Get fallback image URL when AI generation fails
+ * @param {GenerationSettings} settings - Image generation settings
+ * @returns {string} Placeholder image URL
+ */
 function getFallbackImage(settings: GenerationSettings): string {
   const dimensions = getDimensionsFromAspectRatio(settings.aspectRatio);
   return `https://picsum.photos/${dimensions.width}/${dimensions.height}?random=${Date.now()}`;
 }
 
+/**
+ * Get width from aspect ratio
+ * @param {string} aspectRatio - Aspect ratio string (e.g., '16:9')
+ * @returns {number} Width in pixels
+ */
 function getWidthFromAspectRatio(aspectRatio: string): number {
   switch (aspectRatio) {
     case '16:9': return 1024;
@@ -176,6 +222,11 @@ function getWidthFromAspectRatio(aspectRatio: string): number {
   }
 }
 
+/**
+ * Get height from aspect ratio
+ * @param {string} aspectRatio - Aspect ratio string (e.g., '16:9')
+ * @returns {number} Height in pixels
+ */
 function getHeightFromAspectRatio(aspectRatio: string): number {
   switch (aspectRatio) {
     case '16:9': return 576;
@@ -186,6 +237,11 @@ function getHeightFromAspectRatio(aspectRatio: string): number {
   }
 }
 
+/**
+ * Get dimensions object from aspect ratio
+ * @param {string} aspectRatio - Aspect ratio string (e.g., '16:9')
+ * @returns {{width: number, height: number}} Dimensions object
+ */
 function getDimensionsFromAspectRatio(aspectRatio: string): { width: number; height: number } {
   return {
     width: getWidthFromAspectRatio(aspectRatio),
