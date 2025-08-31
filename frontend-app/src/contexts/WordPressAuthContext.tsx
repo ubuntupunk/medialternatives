@@ -63,7 +63,6 @@ interface WordPressAuthProviderProps {
  * It handles the OAuth flow, token storage, and provides authentication methods
  * to child components through React Context.
  *
- * @component
  * @param {WordPressAuthProviderProps} props - Component props
  * @returns {JSX.Element} Context provider wrapping children
  *

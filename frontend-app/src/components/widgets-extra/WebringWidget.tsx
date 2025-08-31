@@ -10,7 +10,6 @@ import { useClientOnly } from '@/hooks/useClientOnly';
  * A dynamic widget that displays webring information with interactive theme changing.
  * Users can hover over the widget and tooltip to cycle through different visual themes.
  *
- * @component
  * @param {WebringWidgetProps} props - The component props
  * @returns {JSX.Element} The rendered webring widget
  *

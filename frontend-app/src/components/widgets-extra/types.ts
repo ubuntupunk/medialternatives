@@ -1,19 +1,19 @@
 // TypeScript type definitions for MuizenMesh Webring Widget
 
 export interface WebringWidgetProps {
-  /** Custom title for the widget */
+  /* Custom title for the widget */
   title?: string;
-  /** URL of the webring site */
+  /* URL of the webring site */
   webringUrl?: string;
-  /** Theme variant for the widget */
+  /* Theme variant for the widget */
   theme?: 'default' | 'minimal' | 'ocean' | 'sunset' | 'dark' | 'tokyo' | 'dracula' | 'disco' | 'random';
-  /** Size variant for the widget */
+  /* Size variant for the widget */
   size?: 'small' | 'medium' | 'large';
-  /** Whether to show the surfer image */
+  /* Whether to show the surfer image */
   showImage?: boolean;
-  /** Custom CSS class name */
+  /* Custom CSS class name */
   className?: string;
-  /** Whether to show the description text */
+  /* Whether to show the description text */
   showDescription?: boolean;
 }
 

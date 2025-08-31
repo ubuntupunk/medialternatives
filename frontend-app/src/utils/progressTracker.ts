@@ -1,6 +1,6 @@
-/**
- * Progress tracking utilities for dead link checker
- */
+/*
+  * Progress tracking utilities for dead link checker
+  */
 
 export interface ProgressUpdate {
   current: number;
@@ -26,9 +26,9 @@ export class ProgressTracker {
     this.startTime = Date.now();
   }
 
-  /**
-   * Update progress with current item being processed
-   */
+  /*
+    * Update progress with current item being processed
+    */
   update(current: number, currentItem?: string, status: 'checking' | 'completed' | 'error' = 'checking') {
     this.current = current;
     const timeElapsed = Date.now() - this.startTime;
@@ -58,23 +58,23 @@ export class ProgressTracker {
     return update;
   }
 
-  /**
-   * Mark progress as completed
-   */
+  /*
+    * Mark progress as completed
+    */
   complete() {
     return this.update(this.total, undefined, 'completed');
   }
 
-  /**
-   * Mark progress as error
-   */
+  /*
+    * Mark progress as error
+    */
   error(currentItem?: string) {
     return this.update(this.current, currentItem, 'error');
   }
 
-  /**
-   * Get current progress without updating
-   */
+  /*
+    * Get current progress without updating
+    */
   getProgress(): ProgressUpdate {
     const timeElapsed = Date.now() - this.startTime;
     const percentage = Math.round((this.current / this.total) * 100);
@@ -89,9 +89,9 @@ export class ProgressTracker {
   }
 }
 
-/**
- * Format time duration in human readable format
- */
+/*
+  * Format time duration in human readable format
+  */
 export function formatDuration(ms: number): string {
   if (ms < 1000) return `${ms}ms`;
   if (ms < 60000) return `${Math.round(ms / 1000)}s`;
@@ -102,9 +102,9 @@ export function formatDuration(ms: number): string {
   return `${hours}h ${minutes}m`;
 }
 
-/**
- * Calculate processing speed (items per second)
- */
+/*
+  * Calculate processing speed (items per second)
+  */
 export function calculateSpeed(itemsProcessed: number, timeElapsed: number): number {
   if (timeElapsed === 0) return 0;
   return Math.round((itemsProcessed / timeElapsed) * 1000 * 100) / 100;

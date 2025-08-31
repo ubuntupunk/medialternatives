@@ -17,6 +17,20 @@ import {
   API_CONFIG 
 } from '@/lib/constants';
 
+/**
+ * WordPress.com API Service
+ *
+ * A comprehensive service for interacting with WordPress.com REST API.
+ * Provides methods for fetching posts, categories, tags, users, and site information
+ * with built-in caching, error handling, and pagination support.
+ *
+ * @class WordPressAPIService
+ * @example
+ * ```typescript
+ * const api = new WordPressAPIService();
+ * const posts = await api.getPosts({ per_page: 10 });
+ * ```
+ */
 class WordPressAPIService {
   private baseUrl: string;
   private siteInfoUrl: string;
@@ -29,8 +43,10 @@ class WordPressAPIService {
   }
 
   /**
-   * Extract pagination information from response headers
-   */
+    * Extract pagination information from response headers
+    * @memberof WordPressAPIService
+    * @private
+    */
   private extractPaginationInfo(headers: Headers, params: Record<string, any>): PaginationInfo {
     const total = parseInt(headers.get('X-WP-Total') || '0', 10);
     const totalPages = parseInt(headers.get('X-WP-TotalPages') || '1', 10);
@@ -169,8 +185,10 @@ class WordPressAPIService {
   }
 
   /**
-   * Generic fetch method with error handling and caching
-   */
+    * Generic fetch method with error handling and caching
+    * @memberof WordPressAPIService
+    * @private
+    */
   private async fetchWithCache<T>(
     endpoint: string, 
     params: Record<string, any> = {},
