@@ -2,6 +2,18 @@
  * Scheduler utilities for automated dead link checking
  */
 
+/**
+ * Schedule settings for automated dead link checking
+ * @interface ScheduleSettings
+ * @property {boolean} enabled - Whether scheduling is enabled
+ * @property {'daily' | 'weekly' | 'monthly'} frequency - How often to run checks
+ * @property {string} time - Time to run checks (HH:MM format)
+ * @property {number} [dayOfWeek] - Day of week for weekly checks (0-6, 0 = Sunday)
+ * @property {number} [dayOfMonth] - Day of month for monthly checks (1-31)
+ * @property {number} postsToCheck - Number of posts to check per run
+ * @property {string} [lastRun] - ISO timestamp of last run
+ * @property {string} [nextRun] - ISO timestamp of next scheduled run
+ */
 export interface ScheduleSettings {
   enabled: boolean;
   frequency: 'daily' | 'weekly' | 'monthly';
@@ -13,6 +25,16 @@ export interface ScheduleSettings {
   nextRun?: string;
 }
 
+/**
+ * Scheduled check information
+ * @interface ScheduledCheck
+ * @property {string} id - Unique identifier for the scheduled check
+ * @property {string} timestamp - ISO timestamp when check was created
+ * @property {'pending' | 'running' | 'completed' | 'failed'} status - Current status of the check
+ * @property {ScheduleSettings} settings - Settings used for this check
+ * @property {any} [results] - Results of the completed check
+ * @property {string} [error] - Error message if check failed
+ */
 export interface ScheduledCheck {
   id: string;
   timestamp: string;
@@ -24,6 +46,8 @@ export interface ScheduledCheck {
 
 /**
  * Calculate next run time based on schedule settings
+ * @param {ScheduleSettings} settings - Schedule settings
+ * @returns {Date} Next scheduled run time
  */
 export function calculateNextRun(settings: ScheduleSettings): Date {
   const now = new Date();
@@ -67,6 +91,8 @@ export function calculateNextRun(settings: ScheduleSettings): Date {
 
 /**
  * Check if a scheduled check should run now
+ * @param {ScheduleSettings} settings - Schedule settings
+ * @returns {boolean} True if check should run now
  */
 export function shouldRunCheck(settings: ScheduleSettings): boolean {
   if (!settings.enabled) {
@@ -81,6 +107,8 @@ export function shouldRunCheck(settings: ScheduleSettings): boolean {
 
 /**
  * Create a scheduled check
+ * @param {ScheduleSettings} settings - Schedule settings for the check
+ * @returns {Promise<ScheduledCheck>} Created scheduled check
  */
 export async function createScheduledCheck(settings: ScheduleSettings): Promise<ScheduledCheck> {
   const check: ScheduledCheck = {
@@ -115,6 +143,8 @@ export async function createScheduledCheck(settings: ScheduleSettings): Promise<
 
 /**
  * Execute a scheduled check
+ * @param {string} checkId - ID of the scheduled check to execute
+ * @returns {Promise<any>} Results of the executed check
  */
 export async function executeScheduledCheck(checkId: string): Promise<any> {
   try {
@@ -135,6 +165,7 @@ export async function executeScheduledCheck(checkId: string): Promise<any> {
 
 /**
  * Get all scheduled checks
+ * @returns {Promise<ScheduledCheck[]>} Array of scheduled checks
  */
 export async function getScheduledChecks(): Promise<ScheduledCheck[]> {
   try {
@@ -153,6 +184,8 @@ export async function getScheduledChecks(): Promise<ScheduledCheck[]> {
 
 /**
  * Update schedule settings
+ * @param {ScheduleSettings} settings - New schedule settings
+ * @returns {Promise<void>}
  */
 export async function updateScheduleSettings(settings: ScheduleSettings): Promise<void> {
   try {
@@ -175,6 +208,7 @@ export async function updateScheduleSettings(settings: ScheduleSettings): Promis
 
 /**
  * Get default schedule settings
+ * @returns {ScheduleSettings} Default schedule configuration
  */
 export function getDefaultScheduleSettings(): ScheduleSettings {
   return {
@@ -188,6 +222,7 @@ export function getDefaultScheduleSettings(): ScheduleSettings {
 
 /**
  * Load schedule settings from localStorage
+ * @returns {ScheduleSettings} Loaded or default schedule settings
  */
 export function loadScheduleSettings(): ScheduleSettings {
   if (typeof window === 'undefined') {
@@ -211,6 +246,8 @@ export function loadScheduleSettings(): ScheduleSettings {
 
 /**
  * Save schedule settings to localStorage
+ * @param {ScheduleSettings} settings - Settings to save
+ * @returns {void}
  */
 export function saveScheduleSettings(settings: ScheduleSettings): void {
   if (typeof window === 'undefined') {
@@ -232,6 +269,8 @@ export function saveScheduleSettings(settings: ScheduleSettings): void {
 
 /**
  * Format next run time for display
+ * @param {ScheduleSettings} settings - Schedule settings
+ * @returns {string} Formatted next run time string
  */
 export function formatNextRun(settings: ScheduleSettings): string {
   if (!settings.enabled) {
