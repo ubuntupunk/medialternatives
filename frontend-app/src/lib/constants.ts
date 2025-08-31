@@ -15,11 +15,13 @@ export const JETPACK_ENDPOINTS = {
 
 // WordPress.com OAuth Configuration
 export const WORDPRESS_COM_OAUTH = {
-  CLIENT_ID: process.env.WORDPRESS_COM_CLIENT_ID,
+  CLIENT_ID: process.env.NEXT_PUBLIC_WORDPRESS_COM_CLIENT_ID,
+  CLIENT_SECRET: process.env.WORDPRESS_COM_CLIENT_SECRET,
   AUTHORIZE_URL: 'https://public-api.wordpress.com/oauth2/authorize',
+  AUTHENTICATE_URL: 'https://public-api.wordpress.com/oauth2/authenticate',
   TOKEN_URL: 'https://public-api.wordpress.com/oauth2/token',
-  SCOPE: 'read:stats,read:posts',
-  REDIRECT_URI: process.env.WORDPRESS_COM_REDIRECT_URI
+  SCOPE: 'read:stats,read:posts,read:media,read:site,write:posts,write:media,write:site',
+  REDIRECT_URI: process.env.NEXT_PUBLIC_WORDPRESS_COM_REDIRECT_URI || 'http://localhost:3000'
 } as const;
 
 // AdSense Configuration

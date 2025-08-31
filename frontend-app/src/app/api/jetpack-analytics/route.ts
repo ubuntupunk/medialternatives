@@ -35,117 +35,10 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const period = searchParams.get('period') || '30'; // days
     
-    // WordPress.com site identifier
-    const siteId = 'medialternatives.wordpress.com';
-    
-    // Check for authentication credentials
-    const wpApiNonce = process.env.WP_API_NONCE;
-    const wpApiRoot = process.env.WP_API_ROOT || `https://${siteId}/wp-json/wp/v2`;
-    const wpAuthCookie = process.env.WP_AUTH_COOKIE;
-    
-    // For WordPress.com hosted sites, we need OAuth or API key authentication
-    const wpcomApiKey = process.env.WORDPRESS_COM_API_KEY;
-    const wpcomAccessToken = process.env.WORDPRESS_COM_ACCESS_TOKEN;
-    
-    if (wpcomAccessToken || wpApiNonce) {
-      try {
-        console.log('Attempting authenticated Jetpack API calls...');
-        
-        // Try WordPress.com REST API with authentication
-        const headers: Record<string, string> = {
-          'User-Agent': 'Medialternatives-Dashboard/1.0',
-          'Accept': 'application/json'
-        };
-        
-        if (wpcomAccessToken) {
-          headers['Authorization'] = `Bearer ${wpcomAccessToken}`;
-        }
-        
-        if (wpApiNonce) {
-          headers['X-WP-Nonce'] = wpApiNonce;
-        }
-        
-        if (wpAuthCookie) {
-          headers['Cookie'] = wpAuthCookie;
-        }
-        
-        // Use WordPress.com public API for hosted sites
-        const apiBase = 'https://public-api.wordpress.com/rest/v1.1/sites';
-        const statsResponse = await fetch(`${apiBase}/${siteId}/stats/summary?period=${period}`, {
-          headers
-        });
-      
-      if (statsResponse.ok) {
-        const statsData = await statsResponse.json();
-        
-        // Fetch additional data
-        const [topPostsResponse, referrersResponse] = await Promise.all([
-          fetch(`${apiBase}/${siteId}/stats/top-posts?period=${period}`),
-          fetch(`${apiBase}/${siteId}/stats/referrers?period=${period}`)
-        ]);
-        
-        const topPostsData = topPostsResponse.ok ? await topPostsResponse.json() : null;
-        const referrersData = referrersResponse.ok ? await referrersResponse.json() : null;
-        
-        // Transform data to match our interface
-        const jetpackData: JetpackAnalyticsData = {
-          visits: statsData.visits || 0,
-          views: statsData.views || 0,
-          visitors: statsData.visitors || 0,
-          topPosts: topPostsData?.days?.[0]?.postviews?.map((post: any, index: number) => ({
-            title: post.title,
-            url: post.href,
-            views: post.views,
-            percentage: parseFloat(((post.views / statsData.views) * 100).toFixed(1))
-          })) || [],
-          referrers: referrersData?.days?.[0]?.groups?.map((ref: any, index: number) => ({
-            name: ref.name,
-            views: ref.views,
-            percentage: parseFloat(((ref.views / statsData.views) * 100).toFixed(1))
-          })) || [],
-          searchTerms: [], // Would need search-terms endpoint
-          summary: {
-            period: `${period} days`,
-            views: statsData.views || 0,
-            visitors: statsData.visitors || 0,
-            likes: statsData.likes || 0,
-            comments: statsData.comments || 0
-          }
-        };
-        
-        return NextResponse.json({
-          success: true,
-          data: jetpackData,
-          source: 'Jetpack Analytics API',
-          period: `${period} days`,
-          lastUpdated: new Date().toISOString()
-        });
-        
-      } else {
-        // API call failed, return mock data with realistic structure
-        throw new Error('Jetpack API authentication required');
-      }
-      
-    } catch (error) {
-      console.error('Jetpack Analytics API error:', error);
-      
-      // Return realistic mock data for development
-      const mockData = getJetpackMockData(period);
-      
-      return NextResponse.json({
-        success: true,
-        data: mockData,
-        source: 'Mock data (Jetpack authentication needed)',
-        period: `${period} days`,
-        lastUpdated: new Date().toISOString(),
-        note: 'Connect WordPress.com account for live Jetpack analytics data',
-        authenticationRequired: true,
-        error: error instanceof Error ? error.message : 'Authentication required'
-      });
-    }
-    
+    // For GET requests, return mock data (demo mode)
+    return getMockDataResponse(period);
   } catch (error) {
-    console.error('Jetpack Analytics error:', error);
+    console.error('Jetpack Analytics GET error:', error);
     return NextResponse.json(
       { 
         success: false, 
@@ -155,6 +48,187 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+// Simple in-memory cache for WordPress.com API responses
+const analyticsCache = new Map<string, { data: any; timestamp: number }>();
+const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { token, action, period } = body;
+
+    if (action === 'fetch_stats' && token) {
+      return await fetchAuthenticatedStats(token, period || '30');
+    }
+
+    return NextResponse.json(
+      { success: false, error: 'Invalid request' },
+      { status: 400 }
+    );
+  } catch (error) {
+    console.error('Jetpack Analytics POST error:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Failed to process request',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
+    );
+  }
+}
+
+async function fetchAuthenticatedStats(token: any, period: string) {
+  try {
+    console.log('🔐 Backend: Fetching authenticated stats for site:', token.siteId);
+
+    // Check cache first
+    const cacheKey = `${token.siteId}_${period}`;
+    const cached = analyticsCache.get(cacheKey);
+    if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
+      console.log('📊 Using cached analytics data');
+      return NextResponse.json({
+        success: true,
+        data: cached.data,
+        source: 'WordPress.com API (cached)',
+        period: `${period} days`,
+        lastUpdated: new Date(cached.timestamp).toISOString(),
+        cached: true
+      });
+    }
+
+    const headers = {
+      'Authorization': `Bearer ${token.accessToken}`,
+      'Content-Type': 'application/json'
+    };
+
+    // Make requests from backend (no CORS issues) - with timeout to prevent hanging
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+    try {
+      const [summaryResponse, topPostsResponse, referrersResponse] = await Promise.all([
+        fetch(`https://public-api.wordpress.com/rest/v1.1/sites/${token.siteId}/stats/summary?period=${period}`, {
+          headers,
+          signal: controller.signal
+        }),
+        fetch(`https://public-api.wordpress.com/rest/v1.1/sites/${token.siteId}/stats/top-posts?period=${period}`, {
+          headers,
+          signal: controller.signal
+        }),
+        fetch(`https://public-api.wordpress.com/rest/v1.1/sites/${token.siteId}/stats/referrers?period=${period}`, {
+          headers,
+          signal: controller.signal
+        })
+      ]);
+
+      clearTimeout(timeoutId);
+
+    console.log('📊 WordPress.com API responses:', {
+      summary: { ok: summaryResponse.ok, status: summaryResponse.status },
+      topPosts: { ok: topPostsResponse.ok, status: topPostsResponse.status },
+      referrers: { ok: referrersResponse.ok, status: referrersResponse.status }
+    });
+
+    if (!summaryResponse.ok) {
+      const errorText = await summaryResponse.text();
+      console.error('❌ WordPress.com API error:', errorText);
+      
+      // Handle scope-related errors specifically
+      if (errorText.includes('Required scope') || errorText.includes('stats')) {
+        console.log('💡 Scope Error: Current token lacks "stats" scope');
+        console.log('💡 Solution: Re-authenticate with proper WordPress.com app configuration');
+        
+        return NextResponse.json({
+          success: false,
+          error: 'INSUFFICIENT_SCOPE',
+          message: 'WordPress.com authentication lacks required "stats" scope',
+          details: errorText,
+          solution: 'Please set up a proper WordPress.com OAuth application and re-authenticate',
+          fallback: 'Using Google Analytics data instead'
+        }, { status: 403 });
+      }
+      
+      throw new Error(`WordPress.com API error: ${summaryResponse.status}`);
+    }
+
+      const summaryData = await summaryResponse.json();
+      const topPostsData = topPostsResponse.ok ? await topPostsResponse.json() : null;
+      const referrersData = referrersResponse.ok ? await referrersResponse.json() : null;
+
+      console.log('📈 WordPress.com data received:', { summaryData, topPostsData, referrersData });
+
+      // Transform real WordPress.com data
+      const realJetpackData = {
+        views: summaryData.views || 0,
+        visitors: summaryData.visitors || 0,
+        visits: summaryData.visits || 0,
+        topPosts: topPostsData?.days?.[0]?.postviews?.map((post: any) => ({
+          title: post.title,
+          url: post.href,
+          views: post.views,
+          percentage: parseFloat(((post.views / summaryData.views) * 100).toFixed(1))
+        })) || [],
+        referrers: referrersData?.days?.[0]?.groups?.map((ref: any) => ({
+          name: ref.name,
+          views: ref.views,
+          percentage: parseFloat(((ref.views / summaryData.views) * 100).toFixed(1))
+        })) || [],
+        searchTerms: [], // Would need additional API call
+        summary: {
+          period: `${period} days`,
+          views: summaryData.views || 0,
+          visitors: summaryData.visitors || 0,
+          likes: summaryData.likes || 0,
+          comments: summaryData.comments || 0
+        }
+      };
+
+      // Cache the result
+      analyticsCache.set(cacheKey, {
+        data: realJetpackData,
+        timestamp: Date.now()
+      });
+
+      return NextResponse.json({
+        success: true,
+        data: realJetpackData,
+        source: 'WordPress.com API (authenticated)',
+        period: `${period} days`,
+        lastUpdated: new Date().toISOString()
+      });
+
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      if (fetchError instanceof Error && fetchError.name === 'AbortError') {
+        console.log('⏰ WordPress.com API request timed out');
+        return getMockDataResponse(period);
+      }
+      throw fetchError;
+    }
+
+  } catch (error) {
+    console.error('❌ Backend authentication error:', error);
+    
+    // Fall back to mock data
+    return getMockDataResponse(period);
+  }
+}
+
+function getMockDataResponse(period: string) {
+  const periodNum = parseInt(period);
+  const mockData = getJetpackMockData(period);
+  
+  return NextResponse.json({
+    success: true,
+    data: mockData,
+    source: 'Mock data (demo mode)',
+    period: `${period} days`,
+    lastUpdated: new Date().toISOString(),
+    note: 'Connect WordPress.com for live data'
+  });
 }
 
 /**

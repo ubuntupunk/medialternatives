@@ -25,8 +25,17 @@ const Avatar: React.FC<AvatarProps> = ({
   showTooltip = false,
   onClick
 }) => {
-  // Generate fallback avatar if no src provided
-  const avatarSrc = src || generateInitialsAvatar(name, { size });
+  // Validate and sanitize the src prop
+  let validSrc = src;
+  
+  // Check if src is malformed (object, contains curly braces, etc.)
+  if (src && (typeof src !== 'string' || src.includes('{') || src.includes('}'))) {
+    console.warn('Invalid avatar src detected, using fallback:', src);
+    validSrc = undefined;
+  }
+  
+  // Generate fallback avatar if no valid src provided
+  const avatarSrc = validSrc || generateInitialsAvatar(name, { size });
   const altText = alt || `${name}'s avatar`;
   
   const avatarElement = (

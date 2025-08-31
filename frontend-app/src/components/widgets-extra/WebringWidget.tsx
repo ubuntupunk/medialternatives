@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { WebringWidgetProps, webringThemes } from './types';
 import styles from './WebringWidget.module.css';
+import { useClientOnly } from '@/hooks/useClientOnly';
 
 const WebringWidget: React.FC<WebringWidgetProps> = ({
   title = 'Webring',
@@ -14,21 +15,23 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [isKeyboardNav, setIsKeyboardNav] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState<string>('default');
   const tooltipRef = useRef<HTMLDivElement>(null);
   const infoButtonRef = useRef<HTMLAnchorElement>(null);
+  const isClient = useClientOnly();
   
-  // Handle random theme selection
-  const getActualTheme = () => {
-    if (theme === 'random') {
+  // Handle random theme selection on client side only
+  useEffect(() => {
+    if (isClient && theme === 'random') {
       const availableThemes = ['default', 'minimal', 'ocean', 'sunset', 'dark', 'tokyo', 'dracula', 'disco'];
       const randomIndex = Math.floor(Math.random() * availableThemes.length);
-      return availableThemes[randomIndex];
+      setSelectedTheme(availableThemes[randomIndex]);
+    } else if (theme !== 'random') {
+      setSelectedTheme(theme);
     }
-    return theme;
-  };
+  }, [isClient, theme]);
   
-  const actualTheme = getActualTheme();
-  const currentTheme = webringThemes[actualTheme] || webringThemes.default;
+  const currentTheme = webringThemes[selectedTheme] || webringThemes.default;
   
   const getSizeClass = () => {
     switch (size) {
@@ -86,7 +89,7 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
 
   return (
     <aside 
-      className={`widget ${styles.webringWidget} ${getSizeClass()} ${styles[`theme-${actualTheme}`]} ${className} ${isKeyboardNav ? styles.keyboardNav : ''}`}
+      className={`widget ${styles.webringWidget} ${getSizeClass()} ${styles[`theme-${selectedTheme}`]} ${className} ${isKeyboardNav ? styles.keyboardNav : ''}`}
       style={themeStyles}
       role="complementary"
       aria-labelledby="webring-title"

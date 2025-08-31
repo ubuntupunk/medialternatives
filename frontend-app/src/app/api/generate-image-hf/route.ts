@@ -15,6 +15,18 @@ interface GenerateImageRequest {
 }
 
 export async function POST(request: NextRequest) {
+  // TEMPORARILY DISABLED: High CPU usage on Vercel Free Tier
+  // This route uses FLUX.1-dev AI model which consumes excessive CPU
+  return NextResponse.json(
+    {
+      error: 'Image generation temporarily disabled due to high CPU usage',
+      message: 'This feature has been disabled to prevent exceeding Vercel Free Tier limits',
+      suggestion: 'Consider upgrading to Vercel Pro or using a dedicated image generation service'
+    },
+    { status: 503 }
+  );
+
+  /* ORIGINAL CODE - COMMENTED OUT FOR CPU OPTIMIZATION
   try {
     const { title, content, settings }: GenerateImageRequest = await request.json();
 
@@ -27,11 +39,11 @@ export async function POST(request: NextRequest) {
 
     // Create a comprehensive prompt based on title and content
     const prompt = createImagePrompt(title, content, settings);
-    
+
     console.log('=== HUGGING FACE CLIENT IMAGE GENERATION ===');
     console.log('Generated Prompt:', prompt);
     console.log('Settings:', settings);
-    
+
     // Generate image using official HF client
     const imageUrl = await generateImageWithHfClient(prompt, settings);
 
@@ -46,13 +58,14 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error generating image:', error);
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to generate image',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );
   }
+  */
 }
 
 async function generateImageWithHfClient(prompt: string, settings: GenerationSettings): Promise<string> {

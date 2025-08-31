@@ -35,12 +35,40 @@ export function initiateWordPressOAuth(): void {
   
   // Build OAuth URL
   const authUrl = new URL('https://public-api.wordpress.com/oauth2/authorize');
-  authUrl.searchParams.set('client_id', '69634'); // WordPress.com public client ID
-  authUrl.searchParams.set('redirect_uri', window.location.origin + '/dashboard/analytics');
+  
+  // Use your registered WordPress.com OAuth app client ID
+  const clientId = process.env.NEXT_PUBLIC_WORDPRESS_COM_CLIENT_ID;
+  
+  if (!clientId) {
+    throw new Error('WordPress.com Client ID not configured. Add NEXT_PUBLIC_WORDPRESS_COM_CLIENT_ID to .env.local');
+  }
+  
+  authUrl.searchParams.set('client_id', clientId);
+  console.log('Using WordPress.com Client ID:', clientId);
+  
+  // Use the full analytics page URL as redirect URI
+  const redirectUri = window.location.origin + '/dashboard/analytics';
+  authUrl.searchParams.set('redirect_uri', redirectUri);
+  
   authUrl.searchParams.set('response_type', 'token');
-  authUrl.searchParams.set('scope', 'read');
+  
+  // WordPress.com OAuth scopes - using only documented scopes
+  // Based on https://developer.wordpress.com/docs/oauth2/#token-scope
+  // Note: WordPress.com only supports 'read', 'write', 'global', 'auth' scopes
+  // Stats access is included in 'read' scope for Jetpack sites
+  const scopes = [
+    'read',              // Basic read access (includes stats for Jetpack sites)
+    'global'             // Access to WordPress.com account information
+  ].join(',');
+  
+  authUrl.searchParams.set('scope', scopes);
   authUrl.searchParams.set('blog', 'medialternatives.wordpress.com');
   authUrl.searchParams.set('state', state);
+  
+  console.log('OAuth URL:', authUrl.toString());
+  console.log('Redirect URI:', redirectUri);
+  console.log('Requested Scopes:', scopes);
+  console.log('Target Blog:', 'medialternatives.wordpress.com');
   
   // Redirect to WordPress.com
   window.location.href = authUrl.toString();
@@ -206,16 +234,40 @@ export async function makeAuthenticatedRequest(endpoint: string, options: Reques
     throw new Error('No authentication token available');
   }
   
+  console.log('🔐 Making authenticated request to:', endpoint);
+  console.log('🎫 Using token:', token.accessToken.substring(0, 20) + '...');
+  
   const headers = {
     'Authorization': `Bearer ${token.accessToken}`,
     'Content-Type': 'application/json',
+    // Remove User-Agent header - causes CORS issues
     ...options.headers
   };
   
-  return fetch(endpoint, {
+  const response = await fetch(endpoint, {
     ...options,
     headers
   });
+  
+  console.log('📡 Response status:', response.status, response.statusText);
+  
+  // Check if response is JSON
+  const contentType = response.headers.get('content-type');
+  console.log('📄 Content-Type:', contentType);
+  
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('❌ API Error Response:', errorText);
+    throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+  }
+  
+  if (!contentType || !contentType.includes('application/json')) {
+    const responseText = await response.text();
+    console.error('❌ Non-JSON response received:', responseText.substring(0, 500));
+    throw new Error('API returned non-JSON response');
+  }
+  
+  return response;
 }
 
 /**

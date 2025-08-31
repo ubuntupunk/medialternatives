@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import AuthStatus from '@/components/UI/AuthStatus';
+import { useWordPressAuth } from '@/contexts/WordPressAuthContext';
 
 // Dashboard sections
 const dashboardSections = [
@@ -99,6 +100,7 @@ const dashboardSections = [
 
 export default function DashboardPage() {
   const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated: wpAuthenticated, login: wpLogin } = useWordPressAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   // Update time every minute
@@ -134,7 +136,25 @@ export default function DashboardPage() {
                 })}
               </p>
             </div>
-            <AuthStatus showAvatar={true} />
+            <div className="d-flex align-items-center gap-3">
+              <AuthStatus showAvatar={true} />
+              {!wpAuthenticated && (
+                <button
+                  onClick={wpLogin}
+                  className="btn btn-outline-primary btn-sm"
+                  title="Connect to WordPress.com for enhanced features"
+                >
+                  <i className="bi bi-wordpress me-1"></i>
+                  Connect WordPress.com
+                </button>
+              )}
+              {wpAuthenticated && (
+                <span className="badge bg-success">
+                  <i className="bi bi-check-circle me-1"></i>
+                  WordPress.com Connected
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import "./globals.css";
 import { SITE_CONFIG } from "@/lib/constants";
 import Layout from "@/components/Layout/Layout"; // Import the custom Layout component
 import StructuredData from "@/components/SEO/StructuredData";
+import { WordPressAuthProvider } from "@/contexts/WordPressAuthContext";
 
 // Configure Google Fonts
 const copse = Copse({
@@ -191,9 +192,11 @@ export default function RootLayout({
         <StructuredData type="website" />
       </head>
       <body className={`${copse.variable} ${quattrocento.variable} ${revalia.variable} ${quicksand.variable} ${roboto.variable}`}>
-        <Layout>
-          {children}
-        </Layout>
+        <WordPressAuthProvider>
+          <Layout>
+            {children}
+          </Layout>
+        </WordPressAuthProvider>
       </body>
     </html>
   );

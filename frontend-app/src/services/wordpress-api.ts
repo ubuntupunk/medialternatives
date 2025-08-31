@@ -384,6 +384,25 @@ class WordPressAPIService {
       );
     } catch (error) {
       console.error('Error fetching user:', error);
+      
+      // Return fallback author data for known users
+      if (id === 1) {
+        return {
+          id: 1,
+          name: 'David Robert Lewis',
+          slug: 'david-robert-lewis',
+          description: 'Media activist, investigative journalist, and author focused on media alternatives and press freedom in South Africa.',
+          avatar_urls: {
+            '24': '/images/avatar.png',
+            '48': '/images/avatar.png',
+            '96': '/images/avatar.png'
+          },
+          avatar_url: '/images/avatar.png',
+          link: '/author/david-robert-lewis',
+          url: 'https://medialternatives.com'
+        };
+      }
+      
       return null;
     }
   }

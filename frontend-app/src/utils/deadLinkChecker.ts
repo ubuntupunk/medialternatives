@@ -315,69 +315,81 @@ export async function checkMultiplePostsLinks(
   }
   
   let processedLinks = 0;
-  
-  for (const post of posts) {
-    try {
-      const urls = extractUrlsFromContent(post.content.rendered);
-      
-      console.log(`Processing post: ${post.title.rendered} (${urls.length} links)`);
-      
-      for (const { url, context } of urls) {
-        try {
-          // Update progress
-          if (progressCallback) {
-            progressCallback({
-              current: processedLinks,
-              total: totalLinks,
-              percentage: Math.round((processedLinks / totalLinks) * 100),
-              currentItem: url.length > 50 ? `${url.substring(0, 50)}...` : url
-            });
+
+  // Limit concurrency to prevent excessive CPU usage
+  const MAX_CONCURRENT_CHECKS = 3;
+  const DELAY_BETWEEN_REQUESTS = 2000; // Increased from 500ms to reduce CPU load
+
+  // Process posts with concurrency control
+  for (let i = 0; i < posts.length; i += MAX_CONCURRENT_CHECKS) {
+    const batch = posts.slice(i, i + MAX_CONCURRENT_CHECKS);
+    const batchPromises = batch.map(async (post) => {
+      try {
+        const urls = extractUrlsFromContent(post.content.rendered);
+
+        console.log(`Processing post: ${post.title.rendered} (${urls.length} links)`);
+
+        for (const { url, context } of urls) {
+          try {
+            // Update progress
+            if (progressCallback) {
+              progressCallback({
+                current: processedLinks,
+                total: totalLinks,
+                percentage: Math.round((processedLinks / totalLinks) * 100),
+                currentItem: url.length > 50 ? `${url.substring(0, 50)}...` : url
+              });
+            }
+
+            const result = await checkUrl(url, 8000); // Reduced timeout from 10s to 8s
+            checkedLinks++;
+            processedLinks++;
+
+            if (result.status === null || result.status >= 400) {
+              const archiveUrl = generateArchiveUrl(url);
+              const suggestions = generateSuggestions(url);
+              // Skip archive snapshots to reduce API calls and CPU usage
+              // const snapshots = await searchArchiveSnapshots(url);
+
+              // Count error types
+              if (result.retryable) retryableErrors++;
+              if (result.status === 403) forbiddenErrors++;
+              if (result.error?.includes('timeout')) timeoutErrors++;
+
+              allDeadLinks.push({
+                url,
+                status: result.status,
+                error: result.error,
+                context,
+                postId: post.id,
+                postTitle: post.title.rendered,
+                postSlug: post.slug,
+                archiveUrl,
+                suggestions: suggestions, // Removed snapshots to reduce CPU
+                retryable: result.retryable,
+                checkedAt: new Date().toISOString()
+              });
+            } else {
+              workingLinks++;
+            }
+
+            // Rate limiting - increased delay to reduce CPU load
+            await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_REQUESTS));
+
+          } catch (error) {
+            console.error(`Error checking URL ${url}:`, error);
+            skippedLinks++;
+            processedLinks++;
           }
-          
-          const result = await checkUrl(url);
-          checkedLinks++;
-          processedLinks++;
-          
-          if (result.status === null || result.status >= 400) {
-            const archiveUrl = generateArchiveUrl(url);
-            const suggestions = generateSuggestions(url);
-            const snapshots = await searchArchiveSnapshots(url);
-            
-            // Count error types
-            if (result.retryable) retryableErrors++;
-            if (result.status === 403) forbiddenErrors++;
-            if (result.error?.includes('timeout')) timeoutErrors++;
-            
-            allDeadLinks.push({
-              url,
-              status: result.status,
-              error: result.error,
-              context,
-              postId: post.id,
-              postTitle: post.title.rendered,
-              postSlug: post.slug,
-              archiveUrl,
-              suggestions: snapshots.length > 0 ? [`Archive snapshots found: ${snapshots[0]}`] : suggestions,
-              retryable: result.retryable,
-              checkedAt: new Date().toISOString()
-            });
-          } else {
-            workingLinks++;
-          }
-          
-          // Rate limiting
-          await new Promise(resolve => setTimeout(resolve, 500));
-          
-        } catch (error) {
-          console.error(`Error checking URL ${url}:`, error);
-          skippedLinks++;
-          processedLinks++;
         }
+
+      } catch (error) {
+        console.error(`Error processing post ${post.id}:`, error);
       }
-      
-    } catch (error) {
-      console.error(`Error processing post ${post.id}:`, error);
-    }
+    });
+
+    // Wait for current batch to complete before starting next batch
+    await Promise.all(batchPromises);
   }
   
   // Final progress update

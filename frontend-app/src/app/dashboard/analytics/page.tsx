@@ -3,14 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { GOOGLE_ANALYTICS_ID } from '@/lib/constants';
-import { 
-  initiateWordPressOAuth, 
-  handleOAuthCallback, 
-  getAuthStatus, 
-  clearStoredToken,
-  makeAuthenticatedRequest,
-  WORDPRESS_API_ENDPOINTS 
-} from '@/utils/wordpressImplicitAuth';
+import { useWordPressAuth } from '@/contexts/WordPressAuthContext';
+import { useAuthenticatedAPI } from '@/hooks/useAuthenticatedAPI';
 import { useClientOnly } from '@/hooks/useClientOnly';
 
 interface AnalyticsData {
@@ -50,8 +44,12 @@ export default function AnalyticsPage() {
   const [jetpackLoading, setJetpackLoading] = useState(false);
   const [jetpackAuthStatus, setJetpackAuthStatus] = useState<any>(null);
   const [jetpackAuthLoading, setJetpackAuthLoading] = useState(false);
-  const [wpAuthStatus, setWpAuthStatus] = useState<any>({ isAuthenticated: false }); // Default state
+  const [wpAuthStatus, setWpAuthStatus] = useState<any>(null);
   const isClient = useClientOnly();
+  
+  // Use centralized WordPress authentication
+  const { isAuthenticated, token, login, logout, loading: authLoading } = useWordPressAuth();
+  const { getStats, getTopPosts, getReferrers, canPerform } = useAuthenticatedAPI();
   
   // Fetch analytics data from API
   const fetchAnalyticsData = async (period: string = selectedPeriod) => {
@@ -152,25 +150,15 @@ const fetchJetpackAuthStatus = async () => {
   }
 };
 
-// Check for WordPress.com OAuth callback on page load (client-side only)
+// Auto-fetch Jetpack data when authenticated
 useEffect(() => {
-  if (!isClient) return;
+  if (!isClient || authLoading) return;
   
-  // Check if we're returning from OAuth
-  const authResult = handleOAuthCallback();
-  if (authResult.isAuthenticated) {
-    console.log('WordPress.com OAuth successful!', authResult.token);
-    setWpAuthStatus(authResult);
-    // Automatically fetch Jetpack data with new token
-    fetchJetpackDataWithAuth(authResult.token);
-  } else if (authResult.error) {
-    console.error('OAuth error:', authResult.error);
+  if (isAuthenticated && activeTab === 'jetpack') {
+    console.log('🎉 WordPress.com authenticated - fetching Jetpack data');
+    fetchJetpackDataWithCentralizedAuth();
   }
-  
-  // Check existing auth status
-  const currentAuth = getAuthStatus();
-  setWpAuthStatus(currentAuth);
-}, [isClient]);
+}, [isClient, isAuthenticated, authLoading, activeTab]);
 
 // Initiate WordPress.com implicit OAuth flow (Grasshopper-style)
 const initiateWordPressImplicitOAuth = () => {
@@ -185,61 +173,64 @@ const initiateWordPressImplicitOAuth = () => {
 
 // Fetch Jetpack data with authentication token
 const fetchJetpackDataWithAuth = async (token?: any) => {
+  console.log('🚀 fetchJetpackDataWithAuth called with token:', token);
   setJetpackLoading(true);
   try {
     const authToken = token || wpAuthStatus?.token;
+    console.log('🔑 Using auth token:', authToken);
+    
     if (!authToken) {
       throw new Error('No authentication token available');
     }
 
+    if (!authToken.siteId) {
+      throw new Error('No site ID in token');
+    }
+
     const periodDays = selectedPeriod === '7d' ? '7' : selectedPeriod === '30d' ? '30' : selectedPeriod === '90d' ? '90' : '365';
+    console.log('📅 Fetching data for period:', periodDays, 'days');
     
-    // Use WordPress.com API directly with authentication
-    const [summaryResponse, topPostsResponse, referrersResponse] = await Promise.all([
-      makeAuthenticatedRequest(WORDPRESS_API_ENDPOINTS.SITE_STATS_SUMMARY(authToken.siteId, periodDays)),
-      makeAuthenticatedRequest(WORDPRESS_API_ENDPOINTS.SITE_STATS_TOP_POSTS(authToken.siteId, periodDays)),
-      makeAuthenticatedRequest(WORDPRESS_API_ENDPOINTS.SITE_STATS_REFERRERS(authToken.siteId, periodDays))
-    ]);
+    // Use our backend API to avoid CORS issues
+    console.log('📡 Making API request via our backend...');
+    const response = await fetch(`/api/jetpack-analytics?period=${periodDays}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        token: authToken,
+        action: 'fetch_stats'
+      })
+    });
 
-    if (summaryResponse.ok) {
-      const summaryData = await summaryResponse.json();
-      const topPostsData = topPostsResponse.ok ? await topPostsResponse.json() : null;
-      const referrersData = referrersResponse.ok ? await referrersResponse.json() : null;
+    console.log('📊 Backend API Response:', { ok: response.ok, status: response.status });
 
-      // Transform real WordPress.com data
-      const realJetpackData = {
-        views: summaryData.views || 0,
-        visitors: summaryData.visitors || 0,
-        visits: summaryData.visits || 0,
-        topPosts: topPostsData?.days?.[0]?.postviews?.map((post: any) => ({
-          title: post.title,
-          url: post.href,
-          views: post.views,
-          percentage: parseFloat(((post.views / summaryData.views) * 100).toFixed(1))
-        })) || [],
-        referrers: referrersData?.days?.[0]?.groups?.map((ref: any) => ({
-          name: ref.name,
-          views: ref.views,
-          percentage: parseFloat(((ref.views / summaryData.views) * 100).toFixed(1))
-        })) || [],
-        searchTerms: [], // Would need additional API call
-        summary: {
-          period: `${periodDays} days`,
-          views: summaryData.views || 0,
-          visitors: summaryData.visitors || 0,
-          likes: summaryData.likes || 0,
-          comments: summaryData.comments || 0
-        }
-      };
-
-      setJetpackData(realJetpackData);
-      console.log('Real WordPress.com data loaded:', realJetpackData);
+    if (response.ok) {
+      const result = await response.json();
+      console.log('📈 Backend response data:', result);
+      
+      if (result.success && result.data) {
+        console.log('✅ Setting Jetpack data from backend:', result.data);
+        setJetpackData(result.data);
+      } else {
+        throw new Error(result.error || 'Backend API returned no data');
+      }
     } else {
-      throw new Error('Failed to fetch WordPress.com stats');
+      const errorText = await response.text();
+      console.error('❌ Backend API failed:', response.status, errorText);
+      throw new Error(`Backend API failed: ${response.status}`);
     }
   } catch (error) {
-    console.error('Error fetching authenticated Jetpack data:', error);
+    console.error('❌ Error fetching authenticated Jetpack data:', error);
+    
+    // Check if we have response details
+    if (error instanceof Error && error.message.includes('JSON.parse')) {
+      console.error('🔍 API returned non-JSON response (likely HTML error page)');
+      console.error('This usually means authentication failed or wrong endpoint');
+    }
+    
     // Fall back to mock data
+    console.log('🔄 Falling back to demo data...');
     fetchJetpackData();
   } finally {
     setJetpackLoading(false);
@@ -279,18 +270,32 @@ const handlePeriodChange = (period: string) => {
   }
 };
 
+// Initialize WordPress auth status on client side
+useEffect(() => {
+  if (isClient) {
+    import('@/utils/wordpressImplicitAuth').then(({ getAuthStatus }) => {
+      const currentAuth = getAuthStatus();
+      setWpAuthStatus(currentAuth);
+    });
+  }
+}, [isClient]);
+
 const handleTabChange = (tab: 'google' | 'jetpack') => {
   setActiveTab(tab);
   if (tab === 'jetpack' && isClient) {
-    // Check WordPress.com auth status (client-side only)
-    const currentAuth = getAuthStatus();
-    setWpAuthStatus(currentAuth);
-    
-    if (currentAuth.isAuthenticated && !jetpackData) {
-      fetchJetpackDataWithAuth(currentAuth.token);
-    } else if (!currentAuth.isAuthenticated && !jetpackData) {
-      fetchJetpackData(); // Load demo data
-    }
+    // Import getAuthStatus dynamically to avoid SSR issues
+    import('@/utils/wordpressImplicitAuth').then(({ getAuthStatus }) => {
+      const currentAuth = getAuthStatus();
+      setWpAuthStatus(currentAuth);
+      
+      if (currentAuth.isAuthenticated) {
+        // Always fetch live data when authenticated
+        fetchJetpackDataWithAuth(currentAuth.token);
+      } else {
+        // Clear any existing data when not authenticated
+        setJetpackData(null);
+      }
+    });
   }
 };
 
@@ -695,6 +700,62 @@ if (!analyticsData) {
 
         {/* Jetpack Analytics Tab */}
         <div className={`tab-pane fade ${activeTab === 'jetpack' ? 'show active' : ''}`}>
+          {/* WordPress.com Connection Status */}
+          {isClient && wpAuthStatus && (
+            <div className="row mb-4">
+              <div className="col-12">
+                <div className={`alert ${wpAuthStatus.isAuthenticated ? 'alert-success' : 'alert-info'} mb-0`}>
+                  <div className="d-flex align-items-center justify-content-between">
+                    <div className="d-flex align-items-center">
+                      <i className={`bi ${wpAuthStatus.isAuthenticated ? 'bi-check-circle' : 'bi-info-circle'} me-2`}></i>
+                      <div>
+                        <strong>
+                          {wpAuthStatus.isAuthenticated ? 'WordPress.com Connected' : 'Connect to WordPress.com'}
+                        </strong>
+                        {wpAuthStatus.isAuthenticated && wpAuthStatus.token && (
+                          <div className="small text-muted">
+                            Site ID: {wpAuthStatus.token.siteId} | 
+                            Expires: {new Date(wpAuthStatus.token.expiresAt).toLocaleDateString()}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div>
+                      {wpAuthStatus.isAuthenticated ? (
+                        <div className="btn-group">
+                          <button 
+                            className="btn btn-sm btn-success"
+                            onClick={() => fetchJetpackDataWithAuth()}
+                            disabled={jetpackLoading}
+                          >
+                            <i className="bi bi-arrow-clockwise me-1"></i>
+                            {jetpackLoading ? 'Loading...' : 'Refresh'}
+                          </button>
+                          <button 
+                            className="btn btn-sm btn-outline-secondary"
+                            onClick={disconnectWordPress}
+                          >
+                            <i className="bi bi-x-circle me-1"></i>
+                            Disconnect
+                          </button>
+                        </div>
+                      ) : (
+                        <button 
+                          className="btn btn-sm btn-primary"
+                          onClick={initiateWordPressImplicitOAuth}
+                          disabled={jetpackAuthLoading}
+                        >
+                          <i className="bi bi-wordpress me-1"></i>
+                          {jetpackAuthLoading ? 'Connecting...' : 'Connect'}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {jetpackLoading ? (
             <div className="text-center py-5">
               <div className="spinner-border text-primary mb-3" role="status">
