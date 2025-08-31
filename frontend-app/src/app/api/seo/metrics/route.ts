@@ -1,5 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+/**
+ * SEO metrics data structure
+ * @interface SEOMetrics
+ * @property {number} searchConsoleClicks - Total clicks from Google Search Console
+ * @property {number} searchConsoleImpressions - Total impressions from Google Search Console
+ * @property {number} averagePosition - Average search position
+ * @property {number} indexedPages - Number of indexed pages
+ * @property {{facebook: number, twitter: number, linkedin: number}} socialShares - Social media shares by platform
+ * @property {{topKeywords: Array<{keyword: string, position: number, clicks: number, impressions: number}>}} keywords - Top performing keywords
+ * @property {{totalBacklinks: number, referringDomains: number, newBacklinks: number}} backlinks - Backlink statistics
+ */
 interface SEOMetrics {
   searchConsoleClicks: number;
   searchConsoleImpressions: number;
@@ -25,6 +36,15 @@ interface SEOMetrics {
   };
 }
 
+/**
+ * GET /api/seo/metrics - Fetch SEO performance metrics
+ *
+ * Returns SEO metrics from Google Search Console and social media data.
+ * Falls back to static data if API credentials are not configured.
+ *
+ * @param {NextRequest} request - Next.js request with optional period parameter
+ * @returns {Promise<NextResponse>} SEO metrics data or error response
+ */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -78,6 +98,8 @@ export async function GET(request: NextRequest) {
 /**
  * Get static SEO data based on period
  * Provides consistent, realistic data for development and demo
+ * @param {string} period - Time period (7d, 30d, 90d)
+ * @returns {SEOMetrics} Static SEO metrics for the specified period
  */
 function getStaticSEOData(period: string): SEOMetrics {
   const baseData = {
