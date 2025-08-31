@@ -4,8 +4,8 @@ import { SITE_CONFIG } from '@/lib/constants';
 import { decodeHtmlEntities } from '@/utils/helpers';
 
 /**
- * Generate RSS feed for the site
- * Usage: GET /api/feed or /feed.xml
+ * GET /api/feed - Generate RSS feed for the site
+ * @returns {Promise<NextResponse>} RSS XML feed response
  */
 export async function GET() {
   try {
