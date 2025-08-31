@@ -50,15 +50,19 @@ export async function GET(request: NextRequest) {
   }
 }
 
+// Simple in-memory cache for WordPress.com API responses
+const analyticsCache = new Map<string, { data: any; timestamp: number }>();
+const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { token, action, period } = body;
-    
+
     if (action === 'fetch_stats' && token) {
       return await fetchAuthenticatedStats(token, period || '30');
     }
-    
+
     return NextResponse.json(
       { success: false, error: 'Invalid request' },
       { status: 400 }
@@ -66,8 +70,8 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Jetpack Analytics POST error:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to process request',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
@@ -79,18 +83,48 @@ export async function POST(request: NextRequest) {
 async function fetchAuthenticatedStats(token: any, period: string) {
   try {
     console.log('🔐 Backend: Fetching authenticated stats for site:', token.siteId);
-    
+
+    // Check cache first
+    const cacheKey = `${token.siteId}_${period}`;
+    const cached = analyticsCache.get(cacheKey);
+    if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
+      console.log('📊 Using cached analytics data');
+      return NextResponse.json({
+        success: true,
+        data: cached.data,
+        source: 'WordPress.com API (cached)',
+        period: `${period} days`,
+        lastUpdated: new Date(cached.timestamp).toISOString(),
+        cached: true
+      });
+    }
+
     const headers = {
       'Authorization': `Bearer ${token.accessToken}`,
       'Content-Type': 'application/json'
     };
-    
-    // Make requests from backend (no CORS issues)
-    const [summaryResponse, topPostsResponse, referrersResponse] = await Promise.all([
-      fetch(`https://public-api.wordpress.com/rest/v1.1/sites/${token.siteId}/stats/summary?period=${period}`, { headers }),
-      fetch(`https://public-api.wordpress.com/rest/v1.1/sites/${token.siteId}/stats/top-posts?period=${period}`, { headers }),
-      fetch(`https://public-api.wordpress.com/rest/v1.1/sites/${token.siteId}/stats/referrers?period=${period}`, { headers })
-    ]);
+
+    // Make requests from backend (no CORS issues) - with timeout to prevent hanging
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+    try {
+      const [summaryResponse, topPostsResponse, referrersResponse] = await Promise.all([
+        fetch(`https://public-api.wordpress.com/rest/v1.1/sites/${token.siteId}/stats/summary?period=${period}`, {
+          headers,
+          signal: controller.signal
+        }),
+        fetch(`https://public-api.wordpress.com/rest/v1.1/sites/${token.siteId}/stats/top-posts?period=${period}`, {
+          headers,
+          signal: controller.signal
+        }),
+        fetch(`https://public-api.wordpress.com/rest/v1.1/sites/${token.siteId}/stats/referrers?period=${period}`, {
+          headers,
+          signal: controller.signal
+        })
+      ]);
+
+      clearTimeout(timeoutId);
 
     console.log('📊 WordPress.com API responses:', {
       summary: { ok: summaryResponse.ok, status: summaryResponse.status },
@@ -120,45 +154,60 @@ async function fetchAuthenticatedStats(token: any, period: string) {
       throw new Error(`WordPress.com API error: ${summaryResponse.status}`);
     }
 
-    const summaryData = await summaryResponse.json();
-    const topPostsData = topPostsResponse.ok ? await topPostsResponse.json() : null;
-    const referrersData = referrersResponse.ok ? await referrersResponse.json() : null;
+      const summaryData = await summaryResponse.json();
+      const topPostsData = topPostsResponse.ok ? await topPostsResponse.json() : null;
+      const referrersData = referrersResponse.ok ? await referrersResponse.json() : null;
 
-    console.log('📈 WordPress.com data received:', { summaryData, topPostsData, referrersData });
+      console.log('📈 WordPress.com data received:', { summaryData, topPostsData, referrersData });
 
-    // Transform real WordPress.com data
-    const realJetpackData = {
-      views: summaryData.views || 0,
-      visitors: summaryData.visitors || 0,
-      visits: summaryData.visits || 0,
-      topPosts: topPostsData?.days?.[0]?.postviews?.map((post: any) => ({
-        title: post.title,
-        url: post.href,
-        views: post.views,
-        percentage: parseFloat(((post.views / summaryData.views) * 100).toFixed(1))
-      })) || [],
-      referrers: referrersData?.days?.[0]?.groups?.map((ref: any) => ({
-        name: ref.name,
-        views: ref.views,
-        percentage: parseFloat(((ref.views / summaryData.views) * 100).toFixed(1))
-      })) || [],
-      searchTerms: [], // Would need additional API call
-      summary: {
-        period: `${period} days`,
+      // Transform real WordPress.com data
+      const realJetpackData = {
         views: summaryData.views || 0,
         visitors: summaryData.visitors || 0,
-        likes: summaryData.likes || 0,
-        comments: summaryData.comments || 0
-      }
-    };
+        visits: summaryData.visits || 0,
+        topPosts: topPostsData?.days?.[0]?.postviews?.map((post: any) => ({
+          title: post.title,
+          url: post.href,
+          views: post.views,
+          percentage: parseFloat(((post.views / summaryData.views) * 100).toFixed(1))
+        })) || [],
+        referrers: referrersData?.days?.[0]?.groups?.map((ref: any) => ({
+          name: ref.name,
+          views: ref.views,
+          percentage: parseFloat(((ref.views / summaryData.views) * 100).toFixed(1))
+        })) || [],
+        searchTerms: [], // Would need additional API call
+        summary: {
+          period: `${period} days`,
+          views: summaryData.views || 0,
+          visitors: summaryData.visitors || 0,
+          likes: summaryData.likes || 0,
+          comments: summaryData.comments || 0
+        }
+      };
 
-    return NextResponse.json({
-      success: true,
-      data: realJetpackData,
-      source: 'WordPress.com API (authenticated)',
-      period: `${period} days`,
-      lastUpdated: new Date().toISOString()
-    });
+      // Cache the result
+      analyticsCache.set(cacheKey, {
+        data: realJetpackData,
+        timestamp: Date.now()
+      });
+
+      return NextResponse.json({
+        success: true,
+        data: realJetpackData,
+        source: 'WordPress.com API (authenticated)',
+        period: `${period} days`,
+        lastUpdated: new Date().toISOString()
+      });
+
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      if (fetchError instanceof Error && fetchError.name === 'AbortError') {
+        console.log('⏰ WordPress.com API request timed out');
+        return getMockDataResponse(period);
+      }
+      throw fetchError;
+    }
 
   } catch (error) {
     console.error('❌ Backend authentication error:', error);
