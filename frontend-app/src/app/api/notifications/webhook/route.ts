@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * API endpoint to send webhook notifications for dead links
+ * POST /api/notifications/webhook - Send webhook notification for dead links
+ *
+ * Sends structured JSON payload to configured webhook URL for dead link alerts.
+ * Includes timeout handling and proper error responses.
+ *
+ * @param {NextRequest} request - Next.js request with webhook URL and notification data
+ * @returns {Promise<NextResponse>} Webhook sending result or error response
  */
 export async function POST(request: NextRequest) {
   try {
@@ -68,6 +74,9 @@ export async function POST(request: NextRequest) {
 
 /**
  * Send webhook notification
+ * @param {string} webhookUrl - Target webhook endpoint URL
+ * @param {any} payload - JSON payload to send
+ * @returns {Promise<boolean>} True if webhook sent successfully (2xx response)
  */
 async function sendWebhook(webhookUrl: string, payload: any): Promise<boolean> {
   try {
