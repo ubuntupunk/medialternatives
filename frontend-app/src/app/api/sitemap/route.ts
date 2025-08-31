@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import { wordpressApi } from '@/services/wordpress-api';
 
 /**
- * Generate XML sitemap with proper URLs
- * Includes both legacy and new URL formats for SEO
+ * GET /api/sitemap - Generate XML sitemap for SEO
+ * @returns {Promise<NextResponse>} XML sitemap response
  */
 export async function GET() {
   try {
