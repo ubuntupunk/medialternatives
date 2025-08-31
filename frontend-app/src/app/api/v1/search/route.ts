@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateQueryParams, createAPIResponse, sanitizeInput, schemas } from '@/lib/validation';
 import { createRateLimit, rateLimitConfigs } from '@/lib/rate-limit';
-import { withCache, searchCache } from '@/lib/cache';
 
 const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL || 'https://public-api.wordpress.com/wp/v2/sites/medialternatives.wordpress.com';
 
@@ -69,7 +68,7 @@ const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL || 'https://public-api.w
  *             schema:
  *               $ref: '#/components/schemas/APIResponse'
  */
-async function searchHandler(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     // Apply rate limiting
     const rateLimit = createRateLimit(rateLimitConfigs.search);
@@ -141,12 +140,3 @@ async function searchHandler(request: NextRequest) {
     return NextResponse.json(errorResponse, { status: 500 });
   }
 }
-
-// Export with caching middleware
-export const GET = withCache(searchHandler, searchCache, {
-  ttl: 300, // 5 minutes cache for search results
-  shouldCache: (request, response) => {
-    // Only cache successful responses
-    return response.status === 200;
-  }
-});
