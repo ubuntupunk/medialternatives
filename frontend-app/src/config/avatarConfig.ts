@@ -3,6 +3,15 @@
  * Configure different storage options for different environments
  */
 
+/**
+ * Configuration interface for avatar storage
+ * @interface AvatarConfig
+ * @property {'localStorage' | 'vercel' | 'cloudinary' | 'supabase' | 'filesystem'} storage - Storage backend to use
+ * @property {number} maxFileSize - Maximum file size in bytes
+ * @property {string[]} allowedTypes - Array of allowed MIME types
+ * @property {number[]} sizes - Array of avatar sizes to generate
+ * @property {number} quality - Image quality (0-1 for compression)
+ */
 export interface AvatarConfig {
   storage: 'localStorage' | 'vercel' | 'cloudinary' | 'supabase' | 'filesystem';
   maxFileSize: number; // in bytes
@@ -11,7 +20,10 @@ export interface AvatarConfig {
   quality: number; // 0-1 for compression
 }
 
-// Default configuration
+/**
+ * Default avatar configuration for development/demo environments
+ * @constant {AvatarConfig} defaultAvatarConfig
+ */
 export const defaultAvatarConfig: AvatarConfig = {
   storage: 'localStorage', // Default to localStorage for demo
   maxFileSize: 5 * 1024 * 1024, // 5MB
@@ -20,7 +32,10 @@ export const defaultAvatarConfig: AvatarConfig = {
   quality: 0.9, // High quality
 };
 
-// Environment-specific configurations
+/**
+ * Environment-specific avatar configurations
+ * @constant {Record<string, AvatarConfig>} avatarConfigs
+ */
 export const avatarConfigs: Record<string, AvatarConfig> = {
   development: {
     ...defaultAvatarConfig,
@@ -39,7 +54,10 @@ export const avatarConfigs: Record<string, AvatarConfig> = {
   },
 };
 
-// Get configuration based on environment
+/**
+ * Get avatar configuration based on current environment
+ * @returns {AvatarConfig} Avatar configuration for current environment
+ */
 export function getAvatarConfig(): AvatarConfig {
   const env = process.env.NODE_ENV || 'development';
   const storageOverride = process.env.NEXT_PUBLIC_AVATAR_STORAGE;
@@ -54,7 +72,11 @@ export function getAvatarConfig(): AvatarConfig {
   return config;
 }
 
-// Storage-specific environment variables validation
+/**
+ * Validate that required environment variables are set for the chosen storage
+ * @param {string} storage - Storage type to validate
+ * @returns {{valid: boolean, missing: string[]}} Validation result with missing variables
+ */
 export function validateStorageConfig(storage: string): { valid: boolean; missing: string[] } {
   const missing: string[] = [];
   
