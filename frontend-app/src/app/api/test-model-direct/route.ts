@@ -1,12 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { HfInference } from '@huggingface/inference';
 
+/**
+ * Test model request interface
+ * @interface TestModelRequest
+ * @property {string} model - Hugging Face model identifier
+ * @property {string} prompt - Input prompt for generation
+ * @property {'image' | 'text'} type - Type of generation to perform
+ */
 interface TestModelRequest {
   model: string;
   prompt: string;
   type: 'image' | 'text';
 }
 
+/**
+ * POST /api/test-model-direct - Test specific Hugging Face model
+ *
+ * Tests a specific Hugging Face model for text or image generation.
+ * Validates model access and returns generated content.
+ *
+ * @param {NextRequest} request - Next.js request with model, prompt, and type
+ * @returns {Promise<NextResponse>} Model test results or error response
+ */
 export async function POST(request: NextRequest) {
   try {
     const { model, prompt, type }: TestModelRequest = await request.json();
