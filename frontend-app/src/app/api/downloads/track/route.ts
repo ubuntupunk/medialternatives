@@ -1,5 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+/**
+ * Download tracking data interface
+ * @interface DownloadTrackingData
+ * @property {string} filename - Name of the downloaded file
+ * @property {string} fileid - Unique identifier for the file
+ * @property {string} category - Category of the download
+ * @property {string} timestamp - ISO timestamp of the download
+ */
 interface DownloadTrackingData {
   filename: string;
   fileid: string;
@@ -7,14 +15,15 @@ interface DownloadTrackingData {
   timestamp: string;
 }
 
-// Simple in-memory storage for download tracking
-// In production, you'd want to use a database
-const downloadStats = new Map<string, {
-  count: number;
-  lastDownload: string;
-  firstDownload: string;
-}>();
-
+/**
+ * POST /api/downloads/track - Track file download
+ *
+ * Records download events for analytics and monitoring.
+ * Updates download statistics for each file.
+ *
+ * @param {NextRequest} request - Next.js request with download tracking data
+ * @returns {Promise<NextResponse>} Tracking confirmation or error response
+ */
 export async function POST(request: NextRequest) {
   try {
     const data: DownloadTrackingData = await request.json();
@@ -62,6 +71,14 @@ export async function POST(request: NextRequest) {
   }
 }
 
+/**
+ * GET /api/downloads/track - Get download statistics
+ *
+ * Returns aggregated download statistics for all tracked files.
+ * Includes total downloads, file counts, and individual file stats.
+ *
+ * @returns {Promise<NextResponse>} Download statistics or error response
+ */
 export async function GET() {
   try {
     // Return download statistics
