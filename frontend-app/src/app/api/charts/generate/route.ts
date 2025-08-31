@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Simple chart generation using Canvas API (fallback when MCP is unavailable)
+/**
+ * POST /api/charts/generate - Generate charts using SVG fallback
+ *
+ * Creates simple bar and pie charts as SVG when MCP chart service is unavailable.
+ * Supports Chart.js compatible data format with automatic fallback rendering.
+ *
+ * @param {NextRequest} request - Next.js request with chart type and data
+ * @returns {Promise<NextResponse>} SVG chart data URL or error response
+ */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -40,6 +48,12 @@ export async function POST(request: NextRequest) {
   }
 }
 
+/**
+ * Generate SVG chart from data
+ * @param {string} type - Chart type (bar, pie, etc.)
+ * @param {any} data - Chart data in Chart.js format
+ * @returns {string} SVG string representation of the chart
+ */
 function generateSVGChart(type: string, data: any): string {
   const { labels = [], datasets = [] } = data;
   const width = 600;
@@ -65,6 +79,14 @@ function generateSVGChart(type: string, data: any): string {
   }
 }
 
+/**
+ * Generate simple bar chart SVG
+ * @param {string[]} labels - X-axis labels
+ * @param {number[]} data - Y-axis data values
+ * @param {number} width - Chart width in pixels
+ * @param {number} height - Chart height in pixels
+ * @returns {string} SVG bar chart
+ */
 function generateSimpleBarChart(labels: string[], data: number[], width: number, height: number): string {
   const margin = 60;
   const chartWidth = width - 2 * margin;
@@ -95,6 +117,14 @@ function generateSimpleBarChart(labels: string[], data: number[], width: number,
   `;
 }
 
+/**
+ * Generate simple pie chart SVG
+ * @param {string[]} labels - Slice labels
+ * @param {number[]} data - Slice data values
+ * @param {number} width - Chart width in pixels
+ * @param {number} height - Chart height in pixels
+ * @returns {string} SVG pie chart
+ */
 function generateSimplePieChart(labels: string[], data: number[], width: number, height: number): string {
   const centerX = width / 2;
   const centerY = height / 2;
