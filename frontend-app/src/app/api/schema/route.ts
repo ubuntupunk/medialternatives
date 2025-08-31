@@ -2,8 +2,12 @@ import { NextResponse } from 'next/server';
 import { SITE_CONFIG } from '@/lib/constants';
 
 /**
- * Generate comprehensive Schema.org structured data
- * Usage: GET /api/schema
+ * GET /api/schema - Generate Schema.org structured data
+ *
+ * Returns comprehensive Schema.org JSON-LD structured data for SEO.
+ * Includes organization, website, webpage, and blog schema definitions.
+ *
+ * @returns {Promise<NextResponse>} Schema.org JSON-LD data with proper headers
  */
 export async function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://medialternatives.com';
