@@ -1,5 +1,20 @@
 import { WordPressPost } from '@/types/wordpress';
 
+/**
+ * Dead link information structure
+ * @interface DeadLink
+ * @property {string} url - The broken URL
+ * @property {number | null} status - HTTP status code or null if unreachable
+ * @property {string | null} error - Error message or null if successful
+ * @property {string} context - Surrounding text for context
+ * @property {number} postId - WordPress post ID containing the link
+ * @property {string} postTitle - Title of the post containing the link
+ * @property {string} postSlug - Slug of the post containing the link
+ * @property {string} [archiveUrl] - Internet Archive Wayback Machine URL
+ * @property {string[]} [suggestions] - Alternative suggestions for the broken link
+ * @property {boolean} [retryable] - Whether the error is retryable
+ * @property {string} [checkedAt] - ISO timestamp when the link was checked
+ */
 export interface DeadLink {
   url: string;
   status: number | null;
@@ -14,6 +29,19 @@ export interface DeadLink {
   checkedAt?: string;
 }
 
+/**
+ * Result of checking multiple links
+ * @interface LinkCheckResult
+ * @property {number} totalLinks - Total number of links found
+ * @property {number} checkedLinks - Number of links successfully checked
+ * @property {DeadLink[]} deadLinks - Array of dead/broken links found
+ * @property {number} workingLinks - Number of working links
+ * @property {number} skippedLinks - Number of links skipped due to errors
+ * @property {number} processingTime - Time taken to process in milliseconds
+ * @property {number} retryableErrors - Number of retryable errors
+ * @property {number} forbiddenErrors - Number of 403 forbidden errors
+ * @property {number} timeoutErrors - Number of timeout errors
+ */
 export interface LinkCheckResult {
   totalLinks: number;
   checkedLinks: number;
@@ -28,6 +56,8 @@ export interface LinkCheckResult {
 
 /**
  * Extract all URLs from post content
+ * @param {string} content - HTML content to search for URLs
+ * @returns {Array<{url: string, context: string}>} Array of URLs with surrounding context
  */
 export function extractUrlsFromContent(content: string): Array<{ url: string; context: string }> {
   const urls: Array<{ url: string; context: string }> = [];
@@ -99,6 +129,9 @@ export function extractUrlsFromContent(content: string): Array<{ url: string; co
 
 /**
  * Check if a URL is accessible with enhanced error handling
+ * @param {string} url - URL to check
+ * @param {number} [timeout=10000] - Request timeout in milliseconds
+ * @returns {Promise<{status: number | null, error: string | null, retryable: boolean}>} Check result
  */
 export async function checkUrl(url: string, timeout: number = 10000): Promise<{ status: number | null; error: string | null; retryable: boolean }> {
   try {
@@ -175,6 +208,8 @@ export async function checkUrl(url: string, timeout: number = 10000): Promise<{ 
 
 /**
  * Generate Internet Archive Wayback Machine URL
+ * @param {string} url - Original URL to archive
+ * @returns {string} Wayback Machine URL for the given URL
  */
 export function generateArchiveUrl(url: string): string {
   return `https://web.archive.org/web/*/${url}`;
@@ -182,6 +217,8 @@ export function generateArchiveUrl(url: string): string {
 
 /**
  * Search Internet Archive for snapshots
+ * @param {string} url - URL to search for in archive
+ * @returns {Promise<string[]>} Array of archive snapshot URLs
  */
 export async function searchArchiveSnapshots(url: string): Promise<string[]> {
   try {
@@ -214,6 +251,8 @@ export async function searchArchiveSnapshots(url: string): Promise<string[]> {
 
 /**
  * Generate alternative suggestions for broken links
+ * @param {string} url - Broken URL to generate suggestions for
+ * @returns {string[]} Array of suggestion strings
  */
 export function generateSuggestions(url: string): string[] {
   const suggestions: string[] = [];
@@ -248,6 +287,8 @@ export function generateSuggestions(url: string): string[] {
 
 /**
  * Check all links in a single post
+ * @param {WordPressPost} post - WordPress post to check links in
+ * @returns {Promise<DeadLink[]>} Array of dead links found in the post
  */
 export async function checkPostLinks(post: WordPressPost): Promise<DeadLink[]> {
   const urls = extractUrlsFromContent(post.content.rendered);
@@ -293,9 +334,12 @@ export async function checkPostLinks(post: WordPressPost): Promise<DeadLink[]> {
 
 /**
  * Check links in multiple posts with progress tracking
+ * @param {WordPressPost[]} posts - Array of WordPress posts to check
+ * @param {(update: {current: number, total: number, percentage: number, currentItem?: string}) => void} [progressCallback] - Optional progress callback
+ * @returns {Promise<LinkCheckResult>} Comprehensive link check results
  */
 export async function checkMultiplePostsLinks(
-  posts: WordPressPost[], 
+  posts: WordPressPost[],
   progressCallback?: (update: { current: number; total: number; percentage: number; currentItem?: string }) => void
 ): Promise<LinkCheckResult> {
   const startTime = Date.now();
