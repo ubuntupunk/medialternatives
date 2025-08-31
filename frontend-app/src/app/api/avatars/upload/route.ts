@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
 
+/**
+ * POST /api/avatars/upload - Upload user avatar to Vercel Blob storage
+ *
+ * Handles avatar image uploads with validation and storage to Vercel Blob.
+ * Supports PNG, JPEG, GIF, and WebP formats with size limits.
+ *
+ * @param {NextRequest} request - Next.js request containing FormData with avatar file
+ * @returns {Promise<NextResponse>} Upload result with URL or error response
+ */
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
