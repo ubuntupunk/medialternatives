@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// PageSpeed Insights API integration
+/**
+ * Performance data structure for PageSpeed Insights metrics
+ * @interface PerformanceData
+ * @property {{performance: number, accessibility: number, bestPractices: number, seo: number, pwa: number}} lighthouse - Lighthouse audit scores
+ * @property {{lcp: number, fid: number, cls: number, status: 'good' | 'needs-improvement' | 'poor'}} coreWebVitals - Core Web Vitals metrics
+ * @property {number} loadTime - Page load time in seconds
+ * @property {number} pageSize - Page size in KB
+ * @property {number} requests - Number of HTTP requests
+ * @property {string} lastChecked - ISO timestamp of last check
+ */
 interface PerformanceData {
   lighthouse: {
     performance: number;
@@ -11,7 +20,7 @@ interface PerformanceData {
   };
   coreWebVitals: {
     lcp: number; // Largest Contentful Paint
-    fid: number; // First Input Delay  
+    fid: number; // First Input Delay
     cls: number; // Cumulative Layout Shift
     status: 'good' | 'needs-improvement' | 'poor';
   };
@@ -21,6 +30,15 @@ interface PerformanceData {
   lastChecked: string;
 }
 
+/**
+ * GET /api/performance - Get PageSpeed Insights performance data
+ *
+ * Fetches performance metrics using Google PageSpeed Insights API.
+ * Falls back to static data if API key is not configured.
+ *
+ * @param {NextRequest} request - Next.js request with optional URL and strategy params
+ * @returns {Promise<NextResponse>} Performance data or error response
+ */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -112,6 +130,8 @@ export async function GET(request: NextRequest) {
 /**
  * Get static performance data based on strategy
  * Provides consistent, realistic data for development and demo
+ * @param {string} strategy - Test strategy ('mobile' or 'desktop')
+ * @returns {PerformanceData} Static performance metrics
  */
 function getStaticPerformanceData(strategy: string): PerformanceData {
   const baseData = {
