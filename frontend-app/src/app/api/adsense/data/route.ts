@@ -21,6 +21,14 @@ OAUTH2_CLIENT.on('tokens', (newTokens) => {
   }
 });
 
+/**
+ * GET /api/adsense/data - Fetch AdSense account and performance data
+ *
+ * Retrieves AdSense accounts, ad units, and performance reports using Google AdSense API.
+ * Falls back to static data if OAuth is not configured.
+ *
+ * @returns {Promise<NextResponse>} AdSense data or static fallback data
+ */
 export async function GET() {
   const tokens = await getToken();
 
@@ -101,6 +109,7 @@ export async function GET() {
 /**
  * Get static AdSense data for development and demo purposes
  * Provides consistent data based on actual account structure
+ * @returns {Object} Static AdSense data with accounts, ad units, and reports
  */
 function getStaticAdSenseData() {
   const currentDate = new Date();
