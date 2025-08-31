@@ -2,8 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { findPostByLegacyUrl } from '@/utils/legacyUrlMatcher';
 
 /**
- * Test endpoint for legacy URL handling
- * Usage: GET /api/test-legacy-url?year=2015&month=05&day=08&slug=apartheid-the-nazis-and-mcebo-dlamini
+ * GET /api/test-legacy-url - Test legacy URL matching
+ *
+ * Tests the legacy URL matching system with date-based URLs.
+ * Attempts to find WordPress posts that match legacy URL patterns.
+ *
+ * @param {NextRequest} request - Next.js request with year, month, day, slug parameters
+ * @returns {Promise<NextResponse>} Legacy URL match results or error response
  */
 export async function GET(request: NextRequest) {
   try {
