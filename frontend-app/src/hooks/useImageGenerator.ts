@@ -2,31 +2,75 @@
 
 import { useState, useCallback } from 'react';
 
-interface GenerationSettings {
-  style: string;
-  aspectRatio: string;
-  quality: string;
-  includeText: boolean;
-}
+/**
+ * Image generation settings interface
+ * @typedef {Object} GenerationSettings
+ * @property {string} style - Image style (photorealistic, illustration, abstract, etc.)
+ * @property {string} aspectRatio - Image aspect ratio (16:9, 4:3, 1:1, etc.)
+ * @property {string} quality - Generation quality (low, medium, high, ultra)
+ * @property {boolean} includeText - Whether to include text in the image
+ */
 
-interface UseImageGeneratorOptions {
-  onSuccess?: (imageUrl: string) => void;
-  onError?: (error: string) => void;
-}
+/**
+ * Hook options interface
+ * @typedef {Object} UseImageGeneratorOptions
+ * @property {Function} [onSuccess] - Callback when image generation succeeds
+ * @property {Function} [onError] - Callback when image generation fails
+ */
 
-interface GenerateImageParams {
-  title: string;
-  content?: string;
-  settings?: Partial<GenerationSettings>;
-}
+/**
+ * Image generation parameters interface
+ * @typedef {Object} GenerateImageParams
+ * @property {string} title - Title for image generation
+ * @property {string} [content] - Optional content for context
+ * @property {Partial<GenerationSettings>} [settings] - Generation settings
+ */
 
-interface GeneratePostImageParams {
-  postId: number;
-  title: string;
-  content: string;
-  excerpt?: string;
-}
+/**
+ * Post image generation parameters interface
+ * @typedef {Object} GeneratePostImageParams
+ * @property {number} postId - WordPress post ID
+ * @property {string} title - Post title
+ * @property {string} content - Post content
+ * @property {string} [excerpt] - Post excerpt
+ */
 
+/**
+ * Custom React hook for AI-powered image generation
+ *
+ * Provides functionality to generate images using AI models based on text content.
+ * Supports both general image generation and WordPress post-specific image generation.
+ *
+ * @param {UseImageGeneratorOptions} [options] - Hook configuration options
+ * @returns {Object} Image generation hook interface
+ * @property {boolean} isGenerating - Whether image is currently being generated
+ * @property {string|null} generatedImage - URL of the generated image
+ * @property {string|null} error - Error message if generation failed
+ * @property {number} progress - Generation progress (0-100)
+ * @property {Function} generateImage - Generate image from title/content
+ * @property {Function} generatePostImage - Generate image for WordPress post
+ * @property {Function} clearError - Clear current error state
+ *
+ * @example
+ * ```tsx
+ * const {
+ *   isGenerating,
+ *   generatedImage,
+ *   generateImage,
+ *   error
+ * } = useImageGenerator({
+ *   onSuccess: (url) => console.log('Image generated:', url),
+ *   onError: (err) => console.error('Generation failed:', err)
+ * });
+ *
+ * // Generate image
+ * const imageUrl = await generateImage({
+ *   title: 'Beautiful sunset',
+ *   content: 'A stunning sunset over the ocean',
+ *   settings: { style: 'photorealistic', aspectRatio: '16:9' }
+ * });
+ * ```
+ */
 export function useImageGenerator(options: UseImageGeneratorOptions = {}) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);

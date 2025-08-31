@@ -12,8 +12,27 @@ import CreativeCommonsWidget from '../Widgets/CreativeCommonsWidget';
 import DonateWidget from '../Widgets/DonateWidget';
 import WebringWidget from '../widgets-extra/WebringWidget';
 
-/*
- * Sidebar component that displays widgets
+/**
+ * Sidebar Component
+ *
+ * Displays a collection of widgets in the sidebar area of the application.
+ * Includes search, author info, categories, ads, donation, webring, and creative commons widgets.
+ * Automatically filters out ads on dashboard pages.
+ *
+ * @component
+ * @param {SidebarProps} props - The component props
+ * @returns {JSX.Element} The rendered sidebar
+ *
+ * @example
+ * ```tsx
+ * <Sidebar
+ *   className="custom-sidebar"
+ *   widgets={[
+ *     <SearchWidget key="search" />,
+ *     <AuthorWidget key="author" authorId={1} />
+ *   ]}
+ * />
+ * ```
  */
 const Sidebar: React.FC<SidebarProps> = ({
   className = '',

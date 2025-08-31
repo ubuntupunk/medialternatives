@@ -3,18 +3,54 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-interface User {
-  userId: string;
-  username: string;
-  isAdmin: boolean;
-}
+/**
+ * User information interface
+ * @typedef {Object} User
+ * @property {string} userId - Unique user identifier
+ * @property {string} username - User's display name
+ * @property {boolean} isAdmin - Whether user has admin privileges
+ */
 
-interface AuthState {
-  user: User | null;
-  isLoading: boolean;
-  isAuthenticated: boolean;
-}
+/**
+ * Authentication state interface
+ * @typedef {Object} AuthState
+ * @property {User|null} user - Current authenticated user
+ * @property {boolean} isLoading - Whether authentication is being checked
+ * @property {boolean} isAuthenticated - Whether user is authenticated
+ */
 
+/**
+ * Custom React hook for authentication management
+ *
+ * Provides authentication state management, login/logout functionality,
+ * and route protection utilities for the Media Alternatives application.
+ *
+ * @returns {Object} Authentication hook interface
+ * @property {User|null} user - Current authenticated user
+ * @property {boolean} isLoading - Whether authentication is loading
+ * @property {boolean} isAuthenticated - Whether user is authenticated
+ * @property {Function} login - Login function
+ * @property {Function} logout - Logout function
+ * @property {Function} requireAuth - Require authentication for route
+ * @property {Function} requireAdmin - Require admin access for route
+ *
+ * @example
+ * ```tsx
+ * const { isAuthenticated, user, login, logout } = useAuth();
+ *
+ * // Login
+ * const result = await login('password');
+ *
+ * // Logout
+ * await logout();
+ *
+ * // Require authentication
+ * requireAuth('/auth/login');
+ *
+ * // Require admin access
+ * requireAdmin('/auth/unauthorized');
+ * ```
+ */
 export function useAuth() {
   const [authState, setAuthState] = useState<AuthState>({
     user: null,

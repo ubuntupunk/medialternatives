@@ -10,6 +10,24 @@ import Footer from './Footer';
 import AddToHomeScreen from '../UI/AddToHomeScreen';
 import OfflineIndicator from '../UI/OfflineIndicator';
 
+/**
+ * Main Layout Component
+ *
+ * Provides the overall page structure for the Media Alternatives application.
+ * Includes header, sidebar, main content area, and footer components.
+ *
+ * @component
+ * @param {LayoutProps} props - The component props
+ * @returns {JSX.Element} The rendered layout
+ *
+ * @example
+ * ```tsx
+ * <Layout showSidebar={true}>
+ *   <h1>Welcome to Media Alternatives</h1>
+ *   <p>Main content goes here...</p>
+ * </Layout>
+ * ```
+ */
 const Layout: React.FC<LayoutProps> = ({
   children,
   className = '',

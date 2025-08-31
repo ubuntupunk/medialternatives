@@ -508,6 +508,16 @@
               
                 
                 <li><a
+                  href='#layout'
+                  class="">
+                  Layout
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
                   href='#useauthenticatedapi'
                   class="">
                   useAuthenticatedAPI
@@ -521,6 +531,46 @@
                   href='#extracturlsfromcontent'
                   class="">
                   extractUrlsFromContent
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#sidebar'
+                  class="">
+                  Sidebar
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#searchresult'
+                  class="">
+                  SearchResult
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#searchwidgetprops'
+                  class="">
+                  SearchWidgetProps
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#searchwidget'
+                  class="">
+                  SearchWidget
                   
                 </a>
                 
@@ -561,6 +611,36 @@
                   href='#generateinitialsavatar'
                   class="">
                   generateInitialsAvatar
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#user'
+                  class="">
+                  User
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#authstate'
+                  class="">
+                  AuthState
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#useauth'
+                  class="">
+                  useAuth
                   
                 </a>
                 
@@ -621,6 +701,56 @@
                   href='#shouldruncheck'
                   class="">
                   shouldRunCheck
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#generationsettings'
+                  class="">
+                  GenerationSettings
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#useimagegeneratoroptions'
+                  class="">
+                  UseImageGeneratorOptions
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#generateimageparams'
+                  class="">
+                  GenerateImageParams
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#generatepostimageparams'
+                  class="">
+                  GeneratePostImageParams
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#useimagegenerator'
+                  class="">
+                  useImageGenerator
                   
                 </a>
                 
@@ -6072,6 +6202,140 @@ Users can hover over the widget and tooltip to cycle through different visual th
   
   <div class='clearfix'>
     
+    <h3 class='fl m0' id='layout'>
+      Layout
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Main Layout Component</p>
+<p>Provides the overall page structure for the Media Alternatives application.
+Includes header, sidebar, main content area, and footer components.</p>
+
+    <div class='pre p1 fill-light mt0'>Layout</div>
+  
+    <p>
+      Type:
+      React.FC&#x3C;LayoutProps>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>props</span> <code class='quiet'>(LayoutProps)</code>
+	    The component props
+
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>props.children</span> <code class='quiet'>any</code>
+  </td>
+  <td class='break-word'><span></span></td>
+</tr>
+
+
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>props.className</span> <code class='quiet'>any</code>
+  
+    (default <code>&#39;&#39;</code>)
+  </td>
+  <td class='break-word'><span></span></td>
+</tr>
+
+
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>props.showSidebar</span> <code class='quiet'>any</code>
+  
+    (default <code>true</code>)
+  </td>
+  <td class='break-word'><span></span></td>
+</tr>
+
+
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>JSX.Element</code>:
+        The rendered layout
+
+      
+    
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-string">``</span><span class="hljs-string">`tsx
+&lt;Layout showSidebar={true}&gt;
+  &lt;h1&gt;Welcome to Media Alternatives&lt;/h1&gt;
+  &lt;p&gt;Main content goes here...&lt;/p&gt;
+&lt;/Layout&gt;
+`</span><span class="hljs-string">``</span></pre>
+    
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
     <h3 class='fl m0' id='useauthenticatedapi'>
       useAuthenticatedAPI
     </h3>
@@ -6256,6 +6520,425 @@ if (isAuthenticated &amp;&amp; canPerform(&#x27;read&#x27;)) {
 
   
 
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='sidebar'>
+      Sidebar
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Sidebar Component</p>
+<p>Displays a collection of widgets in the sidebar area of the application.
+Includes search, author info, categories, ads, donation, webring, and creative commons widgets.
+Automatically filters out ads on dashboard pages.</p>
+
+    <div class='pre p1 fill-light mt0'>Sidebar</div>
+  
+    <p>
+      Type:
+      React.FC&#x3C;SidebarProps>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>props</span> <code class='quiet'>(SidebarProps)</code>
+	    The component props
+
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>props.className</span> <code class='quiet'>any</code>
+  
+    (default <code>&#39;&#39;</code>)
+  </td>
+  <td class='break-word'><span></span></td>
+</tr>
+
+
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>props.widgets</span> <code class='quiet'>any</code>
+  
+    (default <code>[]</code>)
+  </td>
+  <td class='break-word'><span></span></td>
+</tr>
+
+
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>JSX.Element</code>:
+        The rendered sidebar
+
+      
+    
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-string">``</span><span class="hljs-string">`tsx
+&lt;Sidebar
+  className=&quot;custom-sidebar&quot;
+  widgets={[
+    &lt;SearchWidget key=&quot;search&quot; /&gt;,
+    &lt;AuthorWidget key=&quot;author&quot; authorId={1} /&gt;
+  ]}
+/&gt;
+`</span><span class="hljs-string">``</span></pre>
+    
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='searchresult'>
+      SearchResult
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Search result interface</p>
+
+    <div class='pre p1 fill-light mt0'>SearchResult</div>
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Properties</div>
+    <div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>id</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>)</code>
+          : Unique identifier
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>title</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+          : Result title
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>excerpt</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+          : Result excerpt/summary
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>link</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+          : URL to the result
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>type</span> <code class='quiet'>((<code>"post"</code> | <code>"page"</code>))</code>
+          : Content type
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>date</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+          : Publication date
+
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='searchwidgetprops'>
+      SearchWidgetProps
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Search widget props interface</p>
+
+    <div class='pre p1 fill-light mt0'>SearchWidgetProps</div>
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Properties</div>
+    <div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>className</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>?)</code>
+          : Additional CSS classes
+
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='searchwidget'>
+      SearchWidget
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Search Widget Component</p>
+<p>Provides search functionality for the Media Alternatives website.
+Features debounced search, live results dropdown, and navigation to full search results.
+Integrates with WordPress.com search API for content discovery.</p>
+
+    <div class='pre p1 fill-light mt0'>SearchWidget</div>
+  
+    <p>
+      Type:
+      React.FC&#x3C;<a href="#searchwidgetprops">SearchWidgetProps</a>>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>props</span> <code class='quiet'>(<a href="#searchwidgetprops">SearchWidgetProps</a>)</code>
+	    Component props
+
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>props.className</span> <code class='quiet'>any</code>
+  
+    (default <code>&#39;&#39;</code>)
+  </td>
+  <td class='break-word'><span></span></td>
+</tr>
+
+
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>JSX.Element</code>:
+        The rendered search widget
+
+      
+    
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-string">``</span><span class="hljs-string">`tsx
+&lt;SearchWidget className=&quot;mt-4&quot; /&gt;
+`</span><span class="hljs-string">``</span></pre>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-string">``</span><span class="hljs-string">`tsx
+// With custom styling
+&lt;SearchWidget className=&quot;custom-search-widget&quot; /&gt;
+`</span><span class="hljs-string">``</span></pre>
+    
   
 
   
@@ -6571,6 +7254,302 @@ const posts = await response.json();
 
   
 
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='user'>
+      User
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>User information interface</p>
+
+    <div class='pre p1 fill-light mt0'>User</div>
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Properties</div>
+    <div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>userId</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+          : Unique user identifier
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>username</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+          : User's display name
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>isAdmin</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+          : Whether user has admin privileges
+
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='authstate'>
+      AuthState
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Authentication state interface</p>
+
+    <div class='pre p1 fill-light mt0'>AuthState</div>
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Properties</div>
+    <div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>user</span> <code class='quiet'>((<a href="#user">User</a> | null))</code>
+          : Current authenticated user
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>isLoading</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+          : Whether authentication is being checked
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>isAuthenticated</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+          : Whether user is authenticated
+
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='useauth'>
+      useAuth
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Custom React hook for authentication management</p>
+<p>Provides authentication state management, login/logout functionality,
+and route protection utilities for the Media Alternatives application.</p>
+
+    <div class='pre p1 fill-light mt0'>useAuth(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Properties</div>
+    <div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>user</span> <code class='quiet'>((<a href="#user">User</a> | null))</code>
+          : Current authenticated user
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>isLoading</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+          : Whether authentication is loading
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>isAuthenticated</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+          : Whether user is authenticated
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>login</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+          : Login function
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>logout</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+          : Logout function
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>requireAuth</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+          : Require authentication for route
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>requireAdmin</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+          : Require admin access for route
+
+          
+        </div>
+      
+    </div>
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code>:
+        Authentication hook interface
+
+      
+    
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-string">``</span><span class="hljs-string">`tsx
+const { isAuthenticated, user, login, logout } = useAuth();
+
+// Login
+const result = await login(&#x27;password&#x27;);
+
+// Logout
+await logout();
+
+// Require authentication
+requireAuth(&#x27;/auth/login&#x27;);
+
+// Require admin access
+requireAdmin(&#x27;/auth/unauthorized&#x27;);
+`</span><span class="hljs-string">``</span></pre>
+    
   
 
   
@@ -7055,6 +8034,489 @@ console.log(`</span><span class="hljs-title class_">Views</span>: ${stats.<span 
   
   <div class='clearfix'>
     
+    <h3 class='fl m0' id='generationsettings'>
+      GenerationSettings
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Image generation settings interface</p>
+
+    <div class='pre p1 fill-light mt0'>GenerationSettings</div>
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Properties</div>
+    <div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>style</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+          : Image style (photorealistic, illustration, abstract, etc.)
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>aspectRatio</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+          : Image aspect ratio (16:9, 4:3, 1:1, etc.)
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>quality</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+          : Generation quality (low, medium, high, ultra)
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>includeText</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+          : Whether to include text in the image
+
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='useimagegeneratoroptions'>
+      UseImageGeneratorOptions
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Hook options interface</p>
+
+    <div class='pre p1 fill-light mt0'>UseImageGeneratorOptions</div>
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Properties</div>
+    <div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>onSuccess</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>?)</code>
+          : Callback when image generation succeeds
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>onError</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>?)</code>
+          : Callback when image generation fails
+
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='generateimageparams'>
+      GenerateImageParams
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Image generation parameters interface</p>
+
+    <div class='pre p1 fill-light mt0'>GenerateImageParams</div>
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Properties</div>
+    <div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>title</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+          : Title for image generation
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>content</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>?)</code>
+          : Optional content for context
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>settings</span> <code class='quiet'>(Partial&#x3C;<a href="#generationsettings">GenerationSettings</a>>?)</code>
+          : Generation settings
+
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='generatepostimageparams'>
+      GeneratePostImageParams
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Post image generation parameters interface</p>
+
+    <div class='pre p1 fill-light mt0'>GeneratePostImageParams</div>
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Properties</div>
+    <div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>postId</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>)</code>
+          : WordPress post ID
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>title</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+          : Post title
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>content</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+          : Post content
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>excerpt</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>?)</code>
+          : Post excerpt
+
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='useimagegenerator'>
+      useImageGenerator
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Custom React hook for AI-powered image generation</p>
+<p>Provides functionality to generate images using AI models based on text content.
+Supports both general image generation and WordPress post-specific image generation.</p>
+
+    <div class='pre p1 fill-light mt0'>useImageGenerator(options: <a href="#useimagegeneratoroptions">UseImageGeneratorOptions</a>?): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>options</span> <code class='quiet'>(<a href="#useimagegeneratoroptions">UseImageGeneratorOptions</a>?
+            = <code>{}</code>)</code>
+	    Hook configuration options
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Properties</div>
+    <div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>isGenerating</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+          : Whether image is currently being generated
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>generatedImage</span> <code class='quiet'>((<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a> | null))</code>
+          : URL of the generated image
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>error</span> <code class='quiet'>((<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a> | null))</code>
+          : Error message if generation failed
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>progress</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>)</code>
+          : Generation progress (0-100)
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>generateImage</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+          : Generate image from title/content
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>generatePostImage</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+          : Generate image for WordPress post
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>clearError</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+          : Clear current error state
+
+          
+        </div>
+      
+    </div>
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code>:
+        Image generation hook interface
+
+      
+    
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-string">``</span><span class="hljs-string">`tsx
+const {
+  isGenerating,
+  generatedImage,
+  generateImage,
+  error
+} = useImageGenerator({
+  onSuccess: (url) =&gt; console.log(&#x27;Image generated:&#x27;, url),
+  onError: (err) =&gt; console.error(&#x27;Generation failed:&#x27;, err)
+});
+
+// Generate image
+const imageUrl = await generateImage({
+  title: &#x27;Beautiful sunset&#x27;,
+  content: &#x27;A stunning sunset over the ocean&#x27;,
+  settings: { style: &#x27;photorealistic&#x27;, aspectRatio: &#x27;16:9&#x27; }
+});
+`</span><span class="hljs-string">``</span></pre>
+    
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
     <h3 class='fl m0' id='adsensefeed'>
       AdSenseFeed
     </h3>
@@ -7219,7 +8681,7 @@ Uses the feed ad slot and specific layout</p>
 
   <p>Check if we're returning from OAuth and extract token</p>
 
-    <div class='pre p1 fill-light mt0'>handleOAuthCallback(): AuthState</div>
+    <div class='pre p1 fill-light mt0'>handleOAuthCallback(): <a href="#authstate">AuthState</a></div>
   
   
 
@@ -7237,7 +8699,7 @@ Uses the feed ad slot and specific layout</p>
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>AuthState</code>
+      <code><a href="#authstate">AuthState</a></code>
     
   
 
@@ -10334,7 +11796,7 @@ if (canPerform(&#x27;stats&#x27;)) {
 
   <p>Get current authentication status</p>
 
-    <div class='pre p1 fill-light mt0'>getAuthStatus(): AuthState</div>
+    <div class='pre p1 fill-light mt0'>getAuthStatus(): <a href="#authstate">AuthState</a></div>
   
   
 
@@ -10352,7 +11814,7 @@ if (canPerform(&#x27;stats&#x27;)) {
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>AuthState</code>
+      <code><a href="#authstate">AuthState</a></code>
     
   
 

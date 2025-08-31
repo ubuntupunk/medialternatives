@@ -3,19 +3,45 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-interface SearchResult {
-  id: number;
-  title: string;
-  excerpt: string;
-  link: string;
-  type: 'post' | 'page';
-  date: string;
-}
+/**
+ * Search result interface
+ * @typedef {Object} SearchResult
+ * @property {number} id - Unique identifier
+ * @property {string} title - Result title
+ * @property {string} excerpt - Result excerpt/summary
+ * @property {string} link - URL to the result
+ * @property {'post'|'page'} type - Content type
+ * @property {string} date - Publication date
+ */
 
-interface SearchWidgetProps {
-  className?: string;
-}
+/**
+ * Search widget props interface
+ * @typedef {Object} SearchWidgetProps
+ * @property {string} [className] - Additional CSS classes
+ */
 
+/**
+ * Search Widget Component
+ *
+ * Provides search functionality for the Media Alternatives website.
+ * Features debounced search, live results dropdown, and navigation to full search results.
+ * Integrates with WordPress.com search API for content discovery.
+ *
+ * @component
+ * @param {SearchWidgetProps} props - Component props
+ * @returns {JSX.Element} The rendered search widget
+ *
+ * @example
+ * ```tsx
+ * <SearchWidget className="mt-4" />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // With custom styling
+ * <SearchWidget className="custom-search-widget" />
+ * ```
+ */
 export const SearchWidget: React.FC<SearchWidgetProps> = ({ className = '' }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
