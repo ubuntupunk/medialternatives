@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL || 'https://public-api.wordpress.com/wp/v2/sites/medialternatives.wordpress.com';
 
+/**
+ * GET /api/search - Search WordPress posts
+ * @param {NextRequest} request - Next.js request object
+ * @returns {Promise<NextResponse>} Search results or error response
+ */
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get('q');
