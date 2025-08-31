@@ -112,17 +112,19 @@ export function getFeaturedImageUrl(
 }
 
 /**
- * Get author information from post
+ * Get author information from post embedded data
+ * @param {WordPressPost} post - WordPress post object
+ * @returns {WordPressUser | undefined} Author data if available in embedded data, undefined otherwise
  */
 export function getPostAuthor(post: WordPressPost) {
   // First try to get from embedded data
   const embeddedAuthor = post._embedded?.author?.[0];
-  
+
   // Check if embedded author is valid
   if (embeddedAuthor && embeddedAuthor.name) {
     return embeddedAuthor;
   }
-  
+
   // If embedded data is not available or is an error, return undefined
   // The component will need to fetch author data separately using the author ID
   return undefined;
@@ -130,6 +132,8 @@ export function getPostAuthor(post: WordPressPost) {
 
 /**
  * Get author ID from post
+ * @param {WordPressPost} post - WordPress post object
+ * @returns {number | undefined} Author ID if available, undefined otherwise
  */
 export function getPostAuthorId(post: WordPressPost): number | undefined {
   return post.author || undefined;
@@ -137,28 +141,37 @@ export function getPostAuthorId(post: WordPressPost): number | undefined {
 
 /**
  * Get categories from post embedded data
+ * @param {WordPressPost} post - WordPress post object
+ * @returns {WordPressTerm[]} Array of category terms associated with the post
  */
 export function getPostCategories(post: WordPressPost): WordPressTerm[] {
   const terms = post._embedded?.['wp:term'];
   if (!terms || !terms[0]) return [];
-  
+
   // Categories are in the first term array
   return terms[0].filter(term => term.taxonomy === 'category');
 }
 
 /**
  * Get tags from post embedded data
+ * @param {WordPressPost} post - WordPress post object
+ * @returns {WordPressTerm[]} Array of tag terms associated with the post
  */
 export function getPostTags(post: WordPressPost): WordPressTerm[] {
   const terms = post._embedded?.['wp:term'];
   if (!terms || !terms[1]) return [];
-  
+
   // Tags are in the second term array
   return terms[1].filter(term => term.taxonomy === 'post_tag');
 }
 
 /**
  * Calculate font size for category cloud based on post count
+ * @param {WordPressCategory} category - Category to calculate font size for
+ * @param {WordPressCategory[]} allCategories - All categories for relative sizing
+ * @param {number} [minSize=12] - Minimum font size in pixels
+ * @param {number} [maxSize=24] - Maximum font size in pixels
+ * @returns {number} Calculated font size for the category
  */
 export function calculateCategoryFontSize(
   category: WordPressCategory,
@@ -167,19 +180,21 @@ export function calculateCategoryFontSize(
   maxSize: number = 24
 ): number {
   if (allCategories.length === 0) return minSize;
-  
+
   const counts = allCategories.map(cat => cat.count);
   const minCount = Math.min(...counts);
   const maxCount = Math.max(...counts);
-  
+
   if (minCount === maxCount) return minSize;
-  
+
   const ratio = (category.count - minCount) / (maxCount - minCount);
   return Math.round(minSize + (maxSize - minSize) * ratio);
 }
 
 /**
- * Generate slug from title
+ * Generate URL slug from title
+ * @param {string} title - Title to convert to slug
+ * @returns {string} URL-safe slug
  */
 export function generateSlug(title: string): string {
   return title
@@ -191,7 +206,9 @@ export function generateSlug(title: string): string {
 }
 
 /**
- * Validate email address
+ * Validate email address format
+ * @param {string} email - Email address to validate
+ * @returns {boolean} True if email format is valid
  */
 export function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -199,14 +216,18 @@ export function isValidEmail(email: string): boolean {
 }
 
 /**
- * Debounce function for search
+ * Debounce function calls to limit execution frequency
+ * @template T - Function type
+ * @param {T} func - Function to debounce
+ * @param {number} wait - Wait time in milliseconds
+ * @returns {(...args: Parameters<T>) => void} Debounced function
  */
 export function debounce<T extends (...args: any[]) => any>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout;
-  
+
   return (...args: Parameters<T>) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), wait);
@@ -214,7 +235,10 @@ export function debounce<T extends (...args: any[]) => any>(
 }
 
 /**
- * Get reading time estimate
+ * Calculate estimated reading time for content
+ * @param {string} content - Text content to analyze
+ * @param {number} [wordsPerMinute=200] - Average reading speed
+ * @returns {number} Estimated reading time in minutes
  */
 export function getReadingTime(content: string, wordsPerMinute: number = 200): number {
   const text = stripHtml(content);
@@ -224,6 +248,8 @@ export function getReadingTime(content: string, wordsPerMinute: number = 200): n
 
 /**
  * Format reading time for display
+ * @param {number} minutes - Reading time in minutes
+ * @returns {string} Formatted reading time string
  */
 export function formatReadingTime(minutes: number): string {
   if (minutes < 1) {
@@ -236,18 +262,22 @@ export function formatReadingTime(minutes: number): string {
 }
 
 /**
- * Check if code is running in browser
+ * Check if code is running in browser environment
+ * @returns {boolean} True if running in browser, false if server-side
  */
 export function isBrowser(): boolean {
   return typeof window !== 'undefined';
 }
 
 /**
- * Safely access localStorage
+ * Safely get value from localStorage with error handling
+ * @param {string} key - Storage key
+ * @param {any} [defaultValue=null] - Default value if key not found
+ * @returns {any} Parsed value from localStorage or default value
  */
 export function getLocalStorage(key: string, defaultValue: any = null): any {
   if (!isBrowser()) return defaultValue;
-  
+
   try {
     const item = localStorage.getItem(key);
     return item ? JSON.parse(item) : defaultValue;
@@ -258,11 +288,14 @@ export function getLocalStorage(key: string, defaultValue: any = null): any {
 }
 
 /**
- * Safely set localStorage
+ * Safely set value in localStorage with error handling
+ * @param {string} key - Storage key
+ * @param {any} value - Value to store
+ * @returns {boolean} True if successful, false if error occurred
  */
 export function setLocalStorage(key: string, value: any): boolean {
   if (!isBrowser()) return false;
-  
+
   try {
     localStorage.setItem(key, JSON.stringify(value));
     return true;
@@ -273,11 +306,13 @@ export function setLocalStorage(key: string, value: any): boolean {
 }
 
 /**
- * Create URL-safe parameters object
+ * Create URL-safe parameters object from key-value pairs
+ * @param {Record<string, any>} params - Parameters object
+ * @returns {URLSearchParams} URLSearchParams instance
  */
 export function createUrlParams(params: Record<string, any>): URLSearchParams {
   const urlParams = new URLSearchParams();
-  
+
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
       if (Array.isArray(value)) {
@@ -287,16 +322,18 @@ export function createUrlParams(params: Record<string, any>): URLSearchParams {
       }
     }
   });
-  
+
   return urlParams;
 }
 
 /**
- * Decode HTML entities - comprehensive server/client implementation
+ * Decode HTML entities to plain text - works on both server and client
+ * @param {string} text - Text containing HTML entities
+ * @returns {string} Text with HTML entities decoded
  */
 export function decodeHtmlEntities(text: string): string {
   if (!text) return '';
-  
+
   if (typeof window !== 'undefined') {
     // Client-side: use DOM for comprehensive decoding
     const textarea = document.createElement('textarea');

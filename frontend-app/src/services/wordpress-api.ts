@@ -42,12 +42,14 @@ class WordPressAPIService {
     this.cache = new Map();
   }
 
-  /**
+   /**
     * Extract pagination information from response headers
-    * @memberof WordPressAPIService
     * @private
+    * @param {Headers} headers - Response headers from API call
+    * @param {Record<string, any>} params - Request parameters
+    * @returns {PaginationInfo} Pagination metadata
     */
-  private extractPaginationInfo(headers: Headers, params: Record<string, any>): PaginationInfo {
+   private extractPaginationInfo(headers: Headers, params: Record<string, any>): PaginationInfo {
     const total = parseInt(headers.get('X-WP-Total') || '0', 10);
     const totalPages = parseInt(headers.get('X-WP-TotalPages') || '1', 10);
     const currentPage = parseInt(String(params.page || '1'), 10);
@@ -65,14 +67,20 @@ class WordPressAPIService {
     };
   }
 
-  /**
-   * Generic fetch method with error handling, caching, and header extraction
-   */
-  private async fetchWithHeaders<T>(
-    endpoint: string, 
-    params: Record<string, any> = {},
-    useCache: boolean = true
-  ): Promise<APIResponseWithHeaders<T>> {
+   /**
+    * Generic fetch method with error handling, caching, and header extraction
+    * @private
+    * @template T - Response data type
+    * @param {string} endpoint - API endpoint URL
+    * @param {Record<string, any>} [params={}] - Query parameters
+    * @param {boolean} [useCache=true] - Whether to use caching
+    * @returns {Promise<APIResponseWithHeaders<T>>} Response with data and headers
+    */
+   private async fetchWithHeaders<T>(
+     endpoint: string,
+     params: Record<string, any> = {},
+     useCache: boolean = true
+   ): Promise<APIResponseWithHeaders<T>> {
     // Build URL with parameters
     const url = new URL(endpoint);
     const allParams = {
@@ -184,16 +192,20 @@ class WordPressAPIService {
     throw lastError || new Error('Unknown API error');
   }
 
-  /**
+   /**
     * Generic fetch method with error handling and caching
-    * @memberof WordPressAPIService
     * @private
+    * @template T - Response data type
+    * @param {string} endpoint - API endpoint URL
+    * @param {Record<string, any>} [params={}] - Query parameters
+    * @param {boolean} [useCache=true] - Whether to use caching
+    * @returns {Promise<T>} Response data
     */
-  private async fetchWithCache<T>(
-    endpoint: string, 
-    params: Record<string, any> = {},
-    useCache: boolean = true
-  ): Promise<T> {
+   private async fetchWithCache<T>(
+     endpoint: string,
+     params: Record<string, any> = {},
+     useCache: boolean = true
+   ): Promise<T> {
     // Build URL with parameters
     const url = new URL(endpoint);
     const allParams = {
@@ -284,18 +296,22 @@ class WordPressAPIService {
     throw lastError || new Error('Unknown API error');
   }
 
-  /**
-   * Get posts with optional filtering
-   */
-  async getPosts(params: GetPostsParams = {}): Promise<WordPressPost[]> {
+   /**
+    * Get posts with optional filtering
+    * @param {GetPostsParams} [params={}] - Query parameters for filtering posts
+    * @returns {Promise<WordPressPost[]>} Array of WordPress posts
+    */
+   async getPosts(params: GetPostsParams = {}): Promise<WordPressPost[]> {
     const endpoint = `${this.baseUrl}/posts`;
     return this.fetchWithCache<WordPressPost[]>(endpoint, params);
   }
 
-  /**
-   * Get a single post by slug
-   */
-  async getPost(slug: string): Promise<WordPressPost | null> {
+   /**
+    * Get a single post by slug
+    * @param {string} slug - Post slug
+    * @returns {Promise<WordPressPost | null>} Post data or null if not found
+    */
+   async getPost(slug: string): Promise<WordPressPost | null> {
     try {
       const posts = await this.fetchWithCache<WordPressPost[]>(
         `${this.baseUrl}/posts`,
@@ -308,10 +324,12 @@ class WordPressAPIService {
     }
   }
 
-  /**
-   * Get a post by ID
-   */
-  async getPostById(id: number): Promise<WordPressPost | null> {
+   /**
+    * Get a post by ID
+    * @param {number} id - Post ID
+    * @returns {Promise<WordPressPost | null>} Post data or null if not found
+    */
+   async getPostById(id: number): Promise<WordPressPost | null> {
     try {
       return await this.fetchWithCache<WordPressPost>(
         `${this.baseUrl}/posts/${id}`,
@@ -323,10 +341,12 @@ class WordPressAPIService {
     }
   }
 
-  /**
-   * Get categories
-   */
-  async getCategories(params: GetCategoriesParams = {}): Promise<WordPressCategory[]> {
+   /**
+    * Get categories
+    * @param {GetCategoriesParams} [params={}] - Query parameters for filtering categories
+    * @returns {Promise<WordPressCategory[]>} Array of WordPress categories
+    */
+   async getCategories(params: GetCategoriesParams = {}): Promise<WordPressCategory[]> {
     const endpoint = `${this.baseUrl}/categories`;
     const defaultParams = {
       per_page: 100,
@@ -338,10 +358,12 @@ class WordPressAPIService {
     return this.fetchWithCache<WordPressCategory[]>(endpoint, defaultParams);
   }
 
-  /**
-   * Get a single category by slug
-   */
-  async getCategory(slug: string): Promise<WordPressCategory | null> {
+   /**
+    * Get a single category by slug
+    * @param {string} slug - Category slug
+    * @returns {Promise<WordPressCategory | null>} Category data or null if not found
+    */
+   async getCategory(slug: string): Promise<WordPressCategory | null> {
     try {
       const categories = await this.fetchWithCache<WordPressCategory[]>(
         `${this.baseUrl}/categories`,
@@ -354,10 +376,12 @@ class WordPressAPIService {
     }
   }
 
-  /**
-   * Get tags
-   */
-  async getTags(params: Record<string, any> = {}): Promise<WordPressTag[]> {
+   /**
+    * Get tags
+    * @param {Record<string, any>} [params={}] - Query parameters for filtering tags
+    * @returns {Promise<WordPressTag[]>} Array of WordPress tags
+    */
+   async getTags(params: Record<string, any> = {}): Promise<WordPressTag[]> {
     const endpoint = `${this.baseUrl}/tags`;
     const defaultParams = {
       per_page: 100,
@@ -368,10 +392,12 @@ class WordPressAPIService {
     return this.fetchWithCache<WordPressTag[]>(endpoint, defaultParams);
   }
 
-  /**
-   * Get a single tag by slug
-   */
-  async getTag(slug: string): Promise<WordPressTag | null> {
+   /**
+    * Get a single tag by slug
+    * @param {string} slug - Tag slug
+    * @returns {Promise<WordPressTag | null>} Tag data or null if not found
+    */
+   async getTag(slug: string): Promise<WordPressTag | null> {
     try {
       const tags = await this.fetchWithCache<WordPressTag[]>(
         `${this.baseUrl}/tags`,
@@ -384,18 +410,22 @@ class WordPressAPIService {
     }
   }
 
-  /**
-   * Get users/authors
-   */
-  async getUsers(params: Record<string, any> = {}): Promise<WordPressUser[]> {
+   /**
+    * Get users/authors
+    * @param {Record<string, any>} [params={}] - Query parameters for filtering users
+    * @returns {Promise<WordPressUser[]>} Array of WordPress users
+    */
+   async getUsers(params: Record<string, any> = {}): Promise<WordPressUser[]> {
     const endpoint = `${this.baseUrl}/users`;
     return this.fetchWithCache<WordPressUser[]>(endpoint, params);
   }
 
-  /**
-   * Get a single user by ID
-   */
-  async getUser(id: number): Promise<WordPressUser | null> {
+   /**
+    * Get a single user by ID
+    * @param {number} id - User ID
+    * @returns {Promise<WordPressUser | null>} User data or null if not found
+    */
+   async getUser(id: number): Promise<WordPressUser | null> {
     try {
       return await this.fetchWithCache<WordPressUser>(
         `${this.baseUrl}/users/${id}`
@@ -425,10 +455,12 @@ class WordPressAPIService {
     }
   }
 
-  /**
-   * Get a single user by slug
-   */
-  async getUserBySlug(slug: string): Promise<WordPressUser | null> {
+   /**
+    * Get a single user by slug
+    * @param {string} slug - User slug
+    * @returns {Promise<WordPressUser | null>} User data or null if not found
+    */
+   async getUserBySlug(slug: string): Promise<WordPressUser | null> {
     try {
       const users = await this.fetchWithCache<WordPressUser[]>(
         `${this.baseUrl}/users`,
@@ -441,10 +473,11 @@ class WordPressAPIService {
     }
   }
 
-  /**
-   * Get site information
-   */
-  async getSiteInfo(): Promise<WordPressSiteInfo | null> {
+   /**
+    * Get site information
+    * @returns {Promise<WordPressSiteInfo | null>} Site information or null if error
+    */
+   async getSiteInfo(): Promise<WordPressSiteInfo | null> {
     try {
       return await this.fetchWithCache<WordPressSiteInfo>(this.siteInfoUrl);
     } catch (error) {
@@ -453,10 +486,13 @@ class WordPressAPIService {
     }
   }
 
-  /**
-   * Search posts
-   */
-  async searchPosts(query: string, params: GetPostsParams = {}): Promise<WordPressPost[]> {
+   /**
+    * Search posts
+    * @param {string} query - Search query string
+    * @param {GetPostsParams} [params={}] - Additional query parameters
+    * @returns {Promise<WordPressPost[]>} Array of matching posts
+    */
+   async searchPosts(query: string, params: GetPostsParams = {}): Promise<WordPressPost[]> {
     const endpoint = `${this.baseUrl}/posts`;
     const searchParams = {
       search: query,
@@ -465,10 +501,13 @@ class WordPressAPIService {
     return this.fetchWithCache<WordPressPost[]>(endpoint, searchParams, false); // Don't cache search results
   }
 
-  /**
-   * Get posts by category
-   */
-  async getPostsByCategory(categoryId: number, params: GetPostsParams = {}): Promise<WordPressPost[]> {
+   /**
+    * Get posts by category
+    * @param {number} categoryId - Category ID
+    * @param {GetPostsParams} [params={}] - Additional query parameters
+    * @returns {Promise<WordPressPost[]>} Array of posts in the category
+    */
+   async getPostsByCategory(categoryId: number, params: GetPostsParams = {}): Promise<WordPressPost[]> {
     const endpoint = `${this.baseUrl}/posts`;
     const categoryParams = {
       categories: [categoryId],
@@ -477,10 +516,13 @@ class WordPressAPIService {
     return this.fetchWithCache<WordPressPost[]>(endpoint, categoryParams);
   }
 
-  /**
-   * Get posts by author
-   */
-  async getPostsByAuthor(authorId: number, params: GetPostsParams = {}): Promise<WordPressPost[]> {
+   /**
+    * Get posts by author
+    * @param {number} authorId - Author ID
+    * @param {GetPostsParams} [params={}] - Additional query parameters
+    * @returns {Promise<WordPressPost[]>} Array of posts by the author
+    */
+   async getPostsByAuthor(authorId: number, params: GetPostsParams = {}): Promise<WordPressPost[]> {
     const endpoint = `${this.baseUrl}/posts`;
     const authorParams = {
       author: authorId,
@@ -489,10 +531,13 @@ class WordPressAPIService {
     return this.fetchWithCache<WordPressPost[]>(endpoint, authorParams);
   }
 
-  /**
-   * Get posts by tag
-   */
-  async getPostsByTag(tagId: number, params: GetPostsParams = {}): Promise<WordPressPost[]> {
+   /**
+    * Get posts by tag
+    * @param {number} tagId - Tag ID
+    * @param {GetPostsParams} [params={}] - Additional query parameters
+    * @returns {Promise<WordPressPost[]>} Array of posts with the tag
+    */
+   async getPostsByTag(tagId: number, params: GetPostsParams = {}): Promise<WordPressPost[]> {
     const endpoint = `${this.baseUrl}/posts`;
     const tagParams = {
       tags: [tagId],
@@ -505,10 +550,12 @@ class WordPressAPIService {
   // PAGINATION-AWARE METHODS
   // ========================================
 
-  /**
-   * Get posts with pagination information
-   */
-  async getPostsWithPagination(params: GetPostsParams = {}): Promise<PaginationResponse<WordPressPost[]>> {
+   /**
+    * Get posts with pagination information
+    * @param {GetPostsParams} [params={}] - Query parameters for filtering posts
+    * @returns {Promise<PaginationResponse<WordPressPost[]>>} Posts with pagination metadata
+    */
+   async getPostsWithPagination(params: GetPostsParams = {}): Promise<PaginationResponse<WordPressPost[]>> {
     const endpoint = `${this.baseUrl}/posts`;
     try {
       const { data, headers } = await this.fetchWithHeaders<WordPressPost[]>(endpoint, params);
@@ -546,10 +593,13 @@ class WordPressAPIService {
     }
   }
 
-  /**
-   * Get posts by category with pagination information
-   */
-  async getPostsByCategoryWithPagination(categoryId: number, params: GetPostsParams = {}): Promise<PaginationResponse<WordPressPost[]>> {
+   /**
+    * Get posts by category with pagination information
+    * @param {number} categoryId - Category ID
+    * @param {GetPostsParams} [params={}] - Additional query parameters
+    * @returns {Promise<PaginationResponse<WordPressPost[]>>} Posts with pagination metadata
+    */
+   async getPostsByCategoryWithPagination(categoryId: number, params: GetPostsParams = {}): Promise<PaginationResponse<WordPressPost[]>> {
     const endpoint = `${this.baseUrl}/posts`;
     const categoryParams = {
       categories: [categoryId],
@@ -583,10 +633,13 @@ class WordPressAPIService {
     }
   }
 
-  /**
-   * Search posts with pagination information
-   */
-  async searchPostsWithPagination(query: string, params: GetPostsParams = {}): Promise<PaginationResponse<WordPressPost[]>> {
+   /**
+    * Search posts with pagination information
+    * @param {string} query - Search query string
+    * @param {GetPostsParams} [params={}] - Additional query parameters
+    * @returns {Promise<PaginationResponse<WordPressPost[]>>} Search results with pagination metadata
+    */
+   async searchPostsWithPagination(query: string, params: GetPostsParams = {}): Promise<PaginationResponse<WordPressPost[]>> {
     const endpoint = `${this.baseUrl}/posts`;
     const searchParams = {
       search: query,
@@ -620,10 +673,13 @@ class WordPressAPIService {
     }
   }
 
-  /**
-   * Get posts by author with pagination information
-   */
-  async getPostsByAuthorWithPagination(authorId: number, params: GetPostsParams = {}): Promise<PaginationResponse<WordPressPost[]>> {
+   /**
+    * Get posts by author with pagination information
+    * @param {number} authorId - Author ID
+    * @param {GetPostsParams} [params={}] - Additional query parameters
+    * @returns {Promise<PaginationResponse<WordPressPost[]>>} Posts with pagination metadata
+    */
+   async getPostsByAuthorWithPagination(authorId: number, params: GetPostsParams = {}): Promise<PaginationResponse<WordPressPost[]>> {
     const endpoint = `${this.baseUrl}/posts`;
     const authorParams = {
       author: authorId,
@@ -657,10 +713,13 @@ class WordPressAPIService {
     }
   }
 
-  /**
-   * Get posts by tag with pagination information
-   */
-  async getPostsByTagWithPagination(tagId: number, params: GetPostsParams = {}): Promise<PaginationResponse<WordPressPost[]>> {
+   /**
+    * Get posts by tag with pagination information
+    * @param {number} tagId - Tag ID
+    * @param {GetPostsParams} [params={}] - Additional query parameters
+    * @returns {Promise<PaginationResponse<WordPressPost[]>>} Posts with pagination metadata
+    */
+   async getPostsByTagWithPagination(tagId: number, params: GetPostsParams = {}): Promise<PaginationResponse<WordPressPost[]>> {
     const endpoint = `${this.baseUrl}/posts`;
     const tagParams = {
       tags: [tagId],
@@ -694,17 +753,19 @@ class WordPressAPIService {
     }
   }
 
-  /**
-   * Clear cache (useful for development or forced refresh)
-   */
-  clearCache(): void {
+   /**
+    * Clear cache (useful for development or forced refresh)
+    * @returns {void}
+    */
+   clearCache(): void {
     this.cache.clear();
   }
 
-  /**
-   * Get cache statistics
-   */
-  getCacheStats(): { size: number; keys: string[] } {
+   /**
+    * Get cache statistics
+    * @returns {{size: number, keys: string[]}} Cache statistics
+    */
+   getCacheStats(): { size: number; keys: string[] } {
     return {
       size: this.cache.size,
       keys: Array.from(this.cache.keys())
