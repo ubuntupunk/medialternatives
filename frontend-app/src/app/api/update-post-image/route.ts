@@ -1,11 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+/**
+ * Update post image request interface
+ * @interface UpdatePostImageRequest
+ * @property {number} postId - WordPress post ID to update
+ * @property {string} imageUrl - URL of the new featured image
+ * @property {string} [imageData] - Base64 encoded image data
+ */
 interface UpdatePostImageRequest {
   postId: number;
   imageUrl: string;
   imageData?: string; // base64 image data
 }
 
+/**
+ * POST /api/update-post-image - Update WordPress post featured image
+ *
+ * Updates the featured image of a WordPress post.
+ * Currently simulates the process - requires WordPress.com API integration.
+ *
+ * @param {NextRequest} request - Next.js request with postId and image data
+ * @returns {Promise<NextResponse>} Update result or error response
+ */
 export async function POST(request: NextRequest) {
   try {
     const { postId, imageUrl, imageData }: UpdatePostImageRequest = await request.json();
@@ -61,7 +77,11 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Helper functions for WordPress.com integration (to be implemented)
+/**
+ * Upload image to WordPress.com media library
+ * @param {string} imageData - Base64 encoded image data
+ * @returns {Promise<{id: number, url: string}>} Media upload result
+ */
 async function uploadToWordPressMedia(imageData: string): Promise<{ id: number; url: string }> {
   // TODO: Implement WordPress.com media upload
   // This would require:
@@ -72,6 +92,12 @@ async function uploadToWordPressMedia(imageData: string): Promise<{ id: number; 
   throw new Error('WordPress.com media upload not implemented yet');
 }
 
+/**
+ * Update WordPress post with new featured media
+ * @param {number} postId - WordPress post ID
+ * @param {number} mediaId - WordPress media ID
+ * @returns {Promise<boolean>} Update success status
+ */
 async function updateWordPressPost(postId: number, mediaId: number): Promise<boolean> {
   // TODO: Implement WordPress.com post update
   // This would require:
