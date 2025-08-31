@@ -2,8 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { wordpressApi } from '@/services/wordpress-api';
 
 /**
- * API endpoint to help find posts by legacy URLs
- * Usage: GET /api/legacy-url-lookup?url=/2015/05/08/apartheid-the-nazis-and-mcebo-dlamini/
+ * GET /api/legacy-url-lookup - Lookup posts by legacy URLs
+ *
+ * Finds WordPress posts that match legacy date-based URL patterns.
+ * Uses multiple strategies to find the best matching post.
+ *
+ * @param {NextRequest} request - Next.js request with legacy URL parameter
+ * @returns {Promise<NextResponse>} Legacy URL lookup results or error response
  */
 export async function GET(request: NextRequest) {
   try {
@@ -123,6 +128,10 @@ export async function GET(request: NextRequest) {
 
 /**
  * Calculate relevance score between legacy slug and post data
+ * @param {string} legacySlug - Slug from legacy URL
+ * @param {string} postSlug - Current post slug
+ * @param {string} postTitle - Post title
+ * @returns {number} Relevance score (0-100)
  */
 function calculateRelevance(legacySlug: string, postSlug: string, postTitle: string): number {
   let score = 0;
