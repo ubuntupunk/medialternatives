@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * Jetpack Implicit OAuth Implementation
- * Based on Automattic's Grasshopper approach
- * https://github.com/automattic/grasshopper
+ * GET /api/jetpack-auth/implicit - Jetpack Implicit OAuth Implementation
+ *
+ * Handles WordPress.com Implicit OAuth flow based on Automattic's Grasshopper approach.
+ * Supports initiation, callback handling, and information retrieval.
+ *
+ * @param {NextRequest} request - Next.js request with action parameter
+ * @returns {Promise<NextResponse>} OAuth operation result or error response
  */
-
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -36,6 +39,7 @@ export async function GET(request: NextRequest) {
 /**
  * Initiate WordPress.com Implicit OAuth Flow
  * No client secret needed - perfect for frontend apps
+ * @returns {NextResponse} OAuth initiation data with authorization URL
  */
 function initiateImplicitOAuth() {
   // WordPress.com OAuth endpoint for implicit flow
@@ -65,6 +69,8 @@ function initiateImplicitOAuth() {
 
 /**
  * Handle OAuth callback (though with implicit flow, token is in URL fragment)
+ * @param {NextRequest} request - Next.js request object
+ * @returns {NextResponse} Callback handling instructions
  */
 function handleOAuthCallback(request: NextRequest) {
   // With implicit flow, the token is in the URL fragment (#access_token=...)
@@ -83,6 +89,7 @@ function handleOAuthCallback(request: NextRequest) {
 
 /**
  * Get information about implicit OAuth setup
+ * @returns {NextResponse} OAuth implementation information
  */
 function getImplicitOAuthInfo() {
   return NextResponse.json({
@@ -116,6 +123,7 @@ function getImplicitOAuthInfo() {
 
 /**
  * Generate random state for CSRF protection
+ * @returns {string} Random state string
  */
 function generateRandomState(): string {
   return Math.random().toString(36).substring(2, 15) + 
