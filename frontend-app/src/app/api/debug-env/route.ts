@@ -1,5 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+/**
+ * GET /api/debug-env - Debug environment variables
+ *
+ * Returns debug information about environment variables and configuration.
+ * Useful for troubleshooting API integrations and token validation.
+ *
+ * @param {NextRequest} request - Next.js request object
+ * @returns {Promise<NextResponse>} Environment debug information
+ */
 export async function GET(request: NextRequest) {
   // Debug environment variables (be careful not to expose sensitive data in production)
   const envDebug = {
