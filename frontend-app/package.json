@@ -16,7 +16,7 @@
     "test:watch": "jest --watch",
     "jsdoc": "documentation build src/ --format html --output docs/jsdoc",
     "jsdoc:check": "documentation lint src/",
-    "jsdoc:build": "documentation build src/ --format html --output docs/jsdoc"
+    "jsdoc:coverage": "documentation coverage src/"
   },
   "dependencies": {
     "@google-analytics/data": "^5.2.0",
