@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { del, head } from '@vercel/blob';
 
+/**
+ * GET /api/avatars/[userId] - Get user avatar URL
+ *
+ * Retrieves the avatar URL for a specific user from Vercel Blob storage.
+ * Checks if the avatar exists before returning the URL.
+ *
+ * @param {NextRequest} request - Next.js request object
+ * @param {Object} params - Route parameters
+ * @param {string} params.userId - User identifier
+ * @returns {Promise<NextResponse>} Avatar URL or error response
+ */
 export async function GET(
   request: NextRequest,
   { params }: { params: { userId: string } }
@@ -49,6 +60,16 @@ export async function GET(
   }
 }
 
+/**
+ * DELETE /api/avatars/[userId] - Delete user avatar
+ *
+ * Removes the avatar file for a specific user from Vercel Blob storage.
+ *
+ * @param {NextRequest} request - Next.js request object
+ * @param {Object} params - Route parameters
+ * @param {string} params.userId - User identifier
+ * @returns {Promise<NextResponse>} Deletion confirmation or error response
+ */
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { userId: string } }
