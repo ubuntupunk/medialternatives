@@ -1,7 +1,14 @@
 import { NextResponse } from 'next/server';
 import { getToken } from '../auth/route';
 
-// Check AdSense authentication status
+/**
+ * GET /api/adsense/status - Check AdSense authentication status
+ *
+ * Returns current authentication state, token availability, and configuration status.
+ * Used by dashboard to determine if AdSense API is ready for use.
+ *
+ * @returns {Promise<NextResponse>} Authentication status and configuration info
+ */
 export async function GET() {
   try {
     const tokens = await getToken();
