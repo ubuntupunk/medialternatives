@@ -38,8 +38,18 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
         const data = await wordpressApi.getUser(authorId);
         setAuthor(data);
       } catch (err) {
-        setError('Failed to load author information');
-        console.error('Error fetching author:', err);
+        // If authentication is required, fall back to default author info
+        console.warn('Author data requires authentication, using fallback:', err);
+        setAuthor({
+          id: authorId,
+          name: 'David Robert Lewis',
+          slug: 'david-robert-lewis',
+          description: 'Media activist, researcher, and writer focusing on South African media landscape and social justice issues.',
+          avatar_urls: {
+            '96': '/images/avatar.png'
+          },
+          url: '/author/david-robert-lewis'
+        });
       } finally {
         setIsLoading(false);
       }
@@ -60,8 +70,20 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
     return <div className="widget author-widget"></div>;
   }
 
-  // Get avatar URL with fallback
-  const avatarUrl = author.avatar_urls?.['96'] || author.avatar_url || '/images/default-avatar.png';
+  // Get avatar URL with fallback and ensure it's a string
+  let avatarUrl = '/images/default-avatar.png';
+  
+  if (author.avatar_urls?.['96']) {
+    avatarUrl = typeof author.avatar_urls['96'] === 'string' ? author.avatar_urls['96'] : '/images/default-avatar.png';
+  } else if (author.avatar_url) {
+    avatarUrl = typeof author.avatar_url === 'string' ? author.avatar_url : '/images/default-avatar.png';
+  }
+  
+  // Ensure we don't pass objects or malformed data to Image component
+  if (typeof avatarUrl !== 'string' || avatarUrl.includes('{')) {
+    console.warn('Invalid avatar URL detected, using fallback:', avatarUrl);
+    avatarUrl = '/images/default-avatar.png';
+  }
 
   return (
     <div className="widget author-widget">

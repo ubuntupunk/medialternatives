@@ -101,6 +101,22 @@ async function fetchAuthenticatedStats(token: any, period: string) {
     if (!summaryResponse.ok) {
       const errorText = await summaryResponse.text();
       console.error('❌ WordPress.com API error:', errorText);
+      
+      // Handle scope-related errors specifically
+      if (errorText.includes('Required scope') || errorText.includes('stats')) {
+        console.log('💡 Scope Error: Current token lacks "stats" scope');
+        console.log('💡 Solution: Re-authenticate with proper WordPress.com app configuration');
+        
+        return NextResponse.json({
+          success: false,
+          error: 'INSUFFICIENT_SCOPE',
+          message: 'WordPress.com authentication lacks required "stats" scope',
+          details: errorText,
+          solution: 'Please set up a proper WordPress.com OAuth application and re-authenticate',
+          fallback: 'Using Google Analytics data instead'
+        }, { status: 403 });
+      }
+      
       throw new Error(`WordPress.com API error: ${summaryResponse.status}`);
     }
 

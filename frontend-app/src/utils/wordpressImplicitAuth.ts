@@ -52,10 +52,13 @@ export function initiateWordPressOAuth(): void {
   
   authUrl.searchParams.set('response_type', 'token');
   
-  // Start with basic WordPress.com supported scopes
+  // WordPress.com OAuth scopes - using only documented scopes
   // Based on https://developer.wordpress.com/docs/oauth2/#token-scope
+  // Note: WordPress.com only supports 'read', 'write', 'global', 'auth' scopes
+  // Stats access is included in 'read' scope for Jetpack sites
   const scopes = [
-    'read'               // Basic read access (includes stats, posts, etc.)
+    'read',              // Basic read access (includes stats for Jetpack sites)
+    'global'             // Access to WordPress.com account information
   ].join(',');
   
   authUrl.searchParams.set('scope', scopes);
@@ -64,6 +67,8 @@ export function initiateWordPressOAuth(): void {
   
   console.log('OAuth URL:', authUrl.toString());
   console.log('Redirect URI:', redirectUri);
+  console.log('Requested Scopes:', scopes);
+  console.log('Target Blog:', 'medialternatives.wordpress.com');
   
   // Redirect to WordPress.com
   window.location.href = authUrl.toString();

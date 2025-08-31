@@ -3,14 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { GOOGLE_ANALYTICS_ID } from '@/lib/constants';
-import { 
-  initiateWordPressOAuth, 
-  handleOAuthCallback, 
-  getAuthStatus, 
-  clearStoredToken,
-  makeAuthenticatedRequest,
-  WORDPRESS_API_ENDPOINTS 
-} from '@/utils/wordpressImplicitAuth';
+import { useWordPressAuth } from '@/contexts/WordPressAuthContext';
+import { useAuthenticatedAPI } from '@/hooks/useAuthenticatedAPI';
 import { useClientOnly } from '@/hooks/useClientOnly';
 
 interface AnalyticsData {
@@ -50,8 +44,12 @@ export default function AnalyticsPage() {
   const [jetpackLoading, setJetpackLoading] = useState(false);
   const [jetpackAuthStatus, setJetpackAuthStatus] = useState<any>(null);
   const [jetpackAuthLoading, setJetpackAuthLoading] = useState(false);
-  const [wpAuthStatus, setWpAuthStatus] = useState<any>({ isAuthenticated: false }); // Default state
+  const [wpAuthStatus, setWpAuthStatus] = useState<any>(null);
   const isClient = useClientOnly();
+  
+  // Use centralized WordPress authentication
+  const { isAuthenticated, token, login, logout, loading: authLoading } = useWordPressAuth();
+  const { getStats, getTopPosts, getReferrers, canPerform } = useAuthenticatedAPI();
   
   // Fetch analytics data from API
   const fetchAnalyticsData = async (period: string = selectedPeriod) => {
@@ -152,32 +150,15 @@ const fetchJetpackAuthStatus = async () => {
   }
 };
 
-// Check for WordPress.com OAuth callback on page load (client-side only)
+// Auto-fetch Jetpack data when authenticated
 useEffect(() => {
-  if (!isClient) return;
+  if (!isClient || authLoading) return;
   
-  console.log('Checking for OAuth callback...');
-  console.log('Current URL:', window.location.href);
-  console.log('URL Hash:', window.location.hash);
-  
-  // Check if we're returning from OAuth
-  const authResult = handleOAuthCallback();
-  console.log('OAuth callback result:', authResult);
-  
-  if (authResult.isAuthenticated) {
-    console.log('WordPress.com OAuth successful!', authResult.token);
-    setWpAuthStatus(authResult);
-    // Automatically fetch Jetpack data with new token
-    fetchJetpackDataWithAuth(authResult.token);
-  } else if (authResult.error) {
-    console.error('OAuth error:', authResult.error);
-  } else {
-    // Check existing auth status
-    const currentAuth = getAuthStatus();
-    console.log('Existing auth status:', currentAuth);
-    setWpAuthStatus(currentAuth);
+  if (isAuthenticated && activeTab === 'jetpack') {
+    console.log('🎉 WordPress.com authenticated - fetching Jetpack data');
+    fetchJetpackDataWithCentralizedAuth();
   }
-}, [isClient]);
+}, [isClient, isAuthenticated, authLoading, activeTab]);
 
 // Initiate WordPress.com implicit OAuth flow (Grasshopper-style)
 const initiateWordPressImplicitOAuth = () => {
@@ -289,20 +270,32 @@ const handlePeriodChange = (period: string) => {
   }
 };
 
+// Initialize WordPress auth status on client side
+useEffect(() => {
+  if (isClient) {
+    import('@/utils/wordpressImplicitAuth').then(({ getAuthStatus }) => {
+      const currentAuth = getAuthStatus();
+      setWpAuthStatus(currentAuth);
+    });
+  }
+}, [isClient]);
+
 const handleTabChange = (tab: 'google' | 'jetpack') => {
   setActiveTab(tab);
   if (tab === 'jetpack' && isClient) {
-    // Check WordPress.com auth status (client-side only)
-    const currentAuth = getAuthStatus();
-    setWpAuthStatus(currentAuth);
-    
-    if (currentAuth.isAuthenticated) {
-      // Always fetch live data when authenticated
-      fetchJetpackDataWithAuth(currentAuth.token);
-    } else {
-      // Clear any existing data when not authenticated
-      setJetpackData(null);
-    }
+    // Import getAuthStatus dynamically to avoid SSR issues
+    import('@/utils/wordpressImplicitAuth').then(({ getAuthStatus }) => {
+      const currentAuth = getAuthStatus();
+      setWpAuthStatus(currentAuth);
+      
+      if (currentAuth.isAuthenticated) {
+        // Always fetch live data when authenticated
+        fetchJetpackDataWithAuth(currentAuth.token);
+      } else {
+        // Clear any existing data when not authenticated
+        setJetpackData(null);
+      }
+    });
   }
 };
 
