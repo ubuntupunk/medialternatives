@@ -7,7 +7,15 @@ import { checkMultiplePostsLinks } from '@/utils/deadLinkChecker';
 let scheduledChecks: any[] = [];
 
 /**
- * API endpoint to execute a specific scheduled check
+ * POST /api/scheduled-checks/[id]/execute - Execute a scheduled check
+ *
+ * Runs the dead link check for a specific scheduled check ID.
+ * Updates check status and sends notifications if dead links are found.
+ *
+ * @param {NextRequest} request - Next.js request object
+ * @param {Object} params - Route parameters
+ * @param {string} params.id - Scheduled check ID to execute
+ * @returns {Promise<NextResponse>} Execution results or error response
  */
 export async function POST(
   request: NextRequest,
@@ -101,6 +109,8 @@ export async function POST(
 
 /**
  * Send notifications for scheduled check results
+ * @param {any} check - Completed scheduled check with results
+ * @returns {Promise<void>}
  */
 async function sendScheduledCheckNotifications(check: any): Promise<void> {
   try {
@@ -168,6 +178,7 @@ async function sendScheduledCheckNotifications(check: any): Promise<void> {
 /**
  * Get stored notification settings
  * In production, this would come from a database
+ * @returns {Object} Notification settings configuration
  */
 function getStoredNotificationSettings() {
   // Default settings for demo
