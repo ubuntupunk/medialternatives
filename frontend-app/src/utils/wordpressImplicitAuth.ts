@@ -4,6 +4,17 @@
  * https://github.com/automattic/grasshopper
  */
 
+/**
+ * WordPress.com OAuth token structure
+ * @interface WordPressToken
+ * @property {string} accessToken - OAuth access token
+ * @property {string} tokenType - Token type (usually 'bearer')
+ * @property {number} expiresIn - Token expiration time in seconds
+ * @property {string} scope - Granted OAuth scopes
+ * @property {string} siteId - WordPress.com site identifier
+ * @property {string} state - OAuth state parameter for CSRF protection
+ * @property {Date} expiresAt - Token expiration timestamp
+ */
 interface WordPressToken {
   accessToken: string;
   tokenType: string;
@@ -14,6 +25,13 @@ interface WordPressToken {
   expiresAt: Date;
 }
 
+/**
+ * Authentication state structure
+ * @interface AuthState
+ * @property {boolean} isAuthenticated - Whether user is authenticated
+ * @property {WordPressToken} [token] - Current authentication token
+ * @property {string} [error] - Authentication error message
+ */
 interface AuthState {
   isAuthenticated: boolean;
   token?: WordPressToken;
@@ -22,6 +40,8 @@ interface AuthState {
 
 /**
  * Initiate WordPress.com implicit OAuth flow
+ * @returns {void}
+ * @throws {Error} If not in browser or client ID not configured
  */
 export function initiateWordPressOAuth(): void {
   // Ensure we're in the browser
@@ -76,6 +96,7 @@ export function initiateWordPressOAuth(): void {
 
 /**
  * Check if we're returning from OAuth and extract token
+ * @returns {AuthState} Authentication state with token if successful
  */
 export function handleOAuthCallback(): AuthState {
   // Ensure we're in the browser
@@ -144,6 +165,7 @@ export function handleOAuthCallback(): AuthState {
 
 /**
  * Get stored authentication token
+ * @returns {WordPressToken | null} Stored token or null if not found/expired
  */
 export function getStoredToken(): WordPressToken | null {
   // Ensure we're in the browser
@@ -173,6 +195,8 @@ export function getStoredToken(): WordPressToken | null {
 
 /**
  * Store authentication token securely
+ * @param {WordPressToken} token - Token to store
+ * @returns {void}
  */
 export function storeToken(token: WordPressToken): void {
   // Ensure we're in the browser
@@ -189,6 +213,7 @@ export function storeToken(token: WordPressToken): void {
 
 /**
  * Clear stored authentication token
+ * @returns {void}
  */
 export function clearStoredToken(): void {
   // Ensure we're in the browser
@@ -202,6 +227,7 @@ export function clearStoredToken(): void {
 
 /**
  * Check if user is currently authenticated
+ * @returns {boolean} True if user has valid stored token
  */
 export function isAuthenticated(): boolean {
   const token = getStoredToken();
@@ -210,6 +236,7 @@ export function isAuthenticated(): boolean {
 
 /**
  * Get current authentication status
+ * @returns {AuthState} Current authentication state
  */
 export function getAuthStatus(): AuthState {
   const token = getStoredToken();
@@ -226,6 +253,10 @@ export function getAuthStatus(): AuthState {
 
 /**
  * Make authenticated API call to WordPress.com
+ * @param {string} endpoint - API endpoint URL
+ * @param {RequestInit} [options={}] - Fetch options
+ * @returns {Promise<Response>} Fetch response
+ * @throws {Error} If not authenticated or request fails
  */
 export async function makeAuthenticatedRequest(endpoint: string, options: RequestInit = {}): Promise<Response> {
   const token = getStoredToken();
@@ -272,6 +303,7 @@ export async function makeAuthenticatedRequest(endpoint: string, options: Reques
 
 /**
  * Generate random state for CSRF protection
+ * @returns {string} Random state string
  */
 function generateRandomState(): string {
   return Math.random().toString(36).substring(2, 15) + 
@@ -280,6 +312,7 @@ function generateRandomState(): string {
 
 /**
  * WordPress.com API endpoints for authenticated requests
+ * @constant {Object} WORDPRESS_API_ENDPOINTS
  */
 export const WORDPRESS_API_ENDPOINTS = {
   SITE_STATS: (siteId: string) => `https://public-api.wordpress.com/rest/v1.1/sites/${siteId}/stats`,
