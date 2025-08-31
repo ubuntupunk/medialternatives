@@ -6,10 +6,27 @@ import { SITE_CONFIG } from '@/lib/constants';
 import { WordPressPost, PaginationInfo } from '@/types/wordpress';
 import { mockPosts } from '@/utils/mockData';
 
-// Enable ISR - revalidate every 5 minutes
+/**
+ * ISR revalidation interval in seconds
+ * @constant {number} revalidate
+ */
 export const revalidate = 300; // 5 minutes
 
-// This is a server component that fetches data on the server
+/**
+ * Homepage component for Media Alternatives
+ *
+ * Server component that fetches and displays the latest WordPress posts
+ * with pagination support. Falls back to mock data if API fails.
+ *
+ * Features:
+ * - Incremental Static Regeneration (ISR) every 5 minutes
+ * - Server-side data fetching for better SEO
+ * - Responsive post grid layout
+ * - Load more pagination
+ * - Error handling with fallback content
+ *
+ * @returns {Promise<JSX.Element>} Homepage with posts or error message
+ */
 export default async function Home() {
   let posts: WordPressPost[] = [];
   let pagination: PaginationInfo = {
