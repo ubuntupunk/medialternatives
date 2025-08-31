@@ -43,15 +43,24 @@ export class ProgressTracker {
   private total: number = 0;
   private callback?: ProgressCallback;
 
+  /**
+   * Create a new progress tracker
+   * @param {number} total - Total number of items to process
+   * @param {ProgressCallback} [callback] - Optional progress callback function
+   */
   constructor(total: number, callback?: ProgressCallback) {
     this.total = total;
     this.callback = callback;
     this.startTime = Date.now();
   }
 
-  /*
-    * Update progress with current item being processed
-    */
+  /**
+   * Update progress with current item being processed
+   * @param {number} current - Current number of items processed
+   * @param {string} [currentItem] - Name of currently processing item
+   * @param {'checking' | 'completed' | 'error'} [status='checking'] - Current processing status
+   * @returns {ProgressUpdate} Progress update information
+   */
   update(current: number, currentItem?: string, status: 'checking' | 'completed' | 'error' = 'checking') {
     this.current = current;
     const timeElapsed = Date.now() - this.startTime;
@@ -81,23 +90,27 @@ export class ProgressTracker {
     return update;
   }
 
-  /*
-    * Mark progress as completed
-    */
+  /**
+   * Mark progress as completed
+   * @returns {ProgressUpdate} Final progress update
+   */
   complete() {
     return this.update(this.total, undefined, 'completed');
   }
 
-  /*
-    * Mark progress as error
-    */
+  /**
+   * Mark progress as error
+   * @param {string} [currentItem] - Name of item that caused the error
+   * @returns {ProgressUpdate} Error progress update
+   */
   error(currentItem?: string) {
     return this.update(this.current, currentItem, 'error');
   }
 
-  /*
-    * Get current progress without updating
-    */
+  /**
+   * Get current progress without updating
+   * @returns {ProgressUpdate} Current progress information
+   */
   getProgress(): ProgressUpdate {
     const timeElapsed = Date.now() - this.startTime;
     const percentage = Math.round((this.current / this.total) * 100);
@@ -137,9 +150,12 @@ export function formatDuration(ms: number): string {
   return `${hours}h ${minutes}m`;
 }
 
-/*
-  * Calculate processing speed (items per second)
-  */
+/**
+ * Calculate processing speed (items per second)
+ * @param {number} itemsProcessed - Number of items processed
+ * @param {number} timeElapsed - Time elapsed in milliseconds
+ * @returns {number} Processing speed in items per second
+ */
 export function calculateSpeed(itemsProcessed: number, timeElapsed: number): number {
   if (timeElapsed === 0) return 0;
   return Math.round((itemsProcessed / timeElapsed) * 1000 * 100) / 100;
