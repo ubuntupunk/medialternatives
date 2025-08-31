@@ -1,19 +1,34 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Routes that require authentication
+/**
+ * Routes that require user authentication
+ * @constant {string[]} protectedRoutes
+ */
 const protectedRoutes = [
   '/profile',
   '/dashboard',
   '/api/avatars/upload',
 ];
 
-// Admin routes (more sensitive)
+/**
+ * Admin routes requiring elevated permissions
+ * @constant {string[]} adminRoutes
+ */
 const adminRoutes = [
   '/admin',
   '/api/avatars',
 ];
 
+/**
+ * Next.js middleware for route protection and URL redirects
+ *
+ * Handles authentication checks, legacy URL redirects, and route protection
+ * for the Media Alternatives application.
+ *
+ * @param {NextRequest} request - Next.js request object
+ * @returns {NextResponse} Response object (redirect or continue)
+ */
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
@@ -77,6 +92,11 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
+/**
+ * Middleware configuration for route matching
+ * @constant {Object} config
+ * @property {string[]} matcher - URL patterns to match for middleware execution
+ */
 export const config = {
   matcher: [
     /*
