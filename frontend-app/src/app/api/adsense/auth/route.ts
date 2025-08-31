@@ -11,14 +11,31 @@ const OAUTH2_CLIENT = new google.auth.OAuth2(
     : 'http://localhost:3000/api/adsense/callback'
 );
 
+/**
+ * Get stored AdSense OAuth token
+ * @returns {Promise<any>} Stored OAuth token or null
+ */
 export async function getToken() {
   return await readToken();
 }
 
+/**
+ * Store AdSense OAuth token
+ * @param {object} newToken - OAuth token to store
+ * @returns {Promise<void>}
+ */
 export async function setToken(newToken: object) {
   await writeToken(newToken);
 }
 
+/**
+ * GET /api/adsense/auth - Initiate AdSense OAuth flow
+ *
+ * Redirects to Google OAuth for AdSense API authorization.
+ * Generates authorization URL with required scopes.
+ *
+ * @returns {NextResponse} Redirect response to Google OAuth
+ */
 export async function GET() {
   const authUrl = OAUTH2_CLIENT.generateAuthUrl({
     access_type: 'offline',
