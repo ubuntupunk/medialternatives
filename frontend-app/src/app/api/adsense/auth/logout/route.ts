@@ -8,6 +8,14 @@ const OAUTH2_CLIENT = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_SECRET
 );
 
+/**
+ * POST /api/adsense/auth/logout - Sign out of AdSense
+ *
+ * Revokes OAuth tokens on Google's side and clears stored tokens locally.
+ * Ensures clean logout and allows re-authentication.
+ *
+ * @returns {Promise<NextResponse>} Logout confirmation or error response
+ */
 export async function POST() {
   try {
     const tokens = await readToken();
