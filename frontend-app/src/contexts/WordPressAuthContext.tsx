@@ -56,7 +56,30 @@ interface WordPressAuthProviderProps {
   children: ReactNode;
 }
 
-// Provider Component
+/**
+ * WordPress.com Authentication Context Provider Component
+ *
+ * This provider component manages the authentication state for WordPress.com OAuth.
+ * It handles the OAuth flow, token storage, and provides authentication methods
+ * to child components through React Context.
+ *
+ * @component
+ * @param {WordPressAuthProviderProps} props - Component props
+ * @returns {JSX.Element} Context provider wrapping children
+ *
+ * @example
+ * ```tsx
+ * import { WordPressAuthProvider } from '@/contexts/WordPressAuthContext';
+ *
+ * function App() {
+ *   return (
+ *     <WordPressAuthProvider>
+ *       <MyApp />
+ *     </WordPressAuthProvider>
+ *   );
+ * }
+ * ```
+ */
 export function WordPressAuthProvider({ children }: WordPressAuthProviderProps) {
   const [state, setState] = useState<WordPressAuthState>({
     isAuthenticated: false,
@@ -219,7 +242,35 @@ export function WordPressAuthProvider({ children }: WordPressAuthProviderProps) 
   );
 }
 
-// Hook to use WordPress Auth Context
+/**
+ * Custom hook to access WordPress.com authentication context
+ *
+ * This hook provides access to the WordPress.com authentication state and methods.
+ * Must be used within a WordPressAuthProvider component.
+ *
+ * @returns {WordPressAuthContextType} Authentication context with state and methods
+ * @throws {Error} If used outside of WordPressAuthProvider
+ *
+ * @example
+ * ```tsx
+ * import { useWordPressAuth } from '@/contexts/WordPressAuthContext';
+ *
+ * function MyComponent() {
+ *   const { isAuthenticated, login, logout, user } = useWordPressAuth();
+ *
+ *   if (!isAuthenticated) {
+ *     return <button onClick={login}>Login with WordPress.com</button>;
+ *   }
+ *
+ *   return (
+ *     <div>
+ *       <p>Welcome, {user?.name}!</p>
+ *       <button onClick={logout}>Logout</button>
+ *     </div>
+ *   );
+ * }
+ * ```
+ */
 export function useWordPressAuth(): WordPressAuthContextType {
   const context = useContext(WordPressAuthContext);
   if (context === undefined) {
@@ -227,6 +278,44 @@ export function useWordPressAuth(): WordPressAuthContextType {
   }
   return context;
 }
+
+/**
+ * TypeScript type definitions for WordPress.com authentication
+ */
+
+/**
+ * WordPress.com OAuth token structure
+ * @typedef {Object} WordPressToken
+ * @property {string} accessToken - The OAuth access token
+ * @property {string} tokenType - Token type (usually 'bearer')
+ * @property {number} expiresIn - Token expiration time in seconds
+ * @property {string} scope - Granted OAuth scopes
+ * @property {string} siteId - WordPress.com site ID
+ * @property {string} state - OAuth state parameter for CSRF protection
+ * @property {Date} expiresAt - Token expiration timestamp
+ */
+
+/**
+ * WordPress.com user information structure
+ * @typedef {Object} WordPressUser
+ * @property {number} id - User ID
+ * @property {string} name - Display name
+ * @property {string} [email] - User email (if available)
+ * @property {string} [avatar_url] - User avatar URL
+ * @property {string[]} [roles] - User roles
+ */
+
+/**
+ * WordPress.com authentication state structure
+ * @typedef {Object} WordPressAuthState
+ * @property {boolean} isAuthenticated - Whether user is authenticated
+ * @property {WordPressToken|null} token - Current authentication token
+ * @property {WordPressUser|null} user - Current user information
+ * @property {string[]} permissions - Array of granted permissions
+ * @property {boolean} loading - Whether authentication is loading
+ * @property {string|null} error - Authentication error message
+ * @property {string|null} siteId - Current site ID
+ */
 
 // Export types for use in other components
 export type { WordPressToken, WordPressUser, WordPressAuthState };

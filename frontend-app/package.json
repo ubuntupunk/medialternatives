@@ -13,7 +13,10 @@
     "clean": "rm -rf .next out",
     "analyze": "ANALYZE=true next build",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "jsdoc": "documentation build src/ --format html --output docs/jsdoc",
+    "jsdoc:check": "documentation lint src/",
+    "jsdoc:coverage": "documentation coverage src/"
   },
   "dependencies": {
     "@google-analytics/data": "^5.2.0",
@@ -42,6 +45,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "documentation": "^14.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
     "jest": "^30.0.5",

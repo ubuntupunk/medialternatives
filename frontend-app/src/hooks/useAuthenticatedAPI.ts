@@ -2,14 +2,49 @@ import { useWordPressAuth } from '@/contexts/WordPressAuthContext';
 import { makeAuthenticatedRequest, WORDPRESS_API_ENDPOINTS } from '@/utils/wordpressImplicitAuth';
 
 /**
- * Hook for making authenticated WordPress.com API calls
- * Automatically handles authentication state and provides fallbacks
+ * Custom React hook for making authenticated WordPress.com API calls
+ *
+ * This hook provides a convenient interface for interacting with WordPress.com APIs
+ * that require authentication. It automatically handles authentication state,
+ * token management, and provides fallbacks for unauthenticated scenarios.
+ *
+ * @returns {Object} Hook interface with authentication methods and state
+ * @property {boolean} isAuthenticated - Whether user is currently authenticated
+ * @property {Object} token - Current authentication token
+ * @property {Function} makeRequest - Generic authenticated request method
+ * @property {Function} getStats - Get site statistics
+ * @property {Function} getTopPosts - Get top posts data
+ * @property {Function} getReferrers - Get referrer data
+ * @property {Function} getUser - Get user information
+ * @property {Function} canPerform - Check if operation is allowed
+ *
+ * @example
+ * ```tsx
+ * const { isAuthenticated, getStats, canPerform } = useAuthenticatedAPI();
+ *
+ * if (isAuthenticated && canPerform('read')) {
+ *   const stats = await getStats('30');
+ *   console.log('Site stats:', stats);
+ * }
+ * ```
  */
 export function useAuthenticatedAPI() {
   const { isAuthenticated, token, checkPermission } = useWordPressAuth();
 
   /**
-   * Make an authenticated request to WordPress.com API
+   * Make a generic authenticated request to WordPress.com API
+   *
+   * @async
+   * @param {string} endpoint - The API endpoint URL
+   * @param {RequestInit} [options] - Additional fetch options
+   * @returns {Promise<Response>} The fetch response
+   * @throws {Error} If not authenticated or request fails
+   *
+   * @example
+   * ```typescript
+   * const response = await makeRequest('/wp/v2/posts');
+   * const posts = await response.json();
+   * ```
    */
   const makeRequest = async (endpoint: string, options?: RequestInit) => {
     if (!isAuthenticated || !token) {
@@ -20,7 +55,18 @@ export function useAuthenticatedAPI() {
   };
 
   /**
-   * Get site statistics (requires read permission)
+   * Get site statistics from WordPress.com
+   *
+   * @async
+   * @param {string} [period='30'] - Time period in days (7, 30, 90, etc.)
+   * @returns {Promise<Object>} Site statistics data
+   * @throws {Error} If not authenticated or insufficient permissions
+   *
+   * @example
+   * ```typescript
+   * const stats = await getStats('30');
+   * console.log(`Views: ${stats.views}, Visitors: ${stats.visitors}`);
+   * ```
    */
   const getStats = async (period: string = '30') => {
     if (!checkPermission('read')) {
@@ -126,7 +172,18 @@ export function useAuthenticatedAPI() {
   };
 
   /**
-   * Check if a specific API operation is available
+   * Check if a specific API operation is available based on current permissions
+   *
+   * @param {string} operation - The operation to check ('read', 'write', 'stats', 'posts', 'media')
+   * @returns {boolean} Whether the operation is allowed
+   *
+   * @example
+   * ```typescript
+   * if (canPerform('stats')) {
+   *   // User can access statistics
+   *   const stats = await getStats();
+   * }
+   * ```
    */
   const canPerform = (operation: 'read' | 'write' | 'stats' | 'posts' | 'media') => {
     if (!isAuthenticated) return false;

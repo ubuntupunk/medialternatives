@@ -4,6 +4,26 @@ import { WebringWidgetProps, webringThemes } from './types';
 import styles from './WebringWidget.module.css';
 import { useClientOnly } from '@/hooks/useClientOnly';
 
+/**
+ * Interactive Webring Widget Component
+ *
+ * A dynamic widget that displays webring information with interactive theme changing.
+ * Users can hover over the widget and tooltip to cycle through different visual themes.
+ *
+ * @component
+ * @param {WebringWidgetProps} props - The component props
+ * @returns {JSX.Element} The rendered webring widget
+ *
+ * @example
+ * ```tsx
+ * <WebringWidget
+ *   title="My Webring"
+ *   theme="dark"
+ *   size="medium"
+ *   showImage={true}
+ * />
+ * ```
+ */
 const WebringWidget: React.FC<WebringWidgetProps> = ({
   title = 'Webring',
   webringUrl = 'https://meshring.netlify.app',
@@ -36,7 +56,13 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
     }
   }, [isClient, theme]);
 
-  // Change theme to a random different theme
+  /**
+   * Changes the widget theme to a random theme different from the current one
+   *
+   * @private
+   * @function changeToRandomTheme
+   * @returns {void}
+   */
   const changeToRandomTheme = () => {
     const currentIndex = availableThemes.indexOf(currentTheme);
     let randomIndex;
@@ -48,7 +74,14 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
     setCurrentTheme(newTheme);
   };
 
-  // Handle widget mouse enter
+  /**
+   * Handles mouse entering the widget area
+   * Changes theme if not already hovering over tooltip
+   *
+   * @private
+   * @function handleWidgetMouseEnter
+   * @returns {void}
+   */
   const handleWidgetMouseEnter = () => {
     setIsHoveringWidget(true);
     if (!isHoveringTooltip) {
@@ -56,21 +89,42 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
     }
   };
 
-  // Handle widget mouse leave
+  /**
+   * Handles mouse leaving the widget area
+   * Resets hover states and hides tooltip
+   *
+   * @private
+   * @function handleWidgetMouseLeave
+   * @returns {void}
+   */
   const handleWidgetMouseLeave = () => {
     setIsHoveringWidget(false);
     setIsHoveringTooltip(false);
     setShowTooltip(false);
   };
 
-  // Handle tooltip mouse enter
+  /**
+   * Handles mouse entering the tooltip/info button
+   * Shows tooltip and changes theme
+   *
+   * @private
+   * @function handleTooltipMouseEnter
+   * @returns {void}
+   */
   const handleTooltipMouseEnter = () => {
     setIsHoveringTooltip(true);
     setShowTooltip(true);
     changeToRandomTheme();
   };
 
-  // Handle tooltip mouse leave
+  /**
+   * Handles mouse leaving the tooltip/info button
+   * Hides tooltip
+   *
+   * @private
+   * @function handleTooltipMouseLeave
+   * @returns {void}
+   */
   const handleTooltipMouseLeave = () => {
     setIsHoveringTooltip(false);
     setShowTooltip(false);
