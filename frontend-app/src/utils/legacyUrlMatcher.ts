@@ -1,6 +1,13 @@
 import { wordpressApi } from '@/services/wordpress-api';
 import { WordPressPost } from '@/types/wordpress';
 
+/**
+ * Result of matching a legacy URL to a WordPress post
+ * @interface LegacyUrlMatch
+ * @property {WordPressPost} post - The matched WordPress post
+ * @property {number} confidence - Confidence score (0-100)
+ * @property {'exact_slug' | 'title_search' | 'date_match' | 'fuzzy_match'} strategy - Matching strategy used
+ */
 export interface LegacyUrlMatch {
   post: WordPressPost;
   confidence: number;
@@ -9,11 +16,16 @@ export interface LegacyUrlMatch {
 
 /**
  * Find WordPress posts that match legacy date-based URLs
+ * @param {string} year - Year from legacy URL
+ * @param {string} month - Month from legacy URL
+ * @param {string} day - Day from legacy URL
+ * @param {string} slug - Post slug from legacy URL
+ * @returns {Promise<LegacyUrlMatch | null>} Matched post with confidence score or null
  */
 export async function findPostByLegacyUrl(
-  year: string, 
-  month: string, 
-  day: string, 
+  year: string,
+  month: string,
+  day: string,
   slug: string
 ): Promise<LegacyUrlMatch | null> {
   
@@ -143,6 +155,10 @@ export async function findPostByLegacyUrl(
 
 /**
  * Calculate similarity between legacy slug and post data
+ * @param {string} legacySlug - Slug from legacy URL
+ * @param {string} postSlug - Current post slug
+ * @param {string} postTitle - Post title
+ * @returns {number} Similarity score (0-100)
  */
 function calculateSimilarity(legacySlug: string, postSlug: string, postTitle: string): number {
   let score = 0;
@@ -177,6 +193,8 @@ function calculateSimilarity(legacySlug: string, postSlug: string, postTitle: st
 
 /**
  * Generate common slug variations
+ * @param {string} slug - Original slug
+ * @returns {string[]} Array of slug variations
  */
 function generateSlugVariations(slug: string): string[] {
   const variations = [slug];
@@ -213,8 +231,8 @@ function generateSlugVariations(slug: string): string[] {
 }
 
 /**
- * Create a comprehensive mapping of known legacy URLs
- * This can be expanded as we discover more patterns
+ * Known mappings from legacy URLs to current slugs
+ * @constant {Record<string, string>} KNOWN_LEGACY_MAPPINGS
  */
 export const KNOWN_LEGACY_MAPPINGS: Record<string, string> = {
   // Add known mappings here as we discover them
@@ -224,6 +242,8 @@ export const KNOWN_LEGACY_MAPPINGS: Record<string, string> = {
 
 /**
  * Check if we have a known mapping for this legacy URL
+ * @param {string} legacySlug - Legacy slug to check
+ * @returns {string | null} Mapped current slug or null if not found
  */
 export function getKnownMapping(legacySlug: string): string | null {
   return KNOWN_LEGACY_MAPPINGS[legacySlug] || null;
