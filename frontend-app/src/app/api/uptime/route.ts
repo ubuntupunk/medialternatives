@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Uptime monitoring API endpoint
+/**
+ * Uptime monitoring data structure
+ * @interface UptimeData
+ * @property {number} current - Current uptime percentage
+ * @property {number} last24Hours - Uptime percentage for last 24 hours
+ * @property {number} last7Days - Uptime percentage for last 7 days
+ * @property {number} last30Days - Uptime percentage for last 30 days
+ * @property {Array<{date: string, duration: number, reason: string, status: 'resolved' | 'investigating' | 'monitoring'}>} incidents - Service incidents
+ * @property {{current: number, average24h: number, average7d: number, average30d: number}} responseTime - Response time metrics in milliseconds
+ * @property {string} lastChecked - ISO timestamp of last check
+ */
 interface UptimeData {
   current: number; // Current uptime percentage
   last24Hours: number;
@@ -21,6 +31,15 @@ interface UptimeData {
   lastChecked: string;
 }
 
+/**
+ * GET /api/uptime - Get uptime monitoring data
+ *
+ * Returns uptime statistics and incident history.
+ * Currently uses mock data - requires uptime monitoring service integration.
+ *
+ * @param {NextRequest} request - Next.js request object
+ * @returns {Promise<NextResponse>} Uptime data or error response
+ */
 export async function GET(request: NextRequest) {
   try {
     // TODO: Replace with actual uptime monitoring service integration
