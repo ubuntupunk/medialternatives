@@ -11,19 +11,20 @@
   box-shadow: 0 2px 4px 0 rgba(14, 30, 37, 0.12);
 }
 
-/* Theme cycling animation */
-.themeCycling {
-  animation: themePulse 0.8s ease-in-out infinite alternate;
+/* Theme changing animation */
+.themeChanging {
+  animation: themeGlow 1s ease-in-out;
 }
 
-@keyframes themePulse {
+@keyframes themeGlow {
   0% {
-    transform: scale(1);
     box-shadow: 0 2px 4px 0 rgba(14, 30, 37, 0.12);
   }
+  50% {
+    box-shadow: 0 4px 12px 0 rgba(14, 30, 37, 0.25);
+  }
   100% {
-    transform: scale(1.02);
-    box-shadow: 0 4px 12px 0 rgba(14, 30, 37, 0.2);
+    box-shadow: 0 2px 4px 0 rgba(14, 30, 37, 0.12);
   }
 }
 

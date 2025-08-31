@@ -7,7 +7,7 @@ import { useClientOnly } from '@/hooks/useClientOnly';
 const WebringWidget: React.FC<WebringWidgetProps> = ({
   title = 'Webring',
   webringUrl = 'https://meshring.netlify.app',
-  theme = 'random',
+  theme = 'dark',
   size = 'medium',
   showImage = true,
   className = '',
@@ -15,55 +15,42 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [isKeyboardNav, setIsKeyboardNav] = useState(false);
-  const [selectedTheme, setSelectedTheme] = useState<string>('default');
+  const [selectedTheme, setSelectedTheme] = useState<string>('dark');
   const [hoverTheme, setHoverTheme] = useState<string | null>(null);
-  const [themeCycleIndex, setThemeCycleIndex] = useState(0);
+  const [hasChangedTheme, setHasChangedTheme] = useState(false);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const infoButtonRef = useRef<HTMLAnchorElement>(null);
-  const themeCycleRef = useRef<NodeJS.Timeout | null>(null);
+  const widgetRef = useRef<HTMLElement>(null);
   const isClient = useClientOnly();
   
-  // Available themes for cycling
+  // Available themes for single change
   const availableThemes = ['default', 'minimal', 'ocean', 'sunset', 'dark', 'tokyo', 'dracula', 'disco'];
 
-  // Handle random theme selection on client side only
+  // Handle theme selection - default to dark
   useEffect(() => {
-    if (isClient && theme === 'random') {
-      const randomIndex = Math.floor(Math.random() * availableThemes.length);
-      setSelectedTheme(availableThemes[randomIndex]);
-    } else if (theme !== 'random') {
-      setSelectedTheme(theme);
+    if (isClient) {
+      setSelectedTheme(theme === 'random' ? 'dark' : theme);
     }
   }, [isClient, theme]);
 
-  // Theme cycling function
-  const cycleTheme = () => {
-    const nextIndex = (themeCycleIndex + 1) % availableThemes.length;
-    setThemeCycleIndex(nextIndex);
-    setHoverTheme(availableThemes[nextIndex]);
+  // Single theme change function
+  const changeToRandomTheme = () => {
+    if (hasChangedTheme) return; // Only change once per hover session
+
+    const currentIndex = availableThemes.indexOf(selectedTheme);
+    let randomIndex;
+    do {
+      randomIndex = Math.floor(Math.random() * availableThemes.length);
+    } while (randomIndex === currentIndex); // Avoid same theme
+
+    setHoverTheme(availableThemes[randomIndex]);
+    setHasChangedTheme(true);
   };
 
-  // Start theme cycling on tooltip hover
-  const startThemeCycling = () => {
-    if (themeCycleRef.current) return; // Already cycling
-
-    // Start with a random theme
-    const randomStart = Math.floor(Math.random() * availableThemes.length);
-    setThemeCycleIndex(randomStart);
-    setHoverTheme(availableThemes[randomStart]);
-
-    // Cycle every 800ms
-    themeCycleRef.current = setInterval(cycleTheme, 800);
-  };
-
-  // Stop theme cycling and revert to original theme
-  const stopThemeCycling = () => {
-    if (themeCycleRef.current) {
-      clearInterval(themeCycleRef.current);
-      themeCycleRef.current = null;
-    }
+  // Reset theme change flag when mouse leaves the entire widget
+  const resetThemeChange = () => {
     setHoverTheme(null);
-    setThemeCycleIndex(0);
+    setHasChangedTheme(false);
   };
   
   // Use hover theme if available, otherwise use selected theme
@@ -103,7 +90,7 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && showTooltip) {
         setShowTooltip(false);
-        stopThemeCycling();
+        resetThemeChange();
         infoButtonRef.current?.focus();
       }
     };
@@ -111,15 +98,6 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
   }, [showTooltip]);
-
-  // Cleanup theme cycling on unmount
-  useEffect(() => {
-    return () => {
-      if (themeCycleRef.current) {
-        clearInterval(themeCycleRef.current);
-      }
-    };
-  }, []);
 
   const themeStyles = {
     '--webring-bg': currentTheme.colors.background,
@@ -135,10 +113,13 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
 
   return (
     <aside
-      className={`widget ${styles.webringWidget} ${getSizeClass()} ${styles[`theme-${selectedTheme}`]} ${className} ${isKeyboardNav ? styles.keyboardNav : ''} ${hoverTheme ? styles.themeCycling : ''}`}
+      ref={widgetRef}
+      className={`widget ${styles.webringWidget} ${getSizeClass()} ${styles[`theme-${selectedTheme}`]} ${className} ${isKeyboardNav ? styles.keyboardNav : ''} ${hoverTheme ? styles.themeChanging : ''}`}
       style={themeStyles}
       role="complementary"
       aria-labelledby="webring-title"
+      onMouseEnter={changeToRandomTheme}
+      onMouseLeave={resetThemeChange}
     >
       <h3 id="webring-title" className={styles.widgetTitle}>{title}</h3>
       
@@ -192,26 +173,14 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
             rel="noopener noreferrer"
             className={styles.webringInfo}
             aria-describedby={showTooltip ? "webring-tooltip" : undefined}
-            onMouseEnter={() => {
-              setShowTooltip(true);
-              startThemeCycling();
-            }}
-            onMouseLeave={() => {
-              setShowTooltip(false);
-              stopThemeCycling();
-            }}
-            onFocus={() => {
-              setShowTooltip(true);
-              startThemeCycling();
-            }}
-            onBlur={() => {
-              setShowTooltip(false);
-              stopThemeCycling();
-            }}
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+            onFocus={() => setShowTooltip(true)}
+            onBlur={() => setShowTooltip(false)}
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
                 setShowTooltip(false);
-                stopThemeCycling();
+                resetThemeChange();
               }
             }}
             title=""
