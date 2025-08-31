@@ -1,6 +1,14 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
+/**
+ * POST /api/auth/logout - User logout endpoint
+ *
+ * Clears the authentication session cookie and logs out the user.
+ * Removes the auth-session cookie from the browser.
+ *
+ * @returns {Promise<NextResponse>} Logout confirmation response
+ */
 export async function POST() {
   try {
     // Create response
