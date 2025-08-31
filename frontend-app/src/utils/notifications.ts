@@ -2,6 +2,16 @@
  * Notification utilities for dead link checker
  */
 
+/**
+ * Notification settings configuration
+ * @interface NotificationSettings
+ * @property {string} [email] - Email address for notifications
+ * @property {string} [webhookUrl] - Webhook URL for notifications
+ * @property {boolean} enableBrowserNotifications - Enable browser notifications
+ * @property {boolean} enableEmailNotifications - Enable email notifications
+ * @property {boolean} enableWebhookNotifications - Enable webhook notifications
+ * @property {number} threshold - Minimum dead links to trigger notification
+ */
 export interface NotificationSettings {
   email?: string;
   webhookUrl?: string;
@@ -11,6 +21,15 @@ export interface NotificationSettings {
   threshold: number; // Minimum number of dead links to trigger notification
 }
 
+/**
+ * Dead link notification data structure
+ * @interface DeadLinkNotification
+ * @property {string} timestamp - ISO timestamp of notification
+ * @property {number} totalDeadLinks - Total number of dead links found
+ * @property {number} postsAffected - Number of posts affected
+ * @property {string} summary - Human-readable summary
+ * @property {any[]} details - Detailed dead link information
+ */
 export interface DeadLinkNotification {
   timestamp: string;
   totalDeadLinks: number;
@@ -21,6 +40,7 @@ export interface DeadLinkNotification {
 
 /**
  * Request browser notification permission
+ * @returns {Promise<boolean>} True if permission granted
  */
 export async function requestNotificationPermission(): Promise<boolean> {
   if (!('Notification' in window)) {
@@ -42,6 +62,9 @@ export async function requestNotificationPermission(): Promise<boolean> {
 
 /**
  * Show browser notification
+ * @param {string} title - Notification title
+ * @param {NotificationOptions} [options={}] - Notification options
+ * @returns {void}
  */
 export function showBrowserNotification(title: string, options: NotificationOptions = {}) {
   if (Notification.permission === 'granted') {
@@ -55,9 +78,12 @@ export function showBrowserNotification(title: string, options: NotificationOpti
 
 /**
  * Send email notification
+ * @param {string} email - Recipient email address
+ * @param {DeadLinkNotification} notification - Notification data
+ * @returns {Promise<boolean>} True if email sent successfully
  */
 export async function sendEmailNotification(
-  email: string, 
+  email: string,
   notification: DeadLinkNotification
 ): Promise<boolean> {
   try {
@@ -81,6 +107,9 @@ export async function sendEmailNotification(
 
 /**
  * Send webhook notification
+ * @param {string} webhookUrl - Webhook endpoint URL
+ * @param {DeadLinkNotification} notification - Notification data
+ * @returns {Promise<boolean>} True if webhook sent successfully
  */
 export async function sendWebhookNotification(
   webhookUrl: string,
@@ -107,6 +136,9 @@ export async function sendWebhookNotification(
 
 /**
  * Process dead link results and send notifications if needed
+ * @param {any} results - Dead link check results
+ * @param {NotificationSettings} settings - Notification settings
+ * @returns {Promise<void>}
  */
 export async function processNotifications(
   results: any,
@@ -151,6 +183,7 @@ export async function processNotifications(
 
 /**
  * Get default notification settings
+ * @returns {NotificationSettings} Default notification configuration
  */
 export function getDefaultNotificationSettings(): NotificationSettings {
   return {
@@ -163,6 +196,7 @@ export function getDefaultNotificationSettings(): NotificationSettings {
 
 /**
  * Load notification settings from localStorage
+ * @returns {NotificationSettings} Loaded or default notification settings
  */
 export function loadNotificationSettings(): NotificationSettings {
   if (typeof window === 'undefined') {
@@ -183,6 +217,8 @@ export function loadNotificationSettings(): NotificationSettings {
 
 /**
  * Save notification settings to localStorage
+ * @param {NotificationSettings} settings - Settings to save
+ * @returns {void}
  */
 export function saveNotificationSettings(settings: NotificationSettings): void {
   if (typeof window === 'undefined') {
