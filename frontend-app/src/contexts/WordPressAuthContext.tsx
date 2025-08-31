@@ -9,7 +9,17 @@ import {
   getStoredToken
 } from '@/utils/wordpressImplicitAuth';
 
-// Types
+/**
+ * WordPress.com OAuth token structure
+ * @interface WordPressToken
+ * @property {string} accessToken - The OAuth access token
+ * @property {string} tokenType - Token type (usually 'bearer')
+ * @property {number} expiresIn - Token expiration time in seconds
+ * @property {string} scope - Granted OAuth scopes
+ * @property {string} siteId - WordPress.com site ID
+ * @property {string} state - OAuth state parameter for CSRF protection
+ * @property {Date} expiresAt - Token expiration timestamp
+ */
 interface WordPressToken {
   accessToken: string;
   tokenType: string;
@@ -20,6 +30,15 @@ interface WordPressToken {
   expiresAt: Date;
 }
 
+/**
+ * WordPress.com user information structure
+ * @interface WordPressUser
+ * @property {number} id - User ID
+ * @property {string} name - Display name
+ * @property {string} [email] - User email (if available)
+ * @property {string} [avatar_url] - User avatar URL
+ * @property {string[]} [roles] - User roles
+ */
 interface WordPressUser {
   id: number;
   name: string;
@@ -28,6 +47,17 @@ interface WordPressUser {
   roles?: string[];
 }
 
+/**
+ * WordPress.com authentication state structure
+ * @interface WordPressAuthState
+ * @property {boolean} isAuthenticated - Whether user is authenticated
+ * @property {WordPressToken | null} token - Current authentication token
+ * @property {WordPressUser | null} user - Current user information
+ * @property {string[]} permissions - Array of granted permissions
+ * @property {boolean} loading - Whether authentication is loading
+ * @property {string | null} error - Authentication error message
+ * @property {string | null} siteId - Current site ID
+ */
 interface WordPressAuthState {
   isAuthenticated: boolean;
   token: WordPressToken | null;
@@ -38,6 +68,15 @@ interface WordPressAuthState {
   siteId: string | null;
 }
 
+/**
+ * WordPress.com authentication action methods
+ * @interface WordPressAuthActions
+ * @property {() => Promise<void>} login - Initiate OAuth login flow
+ * @property {() => void} logout - Clear authentication and logout
+ * @property {() => Promise<void>} refreshToken - Refresh authentication token
+ * @property {(scope: string) => boolean} checkPermission - Check if user has specific permission
+ * @property {() => void} clearError - Clear current error state
+ */
 interface WordPressAuthActions {
   login: () => Promise<void>;
   logout: () => void;
@@ -46,12 +85,22 @@ interface WordPressAuthActions {
   clearError: () => void;
 }
 
+/**
+ * Complete WordPress.com authentication context type
+ * @interface WordPressAuthContextType
+ * @extends WordPressAuthState
+ * @extends WordPressAuthActions
+ */
 interface WordPressAuthContextType extends WordPressAuthState, WordPressAuthActions {}
 
 // Context
 const WordPressAuthContext = createContext<WordPressAuthContextType | undefined>(undefined);
 
-// Provider Props
+/**
+ * Props for WordPressAuthProvider component
+ * @interface WordPressAuthProviderProps
+ * @property {ReactNode} children - Child components to render
+ */
 interface WordPressAuthProviderProps {
   children: ReactNode;
 }
@@ -108,6 +157,10 @@ export function WordPressAuthProvider({ children }: WordPressAuthProviderProps) 
     }
   }, []);
 
+  /**
+   * Initialize authentication state on component mount
+   * @returns {Promise<void>}
+   */
   const initializeAuth = async () => {
     try {
       const currentAuth = getAuthStatus();
@@ -126,6 +179,11 @@ export function WordPressAuthProvider({ children }: WordPressAuthProviderProps) 
     }
   };
 
+  /**
+   * Update authentication state with new token
+   * @param {WordPressToken} token - New authentication token
+   * @returns {Promise<void>}
+   */
   const updateAuthState = async (token: WordPressToken) => {
     try {
       // Parse permissions from token scope
@@ -164,6 +222,10 @@ export function WordPressAuthProvider({ children }: WordPressAuthProviderProps) 
     }
   };
 
+  /**
+   * Initiate WordPress.com OAuth login flow
+   * @returns {Promise<void>}
+   */
   const login = async () => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }));
@@ -178,6 +240,10 @@ export function WordPressAuthProvider({ children }: WordPressAuthProviderProps) 
     }
   };
 
+  /**
+   * Clear authentication and logout user
+   * @returns {void}
+   */
   const logout = () => {
     clearStoredToken();
     setState({
@@ -192,6 +258,10 @@ export function WordPressAuthProvider({ children }: WordPressAuthProviderProps) 
     console.log('🚪 WordPress.com logout successful');
   };
 
+  /**
+   * Refresh authentication token if still valid
+   * @returns {Promise<void>}
+   */
   const refreshToken = async () => {
     try {
       setState(prev => ({ ...prev, loading: true }));
@@ -217,10 +287,19 @@ export function WordPressAuthProvider({ children }: WordPressAuthProviderProps) 
     }
   };
 
+  /**
+   * Check if user has specific permission scope
+   * @param {string} scope - Permission scope to check
+   * @returns {boolean} True if user has the permission
+   */
   const checkPermission = (scope: string): boolean => {
     return state.permissions.includes(scope) || state.permissions.includes('read') || state.permissions.includes('write');
   };
 
+  /**
+   * Clear current error state
+   * @returns {void}
+   */
   const clearError = () => {
     setState(prev => ({ ...prev, error: null }));
   };
