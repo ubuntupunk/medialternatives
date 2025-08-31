@@ -16,45 +16,68 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
   const [showTooltip, setShowTooltip] = useState(false);
   const [isKeyboardNav, setIsKeyboardNav] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState<string>('dark');
-  const [hoverTheme, setHoverTheme] = useState<string | null>(null);
-  const [hasChangedTheme, setHasChangedTheme] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState<string>('dark');
+  const [isHoveringWidget, setIsHoveringWidget] = useState(false);
+  const [isHoveringTooltip, setIsHoveringTooltip] = useState(false);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const infoButtonRef = useRef<HTMLAnchorElement>(null);
   const widgetRef = useRef<HTMLElement>(null);
   const isClient = useClientOnly();
   
-  // Available themes for single change
+  // Available themes for theme changes
   const availableThemes = ['default', 'minimal', 'ocean', 'sunset', 'dark', 'tokyo', 'dracula', 'disco'];
 
   // Handle theme selection - default to dark
   useEffect(() => {
     if (isClient) {
-      setSelectedTheme(theme === 'random' ? 'dark' : theme);
+      const initialTheme = theme === 'random' ? 'dark' : theme;
+      setSelectedTheme(initialTheme);
+      setCurrentTheme(initialTheme);
     }
   }, [isClient, theme]);
 
-  // Single theme change function
+  // Change theme to a random different theme
   const changeToRandomTheme = () => {
-    if (hasChangedTheme) return; // Only change once per hover session
-
-    const currentIndex = availableThemes.indexOf(selectedTheme);
+    const currentIndex = availableThemes.indexOf(currentTheme);
     let randomIndex;
     do {
       randomIndex = Math.floor(Math.random() * availableThemes.length);
-    } while (randomIndex === currentIndex); // Avoid same theme
+    } while (randomIndex === currentIndex && availableThemes.length > 1); // Avoid same theme
 
-    setHoverTheme(availableThemes[randomIndex]);
-    setHasChangedTheme(true);
+    const newTheme = availableThemes[randomIndex];
+    setCurrentTheme(newTheme);
   };
 
-  // Reset theme change flag when mouse leaves the entire widget
-  const resetThemeChange = () => {
-    setHoverTheme(null);
-    setHasChangedTheme(false);
+  // Handle widget mouse enter
+  const handleWidgetMouseEnter = () => {
+    setIsHoveringWidget(true);
+    if (!isHoveringTooltip) {
+      changeToRandomTheme();
+    }
+  };
+
+  // Handle widget mouse leave
+  const handleWidgetMouseLeave = () => {
+    setIsHoveringWidget(false);
+    setIsHoveringTooltip(false);
+    setShowTooltip(false);
+  };
+
+  // Handle tooltip mouse enter
+  const handleTooltipMouseEnter = () => {
+    setIsHoveringTooltip(true);
+    setShowTooltip(true);
+    changeToRandomTheme();
+  };
+
+  // Handle tooltip mouse leave
+  const handleTooltipMouseLeave = () => {
+    setIsHoveringTooltip(false);
+    setShowTooltip(false);
   };
   
-  // Use hover theme if available, otherwise use selected theme
-  const currentTheme = webringThemes[hoverTheme || selectedTheme] || webringThemes.default;
+  // Use current theme for styling
+  const themeData = webringThemes[currentTheme] || webringThemes.dark;
   
   const getSizeClass = () => {
     switch (size) {
@@ -90,7 +113,7 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && showTooltip) {
         setShowTooltip(false);
-        resetThemeChange();
+        setIsHoveringTooltip(false);
         infoButtonRef.current?.focus();
       }
     };
@@ -100,26 +123,26 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
   }, [showTooltip]);
 
   const themeStyles = {
-    '--webring-bg': currentTheme.colors.background,
-    '--webring-border': currentTheme.colors.border,
-    '--webring-text': currentTheme.colors.text,
-    '--webring-accent': currentTheme.colors.accent,
-    '--webring-link': currentTheme.colors.linkColor,
-    '--webring-link-hover': currentTheme.colors.linkHover,
-    '--webring-button-bg': currentTheme.colors.buttonBackground,
-    '--webring-button-text': currentTheme.colors.buttonText,
-    '--webring-button-hover': currentTheme.colors.buttonHover,
+    '--webring-bg': themeData.colors.background,
+    '--webring-border': themeData.colors.border,
+    '--webring-text': themeData.colors.text,
+    '--webring-accent': themeData.colors.accent,
+    '--webring-link': themeData.colors.linkColor,
+    '--webring-link-hover': themeData.colors.linkHover,
+    '--webring-button-bg': themeData.colors.buttonBackground,
+    '--webring-button-text': themeData.colors.buttonText,
+    '--webring-button-hover': themeData.colors.buttonHover,
   } as React.CSSProperties;
 
   return (
     <aside
       ref={widgetRef}
-      className={`widget ${styles.webringWidget} ${getSizeClass()} ${styles[`theme-${selectedTheme}`]} ${className} ${isKeyboardNav ? styles.keyboardNav : ''} ${hoverTheme ? styles.themeChanging : ''}`}
+      className={`widget ${styles.webringWidget} ${getSizeClass()} ${styles[`theme-${currentTheme}`]} ${className} ${isKeyboardNav ? styles.keyboardNav : ''} ${(isHoveringWidget || isHoveringTooltip) ? styles.themeChanging : ''}`}
       style={themeStyles}
       role="complementary"
       aria-labelledby="webring-title"
-      onMouseEnter={changeToRandomTheme}
-      onMouseLeave={resetThemeChange}
+      onMouseEnter={handleWidgetMouseEnter}
+      onMouseLeave={handleWidgetMouseLeave}
     >
       <h3 id="webring-title" className={styles.widgetTitle}>{title}</h3>
       
@@ -173,14 +196,14 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
             rel="noopener noreferrer"
             className={styles.webringInfo}
             aria-describedby={showTooltip ? "webring-tooltip" : undefined}
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
+            onMouseEnter={handleTooltipMouseEnter}
+            onMouseLeave={handleTooltipMouseLeave}
             onFocus={() => setShowTooltip(true)}
             onBlur={() => setShowTooltip(false)}
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
                 setShowTooltip(false);
-                resetThemeChange();
+                setIsHoveringTooltip(false);
               }
             }}
             title=""
