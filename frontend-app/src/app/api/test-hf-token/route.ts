@@ -1,5 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+/**
+ * GET /api/test-hf-token - Test Hugging Face API token validity
+ *
+ * Tests the Hugging Face API token by making a real API call.
+ * Validates token permissions and API connectivity.
+ *
+ * @param {NextRequest} request - Next.js request object
+ * @returns {Promise<NextResponse>} Token validation results or error response
+ */
 export async function GET(request: NextRequest) {
   try {
     const HF_TOKEN = process.env.HUGGINGFACE_API_TOKEN;
