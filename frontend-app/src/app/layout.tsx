@@ -6,6 +6,61 @@ import Layout from "@/components/Layout/Layout"; // Import the custom Layout com
 import StructuredData from "@/components/SEO/StructuredData";
 import { WordPressAuthProvider } from "@/contexts/WordPressAuthContext";
 
+/**
+ * Configure Copse Google Font
+ * @constant {Object} copse
+ */
+const copse = Copse({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-copse'
+});
+
+/**
+ * Configure Quattrocento Google Font
+ * @constant {Object} quattrocento
+ */
+const quattrocento = Quattrocento({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-quattrocento'
+});
+
+/**
+ * Configure Revalia Google Font
+ * @constant {Object} revalia
+ */
+const revalia = Revalia({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-revalia'
+});
+
+/**
+ * Configure Quicksand Google Font for handbook
+ * @constant {Object} quicksand
+ */
+const quicksand = Quicksand({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-quicksand'
+});
+
+/**
+ * Configure Roboto Google Font for handbook
+ * @constant {Object} roboto
+ */
+const roboto = Roboto({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-roboto'
+});
+
 // Configure Google Fonts
 const copse = Copse({
   weight: '400',
@@ -43,6 +98,10 @@ const roboto = Roboto({
   variable: '--font-roboto'
 });
 
+/**
+ * Next.js metadata configuration for SEO and social sharing
+ * @constant {Metadata} metadata
+ */
 export const metadata: Metadata = {
   title: {
     default: SITE_CONFIG.SITE_TITLE,
@@ -119,6 +178,16 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Root layout component for the Media Alternatives application
+ *
+ * Provides the HTML structure, fonts, metadata, authentication context,
+ * and global layout wrapper for all pages.
+ *
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Child components to render
+ * @returns {JSX.Element} Root HTML structure
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
