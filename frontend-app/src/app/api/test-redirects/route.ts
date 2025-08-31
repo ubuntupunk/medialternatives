@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 
 /**
- * Test endpoint to verify redirect functionality
- * Usage: GET /api/test-redirects
+ * GET /api/test-redirects - Test redirect functionality
+ *
+ * Returns test configuration for verifying URL redirects.
+ * Provides test URLs and expected redirect behavior.
+ *
+ * @returns {Promise<NextResponse>} Test configuration and instructions
  */
 export async function GET() {
   const testUrls = [
