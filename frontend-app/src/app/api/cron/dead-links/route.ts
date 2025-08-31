@@ -3,12 +3,14 @@ import { wordpressApi } from '@/services/wordpress-api';
 import { checkMultiplePostsLinks } from '@/utils/deadLinkChecker';
 
 /**
- * Cron job endpoint for automated dead link checking
- * This can be called by Vercel Cron Jobs, GitHub Actions, or external cron services
- * 
- * Usage:
- * - GET /api/cron/dead-links (runs scheduled checks)
- * - Requires authorization header for security
+ * GET /api/cron/dead-links - Execute scheduled dead link check
+ *
+ * Cron job endpoint for automated dead link checking.
+ * Can be called by Vercel Cron Jobs, GitHub Actions, or external cron services.
+ * Requires authorization header for security.
+ *
+ * @param {NextRequest} request - Next.js request with authorization header
+ * @returns {Promise<NextResponse>} Check results or error response
  */
 export async function GET(request: NextRequest) {
   try {
@@ -122,6 +124,7 @@ export async function GET(request: NextRequest) {
 /**
  * Get stored schedule settings
  * In production, this would come from a database
+ * @returns {any} Schedule settings configuration
  */
 function getStoredScheduleSettings() {
   // Default settings for demo
@@ -138,6 +141,8 @@ function getStoredScheduleSettings() {
 
 /**
  * Check if the scheduled check should run now
+ * @param {any} settings - Schedule settings
+ * @returns {boolean} True if check should run now
  */
 function shouldRunNow(settings: any): boolean {
   if (!settings.nextRun) {
@@ -153,6 +158,8 @@ function shouldRunNow(settings: any): boolean {
 /**
  * Store scheduled check result
  * In production, save to database
+ * @param {any} check - Scheduled check result to store
+ * @returns {Promise<void>}
  */
 async function storeScheduledCheck(check: any): Promise<void> {
   try {
@@ -170,6 +177,8 @@ async function storeScheduledCheck(check: any): Promise<void> {
 
 /**
  * Send notifications for cron job results
+ * @param {any} check - Completed scheduled check with results
+ * @returns {Promise<void>}
  */
 async function sendCronNotifications(check: any): Promise<void> {
   try {
@@ -234,6 +243,8 @@ async function sendCronNotifications(check: any): Promise<void> {
 
 /**
  * Update next run time
+ * @param {any} settings - Schedule settings
+ * @returns {Promise<void>}
  */
 async function updateNextRunTime(settings: any): Promise<void> {
   try {
@@ -270,7 +281,13 @@ async function updateNextRunTime(settings: any): Promise<void> {
 }
 
 /**
- * Health check endpoint
+ * POST /api/cron/dead-links - Health check endpoint
+ *
+ * Returns health status and configuration information for the cron job.
+ * Useful for monitoring and debugging cron job execution.
+ *
+ * @param {NextRequest} request - Next.js request object
+ * @returns {Promise<NextResponse>} Health check response
  */
 export async function POST(request: NextRequest) {
   return NextResponse.json({
