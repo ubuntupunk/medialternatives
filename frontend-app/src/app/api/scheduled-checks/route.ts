@@ -6,10 +6,14 @@ let scheduledChecks: any[] = [];
 let scheduleSettings: any = null;
 
 /**
- * API endpoint for managing scheduled checks
+ * GET /api/scheduled-checks - Retrieve scheduled checks
+ *
+ * Returns list of scheduled dead link checks with optional filtering by status.
+ * Supports pagination with limit parameter.
+ *
+ * @param {NextRequest} request - Next.js request with optional query parameters
+ * @returns {Promise<NextResponse>} Scheduled checks data or error response
  */
-
-// GET - Retrieve all scheduled checks
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -42,7 +46,15 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST - Create a new scheduled check
+/**
+ * POST /api/scheduled-checks - Create a new scheduled check
+ *
+ * Creates a new scheduled dead link check with the provided settings.
+ * Generates unique ID if not provided and validates required fields.
+ *
+ * @param {NextRequest} request - Next.js request with scheduled check data
+ * @returns {Promise<NextResponse>} Created scheduled check or error response
+ */
 export async function POST(request: NextRequest) {
   try {
     const checkData = await request.json();
@@ -88,7 +100,15 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// PUT - Update schedule settings
+/**
+ * PUT /api/scheduled-checks - Update schedule settings
+ *
+ * Updates global schedule settings for automated dead link checking.
+ * Validates frequency and time format before saving.
+ *
+ * @param {NextRequest} request - Next.js request with schedule settings
+ * @returns {Promise<NextResponse>} Updated settings or error response
+ */
 export async function PUT(request: NextRequest) {
   try {
     const settings = await request.json();
