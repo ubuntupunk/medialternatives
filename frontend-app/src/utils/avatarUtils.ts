@@ -2,6 +2,15 @@
  * Avatar utility functions for generating, processing, and managing user avatars
  */
 
+/**
+ * Options for avatar generation
+ * @interface AvatarOptions
+ * @property {number} [size] - Avatar size in pixels
+ * @property {string} [backgroundColor] - Background color (auto-generated if not provided)
+ * @property {string} [textColor] - Text color for initials
+ * @property {string} [fontFamily] - Font family for initials
+ * @property {number} [borderRadius] - Border radius for rounded avatars
+ */
 export interface AvatarOptions {
   size?: number;
   backgroundColor?: string;
@@ -12,6 +21,8 @@ export interface AvatarOptions {
 
 /**
  * Generate initials from a full name
+ * @param {string} name - Full name to generate initials from
+ * @returns {string} Initials (up to 2 characters)
  */
 export function getInitials(name: string): string {
   if (!name || name.trim() === '') return 'U';
@@ -26,6 +37,8 @@ export function getInitials(name: string): string {
 
 /**
  * Generate a consistent color based on a string (usually name)
+ * @param {string} str - String to generate color from
+ * @returns {string} Hex color code
  */
 export function generateColorFromString(str: string): string {
   const colors = [
@@ -46,9 +59,12 @@ export function generateColorFromString(str: string): string {
 
 /**
  * Generate an avatar image from initials
+ * @param {string} name - Name to generate initials from
+ * @param {AvatarOptions} [options={}] - Avatar generation options
+ * @returns {string} Data URL of the generated avatar image
  */
 export function generateInitialsAvatar(
-  name: string, 
+  name: string,
   options: AvatarOptions = {}
 ): string {
   const {
@@ -93,9 +109,12 @@ export function generateInitialsAvatar(
 
 /**
  * Resize and crop an image to a square
+ * @param {File} imageFile - Image file to resize
+ * @param {number} [size=120] - Target size in pixels
+ * @returns {Promise<string>} Data URL of the resized square image
  */
 export function resizeImageToSquare(
-  imageFile: File, 
+  imageFile: File,
   size: number = 120
 ): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -138,6 +157,8 @@ export function resizeImageToSquare(
 
 /**
  * Validate if a file is a valid image
+ * @param {File} file - File to validate
+ * @returns {{valid: boolean, error?: string}} Validation result
  */
 export function validateImageFile(file: File): { valid: boolean; error?: string } {
   // Check file type
@@ -162,6 +183,8 @@ export function validateImageFile(file: File): { valid: boolean; error?: string 
 
 /**
  * Convert data URL to blob for uploading
+ * @param {string} dataURL - Data URL to convert
+ * @returns {Blob} Converted blob
  */
 export function dataURLToBlob(dataURL: string): Blob {
   const arr = dataURL.split(',');
@@ -179,6 +202,9 @@ export function dataURLToBlob(dataURL: string): Blob {
 
 /**
  * Save avatar to localStorage (for demo purposes)
+ * @param {string} userId - User identifier
+ * @param {string} avatarData - Avatar data URL
+ * @returns {void}
  */
 export function saveAvatarToStorage(userId: string, avatarData: string): void {
   try {
@@ -190,6 +216,8 @@ export function saveAvatarToStorage(userId: string, avatarData: string): void {
 
 /**
  * Load avatar from localStorage
+ * @param {string} userId - User identifier
+ * @returns {string | null} Avatar data URL or null if not found
  */
 export function loadAvatarFromStorage(userId: string): string | null {
   try {
@@ -202,6 +230,8 @@ export function loadAvatarFromStorage(userId: string): string | null {
 
 /**
  * Remove avatar from localStorage
+ * @param {string} userId - User identifier
+ * @returns {void}
  */
 export function removeAvatarFromStorage(userId: string): void {
   try {
@@ -213,9 +243,12 @@ export function removeAvatarFromStorage(userId: string): void {
 
 /**
  * Generate multiple avatar sizes from a source image
+ * @param {string} sourceImage - Source image data URL
+ * @param {number[]} [sizes=[24, 48, 96, 120, 150]] - Array of sizes to generate
+ * @returns {Promise<Record<string, string>>} Object with size keys and data URL values
  */
 export function generateAvatarSizes(
-  sourceImage: string, 
+  sourceImage: string,
   sizes: number[] = [24, 48, 96, 120, 150]
 ): Promise<Record<string, string>> {
   return new Promise((resolve, reject) => {
@@ -246,6 +279,9 @@ export function generateAvatarSizes(
 
 /**
  * Create a gravatar-style fallback URL
+ * @param {string} email - Email address for gravatar
+ * @param {number} [size=120] - Avatar size in pixels
+ * @returns {string} Gravatar URL
  */
 export function createGravatarUrl(email: string, size: number = 120): string {
   // This is a simplified version - in a real app you'd use crypto.subtle or a library
@@ -256,42 +292,56 @@ export function createGravatarUrl(email: string, size: number = 120): string {
 
 /**
  * Avatar management class for handling user avatars
+ * @class AvatarManager
  */
 export class AvatarManager {
   private userId: string;
-  
+
+  /**
+   * Create avatar manager for a user
+   * @param {string} userId - User identifier
+   */
   constructor(userId: string) {
     this.userId = userId;
   }
   
-  /**
-   * Get current avatar or generate fallback
-   */
-  getAvatar(userName: string, size: number = 120): string {
+   /**
+    * Get current avatar or generate fallback
+    * @param {string} userName - User's full name
+    * @param {number} [size=120] - Avatar size in pixels
+    * @returns {string} Avatar data URL
+    */
+   getAvatar(userName: string, size: number = 120): string {
     const stored = loadAvatarFromStorage(this.userId);
     if (stored) return stored;
     
     return generateInitialsAvatar(userName, { size });
   }
   
-  /**
-   * Save new avatar
-   */
-  saveAvatar(avatarData: string): void {
+   /**
+    * Save new avatar
+    * @param {string} avatarData - Avatar data URL
+    * @returns {void}
+    */
+   saveAvatar(avatarData: string): void {
     saveAvatarToStorage(this.userId, avatarData);
   }
   
-  /**
-   * Remove avatar
-   */
-  removeAvatar(): void {
+   /**
+    * Remove avatar
+    * @returns {void}
+    */
+   removeAvatar(): void {
     removeAvatarFromStorage(this.userId);
   }
   
-  /**
-   * Update avatar from file
-   */
-  async updateFromFile(file: File, size: number = 120): Promise<string> {
+   /**
+    * Update avatar from file
+    * @param {File} file - Image file to use
+    * @param {number} [size=120] - Target size in pixels
+    * @returns {Promise<string>} Processed avatar data URL
+    */
+   async updateFromFile(file: File, size: number = 120): Promise<string> {
     const validation = validateImageFile(file);
     if (!validation.valid) {
       throw new Error(validation.error);
@@ -302,10 +352,13 @@ export class AvatarManager {
     return resizedImage;
   }
   
-  /**
-   * Generate initials avatar
-   */
-  generateInitials(userName: string, size: number = 120): string {
+   /**
+    * Generate initials avatar
+    * @param {string} userName - User's full name
+    * @param {number} [size=120] - Avatar size in pixels
+    * @returns {string} Generated avatar data URL
+    */
+   generateInitials(userName: string, size: number = 120): string {
     const avatar = generateInitialsAvatar(userName, { size });
     this.saveAvatar(avatar);
     return avatar;
