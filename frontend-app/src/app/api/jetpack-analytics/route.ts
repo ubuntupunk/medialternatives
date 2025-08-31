@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Jetpack Analytics API integration
+/**
+ * Jetpack analytics data structure
+ * @interface JetpackAnalyticsData
+ * @property {number} visits - Total visits
+ * @property {number} views - Total page views
+ * @property {number} visitors - Unique visitors
+ * @property {Array<{title: string, url: string, views: number, percentage: number}>} topPosts - Top performing posts
+ * @property {Array<{name: string, views: number, percentage: number}>} referrers - Traffic referrers
+ * @property {Array<{term: string, views: number, percentage: number}>} searchTerms - Search terms
+ * @property {{period: string, views: number, visitors: number, likes: number, comments: number}} summary - Period summary
+ */
 interface JetpackAnalyticsData {
   visits: number;
   views: number;
@@ -30,6 +40,15 @@ interface JetpackAnalyticsData {
   };
 }
 
+/**
+ * GET /api/jetpack-analytics - Get Jetpack analytics data
+ *
+ * Returns mock analytics data for development.
+ * Use POST with authentication token for real WordPress.com data.
+ *
+ * @param {NextRequest} request - Next.js request with optional period parameter
+ * @returns {Promise<NextResponse>} Analytics data or error response
+ */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -54,6 +73,15 @@ export async function GET(request: NextRequest) {
 const analyticsCache = new Map<string, { data: any; timestamp: number }>();
 const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
 
+/**
+ * POST /api/jetpack-analytics - Fetch authenticated Jetpack analytics
+ *
+ * Retrieves real WordPress.com Jetpack analytics data using OAuth token.
+ * Requires proper WordPress.com authentication with stats scope.
+ *
+ * @param {NextRequest} request - Next.js request with token and parameters
+ * @returns {Promise<NextResponse>} Authenticated analytics data or error response
+ */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -80,6 +108,12 @@ export async function POST(request: NextRequest) {
   }
 }
 
+/**
+ * Fetch authenticated Jetpack stats from WordPress.com API
+ * @param {any} token - WordPress.com OAuth token
+ * @param {string} period - Time period in days
+ * @returns {Promise<NextResponse>} Analytics data response
+ */
 async function fetchAuthenticatedStats(token: any, period: string) {
   try {
     console.log('🔐 Backend: Fetching authenticated stats for site:', token.siteId);
@@ -217,6 +251,11 @@ async function fetchAuthenticatedStats(token: any, period: string) {
   }
 }
 
+/**
+ * Get mock analytics data response
+ * @param {string} period - Time period in days
+ * @returns {NextResponse} Mock analytics data response
+ */
 function getMockDataResponse(period: string) {
   const periodNum = parseInt(period);
   const mockData = getJetpackMockData(period);
@@ -233,6 +272,8 @@ function getMockDataResponse(period: string) {
 
 /**
  * Get mock Jetpack analytics data for development
+ * @param {string} period - Time period in days
+ * @returns {JetpackAnalyticsData} Mock analytics data
  */
 function getJetpackMockData(period: string): JetpackAnalyticsData {
   const periodNum = parseInt(period);
