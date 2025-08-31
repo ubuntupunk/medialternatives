@@ -3,13 +3,51 @@
  * Provides a unified interface for different storage solutions
  */
 
+/**
+ * Interface for avatar storage adapters
+ * @interface AvatarStorageAdapter
+ */
 export interface AvatarStorageAdapter {
+  /**
+   * Save avatar data for a user
+   * @param {string} userId - Unique user identifier
+   * @param {string} avatarData - Avatar data (data URL or blob)
+   * @param {AvatarMetadata} [metadata] - Optional metadata about the avatar
+   * @returns {Promise<string>} URL or identifier of the saved avatar
+   */
   save(userId: string, avatarData: string, metadata?: AvatarMetadata): Promise<string>;
+
+  /**
+   * Load avatar data for a user
+   * @param {string} userId - Unique user identifier
+   * @returns {Promise<string | null>} Avatar data URL or null if not found
+   */
   load(userId: string): Promise<string | null>;
+
+  /**
+   * Remove avatar data for a user
+   * @param {string} userId - Unique user identifier
+   * @returns {Promise<void>}
+   */
   remove(userId: string): Promise<void>;
+
+  /**
+   * Get avatar URL for a user
+   * @param {string} userId - Unique user identifier
+   * @returns {Promise<string | null>} Avatar URL or null if not found
+   */
   getUrl(userId: string): Promise<string | null>;
 }
 
+/**
+ * Metadata for avatar files
+ * @interface AvatarMetadata
+ * @property {string} [filename] - Generated filename
+ * @property {string} [mimeType] - MIME type of the avatar
+ * @property {number} [size] - File size in bytes
+ * @property {Date} [uploadedAt] - Upload timestamp
+ * @property {string} [originalName] - Original filename
+ */
 export interface AvatarMetadata {
   filename?: string;
   mimeType?: string;
@@ -21,7 +59,19 @@ export interface AvatarMetadata {
 /**
  * 1. LOCAL STORAGE ADAPTER (Demo/Development)
  */
+/**
+ * Local storage adapter for avatar storage (development/demo)
+ * @class LocalStorageAdapter
+ * @implements {AvatarStorageAdapter}
+ */
 export class LocalStorageAdapter implements AvatarStorageAdapter {
+  /**
+   * Save avatar to localStorage
+   * @param {string} userId - Unique user identifier
+   * @param {string} avatarData - Avatar data URL
+   * @param {AvatarMetadata} [metadata] - Optional metadata
+   * @returns {Promise<string>} Avatar data URL
+   */
   async save(userId: string, avatarData: string, metadata?: AvatarMetadata): Promise<string> {
     try {
       const key = `avatar_${userId}`;
@@ -38,12 +88,17 @@ export class LocalStorageAdapter implements AvatarStorageAdapter {
     }
   }
 
+  /**
+   * Load avatar from localStorage
+   * @param {string} userId - Unique user identifier
+   * @returns {Promise<string | null>} Avatar data URL or null
+   */
   async load(userId: string): Promise<string | null> {
     try {
       const key = `avatar_${userId}`;
       const stored = localStorage.getItem(key);
       if (!stored) return null;
-      
+
       const data = JSON.parse(stored);
       return data.avatar;
     } catch (error) {
@@ -52,6 +107,11 @@ export class LocalStorageAdapter implements AvatarStorageAdapter {
     }
   }
 
+  /**
+   * Remove avatar from localStorage
+   * @param {string} userId - Unique user identifier
+   * @returns {Promise<void>}
+   */
   async remove(userId: string): Promise<void> {
     try {
       localStorage.removeItem(`avatar_${userId}`);
@@ -60,21 +120,39 @@ export class LocalStorageAdapter implements AvatarStorageAdapter {
     }
   }
 
+  /**
+   * Get avatar URL from localStorage
+   * @param {string} userId - Unique user identifier
+   * @returns {Promise<string | null>} Avatar data URL or null
+   */
   async getUrl(userId: string): Promise<string | null> {
     return this.load(userId); // Same as load for localStorage
   }
 }
 
 /**
- * 2. VERCEL BLOB STORAGE ADAPTER (Recommended for Vercel deployment)
+ * Vercel Blob storage adapter for avatar storage
+ * @class VercelBlobAdapter
+ * @implements {AvatarStorageAdapter}
  */
 export class VercelBlobAdapter implements AvatarStorageAdapter {
   private apiUrl: string;
 
+  /**
+   * Create Vercel Blob adapter
+   * @param {string} [apiUrl='/api/avatars'] - API endpoint URL
+   */
   constructor(apiUrl: string = '/api/avatars') {
     this.apiUrl = apiUrl;
   }
 
+  /**
+   * Save avatar to Vercel Blob storage
+   * @param {string} userId - Unique user identifier
+   * @param {string} avatarData - Avatar data URL
+   * @param {AvatarMetadata} [metadata] - Optional metadata
+   * @returns {Promise<string>} Vercel Blob URL
+   */
   async save(userId: string, avatarData: string, metadata?: AvatarMetadata): Promise<string> {
     try {
       // Convert data URL to blob
@@ -103,6 +181,11 @@ export class VercelBlobAdapter implements AvatarStorageAdapter {
     }
   }
 
+  /**
+   * Load avatar from Vercel Blob storage
+   * @param {string} userId - Unique user identifier
+   * @returns {Promise<string | null>} Avatar URL or null
+   */
   async load(userId: string): Promise<string | null> {
     try {
       const response = await fetch(`${this.apiUrl}/${userId}`);
@@ -110,7 +193,7 @@ export class VercelBlobAdapter implements AvatarStorageAdapter {
         if (response.status === 404) return null;
         throw new Error(`Failed to load avatar: ${response.statusText}`);
       }
-      
+
       const result = await response.json();
       return result.url;
     } catch (error) {
@@ -119,6 +202,11 @@ export class VercelBlobAdapter implements AvatarStorageAdapter {
     }
   }
 
+  /**
+   * Remove avatar from Vercel Blob storage
+   * @param {string} userId - Unique user identifier
+   * @returns {Promise<void>}
+   */
   async remove(userId: string): Promise<void> {
     try {
       const response = await fetch(`${this.apiUrl}/${userId}`, {
@@ -128,37 +216,55 @@ export class VercelBlobAdapter implements AvatarStorageAdapter {
       if (!response.ok) {
         throw new Error(`Failed to remove avatar: ${response.statusText}`);
       }
-    } catch (error) {
-      throw new Error(`Failed to remove avatar from Vercel Blob: ${error}`);
-    }
-  }
+     } catch (error) {
+       throw new Error(`Failed to remove avatar from Vercel Blob: ${error}`);
+     }
+   }
 
-  async getUrl(userId: string): Promise<string | null> {
-    return this.load(userId);
-  }
+   /**
+    * Get avatar URL from Vercel Blob storage
+    * @param {string} userId - Unique user identifier
+    * @returns {Promise<string | null>} Avatar URL or null
+    */
+   async getUrl(userId: string): Promise<string | null> {
+     return this.load(userId);
+   }
 
-  private dataURLToBlob(dataURL: string): Blob {
-    const arr = dataURL.split(',');
-    const mime = arr[0].match(/:(.*?);/)?.[1] || 'image/png';
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-    
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    
-    return new Blob([u8arr], { type: mime });
-  }
+   /**
+    * Convert data URL to Blob
+    * @private
+    * @param {string} dataURL - Data URL to convert
+    * @returns {Blob} Converted blob
+    */
+   private dataURLToBlob(dataURL: string): Blob {
+     const arr = dataURL.split(',');
+     const mime = arr[0].match(/:(.*?);/)?.[1] || 'image/png';
+     const bstr = atob(arr[1]);
+     let n = bstr.length;
+     const u8arr = new Uint8Array(n);
+
+     while (n--) {
+       u8arr[n] = bstr.charCodeAt(n);
+     }
+
+     return new Blob([u8arr], { type: mime });
+   }
 }
 
 /**
- * 3. CLOUDINARY ADAPTER (Popular image CDN)
+ * Cloudinary storage adapter for avatar storage
+ * @class CloudinaryAdapter
+ * @implements {AvatarStorageAdapter}
  */
 export class CloudinaryAdapter implements AvatarStorageAdapter {
   private cloudName: string;
   private uploadPreset: string;
 
+  /**
+   * Create Cloudinary adapter
+   * @param {string} cloudName - Cloudinary cloud name
+   * @param {string} uploadPreset - Cloudinary upload preset
+   */
   constructor(cloudName: string, uploadPreset: string) {
     this.cloudName = cloudName;
     this.uploadPreset = uploadPreset;
@@ -377,39 +483,76 @@ export class FileSystemAdapter implements AvatarStorageAdapter {
 }
 
 /**
- * AVATAR STORAGE SERVICE
- * Unified service that can use any storage adapter
+ * Unified avatar storage service
+ * @class AvatarStorageService
  */
 export class AvatarStorageService {
   private adapter: AvatarStorageAdapter;
 
+  /**
+   * Create avatar storage service
+   * @param {AvatarStorageAdapter} adapter - Storage adapter to use
+   */
+  /**
+   * Create avatar storage service
+   * @param {AvatarStorageAdapter} adapter - Storage adapter to use
+   */
   constructor(adapter: AvatarStorageAdapter) {
     this.adapter = adapter;
   }
 
+  /**
+   * Save avatar for a user
+   * @param {string} userId - Unique user identifier
+   * @param {string} avatarData - Avatar data
+   * @param {AvatarMetadata} [metadata] - Optional metadata
+   * @returns {Promise<string>} Avatar URL or identifier
+   */
   async saveAvatar(userId: string, avatarData: string, metadata?: AvatarMetadata): Promise<string> {
     return this.adapter.save(userId, avatarData, metadata);
   }
 
+  /**
+   * Load avatar for a user
+   * @param {string} userId - Unique user identifier
+   * @returns {Promise<string | null>} Avatar data or null
+   */
   async loadAvatar(userId: string): Promise<string | null> {
     return this.adapter.load(userId);
   }
 
+  /**
+   * Remove avatar for a user
+   * @param {string} userId - Unique user identifier
+   * @returns {Promise<void>}
+   */
   async removeAvatar(userId: string): Promise<void> {
     return this.adapter.remove(userId);
   }
 
+  /**
+   * Get avatar URL for a user
+   * @param {string} userId - Unique user identifier
+   * @returns {Promise<string | null>} Avatar URL or null
+   */
   async getAvatarUrl(userId: string): Promise<string | null> {
     return this.adapter.getUrl(userId);
   }
 
-  // Switch storage adapter at runtime
+  /**
+   * Switch storage adapter at runtime
+   * @param {AvatarStorageAdapter} adapter - New storage adapter
+   * @returns {void}
+   */
   setAdapter(adapter: AvatarStorageAdapter): void {
     this.adapter = adapter;
   }
 }
 
-// Factory function to create storage service based on environment
+/**
+ * Factory function to create avatar storage service based on environment
+ * @returns {AvatarStorageService} Configured avatar storage service
+ */
 export function createAvatarStorage(): AvatarStorageService {
   const storageType = process.env.NEXT_PUBLIC_AVATAR_STORAGE || 'localStorage';
   
