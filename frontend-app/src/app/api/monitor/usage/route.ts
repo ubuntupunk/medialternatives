@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * Monitor Vercel function usage and provide alerts
- * Usage: GET /api/monitor/usage
+ * GET /api/monitor/usage - Monitor Vercel function usage
+ *
+ * Returns usage statistics and alerts for Vercel functions and ISR.
+ * Currently uses mock data - requires Vercel API integration for live data.
+ *
+ * @param {NextRequest} request - Next.js request object
+ * @returns {Promise<NextResponse>} Usage monitoring data or error response
  */
 export async function GET(request: NextRequest) {
   try {
