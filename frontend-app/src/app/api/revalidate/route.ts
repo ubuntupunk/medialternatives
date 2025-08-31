@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
 
 /**
- * On-demand revalidation API endpoint
- * Usage: POST /api/revalidate
- * Body: { path?: string, tag?: string, secret?: string }
+ * POST /api/revalidate - Trigger on-demand cache revalidation
+ *
+ * Revalidates Next.js cache for specific paths or tags.
+ * Supports optional secret validation for security.
+ *
+ * @param {NextRequest} request - Next.js request with path, tag, and optional secret
+ * @returns {Promise<NextResponse>} Revalidation result or error response
  */
 export async function POST(request: NextRequest) {
   try {
@@ -59,7 +63,12 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * GET endpoint to show revalidation options
+ * GET /api/revalidate - Show revalidation options and examples
+ *
+ * Returns documentation and examples for the revalidation endpoint.
+ * Useful for understanding how to use the POST endpoint.
+ *
+ * @returns {Promise<NextResponse>} Revalidation endpoint documentation
  */
 export async function GET() {
   return NextResponse.json({
