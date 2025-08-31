@@ -1,0 +1,328 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> utils/api-debug.ts</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AvatarManager.html">AvatarManager</a></li></ul><h3>Interfaces</h3><ul><li><a href="APITestResult.html">APITestResult</a></li><li><a href="AvatarOptions.html">AvatarOptions</a></li><li><a href="HeaderProps.html">HeaderProps</a></li><li><a href="NotificationSettings.html">NotificationSettings</a></li><li><a href="ScheduleSettings.html">ScheduleSettings</a></li><li><a href="WordPressToken.html">WordPressToken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AdSenseFeed">AdSenseFeed</a></li><li><a href="global.html#AdSenseWidget">AdSenseWidget</a></li><li><a href="global.html#AddToHomeScreen">AddToHomeScreen</a></li><li><a href="global.html#AuthStatus">AuthStatus</a></li><li><a href="global.html#AuthorDisplay">AuthorDisplay</a></li><li><a href="global.html#AuthorWidget">AuthorWidget</a></li><li><a href="global.html#Avatar">Avatar</a></li><li><a href="global.html#AvatarUpload">AvatarUpload</a></li><li><a href="global.html#AvatarUploadV2">AvatarUploadV2</a></li><li><a href="global.html#CategoryCards">CategoryCards</a></li><li><a href="global.html#CategoryCloud">CategoryCloud</a></li><li><a href="global.html#CategoryCloudEnhanced">CategoryCloudEnhanced</a></li><li><a href="global.html#CategoryList">CategoryList</a></li><li><a href="global.html#CategoryPills">CategoryPills</a></li><li><a href="global.html#CreativeCommonsWidget">CreativeCommonsWidget</a></li><li><a href="global.html#CustomHeader">CustomHeader</a></li><li><a href="global.html#DonateWidget">DonateWidget</a></li><li><a href="global.html#EnhancedAuthorWidget">EnhancedAuthorWidget</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#InteractiveButton">InteractiveButton</a></li><li><a href="global.html#KNOWN_LEGACY_MAPPINGS">KNOWN_LEGACY_MAPPINGS</a></li><li><a href="global.html#LoadMore">LoadMore</a></li><li><a href="global.html#OfflineIndicator">OfflineIndicator</a></li><li><a href="global.html#Pagination">Pagination</a></li><li><a href="global.html#PostCard">PostCard</a></li><li><a href="global.html#PostCardBig">PostCardBig</a></li><li><a href="global.html#PostGrid">PostGrid</a></li><li><a href="global.html#WORDPRESS_API_ENDPOINTS">WORDPRESS_API_ENDPOINTS</a></li><li><a href="global.html#WebringWidget">WebringWidget</a></li><li><a href="global.html#WordPressAuthProvider">WordPressAuthProvider</a></li><li><a href="global.html#calculateCategoryFontSize">calculateCategoryFontSize</a></li><li><a href="global.html#calculateNextRun">calculateNextRun</a></li><li><a href="global.html#calculateSimilarity">calculateSimilarity</a></li><li><a href="global.html#checkMultiplePostsLinks">checkMultiplePostsLinks</a></li><li><a href="global.html#checkPostLinks">checkPostLinks</a></li><li><a href="global.html#checkUrl">checkUrl</a></li><li><a href="global.html#clearStoredToken">clearStoredToken</a></li><li><a href="global.html#createExcerpt">createExcerpt</a></li><li><a href="global.html#createGravatarUrl">createGravatarUrl</a></li><li><a href="global.html#createScheduledCheck">createScheduledCheck</a></li><li><a href="global.html#createUrlParams">createUrlParams</a></li><li><a href="global.html#dataURLToBlob">dataURLToBlob</a></li><li><a href="global.html#debounce">debounce</a></li><li><a href="global.html#decodeHtmlEntities">decodeHtmlEntities</a></li><li><a href="global.html#downloadFile">downloadFile</a></li><li><a href="global.html#executeScheduledCheck">executeScheduledCheck</a></li><li><a href="global.html#exportDeadLinks">exportDeadLinks</a></li><li><a href="global.html#exportToCSV">exportToCSV</a></li><li><a href="global.html#exportToJSON">exportToJSON</a></li><li><a href="global.html#extractUrlsFromContent">extractUrlsFromContent</a></li><li><a href="global.html#findPostByLegacyUrl">findPostByLegacyUrl</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#formatNextRun">formatNextRun</a></li><li><a href="global.html#formatReadingTime">formatReadingTime</a></li><li><a href="global.html#formatRelativeDate">formatRelativeDate</a></li><li><a href="global.html#generateArchiveUrl">generateArchiveUrl</a></li><li><a href="global.html#generateAvatarSizes">generateAvatarSizes</a></li><li><a href="global.html#generateColorFromString">generateColorFromString</a></li><li><a href="global.html#generateInitialsAvatar">generateInitialsAvatar</a></li><li><a href="global.html#generatePDFHTML">generatePDFHTML</a></li><li><a href="global.html#generatePDFReport">generatePDFReport</a></li><li><a href="global.html#generateRandomState">generateRandomState</a></li><li><a href="global.html#generateSlug">generateSlug</a></li><li><a href="global.html#generateSlugVariations">generateSlugVariations</a></li><li><a href="global.html#generateSuggestions">generateSuggestions</a></li><li><a href="global.html#generateTestReport">generateTestReport</a></li><li><a href="global.html#getAuthStatus">getAuthStatus</a></li><li><a href="global.html#getDefaultExportOptions">getDefaultExportOptions</a></li><li><a href="global.html#getDefaultNotificationSettings">getDefaultNotificationSettings</a></li><li><a href="global.html#getDefaultScheduleSettings">getDefaultScheduleSettings</a></li><li><a href="global.html#getFeaturedImageUrl">getFeaturedImageUrl</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getKnownMapping">getKnownMapping</a></li><li><a href="global.html#getLocalStorage">getLocalStorage</a></li><li><a href="global.html#getPostAuthor">getPostAuthor</a></li><li><a href="global.html#getPostAuthorId">getPostAuthorId</a></li><li><a href="global.html#getPostCategories">getPostCategories</a></li><li><a href="global.html#getPostTags">getPostTags</a></li><li><a href="global.html#getReadingTime">getReadingTime</a></li><li><a href="global.html#getScheduledChecks">getScheduledChecks</a></li><li><a href="global.html#getStoredToken">getStoredToken</a></li><li><a href="global.html#handleOAuthCallback">handleOAuthCallback</a></li><li><a href="global.html#initiateWordPressOAuth">initiateWordPressOAuth</a></li><li><a href="global.html#isAuthenticated">isAuthenticated</a></li><li><a href="global.html#isBrowser">isBrowser</a></li><li><a href="global.html#isDebugMode">isDebugMode</a></li><li><a href="global.html#isValidEmail">isValidEmail</a></li><li><a href="global.html#loadAvatarFromStorage">loadAvatarFromStorage</a></li><li><a href="global.html#loadNotificationSettings">loadNotificationSettings</a></li><li><a href="global.html#loadScheduleSettings">loadScheduleSettings</a></li><li><a href="global.html#logAPIResponse">logAPIResponse</a></li><li><a href="global.html#makeAuthenticatedRequest">makeAuthenticatedRequest</a></li><li><a href="global.html#processNotifications">processNotifications</a></li><li><a href="global.html#removeAvatarFromStorage">removeAvatarFromStorage</a></li><li><a href="global.html#requestNotificationPermission">requestNotificationPermission</a></li><li><a href="global.html#resizeImageToSquare">resizeImageToSquare</a></li><li><a href="global.html#saveAvatarToStorage">saveAvatarToStorage</a></li><li><a href="global.html#saveNotificationSettings">saveNotificationSettings</a></li><li><a href="global.html#saveScheduleSettings">saveScheduleSettings</a></li><li><a href="global.html#searchArchiveSnapshots">searchArchiveSnapshots</a></li><li><a href="global.html#sendEmailNotification">sendEmailNotification</a></li><li><a href="global.html#sendWebhookNotification">sendWebhookNotification</a></li><li><a href="global.html#setLocalStorage">setLocalStorage</a></li><li><a href="global.html#shouldRunCheck">shouldRunCheck</a></li><li><a href="global.html#showBrowserNotification">showBrowserNotification</a></li><li><a href="global.html#storeToken">storeToken</a></li><li><a href="global.html#stripHtml">stripHtml</a></li><li><a href="global.html#testEndpoint">testEndpoint</a></li><li><a href="global.html#testWordPressEndpoints">testWordPressEndpoints</a></li><li><a href="global.html#truncateText">truncateText</a></li><li><a href="global.html#updateScheduleSettings">updateScheduleSettings</a></li><li><a href="global.html#useAuthenticatedAPI">useAuthenticatedAPI</a></li><li><a href="global.html#useClientOnly">useClientOnly</a></li><li><a href="global.html#useClientState">useClientState</a></li><li><a href="global.html#useWordPressAuth">useWordPressAuth</a></li><li><a href="global.html#validateImageFile">validateImageFile</a></li><li><a href="global.html#validateSiteSetup">validateSiteSetup</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>utils/api-debug.ts</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * API Debugging utilities for WordPress.com integration
+ */
+
+export interface APITestResult {
+  endpoint: string;
+  success: boolean;
+  data?: any;
+  error?: string;
+  responseTime?: number;
+  status?: number;
+}
+
+/**
+ * Test a single API endpoint
+ */
+export async function testEndpoint(url: string): Promise&lt;APITestResult> {
+  const startTime = Date.now();
+  
+  try {
+    console.log(`🔍 Testing endpoint: ${url}`);
+    
+    const response = await fetch(url);
+    const responseTime = Date.now() - startTime;
+    
+    if (!response.ok) {
+      return {
+        endpoint: url,
+        success: false,
+        error: `HTTP ${response.status}: ${response.statusText}`,
+        responseTime,
+        status: response.status
+      };
+    }
+    
+    const data = await response.json();
+    
+    console.log(`✅ Success: ${url} (${responseTime}ms)`);
+    
+    return {
+      endpoint: url,
+      success: true,
+      data,
+      responseTime,
+      status: response.status
+    };
+  } catch (error) {
+    const responseTime = Date.now() - startTime;
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    
+    console.error(`❌ Failed: ${url} - ${errorMessage}`);
+    
+    return {
+      endpoint: url,
+      success: false,
+      error: errorMessage,
+      responseTime
+    };
+  }
+}
+
+/**
+ * Test multiple WordPress.com API endpoints
+ */
+export async function testWordPressEndpoints(siteUrl: string = 'medialternatives.wordpress.com'): Promise&lt;APITestResult[]> {
+  const baseUrl = `https://public-api.wordpress.com/wp/v2/sites/${siteUrl}`;
+  const siteInfoUrl = `https://public-api.wordpress.com/rest/v1.1/sites/${siteUrl}`;
+  
+  const endpoints = [
+    siteInfoUrl,
+    `${baseUrl}/posts?per_page=1`,
+    `${baseUrl}/categories?per_page=1`,
+    `${baseUrl}/tags?per_page=1`,
+    `${baseUrl}/users`,
+    `${baseUrl}/pages?per_page=1`
+  ];
+  
+  console.log('🚀 Starting WordPress.com API tests...');
+  
+  const results: APITestResult[] = [];
+  
+  for (const endpoint of endpoints) {
+    const result = await testEndpoint(endpoint);
+    results.push(result);
+    
+    // Small delay between requests to be respectful
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  
+  console.log('📊 API Test Summary:');
+  console.log(`✅ Successful: ${results.filter(r => r.success).length}`);
+  console.log(`❌ Failed: ${results.filter(r => !r.success).length}`);
+  
+  return results;
+}
+
+/**
+ * Validate WordPress.com site setup
+ */
+export async function validateSiteSetup(siteUrl: string = 'medialternatives.wordpress.com'): Promise&lt;{
+  isSetup: boolean;
+  issues: string[];
+  recommendations: string[];
+}> {
+  const issues: string[] = [];
+  const recommendations: string[] = [];
+  
+  try {
+    // Test site info endpoint
+    const siteInfoResult = await testEndpoint(`https://public-api.wordpress.com/rest/v1.1/sites/${siteUrl}`);
+    
+    if (!siteInfoResult.success) {
+      issues.push('Site is not accessible via WordPress.com API');
+      recommendations.push('Verify the site exists at ' + siteUrl);
+      recommendations.push('Check if the site is public (not private)');
+      return { isSetup: false, issues, recommendations };
+    }
+    
+    // Test posts endpoint
+    const postsResult = await testEndpoint(`https://public-api.wordpress.com/wp/v2/sites/${siteUrl}/posts?per_page=1`);
+    
+    if (!postsResult.success) {
+      issues.push('Posts endpoint is not accessible');
+      recommendations.push('Ensure the site has at least one published post');
+    }
+    
+    // Check if site has content
+    if (postsResult.success &amp;&amp; postsResult.data &amp;&amp; Array.isArray(postsResult.data) &amp;&amp; postsResult.data.length === 0) {
+      issues.push('Site has no published posts');
+      recommendations.push('Import content from the current WordPress site');
+      recommendations.push('Create at least one test post to verify API functionality');
+    }
+    
+    // Test categories endpoint
+    const categoriesResult = await testEndpoint(`https://public-api.wordpress.com/wp/v2/sites/${siteUrl}/categories?per_page=1`);
+    
+    if (!categoriesResult.success) {
+      issues.push('Categories endpoint is not accessible');
+    }
+    
+    const isSetup = issues.length === 0;
+    
+    if (isSetup) {
+      recommendations.push('Site setup looks good! You can proceed with component development.');
+    }
+    
+    return { isSetup, issues, recommendations };
+    
+  } catch (error) {
+    issues.push('Failed to validate site setup: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    recommendations.push('Check your internet connection');
+    recommendations.push('Verify the WordPress.com site URL is correct');
+    
+    return { isSetup: false, issues, recommendations };
+  }
+}
+
+/**
+ * Generate API test report
+ */
+export function generateTestReport(results: APITestResult[]): string {
+  const successful = results.filter(r => r.success);
+  const failed = results.filter(r => !r.success);
+  const avgResponseTime = results.reduce((sum, r) => sum + (r.responseTime || 0), 0) / results.length;
+  
+  let report = '# WordPress.com API Test Report\n\n';
+  
+  report += `## Summary\n`;
+  report += `- Total endpoints tested: ${results.length}\n`;
+  report += `- Successful: ${successful.length}\n`;
+  report += `- Failed: ${failed.length}\n`;
+  report += `- Average response time: ${avgResponseTime.toFixed(0)}ms\n\n`;
+  
+  if (successful.length > 0) {
+    report += `## ✅ Successful Endpoints\n`;
+    successful.forEach(result => {
+      report += `- ${result.endpoint} (${result.responseTime}ms)\n`;
+    });
+    report += '\n';
+  }
+  
+  if (failed.length > 0) {
+    report += `## ❌ Failed Endpoints\n`;
+    failed.forEach(result => {
+      report += `- ${result.endpoint}: ${result.error}\n`;
+    });
+    report += '\n';
+  }
+  
+  return report;
+}
+
+/**
+ * Log detailed API response for debugging
+ */
+export function logAPIResponse(endpoint: string, data: any): void {
+  console.group(`📡 API Response: ${endpoint}`);
+  
+  if (Array.isArray(data)) {
+    console.log(`📊 Array with ${data.length} items`);
+    if (data.length > 0) {
+      console.log('📝 First item:', data[0]);
+    }
+  } else if (typeof data === 'object' &amp;&amp; data !== null) {
+    console.log('📝 Object keys:', Object.keys(data));
+    console.log('📝 Full object:', data);
+  } else {
+    console.log('📝 Data:', data);
+  }
+  
+  console.groupEnd();
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sun Aug 31 2025 10:28:25 GMT-0400 (Eastern Daylight Time)</p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

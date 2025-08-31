@@ -1,0 +1,217 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> components/Widgets/CategoryCloud.tsx</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AvatarManager.html">AvatarManager</a></li></ul><h3>Interfaces</h3><ul><li><a href="APITestResult.html">APITestResult</a></li><li><a href="AvatarOptions.html">AvatarOptions</a></li><li><a href="HeaderProps.html">HeaderProps</a></li><li><a href="NotificationSettings.html">NotificationSettings</a></li><li><a href="ScheduleSettings.html">ScheduleSettings</a></li><li><a href="WordPressToken.html">WordPressToken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AdSenseFeed">AdSenseFeed</a></li><li><a href="global.html#AdSenseWidget">AdSenseWidget</a></li><li><a href="global.html#AddToHomeScreen">AddToHomeScreen</a></li><li><a href="global.html#AuthStatus">AuthStatus</a></li><li><a href="global.html#AuthorDisplay">AuthorDisplay</a></li><li><a href="global.html#AuthorWidget">AuthorWidget</a></li><li><a href="global.html#Avatar">Avatar</a></li><li><a href="global.html#AvatarUpload">AvatarUpload</a></li><li><a href="global.html#AvatarUploadV2">AvatarUploadV2</a></li><li><a href="global.html#CategoryCards">CategoryCards</a></li><li><a href="global.html#CategoryCloud">CategoryCloud</a></li><li><a href="global.html#CategoryCloudEnhanced">CategoryCloudEnhanced</a></li><li><a href="global.html#CategoryList">CategoryList</a></li><li><a href="global.html#CategoryPills">CategoryPills</a></li><li><a href="global.html#CreativeCommonsWidget">CreativeCommonsWidget</a></li><li><a href="global.html#CustomHeader">CustomHeader</a></li><li><a href="global.html#DonateWidget">DonateWidget</a></li><li><a href="global.html#EnhancedAuthorWidget">EnhancedAuthorWidget</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#InteractiveButton">InteractiveButton</a></li><li><a href="global.html#KNOWN_LEGACY_MAPPINGS">KNOWN_LEGACY_MAPPINGS</a></li><li><a href="global.html#LoadMore">LoadMore</a></li><li><a href="global.html#OfflineIndicator">OfflineIndicator</a></li><li><a href="global.html#Pagination">Pagination</a></li><li><a href="global.html#PostCard">PostCard</a></li><li><a href="global.html#PostCardBig">PostCardBig</a></li><li><a href="global.html#PostGrid">PostGrid</a></li><li><a href="global.html#WORDPRESS_API_ENDPOINTS">WORDPRESS_API_ENDPOINTS</a></li><li><a href="global.html#WebringWidget">WebringWidget</a></li><li><a href="global.html#WordPressAuthProvider">WordPressAuthProvider</a></li><li><a href="global.html#calculateCategoryFontSize">calculateCategoryFontSize</a></li><li><a href="global.html#calculateNextRun">calculateNextRun</a></li><li><a href="global.html#calculateSimilarity">calculateSimilarity</a></li><li><a href="global.html#checkMultiplePostsLinks">checkMultiplePostsLinks</a></li><li><a href="global.html#checkPostLinks">checkPostLinks</a></li><li><a href="global.html#checkUrl">checkUrl</a></li><li><a href="global.html#clearStoredToken">clearStoredToken</a></li><li><a href="global.html#createExcerpt">createExcerpt</a></li><li><a href="global.html#createGravatarUrl">createGravatarUrl</a></li><li><a href="global.html#createScheduledCheck">createScheduledCheck</a></li><li><a href="global.html#createUrlParams">createUrlParams</a></li><li><a href="global.html#dataURLToBlob">dataURLToBlob</a></li><li><a href="global.html#debounce">debounce</a></li><li><a href="global.html#decodeHtmlEntities">decodeHtmlEntities</a></li><li><a href="global.html#downloadFile">downloadFile</a></li><li><a href="global.html#executeScheduledCheck">executeScheduledCheck</a></li><li><a href="global.html#exportDeadLinks">exportDeadLinks</a></li><li><a href="global.html#exportToCSV">exportToCSV</a></li><li><a href="global.html#exportToJSON">exportToJSON</a></li><li><a href="global.html#extractUrlsFromContent">extractUrlsFromContent</a></li><li><a href="global.html#findPostByLegacyUrl">findPostByLegacyUrl</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#formatNextRun">formatNextRun</a></li><li><a href="global.html#formatReadingTime">formatReadingTime</a></li><li><a href="global.html#formatRelativeDate">formatRelativeDate</a></li><li><a href="global.html#generateArchiveUrl">generateArchiveUrl</a></li><li><a href="global.html#generateAvatarSizes">generateAvatarSizes</a></li><li><a href="global.html#generateColorFromString">generateColorFromString</a></li><li><a href="global.html#generateInitialsAvatar">generateInitialsAvatar</a></li><li><a href="global.html#generatePDFHTML">generatePDFHTML</a></li><li><a href="global.html#generatePDFReport">generatePDFReport</a></li><li><a href="global.html#generateRandomState">generateRandomState</a></li><li><a href="global.html#generateSlug">generateSlug</a></li><li><a href="global.html#generateSlugVariations">generateSlugVariations</a></li><li><a href="global.html#generateSuggestions">generateSuggestions</a></li><li><a href="global.html#generateTestReport">generateTestReport</a></li><li><a href="global.html#getAuthStatus">getAuthStatus</a></li><li><a href="global.html#getDefaultExportOptions">getDefaultExportOptions</a></li><li><a href="global.html#getDefaultNotificationSettings">getDefaultNotificationSettings</a></li><li><a href="global.html#getDefaultScheduleSettings">getDefaultScheduleSettings</a></li><li><a href="global.html#getFeaturedImageUrl">getFeaturedImageUrl</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getKnownMapping">getKnownMapping</a></li><li><a href="global.html#getLocalStorage">getLocalStorage</a></li><li><a href="global.html#getPostAuthor">getPostAuthor</a></li><li><a href="global.html#getPostAuthorId">getPostAuthorId</a></li><li><a href="global.html#getPostCategories">getPostCategories</a></li><li><a href="global.html#getPostTags">getPostTags</a></li><li><a href="global.html#getReadingTime">getReadingTime</a></li><li><a href="global.html#getScheduledChecks">getScheduledChecks</a></li><li><a href="global.html#getStoredToken">getStoredToken</a></li><li><a href="global.html#handleOAuthCallback">handleOAuthCallback</a></li><li><a href="global.html#initiateWordPressOAuth">initiateWordPressOAuth</a></li><li><a href="global.html#isAuthenticated">isAuthenticated</a></li><li><a href="global.html#isBrowser">isBrowser</a></li><li><a href="global.html#isDebugMode">isDebugMode</a></li><li><a href="global.html#isValidEmail">isValidEmail</a></li><li><a href="global.html#loadAvatarFromStorage">loadAvatarFromStorage</a></li><li><a href="global.html#loadNotificationSettings">loadNotificationSettings</a></li><li><a href="global.html#loadScheduleSettings">loadScheduleSettings</a></li><li><a href="global.html#logAPIResponse">logAPIResponse</a></li><li><a href="global.html#makeAuthenticatedRequest">makeAuthenticatedRequest</a></li><li><a href="global.html#processNotifications">processNotifications</a></li><li><a href="global.html#removeAvatarFromStorage">removeAvatarFromStorage</a></li><li><a href="global.html#requestNotificationPermission">requestNotificationPermission</a></li><li><a href="global.html#resizeImageToSquare">resizeImageToSquare</a></li><li><a href="global.html#saveAvatarToStorage">saveAvatarToStorage</a></li><li><a href="global.html#saveNotificationSettings">saveNotificationSettings</a></li><li><a href="global.html#saveScheduleSettings">saveScheduleSettings</a></li><li><a href="global.html#searchArchiveSnapshots">searchArchiveSnapshots</a></li><li><a href="global.html#sendEmailNotification">sendEmailNotification</a></li><li><a href="global.html#sendWebhookNotification">sendWebhookNotification</a></li><li><a href="global.html#setLocalStorage">setLocalStorage</a></li><li><a href="global.html#shouldRunCheck">shouldRunCheck</a></li><li><a href="global.html#showBrowserNotification">showBrowserNotification</a></li><li><a href="global.html#storeToken">storeToken</a></li><li><a href="global.html#stripHtml">stripHtml</a></li><li><a href="global.html#testEndpoint">testEndpoint</a></li><li><a href="global.html#testWordPressEndpoints">testWordPressEndpoints</a></li><li><a href="global.html#truncateText">truncateText</a></li><li><a href="global.html#updateScheduleSettings">updateScheduleSettings</a></li><li><a href="global.html#useAuthenticatedAPI">useAuthenticatedAPI</a></li><li><a href="global.html#useClientOnly">useClientOnly</a></li><li><a href="global.html#useClientState">useClientState</a></li><li><a href="global.html#useWordPressAuth">useWordPressAuth</a></li><li><a href="global.html#validateImageFile">validateImageFile</a></li><li><a href="global.html#validateSiteSetup">validateSiteSetup</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>components/Widgets/CategoryCloud.tsx</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use client";
+
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { CategoryCloudProps, WordPressCategory } from '@/types';
+import { wordpressApi } from '@/services/wordpress-api';
+import { calculateCategoryFontSize } from '@/utils/helpers';
+
+/**
+ * Category cloud widget with dynamic font sizing based on post count
+ * Uses colored tags from additional.css
+ */
+const CategoryCloud: React.FC&lt;CategoryCloudProps> = ({
+  categories: initialCategories,
+  maxFontSize = 24,
+  minFontSize = 12,
+  className = ''
+}) => {
+  const [categories, setCategories] = useState&lt;WordPressCategory[]>(initialCategories || []);
+  const [isLoading, setIsLoading] = useState(!initialCategories);
+  const [error, setError] = useState&lt;string | null>(null);
+
+  useEffect(() => {
+    if (!initialCategories) {
+      const fetchCategories = async () => {
+        try {
+          setIsLoading(true);
+          const data = await wordpressApi.getCategories({
+            per_page: 50,
+            orderby: 'count',
+            order: 'desc'
+          });
+          setCategories(data);
+        } catch (err) {
+          setError('Failed to load categories');
+          console.error('Error fetching categories:', err);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchCategories();
+    }
+  }, [initialCategories]);
+
+  if (isLoading) {
+    return &lt;div className="widget category-cloud">Loading categories...&lt;/div>;
+  }
+
+  if (error) {
+    return &lt;div className="widget category-cloud">Error: {error}&lt;/div>;
+  }
+
+  if (!categories || categories.length === 0) {
+    return &lt;div className="widget category-cloud">No categories found.&lt;/div>;
+  }
+
+  return (
+    &lt;div className={`widget category-cloud ${className}`}>
+      &lt;h3 className="widget-title">Categories&lt;/h3>
+      &lt;div className="tagcloud">
+        {categories.map((category, index) => {
+          const fontSize = calculateCategoryFontSize(
+            category,
+            categories,
+            minFontSize,
+            maxFontSize
+          );
+          
+          // This creates the colored tag effect from additional.css
+          // Colors cycle based on index: 9n, 9n+1, 9n+2, etc.
+          const colorClass = `category-${index % 9}`;
+          
+          return (
+            &lt;Link
+              key={category.id}
+              href={`/category/${category.slug}`}
+              className={`tag-link ${colorClass}`}
+              style={{
+                fontSize: `${fontSize}px`,
+                // This ensures the tag cloud styling from additional.css is applied
+                display: 'inline-block',
+                margin: '0 5px 5px 0',
+                padding: '0 6px',
+                lineHeight: '30px',
+                borderRadius: '5px',
+                color: '#FFF',
+                opacity: 0.8,
+                fontFamily: 'cambria'
+              }}
+            >
+              {category.name}
+            &lt;/Link>
+          );
+        })}
+      &lt;/div>
+    &lt;/div>
+  );
+};
+
+export default CategoryCloud;</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sun Aug 31 2025 10:28:25 GMT-0400 (Eastern Daylight Time)</p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

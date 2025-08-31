@@ -1,0 +1,429 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> utils/avatarUtils.ts</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AvatarManager.html">AvatarManager</a></li></ul><h3>Interfaces</h3><ul><li><a href="APITestResult.html">APITestResult</a></li><li><a href="AvatarOptions.html">AvatarOptions</a></li><li><a href="HeaderProps.html">HeaderProps</a></li><li><a href="NotificationSettings.html">NotificationSettings</a></li><li><a href="ScheduleSettings.html">ScheduleSettings</a></li><li><a href="WordPressToken.html">WordPressToken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AdSenseFeed">AdSenseFeed</a></li><li><a href="global.html#AdSenseWidget">AdSenseWidget</a></li><li><a href="global.html#AddToHomeScreen">AddToHomeScreen</a></li><li><a href="global.html#AuthStatus">AuthStatus</a></li><li><a href="global.html#AuthorDisplay">AuthorDisplay</a></li><li><a href="global.html#AuthorWidget">AuthorWidget</a></li><li><a href="global.html#Avatar">Avatar</a></li><li><a href="global.html#AvatarUpload">AvatarUpload</a></li><li><a href="global.html#AvatarUploadV2">AvatarUploadV2</a></li><li><a href="global.html#CategoryCards">CategoryCards</a></li><li><a href="global.html#CategoryCloud">CategoryCloud</a></li><li><a href="global.html#CategoryCloudEnhanced">CategoryCloudEnhanced</a></li><li><a href="global.html#CategoryList">CategoryList</a></li><li><a href="global.html#CategoryPills">CategoryPills</a></li><li><a href="global.html#CreativeCommonsWidget">CreativeCommonsWidget</a></li><li><a href="global.html#CustomHeader">CustomHeader</a></li><li><a href="global.html#DonateWidget">DonateWidget</a></li><li><a href="global.html#EnhancedAuthorWidget">EnhancedAuthorWidget</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#InteractiveButton">InteractiveButton</a></li><li><a href="global.html#KNOWN_LEGACY_MAPPINGS">KNOWN_LEGACY_MAPPINGS</a></li><li><a href="global.html#LoadMore">LoadMore</a></li><li><a href="global.html#OfflineIndicator">OfflineIndicator</a></li><li><a href="global.html#Pagination">Pagination</a></li><li><a href="global.html#PostCard">PostCard</a></li><li><a href="global.html#PostCardBig">PostCardBig</a></li><li><a href="global.html#PostGrid">PostGrid</a></li><li><a href="global.html#WORDPRESS_API_ENDPOINTS">WORDPRESS_API_ENDPOINTS</a></li><li><a href="global.html#WebringWidget">WebringWidget</a></li><li><a href="global.html#WordPressAuthProvider">WordPressAuthProvider</a></li><li><a href="global.html#calculateCategoryFontSize">calculateCategoryFontSize</a></li><li><a href="global.html#calculateNextRun">calculateNextRun</a></li><li><a href="global.html#calculateSimilarity">calculateSimilarity</a></li><li><a href="global.html#checkMultiplePostsLinks">checkMultiplePostsLinks</a></li><li><a href="global.html#checkPostLinks">checkPostLinks</a></li><li><a href="global.html#checkUrl">checkUrl</a></li><li><a href="global.html#clearStoredToken">clearStoredToken</a></li><li><a href="global.html#createExcerpt">createExcerpt</a></li><li><a href="global.html#createGravatarUrl">createGravatarUrl</a></li><li><a href="global.html#createScheduledCheck">createScheduledCheck</a></li><li><a href="global.html#createUrlParams">createUrlParams</a></li><li><a href="global.html#dataURLToBlob">dataURLToBlob</a></li><li><a href="global.html#debounce">debounce</a></li><li><a href="global.html#decodeHtmlEntities">decodeHtmlEntities</a></li><li><a href="global.html#downloadFile">downloadFile</a></li><li><a href="global.html#executeScheduledCheck">executeScheduledCheck</a></li><li><a href="global.html#exportDeadLinks">exportDeadLinks</a></li><li><a href="global.html#exportToCSV">exportToCSV</a></li><li><a href="global.html#exportToJSON">exportToJSON</a></li><li><a href="global.html#extractUrlsFromContent">extractUrlsFromContent</a></li><li><a href="global.html#findPostByLegacyUrl">findPostByLegacyUrl</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#formatNextRun">formatNextRun</a></li><li><a href="global.html#formatReadingTime">formatReadingTime</a></li><li><a href="global.html#formatRelativeDate">formatRelativeDate</a></li><li><a href="global.html#generateArchiveUrl">generateArchiveUrl</a></li><li><a href="global.html#generateAvatarSizes">generateAvatarSizes</a></li><li><a href="global.html#generateColorFromString">generateColorFromString</a></li><li><a href="global.html#generateInitialsAvatar">generateInitialsAvatar</a></li><li><a href="global.html#generatePDFHTML">generatePDFHTML</a></li><li><a href="global.html#generatePDFReport">generatePDFReport</a></li><li><a href="global.html#generateRandomState">generateRandomState</a></li><li><a href="global.html#generateSlug">generateSlug</a></li><li><a href="global.html#generateSlugVariations">generateSlugVariations</a></li><li><a href="global.html#generateSuggestions">generateSuggestions</a></li><li><a href="global.html#generateTestReport">generateTestReport</a></li><li><a href="global.html#getAuthStatus">getAuthStatus</a></li><li><a href="global.html#getDefaultExportOptions">getDefaultExportOptions</a></li><li><a href="global.html#getDefaultNotificationSettings">getDefaultNotificationSettings</a></li><li><a href="global.html#getDefaultScheduleSettings">getDefaultScheduleSettings</a></li><li><a href="global.html#getFeaturedImageUrl">getFeaturedImageUrl</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getKnownMapping">getKnownMapping</a></li><li><a href="global.html#getLocalStorage">getLocalStorage</a></li><li><a href="global.html#getPostAuthor">getPostAuthor</a></li><li><a href="global.html#getPostAuthorId">getPostAuthorId</a></li><li><a href="global.html#getPostCategories">getPostCategories</a></li><li><a href="global.html#getPostTags">getPostTags</a></li><li><a href="global.html#getReadingTime">getReadingTime</a></li><li><a href="global.html#getScheduledChecks">getScheduledChecks</a></li><li><a href="global.html#getStoredToken">getStoredToken</a></li><li><a href="global.html#handleOAuthCallback">handleOAuthCallback</a></li><li><a href="global.html#initiateWordPressOAuth">initiateWordPressOAuth</a></li><li><a href="global.html#isAuthenticated">isAuthenticated</a></li><li><a href="global.html#isBrowser">isBrowser</a></li><li><a href="global.html#isDebugMode">isDebugMode</a></li><li><a href="global.html#isValidEmail">isValidEmail</a></li><li><a href="global.html#loadAvatarFromStorage">loadAvatarFromStorage</a></li><li><a href="global.html#loadNotificationSettings">loadNotificationSettings</a></li><li><a href="global.html#loadScheduleSettings">loadScheduleSettings</a></li><li><a href="global.html#logAPIResponse">logAPIResponse</a></li><li><a href="global.html#makeAuthenticatedRequest">makeAuthenticatedRequest</a></li><li><a href="global.html#processNotifications">processNotifications</a></li><li><a href="global.html#removeAvatarFromStorage">removeAvatarFromStorage</a></li><li><a href="global.html#requestNotificationPermission">requestNotificationPermission</a></li><li><a href="global.html#resizeImageToSquare">resizeImageToSquare</a></li><li><a href="global.html#saveAvatarToStorage">saveAvatarToStorage</a></li><li><a href="global.html#saveNotificationSettings">saveNotificationSettings</a></li><li><a href="global.html#saveScheduleSettings">saveScheduleSettings</a></li><li><a href="global.html#searchArchiveSnapshots">searchArchiveSnapshots</a></li><li><a href="global.html#sendEmailNotification">sendEmailNotification</a></li><li><a href="global.html#sendWebhookNotification">sendWebhookNotification</a></li><li><a href="global.html#setLocalStorage">setLocalStorage</a></li><li><a href="global.html#shouldRunCheck">shouldRunCheck</a></li><li><a href="global.html#showBrowserNotification">showBrowserNotification</a></li><li><a href="global.html#storeToken">storeToken</a></li><li><a href="global.html#stripHtml">stripHtml</a></li><li><a href="global.html#testEndpoint">testEndpoint</a></li><li><a href="global.html#testWordPressEndpoints">testWordPressEndpoints</a></li><li><a href="global.html#truncateText">truncateText</a></li><li><a href="global.html#updateScheduleSettings">updateScheduleSettings</a></li><li><a href="global.html#useAuthenticatedAPI">useAuthenticatedAPI</a></li><li><a href="global.html#useClientOnly">useClientOnly</a></li><li><a href="global.html#useClientState">useClientState</a></li><li><a href="global.html#useWordPressAuth">useWordPressAuth</a></li><li><a href="global.html#validateImageFile">validateImageFile</a></li><li><a href="global.html#validateSiteSetup">validateSiteSetup</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>utils/avatarUtils.ts</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Avatar utility functions for generating, processing, and managing user avatars
+ */
+
+export interface AvatarOptions {
+  size?: number;
+  backgroundColor?: string;
+  textColor?: string;
+  fontFamily?: string;
+  borderRadius?: number;
+}
+
+/**
+ * Generate initials from a full name
+ */
+export function getInitials(name: string): string {
+  if (!name || name.trim() === '') return 'U';
+  
+  return name
+    .trim()
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase())
+    .slice(0, 2)
+    .join('');
+}
+
+/**
+ * Generate a consistent color based on a string (usually name)
+ */
+export function generateColorFromString(str: string): string {
+  const colors = [
+    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+    '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9',
+    '#F8C471', '#82E0AA', '#F1948A', '#85C1E9', '#D7BDE2',
+    '#F39C12', '#E74C3C', '#9B59B6', '#3498DB', '#1ABC9C',
+    '#2ECC71', '#F1C40F', '#E67E22', '#E91E63', '#9C27B0'
+  ];
+  
+  let hash = 0;
+  for (let i = 0; i &lt; str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash &lt;&lt; 5) - hash);
+  }
+  
+  return colors[Math.abs(hash) % colors.length];
+}
+
+/**
+ * Generate an avatar image from initials
+ */
+export function generateInitialsAvatar(
+  name: string, 
+  options: AvatarOptions = {}
+): string {
+  const {
+    size = 120,
+    backgroundColor,
+    textColor = '#FFFFFF',
+    fontFamily = 'Arial, sans-serif',
+    borderRadius = 0
+  } = options;
+
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  
+  if (!ctx) return '';
+  
+  canvas.width = size;
+  canvas.height = size;
+  
+  const initials = getInitials(name);
+  const bgColor = backgroundColor || generateColorFromString(name);
+  
+  // Background
+  ctx.fillStyle = bgColor;
+  if (borderRadius > 0) {
+    // Rounded rectangle
+    ctx.beginPath();
+    ctx.roundRect(0, 0, size, size, borderRadius);
+    ctx.fill();
+  } else {
+    ctx.fillRect(0, 0, size, size);
+  }
+  
+  // Text
+  ctx.fillStyle = textColor;
+  ctx.font = `bold ${size * 0.4}px ${fontFamily}`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(initials, size / 2, size / 2);
+  
+  return canvas.toDataURL('image/png');
+}
+
+/**
+ * Resize and crop an image to a square
+ */
+export function resizeImageToSquare(
+  imageFile: File, 
+  size: number = 120
+): Promise&lt;string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    
+    reader.onload = (e) => {
+      const img = new Image();
+      
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        if (!ctx) {
+          reject(new Error('Could not get canvas context'));
+          return;
+        }
+        
+        canvas.width = size;
+        canvas.height = size;
+        
+        // Calculate crop dimensions to make it square
+        const minDimension = Math.min(img.width, img.height);
+        const sx = (img.width - minDimension) / 2;
+        const sy = (img.height - minDimension) / 2;
+        
+        // Draw cropped and resized image
+        ctx.drawImage(img, sx, sy, minDimension, minDimension, 0, 0, size, size);
+        
+        resolve(canvas.toDataURL('image/png'));
+      };
+      
+      img.onerror = () => reject(new Error('Failed to load image'));
+      img.src = e.target?.result as string;
+    };
+    
+    reader.onerror = () => reject(new Error('Failed to read file'));
+    reader.readAsDataURL(imageFile);
+  });
+}
+
+/**
+ * Validate if a file is a valid image
+ */
+export function validateImageFile(file: File): { valid: boolean; error?: string } {
+  // Check file type
+  if (!file.type.startsWith('image/')) {
+    return { valid: false, error: 'File must be an image' };
+  }
+  
+  // Check file size (5MB limit)
+  const maxSize = 5 * 1024 * 1024; // 5MB
+  if (file.size > maxSize) {
+    return { valid: false, error: 'File size must be less than 5MB' };
+  }
+  
+  // Check supported formats
+  const supportedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+  if (!supportedTypes.includes(file.type)) {
+    return { valid: false, error: 'Supported formats: JPEG, PNG, GIF, WebP' };
+  }
+  
+  return { valid: true };
+}
+
+/**
+ * Convert data URL to blob for uploading
+ */
+export function dataURLToBlob(dataURL: string): Blob {
+  const arr = dataURL.split(',');
+  const mime = arr[0].match(/:(.*?);/)?.[1] || 'image/png';
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  
+  return new Blob([u8arr], { type: mime });
+}
+
+/**
+ * Save avatar to localStorage (for demo purposes)
+ */
+export function saveAvatarToStorage(userId: string, avatarData: string): void {
+  try {
+    localStorage.setItem(`avatar_${userId}`, avatarData);
+  } catch (error) {
+    console.error('Failed to save avatar to storage:', error);
+  }
+}
+
+/**
+ * Load avatar from localStorage
+ */
+export function loadAvatarFromStorage(userId: string): string | null {
+  try {
+    return localStorage.getItem(`avatar_${userId}`);
+  } catch (error) {
+    console.error('Failed to load avatar from storage:', error);
+    return null;
+  }
+}
+
+/**
+ * Remove avatar from localStorage
+ */
+export function removeAvatarFromStorage(userId: string): void {
+  try {
+    localStorage.removeItem(`avatar_${userId}`);
+  } catch (error) {
+    console.error('Failed to remove avatar from storage:', error);
+  }
+}
+
+/**
+ * Generate multiple avatar sizes from a source image
+ */
+export function generateAvatarSizes(
+  sourceImage: string, 
+  sizes: number[] = [24, 48, 96, 120, 150]
+): Promise&lt;Record&lt;string, string>> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    
+    img.onload = () => {
+      const results: Record&lt;string, string> = {};
+      
+      sizes.forEach(size => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        if (ctx) {
+          canvas.width = size;
+          canvas.height = size;
+          ctx.drawImage(img, 0, 0, size, size);
+          results[size.toString()] = canvas.toDataURL('image/png');
+        }
+      });
+      
+      resolve(results);
+    };
+    
+    img.onerror = () => reject(new Error('Failed to load source image'));
+    img.src = sourceImage;
+  });
+}
+
+/**
+ * Create a gravatar-style fallback URL
+ */
+export function createGravatarUrl(email: string, size: number = 120): string {
+  // This is a simplified version - in a real app you'd use crypto.subtle or a library
+  // For demo purposes, we'll just create a placeholder
+  const hash = btoa(email.toLowerCase().trim()).slice(0, 32);
+  return `https://www.gravatar.com/avatar/${hash}?s=${size}&amp;d=identicon`;
+}
+
+/**
+ * Avatar management class for handling user avatars
+ */
+export class AvatarManager {
+  private userId: string;
+  
+  constructor(userId: string) {
+    this.userId = userId;
+  }
+  
+  /**
+   * Get current avatar or generate fallback
+   */
+  getAvatar(userName: string, size: number = 120): string {
+    const stored = loadAvatarFromStorage(this.userId);
+    if (stored) return stored;
+    
+    return generateInitialsAvatar(userName, { size });
+  }
+  
+  /**
+   * Save new avatar
+   */
+  saveAvatar(avatarData: string): void {
+    saveAvatarToStorage(this.userId, avatarData);
+  }
+  
+  /**
+   * Remove avatar
+   */
+  removeAvatar(): void {
+    removeAvatarFromStorage(this.userId);
+  }
+  
+  /**
+   * Update avatar from file
+   */
+  async updateFromFile(file: File, size: number = 120): Promise&lt;string> {
+    const validation = validateImageFile(file);
+    if (!validation.valid) {
+      throw new Error(validation.error);
+    }
+    
+    const resizedImage = await resizeImageToSquare(file, size);
+    this.saveAvatar(resizedImage);
+    return resizedImage;
+  }
+  
+  /**
+   * Generate initials avatar
+   */
+  generateInitials(userName: string, size: number = 120): string {
+    const avatar = generateInitialsAvatar(userName, { size });
+    this.saveAvatar(avatar);
+    return avatar;
+  }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sun Aug 31 2025 10:28:25 GMT-0400 (Eastern Daylight Time)</p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

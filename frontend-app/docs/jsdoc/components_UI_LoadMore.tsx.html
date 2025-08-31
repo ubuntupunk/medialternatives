@@ -1,0 +1,327 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> components/UI/LoadMore.tsx</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AvatarManager.html">AvatarManager</a></li></ul><h3>Interfaces</h3><ul><li><a href="APITestResult.html">APITestResult</a></li><li><a href="AvatarOptions.html">AvatarOptions</a></li><li><a href="HeaderProps.html">HeaderProps</a></li><li><a href="NotificationSettings.html">NotificationSettings</a></li><li><a href="ScheduleSettings.html">ScheduleSettings</a></li><li><a href="WordPressToken.html">WordPressToken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AdSenseFeed">AdSenseFeed</a></li><li><a href="global.html#AdSenseWidget">AdSenseWidget</a></li><li><a href="global.html#AddToHomeScreen">AddToHomeScreen</a></li><li><a href="global.html#AuthStatus">AuthStatus</a></li><li><a href="global.html#AuthorDisplay">AuthorDisplay</a></li><li><a href="global.html#AuthorWidget">AuthorWidget</a></li><li><a href="global.html#Avatar">Avatar</a></li><li><a href="global.html#AvatarUpload">AvatarUpload</a></li><li><a href="global.html#AvatarUploadV2">AvatarUploadV2</a></li><li><a href="global.html#CategoryCards">CategoryCards</a></li><li><a href="global.html#CategoryCloud">CategoryCloud</a></li><li><a href="global.html#CategoryCloudEnhanced">CategoryCloudEnhanced</a></li><li><a href="global.html#CategoryList">CategoryList</a></li><li><a href="global.html#CategoryPills">CategoryPills</a></li><li><a href="global.html#CreativeCommonsWidget">CreativeCommonsWidget</a></li><li><a href="global.html#CustomHeader">CustomHeader</a></li><li><a href="global.html#DonateWidget">DonateWidget</a></li><li><a href="global.html#EnhancedAuthorWidget">EnhancedAuthorWidget</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#InteractiveButton">InteractiveButton</a></li><li><a href="global.html#KNOWN_LEGACY_MAPPINGS">KNOWN_LEGACY_MAPPINGS</a></li><li><a href="global.html#LoadMore">LoadMore</a></li><li><a href="global.html#OfflineIndicator">OfflineIndicator</a></li><li><a href="global.html#Pagination">Pagination</a></li><li><a href="global.html#PostCard">PostCard</a></li><li><a href="global.html#PostCardBig">PostCardBig</a></li><li><a href="global.html#PostGrid">PostGrid</a></li><li><a href="global.html#WORDPRESS_API_ENDPOINTS">WORDPRESS_API_ENDPOINTS</a></li><li><a href="global.html#WebringWidget">WebringWidget</a></li><li><a href="global.html#WordPressAuthProvider">WordPressAuthProvider</a></li><li><a href="global.html#calculateCategoryFontSize">calculateCategoryFontSize</a></li><li><a href="global.html#calculateNextRun">calculateNextRun</a></li><li><a href="global.html#calculateSimilarity">calculateSimilarity</a></li><li><a href="global.html#checkMultiplePostsLinks">checkMultiplePostsLinks</a></li><li><a href="global.html#checkPostLinks">checkPostLinks</a></li><li><a href="global.html#checkUrl">checkUrl</a></li><li><a href="global.html#clearStoredToken">clearStoredToken</a></li><li><a href="global.html#createExcerpt">createExcerpt</a></li><li><a href="global.html#createGravatarUrl">createGravatarUrl</a></li><li><a href="global.html#createScheduledCheck">createScheduledCheck</a></li><li><a href="global.html#createUrlParams">createUrlParams</a></li><li><a href="global.html#dataURLToBlob">dataURLToBlob</a></li><li><a href="global.html#debounce">debounce</a></li><li><a href="global.html#decodeHtmlEntities">decodeHtmlEntities</a></li><li><a href="global.html#downloadFile">downloadFile</a></li><li><a href="global.html#executeScheduledCheck">executeScheduledCheck</a></li><li><a href="global.html#exportDeadLinks">exportDeadLinks</a></li><li><a href="global.html#exportToCSV">exportToCSV</a></li><li><a href="global.html#exportToJSON">exportToJSON</a></li><li><a href="global.html#extractUrlsFromContent">extractUrlsFromContent</a></li><li><a href="global.html#findPostByLegacyUrl">findPostByLegacyUrl</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#formatNextRun">formatNextRun</a></li><li><a href="global.html#formatReadingTime">formatReadingTime</a></li><li><a href="global.html#formatRelativeDate">formatRelativeDate</a></li><li><a href="global.html#generateArchiveUrl">generateArchiveUrl</a></li><li><a href="global.html#generateAvatarSizes">generateAvatarSizes</a></li><li><a href="global.html#generateColorFromString">generateColorFromString</a></li><li><a href="global.html#generateInitialsAvatar">generateInitialsAvatar</a></li><li><a href="global.html#generatePDFHTML">generatePDFHTML</a></li><li><a href="global.html#generatePDFReport">generatePDFReport</a></li><li><a href="global.html#generateRandomState">generateRandomState</a></li><li><a href="global.html#generateSlug">generateSlug</a></li><li><a href="global.html#generateSlugVariations">generateSlugVariations</a></li><li><a href="global.html#generateSuggestions">generateSuggestions</a></li><li><a href="global.html#generateTestReport">generateTestReport</a></li><li><a href="global.html#getAuthStatus">getAuthStatus</a></li><li><a href="global.html#getDefaultExportOptions">getDefaultExportOptions</a></li><li><a href="global.html#getDefaultNotificationSettings">getDefaultNotificationSettings</a></li><li><a href="global.html#getDefaultScheduleSettings">getDefaultScheduleSettings</a></li><li><a href="global.html#getFeaturedImageUrl">getFeaturedImageUrl</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getKnownMapping">getKnownMapping</a></li><li><a href="global.html#getLocalStorage">getLocalStorage</a></li><li><a href="global.html#getPostAuthor">getPostAuthor</a></li><li><a href="global.html#getPostAuthorId">getPostAuthorId</a></li><li><a href="global.html#getPostCategories">getPostCategories</a></li><li><a href="global.html#getPostTags">getPostTags</a></li><li><a href="global.html#getReadingTime">getReadingTime</a></li><li><a href="global.html#getScheduledChecks">getScheduledChecks</a></li><li><a href="global.html#getStoredToken">getStoredToken</a></li><li><a href="global.html#handleOAuthCallback">handleOAuthCallback</a></li><li><a href="global.html#initiateWordPressOAuth">initiateWordPressOAuth</a></li><li><a href="global.html#isAuthenticated">isAuthenticated</a></li><li><a href="global.html#isBrowser">isBrowser</a></li><li><a href="global.html#isDebugMode">isDebugMode</a></li><li><a href="global.html#isValidEmail">isValidEmail</a></li><li><a href="global.html#loadAvatarFromStorage">loadAvatarFromStorage</a></li><li><a href="global.html#loadNotificationSettings">loadNotificationSettings</a></li><li><a href="global.html#loadScheduleSettings">loadScheduleSettings</a></li><li><a href="global.html#logAPIResponse">logAPIResponse</a></li><li><a href="global.html#makeAuthenticatedRequest">makeAuthenticatedRequest</a></li><li><a href="global.html#processNotifications">processNotifications</a></li><li><a href="global.html#removeAvatarFromStorage">removeAvatarFromStorage</a></li><li><a href="global.html#requestNotificationPermission">requestNotificationPermission</a></li><li><a href="global.html#resizeImageToSquare">resizeImageToSquare</a></li><li><a href="global.html#saveAvatarToStorage">saveAvatarToStorage</a></li><li><a href="global.html#saveNotificationSettings">saveNotificationSettings</a></li><li><a href="global.html#saveScheduleSettings">saveScheduleSettings</a></li><li><a href="global.html#searchArchiveSnapshots">searchArchiveSnapshots</a></li><li><a href="global.html#sendEmailNotification">sendEmailNotification</a></li><li><a href="global.html#sendWebhookNotification">sendWebhookNotification</a></li><li><a href="global.html#setLocalStorage">setLocalStorage</a></li><li><a href="global.html#shouldRunCheck">shouldRunCheck</a></li><li><a href="global.html#showBrowserNotification">showBrowserNotification</a></li><li><a href="global.html#storeToken">storeToken</a></li><li><a href="global.html#stripHtml">stripHtml</a></li><li><a href="global.html#testEndpoint">testEndpoint</a></li><li><a href="global.html#testWordPressEndpoints">testWordPressEndpoints</a></li><li><a href="global.html#truncateText">truncateText</a></li><li><a href="global.html#updateScheduleSettings">updateScheduleSettings</a></li><li><a href="global.html#useAuthenticatedAPI">useAuthenticatedAPI</a></li><li><a href="global.html#useClientOnly">useClientOnly</a></li><li><a href="global.html#useClientState">useClientState</a></li><li><a href="global.html#useWordPressAuth">useWordPressAuth</a></li><li><a href="global.html#validateImageFile">validateImageFile</a></li><li><a href="global.html#validateSiteSetup">validateSiteSetup</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>components/UI/LoadMore.tsx</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use client";
+
+import React, { useState } from 'react';
+import { WordPressPost, PaginationInfo } from '@/types/wordpress';
+import { wordpressApi } from '@/services/wordpress-api';
+import { SITE_CONFIG } from '@/lib/constants';
+import PostGrid from '@/components/Posts/PostGrid';
+
+interface LoadMoreProps {
+  initialPosts: WordPressPost[];
+  initialPagination: PaginationInfo;
+  className?: string;
+  categoryId?: number;
+  authorId?: number;
+  tagId?: number;
+}
+
+/**
+ * Load More component for infinite scroll-style loading
+ * Shows a "Load More" button instead of traditional pagination
+ */
+const LoadMore: React.FC&lt;LoadMoreProps> = ({
+  initialPosts,
+  initialPagination,
+  className = '',
+  categoryId,
+  authorId,
+  tagId
+}) => {
+  const [posts, setPosts] = useState&lt;WordPressPost[]>(initialPosts);
+  const [pagination, setPagination] = useState&lt;PaginationInfo>(initialPagination);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState&lt;string | null>(null);
+
+  const loadMorePosts = async () => {
+    if (!pagination.hasNext || isLoading) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      let response;
+      
+      if (categoryId) {
+        response = await wordpressApi.getPostsByCategoryWithPagination(categoryId, {
+          per_page: SITE_CONFIG.POSTS_PER_PAGE,
+          page: pagination.nextPage,
+          _embed: true
+        });
+      } else if (authorId) {
+        response = await wordpressApi.getPostsByAuthorWithPagination(authorId, {
+          per_page: SITE_CONFIG.POSTS_PER_PAGE,
+          page: pagination.nextPage,
+          _embed: true
+        });
+      } else if (tagId) {
+        response = await wordpressApi.getPostsByTagWithPagination(tagId, {
+          per_page: SITE_CONFIG.POSTS_PER_PAGE,
+          page: pagination.nextPage,
+          _embed: true
+        });
+      } else {
+        response = await wordpressApi.getPostsWithPagination({
+          per_page: SITE_CONFIG.POSTS_PER_PAGE,
+          page: pagination.nextPage,
+          _embed: true
+        });
+      }
+
+      // Append new posts to existing posts
+      setPosts(prevPosts => [...prevPosts, ...response.data]);
+      setPagination(response.pagination);
+
+    } catch (err) {
+      console.error('Error loading more posts:', err);
+      setError(err instanceof Error ? err.message : 'Error loading more posts');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    &lt;div className={`load-more-container ${className}`}>
+      {/* Display all posts - first post as featured */}
+      &lt;PostGrid posts={posts} showFeatured={true} />
+
+      {/* Load More Button */}
+      {pagination.hasNext &amp;&amp; (
+        &lt;div className="text-center mt-5 mb-4">
+          &lt;button
+            onClick={loadMorePosts}
+            disabled={isLoading}
+            className="btn btn-lg load-more-btn"
+            style={{
+              minWidth: '240px',
+              padding: '0.75rem 2rem',
+              backgroundColor: isLoading ? '#6c757d' : '#ffffff',
+              borderColor: isLoading ? '#6c757d' : '#0d6efd',
+              color: isLoading ? '#ffffff' : '#0d6efd',
+              fontWeight: '600',
+              fontSize: '1rem',
+              borderRadius: '0.375rem',
+              border: '2px solid',
+              transition: 'all 0.2s ease',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+              textTransform: 'none',
+              letterSpacing: '0.3px'
+            }}
+            onMouseEnter={(e) => {
+              if (!isLoading) {
+                e.currentTarget.style.backgroundColor = '#0d6efd';
+                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 2px 6px rgba(13, 110, 253, 0.25)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isLoading) {
+                e.currentTarget.style.backgroundColor = '#ffffff';
+                e.currentTarget.style.color = '#0d6efd';
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
+              }
+            }}
+          >
+            {isLoading ? (
+              &lt;>
+                &lt;span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true">&lt;/span>
+                Loading More Posts...
+              &lt;/>
+            ) : (
+              &lt;>
+                Load More Posts
+                &lt;span style={{ 
+                  fontSize: '0.85em', 
+                  opacity: 0.8, 
+                  marginLeft: '8px',
+                  fontWeight: '500'
+                }}>
+                  ({pagination.total - posts.length} remaining)
+                &lt;/span>
+              &lt;/>
+            )}
+          &lt;/button>
+        &lt;/div>
+      )}
+
+      {/* Error Display */}
+      {error &amp;&amp; (
+        &lt;div className="alert alert-warning mt-3" style={{ borderRadius: '0.5rem' }}>
+          &lt;strong>Error:&lt;/strong> {error}
+          &lt;button 
+            onClick={loadMorePosts}
+            className="btn btn-sm ms-2"
+            style={{
+              backgroundColor: '#ffffff',
+              borderColor: '#f0ad4e',
+              color: '#f0ad4e',
+              fontWeight: '600',
+              borderRadius: '0.375rem',
+              border: '2px solid',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#f0ad4e';
+              e.currentTarget.style.color = '#ffffff';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#ffffff';
+              e.currentTarget.style.color = '#f0ad4e';
+            }}
+          >
+            Try Again
+          &lt;/button>
+        &lt;/div>
+      )}
+
+      {/* End of posts message */}
+      {!pagination.hasNext &amp;&amp; posts.length > 0 &amp;&amp; (
+        &lt;div className="text-center mt-4 mb-4">
+          &lt;div className="alert alert-info">
+            &lt;strong>You've reached the end!&lt;/strong> 
+            &lt;p className="mb-0">
+              You've viewed all {posts.length} posts. 
+              &lt;a href="/blog" className="alert-link ms-1">Browse by categories&lt;/a> or 
+              &lt;a href="#" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="alert-link ms-1">
+                scroll to top
+              &lt;/a>.
+            &lt;/p>
+          &lt;/div>
+        &lt;/div>
+      )}
+
+      {/* Debug info for development */}
+      {process.env.NODE_ENV === 'development' &amp;&amp; (
+        &lt;div className="mt-4 p-3 bg-light border rounded">
+          &lt;h6>Load More Debug Info:&lt;/h6>
+          &lt;small>
+            Posts loaded: {posts.length} / {pagination.total} | 
+            Current page: {pagination.currentPage} | 
+            Total pages: {pagination.totalPages} | 
+            Has next: {pagination.hasNext ? 'Yes' : 'No'} | 
+            Next page: {pagination.nextPage || 'N/A'}
+          &lt;/small>
+        &lt;/div>
+      )}
+    &lt;/div>
+  );
+};
+
+export default LoadMore;</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sun Aug 31 2025 10:28:25 GMT-0400 (Eastern Daylight Time)</p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>
