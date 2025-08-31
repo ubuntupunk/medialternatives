@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
 
 /**
- * Generate robots.txt with sitemap reference
+ * GET /api/robots - Generate robots.txt file
+ *
+ * Generates a robots.txt file that allows all crawlers to access content
+ * while disallowing sensitive routes and providing sitemap reference.
+ *
+ * @returns {Promise<NextResponse>} Robots.txt content with proper headers
  */
 export async function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://medialternatives.com';
