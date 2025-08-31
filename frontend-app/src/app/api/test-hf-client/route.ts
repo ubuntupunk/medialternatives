@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { HfInference } from '@huggingface/inference';
 
+/**
+ * GET /api/test-hf-client - Test Hugging Face API client
+ *
+ * Tests Hugging Face API connection and image generation capabilities.
+ * Validates API token and model access permissions.
+ *
+ * @param {NextRequest} request - Next.js request object
+ * @returns {Promise<NextResponse>} API test results or error response
+ */
 export async function GET(request: NextRequest) {
   try {
     const HF_TOKEN = process.env.HUGGINGFACE_API_TOKEN;
