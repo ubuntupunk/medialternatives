@@ -3,12 +3,60 @@ import { WordPressPost } from '@/types/wordpress';
 import { getFeaturedImageUrl, getPostAuthor, decodeHtmlEntities } from '@/utils/helpers';
 import { SITE_CONFIG } from '@/lib/constants';
 
-interface StructuredDataProps {
-  post?: WordPressPost;
-  type?: 'article' | 'website' | 'organization' | 'breadcrumb';
-  breadcrumbs?: Array<{ name: string; url: string }>;
-}
+/**
+ * Breadcrumb item interface
+ * @typedef {Object} BreadcrumbItem
+ * @property {string} name - Display name of the breadcrumb
+ * @property {string} url - URL path for the breadcrumb
+ */
 
+/**
+ * Structured data props interface
+ * @typedef {Object} StructuredDataProps
+ * @property {WordPressPost} [post] - WordPress post data for article schema
+ * @property {'article'|'website'|'organization'|'breadcrumb'} [type='website'] - Type of structured data to generate
+ * @property {BreadcrumbItem[]} [breadcrumbs] - Breadcrumb navigation data
+ */
+
+/**
+ * Structured Data Component
+ *
+ * Generates JSON-LD structured data for SEO and rich snippets.
+ * Supports Organization, Website, Article, and Breadcrumb schemas.
+ * Automatically generates appropriate schema based on content type and data.
+ *
+ * @component
+ * @param {StructuredDataProps} props - Component props
+ * @returns {JSX.Element} Script tags with JSON-LD structured data
+ *
+ * @example
+ * ```tsx
+ * // For a website homepage
+ * <StructuredData type="website" />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // For a blog post
+ * <StructuredData
+ *   post={postData}
+ *   type="article"
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // With breadcrumbs
+ * <StructuredData
+ *   type="breadcrumb"
+ *   breadcrumbs={[
+ *     { name: "Home", url: "/" },
+ *     { name: "Articles", url: "/articles" },
+ *     { name: "Current Article", url: "/articles/current" }
+ *   ]}
+ * />
+ * ```
+ */
 export default function StructuredData({ post, type = 'website', breadcrumbs }: StructuredDataProps) {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://medialternatives.com';
   

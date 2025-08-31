@@ -1,19 +1,42 @@
-/*
-  * Progress tracking utilities for dead link checker
-  */
+/**
+ * Progress update interface
+ * @typedef {Object} ProgressUpdate
+ * @property {number} current - Current number of items processed
+ * @property {number} total - Total number of items to process
+ * @property {number} percentage - Completion percentage (0-100)
+ * @property {string} [currentItem] - Name of currently processing item
+ * @property {'checking'|'completed'|'error'} status - Current processing status
+ * @property {number} timeElapsed - Time elapsed in milliseconds
+ * @property {number} [estimatedTimeRemaining] - Estimated remaining time in milliseconds
+ */
 
-export interface ProgressUpdate {
-  current: number;
-  total: number;
-  percentage: number;
-  currentItem?: string;
-  status: 'checking' | 'completed' | 'error';
-  timeElapsed: number;
-  estimatedTimeRemaining?: number;
-}
+/**
+ * Progress callback function type
+ * @callback ProgressCallback
+ * @param {ProgressUpdate} update - Progress update information
+ */
 
-export type ProgressCallback = (update: ProgressUpdate) => void;
-
+/**
+ * Progress Tracker Class
+ *
+ * Utility class for tracking progress of long-running operations.
+ * Provides real-time progress updates, time estimates, and completion tracking.
+ * Used primarily by the dead link checker for user feedback during processing.
+ *
+ * @class
+ * @example
+ * ```typescript
+ * const tracker = new ProgressTracker(100, (update) => {
+ *   console.log(`${update.percentage}% complete`);
+ * });
+ *
+ * // Update progress
+ * tracker.update(50, 'Processing item 50');
+ *
+ * // Mark as complete
+ * tracker.complete();
+ * ```
+ */
 export class ProgressTracker {
   private startTime: number;
   private current: number = 0;
@@ -89,9 +112,21 @@ export class ProgressTracker {
   }
 }
 
-/*
-  * Format time duration in human readable format
-  */
+/**
+ * Format time duration in human readable format
+ *
+ * Converts milliseconds to a human-readable time format (ms, seconds, minutes, hours).
+ *
+ * @param {number} ms - Time duration in milliseconds
+ * @returns {string} Formatted time string
+ *
+ * @example
+ * ```typescript
+ * formatDuration(500);     // "500ms"
+ * formatDuration(65000);   // "1m 5s"
+ * formatDuration(3661000); // "1h 1m"
+ * ```
+ */
 export function formatDuration(ms: number): string {
   if (ms < 1000) return `${ms}ms`;
   if (ms < 60000) return `${Math.round(ms / 1000)}s`;

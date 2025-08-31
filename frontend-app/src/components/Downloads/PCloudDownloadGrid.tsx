@@ -3,24 +3,61 @@
 import React, { useState, useMemo } from 'react';
 import PCloudFileHandler from './PCloudFileHandler';
 
-interface PCloudFile {
-  filename: string;
-  publicUrl: string;
-  pcloudPath: string;
-  fileid: string;
-  category: 'transcripts' | 'legal';
-  size: number;
-  title?: string;
-}
+/**
+ * PCloud file interface
+ * @typedef {Object} PCloudFile
+ * @property {string} filename - Original filename
+ * @property {string} publicUrl - Public download URL
+ * @property {string} pcloudPath - Path in PCloud storage
+ * @property {string} fileid - PCloud file ID
+ * @property {'transcripts'|'legal'} category - File category
+ * @property {number} size - File size in bytes
+ * @property {string} [title] - Optional display title
+ */
 
-interface PCloudDownloadGridProps {
-  files: PCloudFile[];
-  title?: string;
-  showCategories?: boolean;
-  showSearch?: boolean;
-  className?: string;
-}
+/**
+ * PCloud download grid props interface
+ * @typedef {Object} PCloudDownloadGridProps
+ * @property {PCloudFile[]} files - Array of files to display
+ * @property {string} [title='Legal Documents'] - Grid title
+ * @property {boolean} [showCategories=true] - Whether to show category filters
+ * @property {boolean} [showSearch=true] - Whether to show search functionality
+ * @property {string} [className=''] - Additional CSS classes
+ */
 
+/**
+ * PCloud Download Grid Component
+ *
+ * Interactive grid component for displaying and downloading files from PCloud.
+ * Features search, category filtering, and direct download links.
+ * Supports legal documents and court transcripts with organized display.
+ *
+ * @component
+ * @param {PCloudDownloadGridProps} props - Component props
+ * @returns {JSX.Element} The rendered download grid
+ *
+ * @example
+ * ```tsx
+ * const files = [
+ *   {
+ *     filename: 'document.pdf',
+ *     publicUrl: 'https://...',
+ *     pcloudPath: '/legal/document.pdf',
+ *     fileid: '12345',
+ *     category: 'legal',
+ *     size: 1024000,
+ *     title: 'Legal Document'
+ *   }
+ * ];
+ *
+ * <PCloudDownloadGrid
+ *   files={files}
+ *   title="Legal Archive"
+ *   showCategories={true}
+ *   showSearch={true}
+ * />
+ * ```
+ */
 export const PCloudDownloadGrid: React.FC<PCloudDownloadGridProps> = ({
   files,
   title = 'Legal Documents',

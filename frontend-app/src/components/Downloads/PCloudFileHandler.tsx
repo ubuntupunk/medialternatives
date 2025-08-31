@@ -1,22 +1,56 @@
 import React, { useState } from 'react';
 
-interface PCloudFile {
-  filename: string;
-  publicUrl: string;
-  pcloudPath: string;
-  fileid: string;
-  category: 'transcripts' | 'legal';
-  size: number;
-}
+/**
+ * PCloud file interface
+ * @typedef {Object} PCloudFile
+ * @property {string} filename - Original filename
+ * @property {string} publicUrl - Public download URL
+ * @property {string} pcloudPath - Path in PCloud storage
+ * @property {string} fileid - PCloud file ID
+ * @property {'transcripts'|'legal'} category - File category
+ * @property {number} size - File size in bytes
+ */
 
-interface PCloudFileHandlerProps {
-  file: PCloudFile;
-  title?: string;
-  className?: string;
-  showFileInfo?: boolean;
-  trackDownloads?: boolean;
-}
+/**
+ * PCloud file handler props interface
+ * @typedef {Object} PCloudFileHandlerProps
+ * @property {PCloudFile} file - File information
+ * @property {string} [title] - Optional display title
+ * @property {string} [className=''] - Additional CSS classes
+ * @property {boolean} [showFileInfo=false] - Whether to show file size and info
+ * @property {boolean} [trackDownloads=true] - Whether to track download events
+ */
 
+/**
+ * PCloud File Handler Component
+ *
+ * Individual file download component for PCloud-hosted files.
+ * Handles download tracking, file information display, and download state management.
+ * Supports both legal documents and court transcripts with proper categorization.
+ *
+ * @component
+ * @param {PCloudFileHandlerProps} props - Component props
+ * @returns {JSX.Element} The rendered file download component
+ *
+ * @example
+ * ```tsx
+ * const file = {
+ *   filename: 'document.pdf',
+ *   publicUrl: 'https://pcloud.com/download/...',
+ *   pcloudPath: '/legal/document.pdf',
+ *   fileid: '12345',
+ *   category: 'legal',
+ *   size: 1024000
+ * };
+ *
+ * <PCloudFileHandler
+ *   file={file}
+ *   title="Legal Document"
+ *   showFileInfo={true}
+ *   trackDownloads={true}
+ * />
+ * ```
+ */
 const PCloudFileHandler: React.FC<PCloudFileHandlerProps> = ({
   file,
   title,

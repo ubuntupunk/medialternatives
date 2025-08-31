@@ -1,33 +1,117 @@
-// TypeScript type definitions for MuizenMesh Webring Widget
+/**
+ * TypeScript type definitions for MuizenMesh Webring Widget
+ */
 
+/**
+ * Webring widget props interface
+ * @typedef {Object} WebringWidgetProps
+ * @property {string} [title='Webring'] - Custom title for the widget
+ * @property {string} [webringUrl='https://meshring.netlify.app'] - URL of the webring site
+ * @property {'default'|'minimal'|'ocean'|'sunset'|'dark'|'tokyo'|'dracula'|'disco'|'random'} [theme='dark'] - Theme variant for the widget
+ * @property {'small'|'medium'|'large'} [size='medium'] - Size variant for the widget
+ * @property {boolean} [showImage=true] - Whether to show the surfer image
+ * @property {string} [className=''] - Custom CSS class name
+ * @property {boolean} [showDescription=true] - Whether to show the description text
+ */
+
+/**
+ * Webring theme configuration interface
+ * @typedef {Object} WebringTheme
+ * @property {string} name - Display name of the theme
+ * @property {Object} colors - Color configuration for the theme
+ * @property {string} colors.background - Background color
+ * @property {string} colors.border - Border color
+ * @property {string} colors.text - Text color
+ * @property {string} colors.accent - Accent color for highlights
+ * @property {string} colors.linkColor - Link color
+ * @property {string} colors.linkHover - Link hover color
+ * @property {string} colors.buttonBackground - Button background color
+ * @property {string} colors.buttonText - Button text color
+ * @property {string} colors.buttonHover - Button hover color
+ */
+
+/**
+ * Webring Widget Props Interface
+ *
+ * Configuration options for the MuizenMesh Webring Widget component.
+ * Defines all available customization options for appearance and behavior.
+ *
+ * @interface WebringWidgetProps
+ * @example
+ * ```typescript
+ * const props: WebringWidgetProps = {
+ *   title: 'My Webring',
+ *   theme: 'ocean',
+ *   size: 'large',
+ *   showImage: true,
+ *   showDescription: true
+ * };
+ * ```
+ */
 export interface WebringWidgetProps {
-  /* Custom title for the widget */
+  /** Custom title for the widget */
   title?: string;
-  /* URL of the webring site */
+  /** URL of the webring site */
   webringUrl?: string;
-  /* Theme variant for the widget */
+  /** Theme variant for the widget */
   theme?: 'default' | 'minimal' | 'ocean' | 'sunset' | 'dark' | 'tokyo' | 'dracula' | 'disco' | 'random';
-  /* Size variant for the widget */
+  /** Size variant for the widget */
   size?: 'small' | 'medium' | 'large';
-  /* Whether to show the surfer image */
+  /** Whether to show the surfer image */
   showImage?: boolean;
-  /* Custom CSS class name */
+  /** Custom CSS class name */
   className?: string;
-  /* Whether to show the description text */
+  /** Whether to show the description text */
   showDescription?: boolean;
 }
 
+/**
+ * Webring Theme Configuration Interface
+ *
+ * Defines the structure for webring widget themes including color schemes
+ * and visual styling options.
+ *
+ * @interface WebringTheme
+ * @example
+ * ```typescript
+ * const customTheme: WebringTheme = {
+ *   name: 'Custom',
+ *   colors: {
+ *     background: '#ffffff',
+ *     border: '#cccccc',
+ *     text: '#333333',
+ *     accent: '#007bff',
+ *     linkColor: '#007bff',
+ *     linkHover: '#0056b3',
+ *     buttonBackground: '#f8f9fa',
+ *     buttonText: '#007bff',
+ *     buttonHover: '#007bff'
+ *   }
+ * };
+ * ```
+ */
 export interface WebringTheme {
+  /** Display name of the theme */
   name: string;
+  /** Color configuration for the theme */
   colors: {
+    /** Background color */
     background: string;
+    /** Border color */
     border: string;
+    /** Text color */
     text: string;
+    /** Accent color for highlights */
     accent: string;
+    /** Link color */
     linkColor: string;
+    /** Link hover color */
     linkHover: string;
+    /** Button background color */
     buttonBackground: string;
+    /** Button text color */
     buttonText: string;
+    /** Button hover color */
     buttonHover: string;
   };
 }

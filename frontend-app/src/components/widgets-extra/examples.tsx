@@ -1,19 +1,58 @@
-// Example usage of WebringWidget with different themes and configurations
+/**
+ * WebringWidget Examples and Usage Patterns
+ *
+ * This file contains example implementations of the WebringWidget component
+ * with different themes, sizes, and configuration options.
+ * Use these examples as reference for implementing the widget in your application.
+ *
+ * @example
+ * ```tsx
+ * import { DefaultWidget, OceanWidget } from '@/components/widgets-extra/examples';
+ *
+ * // Use in your component
+ * <DefaultWidget />
+ * <OceanWidget />
+ * ```
+ */
 
 import React from 'react';
 import WebringWidget from './WebringWidget';
 
-// Example 1: Default theme
+/**
+ * Default Webring Widget Example
+ *
+ * Basic implementation with default theme and standard configuration.
+ * Shows the most common usage pattern.
+ *
+ * @component
+ * @returns {JSX.Element} WebringWidget with default configuration
+ * @example
+ * ```tsx
+ * <DefaultWidget />
+ * ```
+ */
 export const DefaultWidget = () => (
-  <WebringWidget 
+  <WebringWidget
     title="Community Links"
     webringUrl="https://meshring.netlify.app"
   />
 );
 
-// Example 2: Minimal theme, small size
+/**
+ * Minimal Webring Widget Example
+ *
+ * Compact widget with minimal theme, small size, and no description.
+ * Perfect for sidebar implementations where space is limited.
+ *
+ * @component
+ * @returns {JSX.Element} WebringWidget with minimal configuration
+ * @example
+ * ```tsx
+ * <MinimalWidget />
+ * ```
+ */
 export const MinimalWidget = () => (
-  <WebringWidget 
+  <WebringWidget
     title="Webring"
     theme="minimal"
     size="small"
@@ -22,9 +61,21 @@ export const MinimalWidget = () => (
   />
 );
 
-// Example 3: Ocean theme, large size
+/**
+ * Ocean Theme Webring Widget Example
+ *
+ * Large widget with ocean theme and full description.
+ * Showcases the ocean color scheme with larger size for better visibility.
+ *
+ * @component
+ * @returns {JSX.Element} WebringWidget with ocean theme and large size
+ * @example
+ * ```tsx
+ * <OceanWidget />
+ * ```
+ */
 export const OceanWidget = () => (
-  <WebringWidget 
+  <WebringWidget
     title="MuizenMesh Community"
     theme="ocean"
     size="large"

@@ -1,5 +1,22 @@
 import { WordPressPost, WordPressCategory } from '@/types/wordpress';
 
+/**
+ * Mock WordPress Posts Data
+ *
+ * Sample WordPress post data for development and testing purposes.
+ * Contains realistic post structures with embedded author and media data.
+ * Used for development when WordPress API is not available or for testing.
+ *
+ * @constant {WordPressPost[]} mockPosts
+ * @example
+ * ```typescript
+ * import { mockPosts } from '@/utils/mockData';
+ *
+ * // Use in development
+ * const posts = mockPosts;
+ * console.log('Sample posts:', posts.length); // 2
+ * ```
+ */
 export const mockPosts: WordPressPost[] = [
   {
     id: 1,
@@ -129,6 +146,23 @@ export const mockPosts: WordPressPost[] = [
   }
 ];
 
+/**
+ * Mock WordPress Categories Data
+ *
+ * Sample WordPress category data for development and testing purposes.
+ * Contains realistic category structures with post counts and descriptions.
+ * Used for development when WordPress API is not available or for testing.
+ *
+ * @constant {WordPressCategory[]} mockCategories
+ * @example
+ * ```typescript
+ * import { mockCategories } from '@/utils/mockData';
+ *
+ * // Use in development
+ * const categories = mockCategories;
+ * console.log('Sample categories:', categories.length); // 3
+ * ```
+ */
 export const mockCategories: WordPressCategory[] = [
   {
     id: 1,

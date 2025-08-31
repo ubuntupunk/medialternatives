@@ -3,15 +3,56 @@ import { WordPressPost } from '@/types/wordpress';
 import { getFeaturedImageUrl, getPostAuthor, decodeHtmlEntities } from '@/utils/helpers';
 import { SITE_CONFIG } from '@/lib/constants';
 
-interface MetaTagsProps {
-  title?: string;
-  description?: string;
-  post?: WordPressPost;
-  canonical?: string;
-  noindex?: boolean;
-  type?: 'website' | 'article';
-}
+/**
+ * Meta tags props interface
+ * @typedef {Object} MetaTagsProps
+ * @property {string} [title] - Page title (auto-generated from post if not provided)
+ * @property {string} [description] - Page description (auto-generated from post excerpt if not provided)
+ * @property {WordPressPost} [post] - WordPress post data for article-specific meta tags
+ * @property {string} [canonical] - Canonical URL (auto-generated if not provided)
+ * @property {boolean} [noindex=false] - Whether to add noindex meta tag
+ * @property {'website'|'article'} [type='website'] - Open Graph type
+ */
 
+/**
+ * Meta Tags Component
+ *
+ * Generates comprehensive SEO meta tags for pages and articles.
+ * Includes Open Graph, Twitter Card, and standard meta tags for optimal SEO.
+ * Automatically generates titles, descriptions, and images from WordPress post data.
+ *
+ * @component
+ * @param {MetaTagsProps} props - Component props
+ * @returns {JSX.Element} Next.js Head component with meta tags
+ *
+ * @example
+ * ```tsx
+ * // Basic usage for a page
+ * <MetaTags
+ *   title="About Us"
+ *   description="Learn about our mission and values"
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // For a WordPress post
+ * <MetaTags
+ *   post={postData}
+ *   type="article"
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // With custom canonical URL
+ * <MetaTags
+ *   title="Custom Page"
+ *   canonical="https://example.com/custom-page"
+ *   noindex={false}
+ * />
+ * ```
+ */
 export default function MetaTags({ 
   title, 
   description, 

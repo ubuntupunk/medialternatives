@@ -2,6 +2,38 @@ import React from 'react';
 import Link from 'next/link';
 import styles from '../../styles/components/navbar.module.css';
 
+/**
+ * Navigation Bar Component
+ *
+ * Main navigation component for the Media Alternatives website.
+ * Provides responsive navigation with collapsible menu for mobile devices.
+ * Includes links to main sections: About, Support, Case, Republish, Environment, and Handbook.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered navigation bar
+ *
+ * @example
+ * ```tsx
+ * import Navbar from '@/components/Header/Navbar';
+ *
+ * function Header() {
+ *   return (
+ *     <header>
+ *       <Navbar />
+ *     </header>
+ *   );
+ * }
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // The navbar automatically handles:
+ * // - Responsive collapse on mobile
+ * // - Bootstrap styling integration
+ * // - Accessibility features (ARIA labels)
+ * // - Active link highlighting
+ * ```
+ */
 const Navbar: React.FC = () => {
   return (
     <nav className={`navbar navbar-expand-lg navbar-light ${styles.navbar}`}>

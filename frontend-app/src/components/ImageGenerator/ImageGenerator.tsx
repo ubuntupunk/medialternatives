@@ -2,20 +2,61 @@
 
 import React, { useState } from 'react';
 
-interface ImageGeneratorProps {
-  postTitle?: string;
-  postContent?: string;
-  onImageGenerated?: (imageUrl: string) => void;
-  className?: string;
-}
+/**
+ * Image generation settings interface
+ * @typedef {Object} GenerationSettings
+ * @property {string} style - Image style (photorealistic, illustration, abstract, etc.)
+ * @property {string} aspectRatio - Image aspect ratio (16:9, 4:3, 1:1, etc.)
+ * @property {string} quality - Generation quality (low, medium, high, ultra)
+ * @property {boolean} includeText - Whether to include text in the image
+ */
 
-interface GenerationSettings {
-  style: string;
-  aspectRatio: string;
-  quality: string;
-  includeText: boolean;
-}
+/**
+ * Image generator props interface
+ * @typedef {Object} ImageGeneratorProps
+ * @property {string} [postTitle=''] - Initial title for image generation
+ * @property {string} [postContent=''] - Initial content for context
+ * @property {Function} [onImageGenerated] - Callback when image is generated
+ * @property {string} [className=''] - Additional CSS classes
+ */
 
+/**
+ * AI-Powered Image Generator Component
+ *
+ * Interactive component for generating images using AI based on text content.
+ * Supports various styles, aspect ratios, and quality settings.
+ * Integrates with Hugging Face API for image generation.
+ *
+ * @component
+ * @param {ImageGeneratorProps} props - Component props
+ * @returns {JSX.Element} The rendered image generator interface
+ *
+ * @example
+ * ```tsx
+ * <ImageGenerator
+ *   postTitle="Beautiful Sunset"
+ *   postContent="A stunning sunset over the ocean waves"
+ *   onImageGenerated={(url) => console.log('Image generated:', url)}
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // With custom settings
+ * const [settings, setSettings] = useState({
+ *   style: 'photorealistic',
+ *   aspectRatio: '16:9',
+ *   quality: 'high',
+ *   includeText: false
+ * });
+ *
+ * <ImageGenerator
+ *   postTitle={post.title}
+ *   postContent={post.content}
+ *   className="my-image-generator"
+ * />
+ * ```
+ */
 const ImageGenerator: React.FC<ImageGeneratorProps> = ({
   postTitle = '',
   postContent = '',
