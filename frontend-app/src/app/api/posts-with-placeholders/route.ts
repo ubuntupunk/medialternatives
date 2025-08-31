@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { wordpressApi } from '@/services/wordpress-api';
 
+/**
+ * GET /api/posts-with-placeholders - Get posts with placeholder images
+ *
+ * Returns WordPress posts that have placeholder or missing featured images.
+ * Useful for identifying posts that need image updates.
+ *
+ * @param {NextRequest} request - Next.js request object
+ * @returns {Promise<NextResponse>} Posts with placeholder images or error response
+ */
 export async function GET(request: NextRequest) {
   try {
     // Fetch posts from WordPress.com API
@@ -47,6 +56,11 @@ export async function GET(request: NextRequest) {
   }
 }
 
+/**
+ * Extract featured image URL from WordPress post
+ * @param {any} post - WordPress post object
+ * @returns {string | null} Featured image URL or null if not found
+ */
 function getFeaturedImageUrl(post: any): string | null {
   // Check for featured media in _embedded data
   if (post._embedded?.['wp:featuredmedia']?.[0]?.source_url) {
@@ -70,6 +84,11 @@ function getFeaturedImageUrl(post: any): string | null {
   return null;
 }
 
+/**
+ * Determine the type of placeholder image being used
+ * @param {string | null} imageUrl - Image URL to analyze
+ * @returns {string} Placeholder type ('missing', 'picsum', 'placeholder', etc.)
+ */
 function getPlaceholderType(imageUrl: string | null): string {
   if (!imageUrl) return 'missing';
   if (imageUrl.includes('picsum.photos')) return 'picsum';
