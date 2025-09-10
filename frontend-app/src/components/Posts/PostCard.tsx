@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PostCardProps } from '@/types';
-import { formatDate, createExcerpt, getFeaturedImageUrl, getPostAuthor, getPostAuthorId, decodeHtmlEntities } from '@/utils/helpers';
+import { formatDate, createExcerpt, getFeaturedImageUrl, getPostAuthor, getPostAuthorId } from '@/utils/helpers';
 import AuthorDisplay from '@/components/UI/AuthorDisplay';
 import { LAYOUT_CONFIG } from '@/lib/constants';
 

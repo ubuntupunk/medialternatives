@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import ChartRenderer from './ChartRenderer';
 import { initializeMCPTools } from './mcp-chart-loader';
@@ -19,7 +19,7 @@ export default function ChartsPage() {
   const [loading, setLoading] = useState(false);
 
   // Sample chart configurations
-  const chartConfigs: Record<string, ChartData> = {
+  const chartConfigs: Record<string, ChartData> = useMemo(() => ({
     analytics: {
       type: 'bar',
       title: 'Website Analytics',
@@ -112,10 +112,10 @@ export default function ChartsPage() {
         ]
       }
     }
-  };
+  }, []);
 
   // Generate chart using direct MCP tools
-  const generateChart = async (chartKey: string) => {
+  const generateChart = useCallback(async (chartKey: string) => {
     setLoading(true);
     const config = chartConfigs[chartKey];
     
@@ -166,7 +166,7 @@ export default function ChartsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [chartConfigs]);
 
   // Fallback API method
   const generateChartViaAPI = async (config: ChartData) => {
@@ -246,7 +246,7 @@ export default function ChartsPage() {
     // Initialize MCP tools
     initializeMCPTools();
     generateChart(selectedChart);
-  }, [selectedChart]);
+  }, [selectedChart, generateChart]);
 
   return (
     <div className="container-fluid px-4 py-4">

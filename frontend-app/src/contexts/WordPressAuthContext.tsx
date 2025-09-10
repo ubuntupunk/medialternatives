@@ -141,6 +141,24 @@ export function WordPressAuthProvider({ children }: WordPressAuthProviderProps) 
 
   // Initialize authentication state
   useEffect(() => {
+    const initializeAuth = async () => {
+      try {
+        const currentAuth = getAuthStatus();
+        if (currentAuth.isAuthenticated && currentAuth.token) {
+          await updateAuthState(currentAuth.token);
+        } else {
+          setState(prev => ({ ...prev, loading: false }));
+        }
+      } catch (error) {
+        console.error('Error initializing auth:', error);
+        setState(prev => ({
+          ...prev,
+          loading: false,
+          error: error instanceof Error ? error.message : 'Authentication initialization failed'
+        }));
+      }
+    };
+
     initializeAuth();
   }, []);
 
@@ -157,27 +175,7 @@ export function WordPressAuthProvider({ children }: WordPressAuthProviderProps) 
     }
   }, []);
 
-  /**
-   * Initialize authentication state on component mount
-   * @returns {Promise<void>}
-   */
-  const initializeAuth = async () => {
-    try {
-      const currentAuth = getAuthStatus();
-      if (currentAuth.isAuthenticated && currentAuth.token) {
-        await updateAuthState(currentAuth.token);
-      } else {
-        setState(prev => ({ ...prev, loading: false }));
-      }
-    } catch (error) {
-      console.error('Error initializing auth:', error);
-      setState(prev => ({ 
-        ...prev, 
-        loading: false, 
-        error: error instanceof Error ? error.message : 'Authentication initialization failed'
-      }));
-    }
-  };
+
 
   /**
    * Update authentication state with new token

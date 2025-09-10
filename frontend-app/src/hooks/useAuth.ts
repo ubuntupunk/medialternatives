@@ -31,8 +31,8 @@ import { useRouter } from 'next/navigation';
  * @property {boolean} isAuthenticated - Whether user is authenticated
  * @property {Function} login - Login function
  * @property {Function} logout - Logout function
- * @property {Function} requireAuth - Require authentication for route
- * @property {Function} requireAdmin - Require admin access for route
+  * @property {Function} useRequireAuth - Require authentication for route
+  * @property {Function} useRequireAdmin - Require admin access for route
  *
  * @example
  * ```tsx
@@ -44,11 +44,11 @@ import { useRouter } from 'next/navigation';
  * // Logout
  * await logout();
  *
- * // Require authentication
- * requireAuth('/auth/login');
- *
- * // Require admin access
- * requireAdmin('/auth/unauthorized');
+  * // Require authentication
+  * useRequireAuth('/auth/login');
+  *
+  * // Require admin access
+  * useRequireAdmin('/auth/unauthorized');
  * ```
  */
 export function useAuth() {
@@ -167,30 +167,32 @@ export function useAuth() {
   };
 
   // Require authentication (redirect if not authenticated)
-  const requireAuth = (redirectTo: string = '/auth/login') => {
+  const useRequireAuth = (redirectTo: string = '/auth/login') => {
+    const { isLoading, isAuthenticated } = authState;
     useEffect(() => {
-      if (!authState.isLoading && !authState.isAuthenticated) {
+      if (!isLoading && !isAuthenticated) {
         const currentPath = window.location.pathname;
         const loginUrl = `${redirectTo}?callbackUrl=${encodeURIComponent(currentPath)}`;
         router.push(loginUrl);
       }
-    }, [authState.isLoading, authState.isAuthenticated, redirectTo]);
+    }, [isLoading, isAuthenticated, redirectTo]);
   };
 
   // Require admin access
-  const requireAdmin = (redirectTo: string = '/auth/unauthorized') => {
+  const useRequireAdmin = (redirectTo: string = '/auth/unauthorized') => {
+    const { isLoading, isAuthenticated, user } = authState;
     useEffect(() => {
-      if (!authState.isLoading && (!authState.isAuthenticated || !authState.user?.isAdmin)) {
+      if (!isLoading && (!isAuthenticated || !user?.isAdmin)) {
         router.push(redirectTo);
       }
-    }, [authState.isLoading, authState.isAuthenticated, authState.user?.isAdmin, redirectTo]);
+    }, [isLoading, isAuthenticated, user?.isAdmin, redirectTo]);
   };
 
   return {
     ...authState,
     login,
     logout,
-    requireAuth,
-    requireAdmin,
+    useRequireAuth,
+    useRequireAdmin,
   };
 }

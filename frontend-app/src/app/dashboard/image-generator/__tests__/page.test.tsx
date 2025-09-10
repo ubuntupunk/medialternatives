@@ -7,7 +7,7 @@ import ImageGeneratorPage from '../page';
 jest.mock('@/hooks/useAuth', () => ({
   useAuth: () => ({
     user: { id: 1, username: 'admin', isAdmin: true },
-    requireAuth: jest.fn()
+    useRequireAuth: jest.fn()
   })
 }));
 

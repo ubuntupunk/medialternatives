@@ -94,10 +94,18 @@ export async function GET(request: NextRequest) {
   }
 }
 
+interface DeadLink {
+  url: string;
+  status?: number;
+  error?: string;
+  postId?: number;
+  postTitle?: string;
+}
+
 /**
  * Generate recommendations based on dead links found
  */
-function generateRecommendations(deadLinks: any[]) {
+function generateRecommendations(deadLinks: DeadLink[]) {
   const recommendations = [];
   
   if (deadLinks.length === 0) {
@@ -110,7 +118,7 @@ function generateRecommendations(deadLinks: any[]) {
     try {
       const domain = new URL(link.url).hostname;
       acc[domain] = (acc[domain] || 0) + 1;
-    } catch (error) {
+    } catch (_error) {
       // Invalid URL
     }
     return acc;

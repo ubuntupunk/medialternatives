@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { headers } from 'next/headers';
 import { wordpressApi } from '@/services/wordpress-api';
 import { checkMultiplePostsLinks } from '@/utils/deadLinkChecker';
+
+interface DeadLinkScheduleSettings {
+  enabled: boolean;
+  frequency: 'daily' | 'weekly' | 'monthly';
+  time: string;
+  dayOfWeek: number;
+  postsToCheck: number;
+  nextRun?: string;
+}
 
 /**
  * GET /api/cron/dead-links - Execute scheduled dead link check
@@ -9,13 +20,14 @@ import { checkMultiplePostsLinks } from '@/utils/deadLinkChecker';
  * Can be called by Vercel Cron Jobs, GitHub Actions, or external cron services.
  * Requires authorization header for security.
  *
- * @param {NextRequest} request - Next.js request with authorization header
+
  * @returns {Promise<NextResponse>} Check results or error response
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Security check - verify cron authorization
-    const authHeader = request.headers.get('authorization');
+    const headersList = headers();
+    const authHeader = headersList.get('authorization');
     const cronSecret = process.env.CRON_SECRET || 'your-secret-key';
     
     if (authHeader !== `Bearer ${cronSecret}`) {
@@ -124,14 +136,14 @@ export async function GET(request: NextRequest) {
 /**
  * Get stored schedule settings
  * In production, this would come from a database
- * @returns {any} Schedule settings configuration
+ * @returns {DeadLinkScheduleSettings} Schedule settings configuration
  */
-function getStoredScheduleSettings() {
+function getStoredScheduleSettings(): DeadLinkScheduleSettings {
   // Default settings for demo
   // In production, load from database or environment variables
   return {
     enabled: process.env.DEADLINK_SCHEDULE_ENABLED === 'true',
-    frequency: (process.env.DEADLINK_SCHEDULE_FREQUENCY as any) || 'weekly',
+    frequency: (process.env.DEADLINK_SCHEDULE_FREQUENCY as 'daily' | 'weekly' | 'monthly') || 'weekly',
     time: process.env.DEADLINK_SCHEDULE_TIME || '09:00',
     dayOfWeek: parseInt(process.env.DEADLINK_SCHEDULE_DAY_OF_WEEK || '1'),
     postsToCheck: parseInt(process.env.DEADLINK_SCHEDULE_POSTS_COUNT || '10'),
@@ -141,10 +153,10 @@ function getStoredScheduleSettings() {
 
 /**
  * Check if the scheduled check should run now
- * @param {any} settings - Schedule settings
+ * @param {DeadLinkScheduleSettings} settings - Schedule settings
  * @returns {boolean} True if check should run now
  */
-function shouldRunNow(settings: any): boolean {
+function shouldRunNow(settings: DeadLinkScheduleSettings): boolean {
   if (!settings.nextRun) {
     return true; // Run if no next run time is set
   }

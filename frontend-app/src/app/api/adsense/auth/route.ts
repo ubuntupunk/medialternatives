@@ -42,7 +42,7 @@ export async function setToken(newToken: object) {
  *
  * @returns {NextResponse} Redirect response to Google OAuth with security parameters
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Generate security parameters
     const state = generateState();
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
       prompt: 'consent',
       state: `${sessionId}:${state}`, // Include session ID with state
       code_challenge: pkce.codeChallenge,
-      code_challenge_method: 'S256' as any // Type assertion for Google OAuth client
+      code_challenge_method: 'S256' // PKCE code challenge method
     });
 
     // Create response with session cookie

@@ -6,7 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import ImageGenerator from '@/components/ImageGenerator/ImageGenerator';
 
 export default function ImageGeneratorPage() {
-  const { user, requireAuth } = useAuth();
+  const { user, useRequireAuth } = useAuth();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [bulkProcessing, setBulkProcessing] = useState(false);
@@ -20,7 +20,7 @@ export default function ImageGeneratorPage() {
   });
 
   // Require authentication
-  requireAuth();
+  useRequireAuth();
 
   useEffect(() => {
     fetchPosts();

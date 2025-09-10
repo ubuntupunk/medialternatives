@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 
 /**
  * Image generation settings interface
@@ -77,12 +77,12 @@ export function useImageGenerator(options: UseImageGeneratorOptions = {}) {
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
 
-  const defaultSettings: GenerationSettings = {
+  const defaultSettings: GenerationSettings = useMemo(() => ({
     style: 'photorealistic',
     aspectRatio: '16:9',
     quality: 'high',
     includeText: false
-  };
+  }), []);
 
   const generateImage = useCallback(async ({ title, content, settings }: GenerateImageParams) => {
     if (!title?.trim()) {
@@ -127,22 +127,22 @@ export function useImageGenerator(options: UseImageGeneratorOptions = {}) {
       setGeneratedImage(data.imageUrl);
       options.onSuccess?.(data.imageUrl);
       
-      return {
-        imageUrl: data.imageUrl,
-        prompt: data.prompt,
-        settings: data.settings
-      };
+       return {
+         imageUrl: data.imageUrl,
+         prompt: data.prompt,
+         settings: data.settings
+       };
 
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Failed to generate image';
-      setError(errorMsg);
-      options.onError?.(errorMsg);
-      return null;
-    } finally {
-      setIsGenerating(false);
-      setTimeout(() => setProgress(0), 1000);
-    }
-  }, [options]);
+     } catch (err) {
+       const errorMsg = err instanceof Error ? err.message : 'Failed to generate image';
+       setError(errorMsg);
+       options.onError?.(errorMsg);
+       return null;
+     } finally {
+       setIsGenerating(false);
+       setTimeout(() => setProgress(0), 1000);
+     }
+   }, [options, defaultSettings]);
 
   const generatePostImage = useCallback(async ({ postId, title, content, excerpt }: GeneratePostImageParams) => {
     setIsGenerating(true);

@@ -43,7 +43,7 @@ export async function GET(
         url: url,
         userId: userId,
       });
-    } catch (error) {
+    } catch (_error) {
       // Blob doesn't exist
       return NextResponse.json(
         { error: 'Avatar not found' },

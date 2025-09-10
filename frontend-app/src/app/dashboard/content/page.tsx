@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { wordpressApi } from '@/services/wordpress-api';
 import { WordPressPost } from '@/types/wordpress';
@@ -17,7 +17,7 @@ export default function ContentManagementPage() {
   const [selectedTab, setSelectedTab] = useState('recent');
 
   // Fetch popular posts from Google Analytics
-  const fetchPopularPosts = async () => {
+  const fetchPopularPosts = useCallback(async () => {
     setAnalyticsLoading(true);
     setAnalyticsError(null);
     try {
@@ -78,7 +78,7 @@ export default function ContentManagementPage() {
     } finally {
       setAnalyticsLoading(false);
     }
-  };
+  }, [posts]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -106,7 +106,7 @@ export default function ContentManagementPage() {
     if (posts.length > 0) {
       fetchPopularPosts();
     }
-  }, [posts]);
+  }, [posts, fetchPopularPosts]);
 
   const getStatusBadge = (status: string) => {
     const statusMap = {

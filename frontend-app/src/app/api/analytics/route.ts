@@ -336,13 +336,11 @@ function formatDuration(seconds: number): string {
 }
 
 /**
- * Calculate previous period dates for comparison
+ * Calculate previous period date range for comparison
  * @param {string} period - Current period (7d, 30d, 90d, 1y)
- * @param {string} startDate - Current period start date
- * @param {string} endDate - Current period end date
  * @returns {{previousStartDate: string, previousEndDate: string}} Previous period date range
  */
-function calculatePreviousPeriod(period: string, startDate: string, endDate: string) {
+function calculatePreviousPeriod(period: string) {
   const today = new Date();
   
   switch (period) {
@@ -378,11 +376,9 @@ function calculatePreviousPeriod(period: string, startDate: string, endDate: str
 /**
  * Calculate year-over-year comparison dates
  * @param {string} period - Current period (7d, 30d, 90d, 1y)
- * @param {string} startDate - Current period start date
- * @param {string} endDate - Current period end date
  * @returns {{yearAgoStartDate: string, yearAgoEndDate: string}} Year-over-year date range
  */
-function calculateYearOverYearPeriod(period: string, startDate: string, endDate: string) {
+function calculateYearOverYearPeriod(period: string) {
   const today = new Date();
   const currentYear = today.getFullYear();
   const lastYear = currentYear - 1;

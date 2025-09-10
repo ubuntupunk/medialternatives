@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { GOOGLE_ANALYTICS_ID } from '@/lib/constants';
 import { useWordPressAuth } from '@/contexts/WordPressAuthContext';
@@ -52,7 +52,7 @@ export default function AnalyticsPage() {
   const { getStats, getTopPosts, getReferrers, canPerform } = useAuthenticatedAPI();
   
   // Fetch analytics data from API
-  const fetchAnalyticsData = async (period: string = selectedPeriod) => {
+  const fetchAnalyticsData = useCallback(async (period: string = selectedPeriod) => {
     setLoading(true);
     setError(null);
     try {
@@ -123,15 +123,15 @@ export default function AnalyticsPage() {
   } finally {
     setLoading(false);
   }
-};
+}, [selectedPeriod]);
 
 React.useEffect(() => {
   fetchAnalyticsData();
-  
+
   // Auto-refresh every 10 minutes
   const interval = setInterval(() => fetchAnalyticsData(), 10 * 60 * 1000);
   return () => clearInterval(interval);
-}, []);
+}, [fetchAnalyticsData]);
 
 // Fetch Jetpack authentication status
 const fetchJetpackAuthStatus = async () => {

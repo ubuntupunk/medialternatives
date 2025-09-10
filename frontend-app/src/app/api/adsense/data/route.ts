@@ -85,13 +85,13 @@ export async function GET() {
       report: report.data,
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching AdSense data:', error);
     
     // Provide static data as fallback for development/demo purposes
     const staticData = getStaticAdSenseData();
     
-    if (error.message && error.message.includes('disapproved')) {
+    if (error instanceof Error && error.message.includes('disapproved')) {
       return NextResponse.json({ error: 'Account disapproved' }, { status: 403 });
     }
     

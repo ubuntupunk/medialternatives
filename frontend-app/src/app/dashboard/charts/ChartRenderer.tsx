@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 
 interface ChartRendererProps {
   type: string;
@@ -34,7 +34,7 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  const generateChart = async () => {
+  const generateChart = useCallback(async () => {
     if (!chartRef.current) return;
     
     setLoading(true);
@@ -151,11 +151,11 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [type, data, title, onChartGenerated]);
 
   useEffect(() => {
     generateChart();
-  }, [type, data, title]);
+  }, [generateChart]);
 
   if (loading) {
     return (
