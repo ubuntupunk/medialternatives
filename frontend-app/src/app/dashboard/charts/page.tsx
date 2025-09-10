@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import Link from 'next/link';
-import ChartRenderer from './ChartRenderer';
-import { initializeMCPTools } from './mcp-chart-loader';
+import D3Chart from '../../../components/Charts/D3Chart';
 
 interface ChartData {
   type: string;
@@ -112,139 +111,23 @@ export default function ChartsPage() {
         ]
       }
     }
-  }, []);
+  }
+  ), []);
 
-  // Generate chart using direct MCP tools
-  const generateChart = useCallback(async (chartKey: string) => {
-    setLoading(true);
+  // Generate chart using D3
+  const generateChart = useCallback((chartKey: string) => {
     const config = chartConfigs[chartKey];
-    
-    try {
-      console.log(`Generating ${config.type} chart directly via MCP tools:`, config.data);
-      
-      // Use the direct MCP chart tools that we know work
-      let chartResult;
-      
-      switch (config.type) {
-        case 'bar':
-          chartResult = await window.mcpTools?.bar?.(config.data);
-          break;
-        case 'line':
-          chartResult = await window.mcpTools?.line?.(config.data);
-          break;
-        case 'pie':
-          chartResult = await window.mcpTools?.pie?.(config.data);
-          break;
-        case 'doughnut':
-          chartResult = await window.mcpTools?.doughnut?.(config.data);
-          break;
-        case 'radar':
-          chartResult = await window.mcpTools?.radar?.(config.data);
-          break;
-        default:
-          throw new Error(`Chart type ${config.type} not supported`);
-      }
-      
-      if (chartResult) {
-        setChartData({
-          type: config.type,
-          title: config.title,
-          description: config.description,
-          chartResult: chartResult,
-          data: config.data,
-          isRendered: true,
-          timestamp: new Date().toISOString()
-        });
-      } else {
-        // Fallback to API call if direct tools not available
-        console.log('Direct MCP tools not available, falling back to API...');
-        await generateChartViaAPI(config);
-      }
-    } catch (error) {
-      console.error('Error with direct MCP tools, trying API fallback:', error);
-      await generateChartViaAPI(config);
-    } finally {
-      setLoading(false);
-    }
+    setChartData({
+      type: config.type,
+      title: config.title,
+      description: config.description,
+      data: config.data,
+      isRendered: true,
+      timestamp: new Date().toISOString()
+    });
   }, [chartConfigs]);
 
-  // Fallback API method
-  const generateChartViaAPI = async (config: ChartData) => {
-    try {
-      const response = await fetch('/api/charts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: config.type,
-          data: config.data,
-          options: {
-            responsive: true,
-            plugins: {
-              title: {
-                display: true,
-                text: config.title
-              },
-              legend: {
-                display: true,
-                position: 'top'
-              }
-            }
-          }
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const contentType = response.headers.get('content-type');
-      
-      if (contentType?.startsWith('image/')) {
-        const blob = await response.blob();
-        const imageUrl = URL.createObjectURL(blob);
-        
-        setChartData({
-          type: config.type,
-          title: config.title,
-          description: config.description,
-          imageUrl: imageUrl,
-          data: config.data,
-          isImage: true
-        });
-      } else {
-        const result = await response.json();
-        
-        if (result.success) {
-          setChartData({
-            type: config.type,
-            title: config.title,
-            description: config.description,
-            chartResult: result.chart,
-            data: config.data,
-            timestamp: result.timestamp,
-            fallback: result.fallback
-          });
-        } else {
-          throw new Error(result.error || 'Failed to generate chart');
-        }
-      }
-    } catch (error) {
-      console.error('Error generating chart via API:', error);
-      setChartData({
-        type: config.type,
-        title: config.title,
-        description: config.description,
-        error: error instanceof Error ? error.message : 'Unknown error occurred',
-        data: config.data
-      });
-    }
-  };
-
   useEffect(() => {
-    // Initialize MCP tools
-    initializeMCPTools();
     generateChart(selectedChart);
   }, [selectedChart, generateChart]);
 
@@ -369,25 +252,15 @@ export default function ChartsPage() {
                           Try Again
                         </button>
                       </div>
-                    ) : (
-                      // Render Chart using ChartRenderer
-                      <ChartRenderer
-                        type={chartConfigs[selectedChart]?.type}
-                        data={chartConfigs[selectedChart]?.data}
-                        title={chartConfigs[selectedChart]?.title}
-                        onChartGenerated={(chartUrl) => {
-                          setChartData({
-                            type: chartConfigs[selectedChart]?.type,
-                            title: chartConfigs[selectedChart]?.title,
-                            description: chartConfigs[selectedChart]?.description,
-                            chartUrl: chartUrl,
-                            data: chartConfigs[selectedChart]?.data,
-                            isRendered: true,
-                            timestamp: new Date().toISOString()
-                          });
-                        }}
-                      />
-                    )}
+                     ) : (
+                       // Render Chart using D3
+                       <D3Chart
+                         type={chartConfigs[selectedChart]?.type as any}
+                         data={chartConfigs[selectedChart]?.data}
+                         width={600}
+                         height={400}
+                       />
+                     )}
                   </div>
                   
                   {/* Chart Data & Status */}
@@ -403,13 +276,13 @@ export default function ChartsPage() {
                           <div className="col-6">
                             <small className="text-muted d-block">Status:</small>
                             <span className={`badge ${
-                              chartData?.error ? 'bg-danger' : 
-                              chartData?.isRendered || chartData?.chartUrl ? 'bg-success' : 
+                              chartData?.error ? 'bg-danger' :
+                              chartData?.isRendered ? 'bg-success' :
                               loading ? 'bg-warning' :
                               'bg-secondary'
                             }`}>
-                              {chartData?.error ? 'Error' : 
-                               chartData?.isRendered || chartData?.chartUrl ? 'Rendered' : 
+                              {chartData?.error ? 'Error' :
+                               chartData?.isRendered ? 'Rendered' :
                                loading ? 'Generating' :
                                'Ready'}
                             </span>

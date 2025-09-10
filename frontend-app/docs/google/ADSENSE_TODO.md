@@ -1,3 +1,5 @@
+> **NOTE: This document is for reference purposes only. The incomplete tasks have been moved to `TASKS.md` in the root directory.**
+
 # AdSense Management System Task Checklist
 
 This document outlines the tasks required to fully implement the AdSense management system within the dashboard.
