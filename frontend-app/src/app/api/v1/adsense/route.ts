@@ -1,7 +1,7 @@
 // frontend-app/src/app/api/adsense/auth/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { readToken, writeToken } from './token-storage';
+import { readToken, writeToken } from '../auth/token-storage';
 import {
   generateState,
   generatePKCE,

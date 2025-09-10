@@ -61,42 +61,7 @@ const roboto = Roboto({
   variable: '--font-roboto'
 });
 
-// Configure Google Fonts
-const copse = Copse({
-  weight: '400',
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-copse'
-});
 
-const quattrocento = Quattrocento({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-quattrocento'
-});
-
-const revalia = Revalia({
-  weight: '400',
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-revalia'
-});
-
-// Handbook fonts
-const quicksand = Quicksand({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-quicksand'
-});
-
-const roboto = Roboto({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-roboto'
-});
 
 /**
  * Next.js metadata configuration for SEO and social sharing
