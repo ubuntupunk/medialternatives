@@ -1,5 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import PostGrid from '@/components/Posts/PostGrid';
 import Pagination from '@/components/UI/Pagination';
 import { wordpressApi } from '@/services/wordpress-api';
@@ -89,7 +90,7 @@ export default async function HomePagePaginated({ params }: HomePagePaginatedPro
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
               <li className="breadcrumb-item">
-                <a href="/">Home</a>
+                <Link href="/">Home</Link>
               </li>
               <li className="breadcrumb-item active" aria-current="page">
                 Page {currentPage}
@@ -112,9 +113,9 @@ export default async function HomePagePaginated({ params }: HomePagePaginatedPro
         <div className="alert alert-info">
           <h4>No posts found on this page</h4>
           <p>There are no posts available on page {currentPage}.</p>
-          <a href="/" className="btn btn-primary">
+          <Link href="/" className="btn btn-primary">
             Go to First Page
-          </a>
+          </Link>
         </div>
       ) : (
         <>

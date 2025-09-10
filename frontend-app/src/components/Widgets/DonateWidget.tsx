@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { DonateWidgetProps } from '@/types';
 
 /**
@@ -29,7 +30,13 @@ const DonateWidget: React.FC<DonateWidgetProps> = ({
             style={{ border: 0 }}
             className="mx-auto d-block"
           />
-          <img alt="" src="https://www.paypal.com/en_ZA/i/scr/pixel.gif" width="1" height="1" style={{ border: 0 }} />
+           <Image
+             alt=""
+             src="https://www.paypal.com/en_ZA/i/scr/pixel.gif"
+             width={1}
+             height={1}
+             style={{ border: 0 }}
+           />
         </form>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import Layout from '@/components/Layout/Layout';
 import CategoryCloud from '@/components/Widgets/CategoryCloud';
 import AuthorWidget from '@/components/Widgets/AuthorWidget';
@@ -26,9 +27,9 @@ export default function ComponentsPage() {
         </div>
         
         <div className="mb-4">
-          <a href="/category-demo" className="btn btn-primary me-3">
+          <Link href="/category-demo" className="btn btn-primary me-3">
             Category Widget Demo
-          </a>
+          </Link>
           <span className="text-muted">Explore different category widget styles and options</span>
         </div>
         
