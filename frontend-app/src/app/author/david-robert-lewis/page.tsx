@@ -131,7 +131,7 @@ export default async function DavidRobertLewisPage({ searchParams }: DavidRobert
                 <li className="mb-1">• Former journalist at South Press, Grassroots, and New Nation</li>
                 <li className="mb-1">• Graduate of Centre for African Studies, UCT</li>
                 <li className="mb-1">• Founding member of Earthlife Africa</li>
-                <li className="mb-1">• Past steering committee member of People's Health Movement</li>
+                <li className="mb-1">• Past steering committee member of People&apos;s Health Movement</li>
                 <li className="mb-1">• Technology activist and early hacktivist</li>
               </ul>
             </div>

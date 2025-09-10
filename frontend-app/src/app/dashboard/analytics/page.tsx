@@ -340,9 +340,9 @@ if (!analyticsData) {
             <i className="bi bi-graph-up me-2 text-success"></i>
             Analytics Dashboard
           </h1>
-          <p className="text-muted">
-            Track your site's performance and visitor engagement.
-          </p>
+            <p className="text-muted">
+              Track your site&apos;s performance and visitor engagement.
+            </p>
         </div>
         <div className="col-md-4 text-end">
           <select 
@@ -886,7 +886,7 @@ if (!analyticsData) {
                         <div key={index} className="d-flex justify-content-between align-items-center mb-3">
                           <div className="d-flex align-items-center">
                             <span className="me-2">{index + 1}.</span>
-                            <span className="text-muted">"{term.term}"</span>
+                            <span className="text-muted">&quot;{term.term}&quot;</span>
                           </div>
                           <div className="text-end">
                             <div className="fw-bold">{term.views?.toLocaleString()}</div>
@@ -1203,7 +1203,7 @@ if (!analyticsData) {
                                 <li><code>WORDPRESS_COM_REDIRECT_URI</code></li>
                               </ul>
                             </li>
-                            <li>Use "Connect WordPress.com" button above</li>
+                            <li>Use &quot;Connect WordPress.com&quot; button above</li>
                           </ol>
                         </div>
                         <div className="col-md-6">

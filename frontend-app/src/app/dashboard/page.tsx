@@ -277,7 +277,7 @@ export default function DashboardPage() {
                 <div className="list-group-item d-flex justify-content-between align-items-center">
                   <div>
                     <i className="bi bi-file-plus text-success me-2"></i>
-                    New post published: "Piers Morgan calls out Sophie Mokoena"
+                    New post published: &quot;Piers Morgan calls out Sophie Mokoena&quot;
                   </div>
                   <small className="text-muted">2 hours ago</small>
                 </div>

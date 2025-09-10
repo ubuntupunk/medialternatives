@@ -180,7 +180,7 @@ export default async function AuthorPagePaginated({ params }: AuthorPagePaginate
         {posts.length === 0 ? (
           <div className="alert alert-info">
             <h4>No posts found on this page</h4>
-            <p>There are no posts by "{author?.name}" on page {currentPage}.</p>
+            <p>There are no posts by &quot;{author?.name}&quot; on page {currentPage}.</p>
             <Link href={`/author/${slug}`} className="btn btn-primary">
               Go to First Page
             </Link>
@@ -209,7 +209,7 @@ export default async function AuthorPagePaginated({ params }: AuthorPagePaginate
         {/* Debug info for development */}
         {process.env.NODE_ENV === 'development' && (
           <div className="mt-4 p-3 bg-light border rounded">
-            <h6>Author "{author?.name}" Page {currentPage} Debug Info:</h6>
+            <h6>Author &quot;{author?.name}&quot; Page {currentPage} Debug Info:</h6>
             <small>
               Total posts: {pagination.total} | 
               Total pages: {pagination.totalPages} | 

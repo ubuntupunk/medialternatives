@@ -154,7 +154,7 @@ const HandbookPage: React.FC = () => {
       {/* Content Preview Section */}
       <section className={`${styles.contentSection} py-5`}>
         <div className="container">
-          <h2 className="section-heading text-center mb-5">What's Inside</h2>
+          <h2 className="section-heading text-center mb-5">What&apos;s Inside</h2>
           
           <div className="row">
             <div className="col-12 col-lg-8 mx-auto">

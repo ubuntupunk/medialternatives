@@ -26,7 +26,7 @@ export default function UnauthorizedPage() {
               <h1 className="h2 text-danger mb-3">Access Denied</h1>
               
               <p className="text-muted mb-4">
-                You don't have permission to access this area. 
+                You don&apos;t have permission to access this area. 
                 This section is restricted to authorized administrators only.
               </p>
               

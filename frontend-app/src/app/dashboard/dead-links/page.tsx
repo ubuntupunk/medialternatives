@@ -389,7 +389,7 @@ export default function DeadLinksPage() {
               {error.includes('Forbidden') && (
                 <div className="mt-2">
                   <small>
-                    <strong>Tip:</strong> Some websites block automated requests. This is normal and doesn't indicate a broken link for human visitors.
+                    <strong>Tip:</strong> Some websites block automated requests. This is normal and doesn&apos;t indicate a broken link for human visitors.
                   </small>
                 </div>
               )}

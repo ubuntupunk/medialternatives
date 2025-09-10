@@ -527,7 +527,7 @@ export default function OverviewPage() {
                 </div>
                 <div className="list-group-item d-flex justify-content-between align-items-center px-0">
                   <div>
-                    <strong>Apartheid's Media Legacy</strong>
+                    <strong>Apartheid&apos;s Media Legacy</strong>
                     <br />
                     <small className="text-muted">Published 2 weeks ago</small>
                   </div>

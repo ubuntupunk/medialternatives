@@ -159,7 +159,7 @@ export default async function AuthorPage({ params, searchParams }: AuthorPagePro
       {posts.length === 0 ? (
         <div className="alert alert-info">
           <h4>No posts found by this author</h4>
-          <p>There are currently no posts by "{author?.name}".</p>
+          <p>There are currently no posts by &quot;{author?.name}&quot;.</p>
           <Link href="/blog" className="btn btn-primary">
             View All Posts
           </Link>

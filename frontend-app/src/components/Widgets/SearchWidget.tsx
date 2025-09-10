@@ -168,7 +168,7 @@ export const SearchWidget: React.FC<SearchWidgetProps> = ({ className = '' }) =>
             {results.length === 0 && !error && !isLoading && (
               <div className="p-3 text-muted small">
                 <i className="bi bi-info-circle me-1"></i>
-                No results found for "{query}"
+                No results found for &quot;{query}&quot;
               </div>
             )}
 
@@ -212,7 +212,7 @@ export const SearchWidget: React.FC<SearchWidgetProps> = ({ className = '' }) =>
                     setShowResults(false);
                   }}
                 >
-                  View all results for "{query}"
+                  View all results for &quot;{query}&quot;
                 </button>
               </div>
             )}

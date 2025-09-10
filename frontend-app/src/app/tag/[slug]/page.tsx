@@ -135,7 +135,7 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
       {posts.length === 0 ? (
         <div className="alert alert-info">
           <h4>No posts found with this tag</h4>
-          <p>There are currently no posts tagged with "{tag?.name}".</p>
+          <p>There are currently no posts tagged with &quot;{tag?.name}&quot;.</p>
           <Link href="/blog" className="btn btn-primary">
             View All Posts
           </Link>

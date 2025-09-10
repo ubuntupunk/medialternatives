@@ -157,7 +157,7 @@ export default async function CategoryPagePaginated({ params }: CategoryPagePagi
         {posts.length === 0 ? (
           <div className="alert alert-info">
             <h4>No posts found on this page</h4>
-            <p>There are no posts in the "{category?.name}" category on page {currentPage}.</p>
+            <p>There are no posts in the &quot;{category?.name}&quot; category on page {currentPage}.</p>
             <Link href={`/category/${slug}`} className="btn btn-primary">
               Go to First Page
             </Link>
@@ -186,7 +186,7 @@ export default async function CategoryPagePaginated({ params }: CategoryPagePagi
         {/* Debug info for development */}
         {process.env.NODE_ENV === 'development' && (
           <div className="mt-4 p-3 bg-light border rounded">
-            <h6>Category "{category?.name}" Page {currentPage} Debug Info:</h6>
+            <h6>Category &quot;{category?.name}&quot; Page {currentPage} Debug Info:</h6>
             <small>
               Total posts: {pagination.total} | 
               Total pages: {pagination.totalPages} | 

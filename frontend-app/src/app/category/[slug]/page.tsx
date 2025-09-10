@@ -139,7 +139,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
       {posts.length === 0 ? (
         <div className="alert alert-info">
           <h4>No posts found in this category</h4>
-          <p>There are currently no posts in the "{category?.name}" category.</p>
+          <p>There are currently no posts in the &quot;{category?.name}&quot; category.</p>
           <Link href="/blog" className="btn btn-primary">
             View All Posts
           </Link>

@@ -74,9 +74,9 @@ export default function SearchResults() {
           ) : (
             <>
               {results.length > 0 ? (
-                <>Found {results.length} result{results.length !== 1 ? 's' : ''} for <strong>"{query}"</strong></>
+                <>Found {results.length} result{results.length !== 1 ? 's' : ''} for <strong>&quot;{query}&quot;</strong></>
               ) : (
-                <>No results found for <strong>"{query}"</strong></>
+                <>No results found for <strong>&quot;{query}&quot;</strong></>
               )}
             </>
           )}

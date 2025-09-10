@@ -324,7 +324,7 @@ export default function ContentManagementPage() {
                       <p className="text-muted mt-3">
                         Draft posts would be displayed here
                         <br />
-                        <small>WordPress.com API doesn't expose draft posts in public API</small>
+                        <small>WordPress.com API doesn&apos;t expose draft posts in public API</small>
                       </p>
                       <a 
                         href={WORDPRESS_URLS.DRAFT_POSTS}

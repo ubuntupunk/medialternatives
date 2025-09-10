@@ -179,9 +179,9 @@ const LoadMore: React.FC<LoadMoreProps> = ({
       {!pagination.hasNext && posts.length > 0 && (
         <div className="text-center mt-4 mb-4">
           <div className="alert alert-info">
-            <strong>You've reached the end!</strong> 
+            <strong>You&apos;ve reached the end!</strong> 
             <p className="mb-0">
-              You've viewed all {posts.length} posts. 
+              You&apos;ve viewed all {posts.length} posts. 
               <a href="/blog" className="alert-link ms-1">Browse by categories</a> or 
               <a href="#" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="alert-link ms-1">
                 scroll to top

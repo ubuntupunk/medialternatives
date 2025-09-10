@@ -13,7 +13,7 @@ export default function AdSenseTestPage() {
         <div className="col-12">
           <h1 className="mb-4">AdSense Widget Test Page</h1>
           <p className="lead mb-5">
-            This page tests the AdSense widgets to ensure they're loading and displaying correctly.
+            This page tests the AdSense widgets to ensure they&apos;re loading and displaying correctly.
           </p>
         </div>
       </div>
@@ -139,7 +139,7 @@ export default function AdSenseTestPage() {
               <ol>
                 <li>AdSense containers should be visible above</li>
                 <li>Ads should load within a few seconds</li>
-                <li>No "Ad blocked" or error messages</li>
+                <li>No &quot;Ad blocked&quot; or error messages</li>
                 <li>Responsive behavior on different screen sizes</li>
               </ol>
             </div>
