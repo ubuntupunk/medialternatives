@@ -1,5 +1,9 @@
 import { WordPressPost } from '@/types/wordpress';
 
+// Simple in-memory cache for link check results (resets on function restart)
+const linkCheckCache = new Map<string, { result: any; timestamp: number }>();
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
 /**
  * Dead link information structure
  * @interface DeadLink
@@ -134,6 +138,12 @@ export function extractUrlsFromContent(content: string): Array<{ url: string; co
  * @returns {Promise<{status: number | null, error: string | null, retryable: boolean}>} Check result
  */
 export async function checkUrl(url: string, timeout: number = 10000): Promise<{ status: number | null; error: string | null; retryable: boolean }> {
+  // Check cache first
+  const cached = linkCheckCache.get(url);
+  if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
+    return cached.result;
+  }
+
   try {
     // Use a CORS proxy for client-side requests or direct fetch for server-side
     const controller = new AbortController();
@@ -183,26 +193,41 @@ export async function checkUrl(url: string, timeout: number = 10000): Promise<{ 
       }
     }
     
-    return {
+    const result = {
       status: response.status,
       error: response.ok ? null : `HTTP ${response.status} ${response.statusText}`,
       retryable: response.status >= 500 || response.status === 429
     };
-    
+
+    // Cache the result
+    linkCheckCache.set(url, { result, timestamp: Date.now() });
+    return result;
+
   } catch (error) {
+    let result: { status: number | null; error: string | null; retryable: boolean };
+
     if (error instanceof Error) {
       if (error.name === 'AbortError') {
-        return { status: null, error: 'Request timeout', retryable: true };
+        result = { status: null, error: 'Request timeout', retryable: true };
+      } else if (error.message.includes('CORS')) {
+        result = { status: null, error: 'CORS blocked - Cannot verify from browser', retryable: false };
+      } else if (error.message.includes('network')) {
+        result = { status: null, error: 'Network error', retryable: true };
+      } else {
+        result = { status: null, error: error.message, retryable: true };
       }
-      if (error.message.includes('CORS')) {
-        return { status: null, error: 'CORS blocked - Cannot verify from browser', retryable: false };
-      }
-      if (error.message.includes('network')) {
-        return { status: null, error: 'Network error', retryable: true };
-      }
-      return { status: null, error: error.message, retryable: true };
+    } else {
+      result = { status: null, error: 'Unknown error', retryable: true };
     }
-    return { status: null, error: 'Unknown error', retryable: true };
+
+    // Cache the error result (but for shorter duration for retryable errors)
+    const cacheTime = result.retryable ? CACHE_DURATION / 4 : CACHE_DURATION; // 6 hours for retryable, 24 hours for permanent errors
+    if (cached && (Date.now() - cached.timestamp) < cacheTime) {
+      return cached.result;
+    }
+
+    linkCheckCache.set(url, { result, timestamp: Date.now() });
+    return result;
   }
 }
 
@@ -361,8 +386,8 @@ export async function checkMultiplePostsLinks(
   let processedLinks = 0;
 
   // Limit concurrency to prevent excessive CPU usage
-  const MAX_CONCURRENT_CHECKS = 3;
-  const DELAY_BETWEEN_REQUESTS = 2000; // Increased from 500ms to reduce CPU load
+  const MAX_CONCURRENT_CHECKS = 1; // Reduced from 3 to minimize CPU usage
+  const DELAY_BETWEEN_REQUESTS = 5000; // Increased from 2000ms to reduce CPU load
 
   // Process posts with concurrency control
   for (let i = 0; i < posts.length; i += MAX_CONCURRENT_CHECKS) {

@@ -1,16 +1,24 @@
 {
   "functions": {
     "src/app/api/**/*.ts": {
+      "maxDuration": 8,
+      "memory": 256
+    },
+    "src/app/api/check-dead-links/**/*.ts": {
+      "maxDuration": 15,
+      "memory": 256
+    },
+    "src/app/api/cron/**/*.ts": {
       "maxDuration": 10,
+      "memory": 256
+    },
+    "src/app/api/scheduled-checks/**/*.ts": {
+      "maxDuration": 20,
       "memory": 512
     },
     "src/app/api/generate-image*/**/*.ts": {
       "maxDuration": 5,
       "memory": 256
-    },
-    "src/app/api/scheduled-checks/**/*.ts": {
-      "maxDuration": 30,
-      "memory": 1024
     }
   },
   "rewrites": [

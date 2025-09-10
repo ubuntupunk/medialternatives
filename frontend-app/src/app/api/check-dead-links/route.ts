@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { wordpressApi } from '@/services/wordpress-api';
 import { checkMultiplePostsLinks, checkPostLinks } from '@/utils/deadLinkChecker';
+import { createRateLimit } from '@/lib/rate-limit';
 
 /**
  * API endpoint to check for dead links in posts
@@ -11,6 +12,19 @@ import { checkMultiplePostsLinks, checkPostLinks } from '@/utils/deadLinkChecker
  */
 export async function GET(request: NextRequest) {
   try {
+    // Apply rate limiting to prevent excessive CPU usage
+    const rateLimit = createRateLimit({
+      windowMs: 60 * 60 * 1000, // 1 hour
+      maxRequests: 10, // 10 dead link checks per hour
+      message: 'Dead link check rate limit exceeded. Please try again later.',
+      statusCode: 429
+    });
+
+    const rateLimitResponse = await rateLimit(request);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
+    }
+
     const { searchParams } = new URL(request.url);
     const postId = searchParams.get('post_id');
     const postsCount = searchParams.get('posts');
@@ -43,11 +57,11 @@ export async function GET(request: NextRequest) {
     // Check multiple posts
     let posts;
     if (checkAll) {
-      // Warning: This could take a very long time
-      posts = await wordpressApi.getPosts({ per_page: 100 }); // Limit to 100 for safety
+      // Warning: This could take a very long time - limit to 10 posts for CPU safety
+      posts = await wordpressApi.getPosts({ per_page: 10 }); // Reduced from 100 to 10 for safety
     } else {
-      const count = postsCount ? parseInt(postsCount) : 5;
-      posts = await wordpressApi.getPosts({ per_page: Math.min(count, 20) }); // Max 20 for API safety
+      const count = postsCount ? parseInt(postsCount) : 3; // Reduced default from 5 to 3
+      posts = await wordpressApi.getPosts({ per_page: Math.min(count, 5) }); // Max 5 for API safety
     }
     
     if (posts.length === 0) {
@@ -103,7 +117,7 @@ function generateRecommendations(deadLinks: any[]) {
   }, {} as Record<string, number>);
   
   const topProblematicDomains = Object.entries(domainCounts)
-    .sort(([,a], [,b]) => b - a)
+    .sort(([,a], [,b]) => (b as number) - (a as number))
     .slice(0, 5);
   
   if (topProblematicDomains.length > 0) {
