@@ -234,13 +234,13 @@ ins.adsbygoogle {
         align-items: center !important;
         gap: 1rem !important;
     }
-    
+
     .entry-footer .post-navigation {
         order: 2;
         width: 100%;
         text-align: center;
     }
-    
+
     .entry-footer .share-buttons {
         order: 1;
         justify-content: center !important;
@@ -248,21 +248,31 @@ ins.adsbygoogle {
         gap: 0.5rem !important;
         max-width: 100%;
     }
-    
+
     .entry-footer .share-buttons span {
         width: 100%;
         text-align: center;
         margin-bottom: 0.5rem;
         margin-right: 0 !important;
     }
-    
-    /* Two buttons per row on mobile */
-    .entry-footer .share-buttons a {
-        flex: 0 0 calc(50% - 0.25rem);
-        max-width: calc(50% - 0.25rem);
-        justify-content: center !important;
+
+    /* Responsive button layout: 3 per row on larger mobile, 2 on smaller */
+    @media (min-width: 576px) {
+        .entry-footer .share-buttons a {
+            flex: 0 0 calc(33.333% - 0.33rem);
+            max-width: calc(33.333% - 0.33rem);
+            justify-content: center !important;
+        }
     }
-    
+
+    @media (max-width: 575.98px) {
+        .entry-footer .share-buttons a {
+            flex: 0 0 calc(50% - 0.25rem);
+            max-width: calc(50% - 0.25rem);
+            justify-content: center !important;
+        }
+    }
+
     /* Normal horizontal buttons on mobile */
     .entry-footer .btn-sm {
         padding: 0.375rem 0.75rem !important;
@@ -272,10 +282,12 @@ ins.adsbygoogle {
         height: auto !important;
         white-space: nowrap;
     }
-    
+
+    /* Maintain proper aspect ratio for SVG icons */
     .entry-footer .btn-sm svg {
         width: 14px !important;
         height: 14px !important;
+        flex-shrink: 0;
     }
 }
 
