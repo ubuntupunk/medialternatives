@@ -249,10 +249,9 @@ async function sendCronNotifications(check: any): Promise<void> {
 async function updateNextRunTime(settings: any): Promise<void> {
   try {
     // Calculate next run time
-    const now = new Date();
     const [hours, minutes] = settings.time.split(':').map(Number);
     
-    let nextRun = new Date();
+    const nextRun = new Date();
     nextRun.setHours(hours, minutes, 0, 0);
     
     switch (settings.frequency) {
@@ -289,7 +288,7 @@ async function updateNextRunTime(settings: any): Promise<void> {
  * @param {NextRequest} request - Next.js request object
  * @returns {Promise<NextResponse>} Health check response
  */
-export async function POST(request: NextRequest) {
+export async function POST() {
   return NextResponse.json({
     message: 'Dead Link Checker Cron Job',
     status: 'healthy',

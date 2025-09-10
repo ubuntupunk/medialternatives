@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import Image from 'next/image';
 
 function LoginForm() {
@@ -152,10 +153,10 @@ function LoginForm() {
 
                 {/* Back to Site */}
                 <div className="mt-3 text-center">
-                  <a href="/" className="text-decoration-none small">
+                  <Link href="/" className="text-decoration-none small">
                     <i className="bi bi-arrow-left me-1"></i>
                     Back to Medialternatives
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

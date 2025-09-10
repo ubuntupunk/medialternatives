@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 import { handleMetrics } from '@/lib/monitoring';
 
 /**

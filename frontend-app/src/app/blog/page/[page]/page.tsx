@@ -1,5 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import Layout from '@/components/Layout/Layout';
 import PostGrid from '@/components/Posts/PostGrid';
 import Pagination from '@/components/UI/Pagination';
@@ -96,10 +97,10 @@ export default async function BlogPagePaginated({ params }: BlogPagePaginatedPro
         <nav aria-label="breadcrumb" className="mb-4">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <a href="/">Home</a>
+              <Link href="/">Home</Link>
             </li>
             <li className="breadcrumb-item">
-              <a href="/blog">Blog</a>
+              <Link href="/blog">Blog</Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
               Page {currentPage}

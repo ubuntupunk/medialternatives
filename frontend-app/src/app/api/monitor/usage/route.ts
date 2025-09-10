@@ -6,10 +6,9 @@ import { NextRequest, NextResponse } from 'next/server';
  * Returns usage statistics and alerts for Vercel functions and ISR.
  * Currently uses mock data - requires Vercel API integration for live data.
  *
- * @param {NextRequest} request - Next.js request object
  * @returns {Promise<NextResponse>} Usage monitoring data or error response
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // This is a placeholder for monitoring logic
     // In production, you would integrate with Vercel API or use analytics

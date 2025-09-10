@@ -1,5 +1,5 @@
 // frontend-app/src/app/api/adsense/data/route.ts
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
 import { getToken, setToken } from '../auth/route';
 

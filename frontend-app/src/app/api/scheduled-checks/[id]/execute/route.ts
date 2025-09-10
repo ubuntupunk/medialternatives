@@ -4,7 +4,7 @@ import { checkMultiplePostsLinks } from '@/utils/deadLinkChecker';
 
 // Import the in-memory storage (in production, use a database)
 // This is a simplified approach for demo purposes
-let scheduledChecks: any[] = [];
+const scheduledChecks: any[] = [];
 
 /**
  * POST /api/scheduled-checks/[id]/execute - Execute a scheduled check
