@@ -1,5 +1,70 @@
 import type { NextConfig } from 'next'
 
+// PWA configuration
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development',
+  runtimeCaching: [
+    {
+      urlPattern: /^https:\/\/public-api\.wordpress\.com\/wp\/v2\/sites\/.*$/,
+      handler: 'StaleWhileRevalidate',
+      options: {
+        cacheName: 'wordpress-api',
+        expiration: {
+          maxEntries: 100,
+          maxAgeSeconds: 60 * 60, // 1 hour
+        },
+      },
+    },
+    {
+      urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
+      handler: 'CacheFirst',
+      options: {
+        cacheName: 'images',
+        expiration: {
+          maxEntries: 200,
+          maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+        },
+      },
+    },
+    {
+      urlPattern: /\.(?:js|css|woff|woff2|ttf|eot)$/,
+      handler: 'CacheFirst',
+      options: {
+        cacheName: 'static-resources',
+        expiration: {
+          maxEntries: 100,
+          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+        },
+      },
+    },
+    {
+      urlPattern: /^\/post\/.*$/,
+      handler: 'NetworkFirst',
+      options: {
+        cacheName: 'posts',
+        expiration: {
+          maxEntries: 50,
+          maxAgeSeconds: 24 * 60 * 60, // 24 hours
+        },
+      },
+    },
+    {
+      urlPattern: /^\/$/,
+      handler: 'NetworkFirst',
+      options: {
+        cacheName: 'homepage',
+        expiration: {
+          maxEntries: 1,
+          maxAgeSeconds: 60 * 60, // 1 hour
+        },
+      },
+    },
+  ],
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
   // Disable ESLint and TypeScript checking during builds
@@ -67,5 +132,5 @@ const nextConfig: NextConfig = {
 
 };
 
-export default nextConfig;
+export default withPWA(nextConfig);
 

@@ -5,6 +5,7 @@ import { SITE_CONFIG } from "@/lib/constants";
 import Layout from "@/components/Layout/Layout"; // Import the custom Layout component
 import StructuredData from "@/components/SEO/StructuredData";
 import { WordPressAuthProvider } from "@/contexts/WordPressAuthContext";
+import AddToHomeScreen from "@/components/UI/AddToHomeScreen";
 
 /**
  * Configure Copse Google Font
@@ -141,6 +142,31 @@ export const metadata: Metadata = {
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION,
   },
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: SITE_CONFIG.SITE_TITLE,
+    startupImage: [
+      '/images/apple-touch-icon.png',
+    ],
+  },
+  icons: {
+    icon: [
+      { url: '/images/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/images/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/images/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    other: [
+      {
+        rel: 'mask-icon',
+        url: '/images/safari-pinned-tab.svg',
+        color: '#5bbad5',
+      },
+    ],
+  },
 };
 
 /**
@@ -230,6 +256,7 @@ export default function RootLayout({
           <Layout>
             {children}
           </Layout>
+          <AddToHomeScreen />
         </WordPressAuthProvider>
       </body>
     </html>
