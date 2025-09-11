@@ -32,9 +32,10 @@ This file contains a centralized list of pending tasks.
 ### Atom Feed Widget & Header Icon
 - [x] **Create Atom Feed Endpoint**: Implement `/feed.atom` API route to generate Atom feed
   - [x] Create `/api/feed/atom/route.ts` endpoint
-  - [x] Fetch latest posts from WordPress.com API (mock data for now)
-  - [x] Generate proper Atom XML format
+  - [x] Fetch real posts from WordPress.com API with proper content and metadata
+  - [x] Generate proper Atom XML format with XML escaping and CDATA sections
   - [x] Add proper caching and error handling
+  - [x] Create `/feed.atom` redirect route for SEO-friendly URLs
 - [x] **Create Atom Feed Widget**: Implement a subscription prompt widget based on the design in `atom-note.md`
   - [x] Create `AtomFeedWidget.tsx` component with Tailwind styling
   - [x] Add sticky footer or pop-up implementation
@@ -45,6 +46,10 @@ This file contains a centralized list of pending tasks.
   - [x] Link to `/feed.atom` endpoint
   - [x] Use appropriate icon (atom/rss symbol)
   - [x] Ensure responsive design and accessibility
+- [x] **Add Atom Feed Icon to Author Widget**: Add atom feed subscription link to author social menu
+  - [x] Update `AuthorWidget.tsx` to include RSS/Atom feed icon
+  - [x] Position next to existing social media links (Facebook, X/Twitter)
+  - [x] Use Bootstrap RSS icon with proper accessibility attributes
 
 ## From docs/google/ADSENSE_TODO.md
 

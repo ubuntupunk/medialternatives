@@ -141,6 +141,12 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
                   Facebook
                 </a>
               </li>
+              <li>
+                <a href="/feed.atom" target="_blank" rel="noopener noreferrer" title="Subscribe to Atom Feed">
+                  <i className="bi bi-rss"></i>
+                  Atom Feed
+                </a>
+              </li>
             </ul>
           </div>
         )}
