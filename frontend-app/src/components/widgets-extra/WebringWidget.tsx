@@ -34,7 +34,6 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [isKeyboardNav, setIsKeyboardNav] = useState(false);
-  const [selectedTheme, setSelectedTheme] = useState<string>('dark');
   const [currentTheme, setCurrentTheme] = useState<string>('dark');
   const [isHoveringWidget, setIsHoveringWidget] = useState(false);
   const [isHoveringTooltip, setIsHoveringTooltip] = useState(false);
@@ -50,7 +49,6 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
   useEffect(() => {
     if (isClient) {
       const initialTheme = theme === 'random' ? 'dark' : theme;
-      setSelectedTheme(initialTheme);
       setCurrentTheme(initialTheme);
     }
   }, [isClient, theme]);

@@ -91,16 +91,7 @@ const CategoryCards: React.FC<CategoryCardsProps> = ({
     );
   }
 
-  // Calculate responsive column classes
-  const getColumnClass = () => {
-    switch (columns) {
-      case 1: return 'col-12';
-      case 2: return 'col-md-6';
-      case 3: return 'col-lg-4 col-md-6';
-      case 4: return 'col-xl-3 col-lg-4 col-md-6';
-      default: return 'col-md-6';
-    }
-  };
+
 
   return (
     <div className={`widget category-cards ${className}`}>

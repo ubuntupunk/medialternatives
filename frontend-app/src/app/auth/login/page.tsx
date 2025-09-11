@@ -30,7 +30,7 @@ function LoginForm() {
             router.push(callbackUrl);
             return;
           }
-        } catch (error) {
+        } catch {
           // Invalid session, continue with login
         }
       }
@@ -62,7 +62,7 @@ function LoginForm() {
       } else {
         setError(data.error || 'Login failed');
       }
-    } catch (error) {
+    } catch {
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);
@@ -70,103 +70,94 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
+    <div className="min-vh-100 d-flex align-items-center justify-content-center bg-dark py-4">
       <div className="container">
         <div className="row justify-content-center">
-          <div className="col-md-6 col-lg-4">
-            <div className="card shadow">
-              <div className="card-body p-4">
+          <div className="col-11 col-sm-8 col-md-6 col-lg-4 col-xl-3">
+            <div className="card shadow login-card" style={{ margin: '0 auto' }}>
+              <div className="card-body d-flex flex-column" style={{ minHeight: '320px', paddingTop: '2.5rem' }}>
                 {/* Site Logo/Header */}
-                <div className="text-center mb-4">
+                <div className="text-center mb-3">
                   <Image
                     src="/images/dav-icon.png"
                     alt="Medialternatives"
-                    width={80}
-                    height={80}
-                    className="mb-3"
+                    width={70}
+                    height={70}
+                    className="mb-2"
                   />
-                  <h2 className="h4 text-primary">Medialternatives</h2>
-                  <p className="text-muted small">Admin Access</p>
+                  <h2 className="h4 text-primary mb-1">Medialternatives</h2>
+                  <p className="text-muted small mb-0">Admin Access</p>
                 </div>
 
-                {/* Login Form */}
-                <form onSubmit={handleSubmit}>
-                  <div className="mb-3">
-                    <label htmlFor="password" className="form-label">
-                      <i className="bi bi-lock me-2"></i>
-                      Admin Password
-                    </label>
-                    <div className="input-group">
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        className={`form-control ${error ? 'is-invalid' : ''}`}
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter admin password"
-                        required
-                        disabled={isLoading}
-                      />
+                {/* Login Form - takes available space */}
+                <div className="flex-grow-1 d-flex flex-column">
+                  <form onSubmit={handleSubmit} className="flex-grow-1 d-flex flex-column">
+                    <div className="mb-3">
+                      <label htmlFor="password" className="form-label">
+                        <i className="bi bi-lock me-2"></i>
+                        Admin Password
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          className={`form-control ${error ? 'is-invalid' : ''}`}
+                          id="password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder="Enter admin password"
+                          required
+                          disabled={isLoading}
+                        />
+                        <button
+                          type="button"
+                          className="btn btn-outline-secondary border-start-0"
+                          onClick={() => setShowPassword(!showPassword)}
+                          disabled={isLoading}
+                          title={showPassword ? 'Hide password' : 'Show password'}
+                          style={{ cursor: isLoading ? 'not-allowed' : 'pointer' }}
+                        >
+                          <i className={`bi bi-eye${showPassword ? '-slash' : ''}`}></i>
+                        </button>
+                      </div>
+                      {error && (
+                        <div className="invalid-feedback d-block">
+                          <i className="bi bi-exclamation-triangle me-1"></i>
+                          {error}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Sign In Button - positioned at bottom of form */}
+                    <div className="mt-auto">
                       <button
-                        type="button"
-                        className="btn btn-outline-secondary"
-                        onClick={() => setShowPassword(!showPassword)}
-                        disabled={isLoading}
+                        type="submit"
+                        className="btn btn-primary w-100"
+                        disabled={isLoading || !password.trim()}
                       >
-                        <i className={`bi bi-eye${showPassword ? '-slash' : ''}`}></i>
+                        {isLoading ? (
+                          <>
+                            <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                            Signing in...
+                          </>
+                        ) : (
+                          <>
+                            <i className="bi bi-box-arrow-in-right me-2"></i>
+                            Sign In
+                          </>
+                        )}
                       </button>
                     </div>
-                    {error && (
-                      <div className="invalid-feedback d-block">
-                        <i className="bi bi-exclamation-triangle me-1"></i>
-                        {error}
-                      </div>
-                    )}
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="btn btn-primary w-100"
-                    disabled={isLoading || !password.trim()}
-                  >
-                    {isLoading ? (
-                      <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                        Signing in...
-                      </>
-                    ) : (
-                      <>
-                        <i className="bi bi-box-arrow-in-right me-2"></i>
-                        Sign In
-                      </>
-                    )}
-                  </button>
-                </form>
-
-                {/* Additional Info */}
-                <div className="mt-4 text-center">
-                  <small className="text-muted">
-                    <i className="bi bi-shield-check me-1"></i>
-                    Secure access to admin features
-                  </small>
+                  </form>
                 </div>
 
                 {/* Back to Site */}
                 <div className="mt-3 text-center">
-                  <Link href="/" className="text-decoration-none small">
-                    <i className="bi bi-arrow-left me-1"></i>
+                  <Link href="/" className="btn btn-outline-secondary btn-sm px-3">
+                    <i className="bi bi-arrow-left me-2"></i>
                     Back to Medialternatives
                   </Link>
                 </div>
               </div>
-            </div>
-
-            {/* Security Notice */}
-            <div className="text-center mt-3">
-              <small className="text-muted">
-                <i className="bi bi-info-circle me-1"></i>
-                This area is restricted to authorized users only
-              </small>
             </div>
           </div>
         </div>

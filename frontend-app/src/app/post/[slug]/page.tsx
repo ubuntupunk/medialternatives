@@ -14,9 +14,9 @@ import { mockPosts } from '@/utils/mockData';
 export const revalidate = 600; // 10 minutes
 
 interface PostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 /**
@@ -24,7 +24,7 @@ interface PostPageProps {
  * Accessible via /post/[slug] URLs from PostCard components
  */
 export default async function PostPage({ params }: PostPageProps) {
-  const { slug } = params;
+  const { slug } = await params;
   
   let post: WordPressPost | null = null;
   let error: string | null = null;
@@ -340,9 +340,10 @@ export default async function PostPage({ params }: PostPageProps) {
 /**
  * Generate metadata for SEO
  */
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   try {
-    const post = await wordpressApi.getPost(params.slug);
+    const post = await wordpressApi.getPost(slug);
     
     if (!post) {
       return {

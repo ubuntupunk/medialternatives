@@ -55,6 +55,28 @@ export async function POST(request: NextRequest) {
         console.error('MCP Error response:', errorText);
         throw new Error(`MCP Chart service error: ${response.status} ${response.statusText} - ${errorText}`);
       }
+
+      // Check if response is an image
+      const contentType = response.headers.get('content-type');
+
+      if (contentType?.startsWith('image/')) {
+        // Return the image directly
+        const imageBuffer = await response.arrayBuffer();
+        return new NextResponse(imageBuffer, {
+          headers: {
+            'Content-Type': contentType,
+            'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
+          },
+        });
+      } else {
+        // Return JSON response (might include image URL or base64)
+        const result = await response.json();
+        return NextResponse.json({
+          success: true,
+          chart: result,
+          timestamp: new Date().toISOString(),
+        });
+      }
     } catch (fetchError) {
       clearTimeout(timeoutId);
       console.error('MCP Fetch error details:', fetchError);
@@ -89,27 +111,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Check if response is an image
-    const contentType = response.headers.get('content-type');
-    
-    if (contentType?.startsWith('image/')) {
-      // Return the image directly
-      const imageBuffer = await response.arrayBuffer();
-      return new NextResponse(imageBuffer, {
-        headers: {
-          'Content-Type': contentType,
-          'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
-        },
-      });
-    } else {
-      // Return JSON response (might include image URL or base64)
-      const result = await response.json();
-      return NextResponse.json({
-        success: true,
-        chart: result,
-        timestamp: new Date().toISOString(),
-      });
-    }
+
 
   } catch (error) {
     console.error('Error generating chart:', error);

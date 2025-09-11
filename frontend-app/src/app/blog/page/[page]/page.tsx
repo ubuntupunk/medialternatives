@@ -10,9 +10,9 @@ import { WordPressPost, PaginationInfo } from '@/types/wordpress';
 import { mockPosts } from '@/utils/mockData';
 
 interface BlogPagePaginatedProps {
-  params: {
+  params: Promise<{
     page: string;
-  };
+  }>;
 }
 
 /**
@@ -20,7 +20,8 @@ interface BlogPagePaginatedProps {
  * Accessible via /blog/page/[page] URLs
  */
 export default async function BlogPagePaginated({ params }: BlogPagePaginatedProps) {
-  const currentPage = parseInt(params.page, 10);
+  const { page } = await params;
+  const currentPage = parseInt(page, 10);
   
   // Validate page number
   if (isNaN(currentPage) || currentPage < 1) {
@@ -162,8 +163,9 @@ export default async function BlogPagePaginated({ params }: BlogPagePaginatedPro
 /**
  * Generate metadata for SEO
  */
-export async function generateMetadata({ params }: { params: { page: string } }) {
-  const currentPage = parseInt(params.page, 10);
+export async function generateMetadata({ params }: { params: Promise<{ page: string }> }) {
+  const { page } = await params;
+  const currentPage = parseInt(page, 10);
   
   if (isNaN(currentPage) || currentPage < 1) {
     return {

@@ -7,7 +7,6 @@ import { FooterProps } from '@/types';
  */
 const Footer: React.FC<FooterProps> = ({
   className = '',
-  showNavigation = true,
   copyrightText
 }) => {
   const year = new Date().getFullYear();

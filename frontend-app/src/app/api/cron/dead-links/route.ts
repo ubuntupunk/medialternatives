@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { wordpressApi } from '@/services/wordpress-api';
 import { checkMultiplePostsLinks } from '@/utils/deadLinkChecker';
+import { LinkCheckResult } from '@/utils/deadLinkChecker';
 
 interface DeadLinkScheduleSettings {
   enabled: boolean;
@@ -11,6 +11,27 @@ interface DeadLinkScheduleSettings {
   dayOfWeek: number;
   postsToCheck: number;
   nextRun?: string;
+}
+
+interface ScheduledCheckResult {
+  id: string;
+  timestamp: string;
+  status: 'completed' | 'failed';
+  source: 'cron';
+  settings?: DeadLinkScheduleSettings;
+  results?: {
+    type: string;
+    postsChecked: number;
+    result: LinkCheckResult;
+    summary: {
+      totalPosts: number;
+      totalLinks: number;
+      deadLinks: number;
+      workingLinks: number;
+      processingTimeMs: number;
+    };
+  };
+  error?: string;
 }
 
 /**
@@ -26,7 +47,7 @@ interface DeadLinkScheduleSettings {
 export async function GET() {
   try {
     // Security check - verify cron authorization
-    const headersList = headers();
+    const headersList = await headers();
     const authHeader = headersList.get('authorization');
     const cronSecret = process.env.CRON_SECRET || 'your-secret-key';
     
@@ -72,8 +93,8 @@ export async function GET() {
     const result = await checkMultiplePostsLinks(posts);
 
     // Create scheduled check record
-    const scheduledCheck = {
-      id: `cron_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    const scheduledCheck: ScheduledCheckResult = {
+      id: `cron_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       timestamp: new Date().toISOString(),
       status: 'completed',
       source: 'cron',
@@ -107,7 +128,7 @@ export async function GET() {
       success: true,
       message: `Scheduled check completed. Found ${result.deadLinks.length} dead links in ${posts.length} posts.`,
       checkId: scheduledCheck.id,
-      summary: scheduledCheck.results.summary,
+      summary: scheduledCheck.results?.summary,
       timestamp: new Date().toISOString()
     });
 
@@ -115,7 +136,7 @@ export async function GET() {
     console.error('Error in scheduled dead link check:', error);
     
     // Log failed check
-    const failedCheck = {
+    const failedCheck: ScheduledCheckResult = {
       id: `cron_failed_${Date.now()}`,
       timestamp: new Date().toISOString(),
       status: 'failed',
@@ -170,10 +191,10 @@ function shouldRunNow(settings: DeadLinkScheduleSettings): boolean {
 /**
  * Store scheduled check result
  * In production, save to database
- * @param {any} check - Scheduled check result to store
+ * @param {ScheduledCheckResult} check - Scheduled check result to store
  * @returns {Promise<void>}
  */
-async function storeScheduledCheck(check: any): Promise<void> {
+async function storeScheduledCheck(check: ScheduledCheckResult): Promise<void> {
   try {
     // In production, save to database
     console.log('Storing scheduled check:', check.id, check.status);
@@ -189,11 +210,16 @@ async function storeScheduledCheck(check: any): Promise<void> {
 
 /**
  * Send notifications for cron job results
- * @param {any} check - Completed scheduled check with results
+ * @param {ScheduledCheckResult} check - Completed scheduled check with results
  * @returns {Promise<void>}
  */
-async function sendCronNotifications(check: any): Promise<void> {
+async function sendCronNotifications(check: ScheduledCheckResult): Promise<void> {
   try {
+    if (!check.results) {
+      console.warn('No results found in scheduled check for notifications');
+      return;
+    }
+
     const { results } = check;
     const deadLinks = results.result.deadLinks;
 
@@ -255,10 +281,10 @@ async function sendCronNotifications(check: any): Promise<void> {
 
 /**
  * Update next run time
- * @param {any} settings - Schedule settings
+ * @param {DeadLinkScheduleSettings} settings - Schedule settings
  * @returns {Promise<void>}
  */
-async function updateNextRunTime(settings: any): Promise<void> {
+async function updateNextRunTime(settings: DeadLinkScheduleSettings): Promise<void> {
   try {
     // Calculate next run time
     const [hours, minutes] = settings.time.split(':').map(Number);

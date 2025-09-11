@@ -284,8 +284,8 @@ export default function ContentManagementPage() {
                               </td>
                               <td>
                                 <div className="btn-group btn-group-sm">
-                                  <Link 
-                                    href={`/post/${post.slug}`}
+                                  <Link
+                                    href={`/${post.slug}`}
                                     className="btn btn-outline-primary"
                                     title="View Post"
                                   >
@@ -406,8 +406,8 @@ export default function ContentManagementPage() {
                                     <div className="btn-group btn-group-sm">
                                       {!post.isAnalyticsOnly && (
                                         <>
-                                          <Link 
-                                            href={`/post/${post.slug}`}
+                                          <Link
+                                            href={`/${post.slug}`}
                                             className="btn btn-outline-primary"
                                             title="View Post"
                                           >

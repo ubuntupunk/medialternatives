@@ -49,11 +49,10 @@ export async function POST(request: NextRequest) {
       addRandomSuffix: false, // Keep consistent filename for user
     });
 
-    // Parse metadata if provided
-    let parsedMetadata = {};
+    // Parse metadata if provided (currently not used)
     if (metadata) {
       try {
-        parsedMetadata = JSON.parse(metadata);
+        JSON.parse(metadata);
       } catch (error) {
         console.warn('Failed to parse metadata:', error);
       }

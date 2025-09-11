@@ -5,7 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import Image from 'next/image';
-import { DOMNode, Element } from 'html-react-parser';
+
 
 const CasePage: React.FC = async () => {
   const filePath = path.join(process.cwd(), 'src', 'content', 'case.md');
@@ -17,7 +17,7 @@ const CasePage: React.FC = async () => {
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
         components={{
-          img: ({ node, ...props }) => {
+          img: ({ ...props }) => {
             let imageUrl = props.src;
             if (typeof imageUrl === 'string') {
               imageUrl = imageUrl.startsWith('http://') ? imageUrl.replace('http://', 'https://') : imageUrl;
@@ -33,7 +33,7 @@ const CasePage: React.FC = async () => {
               />
             );
           },
-          a: ({ node, ...props }) => {
+          a: ({ ...props }) => {
             if (props.href && (props.href.startsWith('http://') || props.href.startsWith('https://'))) {
               return (
                 <a href={props.href} target="_blank" rel="noopener noreferrer" className={props.className}>
@@ -43,12 +43,12 @@ const CasePage: React.FC = async () => {
             }
             return <a {...props}>{props.children}</a>;
           },
-          h1: ({ node, ...props }) => <h1 className="mb-4" {...props}>{props.children}</h1>,
-          h4: ({ node, ...props }) => <h4 className="mb-3" {...props}>{props.children}</h4>,
-          p: ({ node, ...props }) => <p className="mb-2" {...props}>{props.children}</p>,
-          div: ({ node, ...props }) => {
+          h1: ({ ...props }) => <h1 className="mb-4" {...props}>{props.children}</h1>,
+          h4: ({ ...props }) => <h4 className="mb-3" {...props}>{props.children}</h4>,
+          p: ({ ...props }) => <p className="mb-2" {...props}>{props.children}</p>,
+          div: ({ ...props }) => {
             if (props.className?.includes('wp-block-file')) {
-              const fileChildren = node!.children;
+              const fileChildren = props.node!.children;
               return (
                 <div className="my-3">
                   {fileChildren.map((childNode, index) => {

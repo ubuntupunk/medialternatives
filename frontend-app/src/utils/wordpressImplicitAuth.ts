@@ -138,7 +138,7 @@ export function handleOAuthCallback(): AuthState {
       expiresIn: parseInt(expiresIn || '3600'),
       scope: scope || 'read',
       siteId,
-      state,
+      state: state || '',
       expiresAt: new Date(Date.now() + parseInt(expiresIn || '3600') * 1000)
     };
     

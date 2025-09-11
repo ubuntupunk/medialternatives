@@ -5,14 +5,15 @@ import { SITE_CONFIG } from '@/lib/constants';
 
 /**
  * Meta tags props interface
- * @typedef {Object} MetaTagsProps
- * @property {string} [title] - Page title (auto-generated from post if not provided)
- * @property {string} [description] - Page description (auto-generated from post excerpt if not provided)
- * @property {WordPressPost} [post] - WordPress post data for article-specific meta tags
- * @property {string} [canonical] - Canonical URL (auto-generated if not provided)
- * @property {boolean} [noindex=false] - Whether to add noindex meta tag
- * @property {'website'|'article'} [type='website'] - Open Graph type
  */
+export interface MetaTagsProps {
+  title?: string;
+  description?: string;
+  post?: WordPressPost;
+  canonical?: string;
+  noindex?: boolean;
+  type?: 'website' | 'article';
+}
 
 /**
  * Meta Tags Component

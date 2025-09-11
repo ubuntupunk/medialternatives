@@ -8,9 +8,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 interface DavidRobertLewisPageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
-  };
+  }>;
 }
 
 /**
@@ -19,7 +19,8 @@ interface DavidRobertLewisPageProps {
  * a proper bio page for the site's main author
  */
 export default async function DavidRobertLewisPage({ searchParams }: DavidRobertLewisPageProps) {
-  const currentPage = parseInt(searchParams.page || '1', 10);
+  const { page } = await searchParams;
+  const currentPage = parseInt(page || '1', 10);
   
   // Static author information for David Robert Lewis
   const author = {

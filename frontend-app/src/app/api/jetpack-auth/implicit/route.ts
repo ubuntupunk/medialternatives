@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       case 'initiate':
         return initiateImplicitOAuth();
       case 'callback':
-        return handleOAuthCallback(request);
+        return handleOAuthCallback();
       default:
         return getImplicitOAuthInfo();
     }
@@ -72,7 +72,7 @@ function initiateImplicitOAuth() {
  * @param {NextRequest} request - Next.js request object
  * @returns {NextResponse} Callback handling instructions
  */
-function handleOAuthCallback(request: NextRequest) {
+function handleOAuthCallback() {
   // With implicit flow, the token is in the URL fragment (#access_token=...)
   // This is handled client-side, not server-side
   

@@ -5,19 +5,21 @@ import { useRouter } from 'next/navigation';
 
 /**
  * User information interface
- * @typedef {Object} User
- * @property {string} userId - Unique user identifier
- * @property {string} username - User's display name
- * @property {boolean} isAdmin - Whether user has admin privileges
  */
+export interface User {
+  userId: string;
+  username: string;
+  isAdmin: boolean;
+}
 
 /**
  * Authentication state interface
- * @typedef {Object} AuthState
- * @property {User|null} user - Current authenticated user
- * @property {boolean} isLoading - Whether authentication is being checked
- * @property {boolean} isAuthenticated - Whether user is authenticated
  */
+export interface AuthState {
+  user: User | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+}
 
 /**
  * Custom React hook for authentication management
@@ -137,7 +139,7 @@ export function useAuth() {
       } else {
         return { success: false, error: data.error };
       }
-    } catch (error) {
+    } catch (_error) {
       return { success: false, error: 'Network error' };
     }
   };

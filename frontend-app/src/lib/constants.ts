@@ -93,7 +93,8 @@ export const SITE_CONFIG = {
   CATEGORIES_PER_PAGE: 50,
   EXCERPT_LENGTH: 150,
   SITE_TITLE: 'Medialternatives',
-  SITE_DESCRIPTION: 'Reaching out from the Global South'
+  SITE_DESCRIPTION: 'Reaching out from the Global South',
+  SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'https://medialternatives.com'
 } as const;
 
 /**

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { wordpressApi } from '@/services/wordpress-api';
 import { WordPressPost, WordPressCategory, WordPressSiteInfo } from '@/types/wordpress';
-import { testWordPressEndpoints, validateSiteSetup, generateTestReport, logAPIResponse } from '@/utils/api-debug';
+
 
 export default function APITestPage() {
   const [posts, setPosts] = useState<WordPressPost[]>([]);
@@ -11,9 +11,7 @@ export default function APITestPage() {
   const [siteInfo, setSiteInfo] = useState<WordPressSiteInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [debugMode, setDebugMode] = useState(false);
-  const [testResults, setTestResults] = useState<any[]>([]);
-  const [validationResults, setValidationResults] = useState<any>(null);
+
 
   useEffect(() => {
     async function testAPI() {

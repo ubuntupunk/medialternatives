@@ -111,6 +111,81 @@ a.more-link, button {
     text-align: left;
 }
 
+/* Author widget specific styling */
+.author-widget {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    border: 1px solid #e9ecef;
+}
+
+.author-widget .widget-title {
+    margin-bottom: 15px;
+    color: #0031FF;
+    font-weight: 500;
+}
+
+.author-widget .user-info {
+    text-align: center;
+}
+
+.author-widget .author-avatar {
+    margin-bottom: 10px;
+}
+
+.author-widget .author-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #0031FF;
+    text-decoration: none;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.author-widget .author-description {
+    font-size: 14px;
+    color: #6c757d;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.author-widget .author-social-menu ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.author-widget .author-social-menu li {
+    display: inline-block;
+}
+
+.author-widget .author-social-menu a {
+    color: #0031FF;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+/* Special styling for icon-only X link */
+.author-widget .author-social-menu a[href*="x.com"] {
+    padding: 8px 12px;
+    justify-content: center;
+}
+
+.author-widget .author-social-menu a:hover {
+    color: blueviolet;
+    background-color: rgba(0, 49, 255, 0.1);
+}
+
 .widget ul {
     list-style: none;
     margin: 0;
@@ -296,4 +371,76 @@ ins.adsbygoogle {
     .entry-footer .share-buttons {
         gap: 0.75rem !important;
     }
+}
+
+/* Login card styling for horizontal rectangle dimensions */
+.login-card {
+    aspect-ratio: 2 / 1; /* Horizontal rectangle - twice as wide as tall */
+    min-height: 420px;
+    max-height: 550px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevent content from spilling out */
+}
+
+.login-card .card-body {
+    padding: 2rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto; /* Allow scrolling if needed */
+}
+
+/* Make login card horizontal rectangle on larger screens */
+@media (min-width: 768px) {
+    .login-card {
+        aspect-ratio: 2.5 / 1; /* More horizontal on desktop */
+        min-height: 420px;
+        max-height: 550px;
+        max-width: 650px; /* Limit max width for readability */
+    }
+}
+
+/* Mobile responsiveness for login card */
+@media (max-width: 767.98px) {
+    .login-card {
+        aspect-ratio: 1.5 / 1; /* Less horizontal on mobile */
+        min-height: 350px;
+    }
+}
+
+/* Auth page specific styles to prevent sidebar blending */
+.auth-page-container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 9999 !important;
+    background: #f8f9fa !important;
+    overflow: auto !important;
+}
+
+/* Hide sidebar elements ONLY on auth pages */
+[data-auth-page="true"] .site-content .widget-area,
+[data-auth-page="true"] aside,
+[data-auth-page="true"] .sidebar,
+[data-auth-page="true"] #secondary,
+[data-auth-page="true"] .main-sidebar {
+    display: none !important;
+}
+
+/* Hide header and footer ONLY on auth pages */
+[data-auth-page="true"] header,
+[data-auth-page="true"] footer,
+[data-auth-page="true"] .site-header,
+[data-auth-page="true"] .site-footer {
+    display: none !important;
+}
+
+/* Ensure auth content takes full width and is centered */
+.auth-page-container .container {
+    max-width: 100% !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
 }

@@ -1,7 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { apiCache, searchCache, analyticsCache } from './cache';
-import { apiTestRunner, apiContractTester, apiPerformanceTester } from './api-testing';
-import { rateLimiter } from './validation';
 
 /**
  * Production Monitoring and Health Check System

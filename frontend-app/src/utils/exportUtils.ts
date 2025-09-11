@@ -2,7 +2,7 @@
  * Export utilities for dead link checker results
  */
 
-import { DeadLink, LinkCheckResult } from './deadLinkChecker';
+import { DeadLink } from './deadLinkChecker';
 
 /**
  * Options for exporting dead link results

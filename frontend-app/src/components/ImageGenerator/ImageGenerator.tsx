@@ -1,24 +1,27 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 
 /**
  * Image generation settings interface
- * @typedef {Object} GenerationSettings
- * @property {string} style - Image style (photorealistic, illustration, abstract, etc.)
- * @property {string} aspectRatio - Image aspect ratio (16:9, 4:3, 1:1, etc.)
- * @property {string} quality - Generation quality (low, medium, high, ultra)
- * @property {boolean} includeText - Whether to include text in the image
  */
+export interface GenerationSettings {
+  style: string;
+  aspectRatio: string;
+  quality: string;
+  includeText: boolean;
+}
 
 /**
  * Image generator props interface
- * @typedef {Object} ImageGeneratorProps
- * @property {string} [postTitle=''] - Initial title for image generation
- * @property {string} [postContent=''] - Initial content for context
- * @property {Function} [onImageGenerated] - Callback when image is generated
- * @property {string} [className=''] - Additional CSS classes
  */
+export interface ImageGeneratorProps {
+  postTitle?: string;
+  postContent?: string;
+  onImageGenerated?: (imageUrl: string) => void;
+  className?: string;
+}
 
 /**
  * AI-Powered Image Generator Component
@@ -287,13 +290,15 @@ const ImageGenerator: React.FC<ImageGeneratorProps> = ({
             <div className="card-body d-flex flex-column">
               {generatedImageUrl ? (
                 <>
-                  <div className="mb-3 flex-grow-1 d-flex align-items-center justify-content-center">
-                    <img
-                      src={generatedImageUrl}
-                      alt="Generated image"
-                      className="img-fluid rounded shadow"
-                      style={{ maxHeight: '300px', objectFit: 'contain' }}
-                    />
+                   <div className="mb-3 flex-grow-1 d-flex align-items-center justify-content-center">
+                     <Image
+                       src={generatedImageUrl}
+                       alt="Generated image"
+                       className="img-fluid rounded shadow"
+                       width={400}
+                       height={300}
+                       style={{ maxHeight: '300px', objectFit: 'contain' }}
+                     />
                   </div>
                   <div className="d-grid gap-2">
                     <button

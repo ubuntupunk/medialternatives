@@ -14,10 +14,10 @@ import { del, head } from '@vercel/blob';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { userId } = params;
+    const { userId } = await params;
 
     if (!userId) {
       return NextResponse.json(
@@ -34,22 +34,22 @@ export async function GET(
     
     const url = `${baseUrl}/_vercel/blob/${filename}`;
 
-    try {
-      // Check if the blob exists
-      await head(url);
-      
-      return NextResponse.json({
-        success: true,
-        url: url,
-        userId: userId,
-      });
-    } catch (_error) {
-      // Blob doesn't exist
-      return NextResponse.json(
-        { error: 'Avatar not found' },
-        { status: 404 }
-      );
-    }
+     try {
+       // Check if the blob exists
+       await head(url);
+
+       return NextResponse.json({
+         success: true,
+         url: url,
+         userId: userId,
+       });
+     } catch {
+       // Blob doesn't exist
+       return NextResponse.json(
+         { error: 'Avatar not found' },
+         { status: 404 }
+       );
+     }
 
   } catch (error) {
     console.error('Avatar fetch error:', error);
@@ -72,10 +72,10 @@ export async function GET(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { userId } = params;
+    const { userId } = await params;
 
     if (!userId) {
       return NextResponse.json(

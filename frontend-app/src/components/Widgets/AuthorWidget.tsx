@@ -18,7 +18,6 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
 }) => {
   const [author, setAuthor] = useState<WordPressUser | null>(initialAuthor || null);
   const [isLoading, setIsLoading] = useState(!initialAuthor);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchAuthor = async () => {
@@ -41,14 +40,19 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
         // If authentication is required, fall back to default author info
         console.warn('Author data requires authentication, using fallback:', err);
         setAuthor({
-          id: authorId,
+          id: 1,
           name: 'David Robert Lewis',
           slug: 'david-robert-lewis',
-          description: 'Media activist, researcher, and writer focusing on South African media landscape and social justice issues.',
+          description: 'Media activist, investigative journalist, and author focused on media alternatives and press freedom in South Africa.',
+          link: '/author/david-robert-lewis',
           avatar_urls: {
-            '96': '/images/avatar.png'
+            '24': '/images/avatar.jpeg',
+            '48': '/images/avatar.jpeg',
+            '96': '/images/avatar.jpeg'
           },
-          url: '/author/david-robert-lewis'
+          avatar_url: '/images/avatar.jpeg',
+          url: '/author/david-robert-lewis',
+          meta: {}
         });
       } finally {
         setIsLoading(false);
@@ -62,21 +66,36 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
     return <div className="widget author-widget">Loading author information...</div>;
   }
 
-  if (error) {
-    return <div className="widget author-widget">Error: {error}</div>;
-  }
-
   if (!author) {
     return <div className="widget author-widget"></div>;
   }
 
   // Get avatar URL with fallback and ensure it's a string
   let avatarUrl = '/images/default-avatar.png';
-  
+
   if (author.avatar_urls?.['96']) {
     avatarUrl = typeof author.avatar_urls['96'] === 'string' ? author.avatar_urls['96'] : '/images/default-avatar.png';
   } else if (author.avatar_url) {
     avatarUrl = typeof author.avatar_url === 'string' ? author.avatar_url : '/images/default-avatar.png';
+  }
+
+  // Fallback to Gravatar if no WordPress avatar or if it's the default
+  if (avatarUrl === '/images/default-avatar.png' || !avatarUrl || avatarUrl.includes('default-avatar')) {
+    // Create Gravatar URL from author name or email-like identifier
+    const gravatarId = author.slug || 'davidrobertlewis';
+    avatarUrl = `https://www.gravatar.com/avatar/${gravatarId}?s=96&d=mp`;
+  }
+
+  // Ensure we don't use non-existent avatar.png
+  if (avatarUrl === '/images/avatar.png') {
+    avatarUrl = '/images/avatar.jpeg';
+  }
+
+  // Fallback to Gravatar if no WordPress avatar or if it's the default
+  if (avatarUrl === '/images/default-avatar.png' || !avatarUrl || avatarUrl.includes('default-avatar')) {
+    // Create Gravatar URL from author name or email-like identifier
+    const gravatarId = author.slug || 'davidrobertlewis';
+    avatarUrl = `https://www.gravatar.com/avatar/${gravatarId}?s=96&d=mp`;
   }
   
   // Ensure we don't pass objects or malformed data to Image component
@@ -92,7 +111,7 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
         <div className="author-avatar">
           <Image
             src={avatarUrl}
-            alt={author.name || 'Author avatar'}
+            alt={`${author.name} avatar`}
             width={75}
             height={75}
             style={{ borderRadius: '50%' }}
@@ -110,15 +129,15 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
         {showSocialMenu && (
           <div className="author-social-menu">
             <ul className="social-links">
-              {/* Social links would be dynamically generated here */}
-              {/* For now, we'll use placeholder links */}
+              {/* Social links with Bootstrap icons */}
               <li>
-                <a href="#" target="_blank" rel="noopener noreferrer">
-                  X.com
+                <a href="https://x.com/davidrobertlewis" target="_blank" rel="noopener noreferrer" title="Follow on X">
+                  <i className="bi bi-twitter-x"></i>
                 </a>
               </li>
               <li>
-                <a href="#" target="_blank" rel="noopener noreferrer">
+                <a href="https://facebook.com/davidrobertlewis" target="_blank" rel="noopener noreferrer">
+                  <i className="bi bi-facebook"></i>
                   Facebook
                 </a>
               </li>

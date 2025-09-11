@@ -81,7 +81,7 @@ export function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/auth/unauthorized', request.url));
       }
       
-    } catch (error) {
+    } catch (_error) {
       // Invalid session, redirect to login
       const response = NextResponse.redirect(new URL('/auth/login', request.url));
       response.cookies.delete('auth-session');

@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
           }
         });
       }
-    } catch (error) {
+    } catch {
       // Continue to next strategy
     }
 
@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
           }
         });
       });
-    } catch (error) {
+    } catch {
       // Continue to next strategy
     }
 
@@ -75,8 +75,7 @@ export async function GET(request: NextRequest) {
     try {
       const dateString = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
       const postsFromDate = await wordpressApi.getPosts({
-        after: `${dateString}T00:00:00`,
-        before: `${dateString}T23:59:59`,
+        search: dateString,
         per_page: 10
       });
       
@@ -93,7 +92,7 @@ export async function GET(request: NextRequest) {
           }
         });
       });
-    } catch (error) {
+    } catch {
       // Continue
     }
 
@@ -106,8 +105,8 @@ export async function GET(request: NextRequest) {
       return acc;
     }, [] as typeof searchResults);
 
-    // Sort by relevance (higher is better)
-    uniqueResults.sort((a, b) => (b.post.relevance || 0) - (a.post.relevance || 0));
+    // Sort by date (newest first)
+    uniqueResults.sort((a, b) => new Date(b.post.date).getTime() - new Date(a.post.date).getTime());
 
     return NextResponse.json({
       legacyUrl,

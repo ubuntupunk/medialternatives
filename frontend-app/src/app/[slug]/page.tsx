@@ -14,9 +14,9 @@ import StructuredData from '@/components/SEO/StructuredData';
 export const revalidate = 600; // 10 minutes
 
 interface PostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 /**
@@ -25,7 +25,7 @@ interface PostPageProps {
  * This replaces the /post/[slug] structure for cleaner URLs
  */
 export default async function PostPage({ params }: PostPageProps) {
-  const { slug } = params;
+  const { slug } = await params;
   
   // Check if this is a known page route that should not be treated as a post
   const knownPages = [
@@ -331,7 +331,7 @@ export default async function PostPage({ params }: PostPageProps) {
                       >
                         <i className="bi bi-folder me-2"></i>
                         {category.name}
-                        <span className="text-muted ms-1">({category.count} posts)</span>
+                          <span className="text-muted ms-1">({category.count || 0} posts)</span>
                       </Link>
                     </div>
                   ))}
@@ -359,9 +359,10 @@ export default async function PostPage({ params }: PostPageProps) {
 /**
  * Generate metadata for SEO
  */
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   try {
-    const post = await wordpressApi.getPost(params.slug);
+    const post = await wordpressApi.getPost(slug);
     
     if (!post) {
       return {

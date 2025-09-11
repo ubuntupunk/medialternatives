@@ -16,7 +16,9 @@ interface AnalyticsData {
   avgSessionDuration: string;
   topPages: Array<{ page: string; views: number; percentage: number }>;
   topCountries: Array<{ country: string; visitors: number; percentage: number }>;
-  deviceTypes: Array<{ device: string; visitors: number; percentage: number }>;
+  deviceTypes: Array<{ device: string; visitors?: number; percentage: number }>;
+  source?: string;
+  note?: string;
   comparisons?: {
     previousPeriod?: {
       visitors: number;
@@ -37,19 +39,15 @@ export default function AnalyticsPage() {
   const [selectedPeriod, setSelectedPeriod] = useState('30d');
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState(new Date());
   const [activeTab, setActiveTab] = useState<'google' | 'jetpack'>('google');
   const [jetpackData, setJetpackData] = useState<any>(null);
   const [jetpackLoading, setJetpackLoading] = useState(false);
-  const [jetpackAuthStatus, setJetpackAuthStatus] = useState<any>(null);
   const [jetpackAuthLoading, setJetpackAuthLoading] = useState(false);
   const [wpAuthStatus, setWpAuthStatus] = useState<any>(null);
   const isClient = useClientOnly();
-  
+
   // Use centralized WordPress authentication
-  const { isAuthenticated, token, login, logout, loading: authLoading } = useWordPressAuth();
-  const { getStats, getTopPosts, getReferrers, canPerform } = useAuthenticatedAPI();
+  const { isAuthenticated, token, loading: authLoading } = useWordPressAuth();
   
   // Fetch analytics data from API
   const fetchAnalyticsData = useCallback(async (period: string = selectedPeriod) => {
@@ -153,10 +151,10 @@ const fetchJetpackAuthStatus = async () => {
 // Auto-fetch Jetpack data when authenticated
 useEffect(() => {
   if (!isClient || authLoading) return;
-  
+
   if (isAuthenticated && activeTab === 'jetpack') {
     console.log('🎉 WordPress.com authenticated - fetching Jetpack data');
-    fetchJetpackDataWithCentralizedAuth();
+    fetchJetpackDataWithAuth(token);
   }
 }, [isClient, isAuthenticated, authLoading, activeTab]);
 
@@ -164,11 +162,30 @@ useEffect(() => {
 const initiateWordPressImplicitOAuth = () => {
   setJetpackAuthLoading(true);
   try {
-    initiateWordPressOAuth();
+    // TODO: Implement OAuth initiation
+    console.log('OAuth initiation not implemented yet');
   } catch (error) {
     console.error('Error initiating OAuth:', error);
     setJetpackAuthLoading(false);
   }
+};
+
+// Stub function for centralized auth (to be implemented)
+const fetchJetpackDataWithCentralizedAuth = async () => {
+  console.log('Centralized auth fetch not implemented yet');
+  // TODO: Implement centralized auth fetching
+};
+
+// Stub function for clearing stored token
+const clearStoredToken = () => {
+  console.log('Clear stored token not implemented yet');
+  // TODO: Implement token clearing
+};
+
+// Stub function for initiating WordPress OAuth
+const initiateWordPressOAuth = () => {
+  console.log('WordPress OAuth initiation not implemented yet');
+  // TODO: Implement OAuth flow
 };
 
 // Fetch Jetpack data with authentication token

@@ -1,7 +1,7 @@
 // frontend-app/src/app/api/adsense/auth/route.ts
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { readToken, writeToken } from '../auth/token-storage';
+
 import {
   generateState,
   generatePKCE,
@@ -17,22 +17,7 @@ const OAUTH2_CLIENT = new google.auth.OAuth2(
   getRedirectURI()
 );
 
-/**
- * Get stored AdSense OAuth token
- * @returns {Promise<any>} Stored OAuth token or null
- */
-export async function getToken() {
-  return await readToken();
-}
 
-/**
- * Store AdSense OAuth token
- * @param {object} newToken - OAuth token to store
- * @returns {Promise<void>}
- */
-export async function setToken(newToken: object) {
-  await writeToken(newToken);
-}
 
 /**
  * GET /api/adsense/auth - Initiate secure AdSense OAuth flow
@@ -42,7 +27,7 @@ export async function setToken(newToken: object) {
  *
  * @returns {NextResponse} Redirect response to Google OAuth with security parameters
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Generate security parameters
     const state = generateState();

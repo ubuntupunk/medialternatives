@@ -230,7 +230,7 @@ async function getGoogleAnalyticsData(propertyId: string, serviceAccountKey: str
     });
 
     // Get year-over-year comparison
-    const { yearAgoStartDate, yearAgoEndDate } = calculateYearOverYearPeriod(period, startDate, endDate);
+    const { yearAgoStartDate, yearAgoEndDate } = calculateYearOverYearPeriod(period);
     const [yearOverYearResponse] = await analyticsDataClient.runReport({
       property: `properties/${propertyId}`,
       dateRanges: [{ startDate: yearAgoStartDate, endDate: yearAgoEndDate }],
@@ -336,13 +336,11 @@ function formatDuration(seconds: number): string {
 }
 
 /**
- * Calculate previous period dates for comparison
- * @param {string} period - Current period (7d, 30d, 90d, 1y)
- * @param {string} startDate - Current period start date
- * @param {string} endDate - Current period end date
+ * Calculate date range for previous period comparison
+ * @param {string} period - Time period (7d, 30d, 90d, 1y)
  * @returns {{previousStartDate: string, previousEndDate: string}} Previous period date range
  */
-function calculatePreviousPeriod(period: string, startDate: string, endDate: string) {
+function calculatePreviousPeriod(period: string) {
   const today = new Date();
   
   switch (period) {
@@ -382,7 +380,7 @@ function calculatePreviousPeriod(period: string, startDate: string, endDate: str
  * @param {string} endDate - Current period end date
  * @returns {{yearAgoStartDate: string, yearAgoEndDate: string}} Year-over-year date range
  */
-function calculateYearOverYearPeriod(period: string, startDate: string, endDate: string) {
+function calculateYearOverYearPeriod(period: string) {
   const today = new Date();
   const currentYear = today.getFullYear();
   const lastYear = currentYear - 1;

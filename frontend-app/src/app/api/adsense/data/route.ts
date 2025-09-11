@@ -1,7 +1,8 @@
 // frontend-app/src/app/api/adsense/data/route.ts
 import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { getToken, setToken } from '../auth/route';
+import { AdsenseReportRequest } from '@/types/google';
+import { getToken, setToken } from '../auth/token-utils';
 
 const OAUTH2_CLIENT = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -50,16 +51,27 @@ export async function GET() {
       return NextResponse.json({ accounts: [] });
     }
 
-    const accountName = accounts[0].name;
+    const accountName = accounts[0]?.name;
+
+    if (!accountName) {
+      throw new Error('No AdSense account found');
+    }
 
     // Fetch Ad Units
     const adClientList = await adsense.accounts.adclients.list({ parent: accountName });
     const adClients = adClientList.data.adClients;
-    let adUnits = [];
+    let adUnits: Array<{
+      name?: string | null;
+      displayName?: string | null;
+      state?: string | null;
+      adUnitCode?: string | null;
+    }> = [];
     if (adClients && adClients.length > 0) {
-      const adClientName = adClients[0].name;
-      const adUnitList = await adsense.accounts.adclients.adunits.list({ parent: adClientName });
-      adUnits = adUnitList.data.adUnits || [];
+      const adClientName = adClients[0]?.name;
+      if (adClientName) {
+        const adUnitList = await adsense.accounts.adclients.adunits.list({ parent: adClientName });
+        adUnits = adUnitList.data.adUnits || [];
+      }
     }
 
     // Fetch Report Data
@@ -67,22 +79,18 @@ export async function GET() {
     const startDate = new Date(today.getFullYear(), today.getMonth(), 1);
     const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
+    // Generate report
     const report = await adsense.accounts.reports.generate({
       account: accountName,
-      dateRange: 'CUSTOM',
-      'dateRange.startDate.year': startDate.getFullYear(),
-      'dateRange.startDate.month': startDate.getMonth() + 1,
-      'dateRange.startDate.day': startDate.getDate(),
-      'dateRange.endDate.year': endDate.getFullYear(),
-      'dateRange.endDate.month': endDate.getMonth() + 1,
-      'dateRange.endDate.day': endDate.getDate(),
+      startDate: startDate.toISOString().split('T')[0],
+      endDate: endDate.toISOString().split('T')[0],
       metrics: ['ESTIMATED_EARNINGS', 'IMPRESSIONS', 'PAGE_VIEWS', 'CLICKS'],
-    });
+    } as AdsenseReportRequest);
 
     return NextResponse.json({
       accounts,
       adUnits,
-      report: report.data,
+      report: report,
     });
 
   } catch (error: unknown) {
@@ -101,7 +109,7 @@ export async function GET() {
       source: 'Static data (OAuth needed)',
       note: 'Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET for live AdSense data',
       authenticationRequired: true,
-      error: error.message
+      error: error instanceof Error ? error.message : 'Unknown error'
     });
   }
 }

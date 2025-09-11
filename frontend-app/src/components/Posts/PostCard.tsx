@@ -29,7 +29,7 @@ const PostCard: React.FC<PostCardProps> = ({
       <header className="entry-header">
         {featuredImageUrl && (
           <div className="entry-thumbnail">
-            <Link href={`/post/${post.slug}`}>
+            <Link href={`/${post.slug}`}>
               <div style={{ position: 'relative', width: '100%', height: '200px' }}>
                 <Image 
                   src={featuredImageUrl}
@@ -66,8 +66,8 @@ const PostCard: React.FC<PostCardProps> = ({
         <div className="entry-content">
           <p className="text-pretty">{excerpt}</p>
           <div className="mt-2">
-            <Link 
-              href={`/post/${post.slug}`}
+            <Link
+              href={`/${post.slug}`}
               className="btn btn-sm read-more-pill"
               style={{
                 backgroundColor: '#04AA6D',

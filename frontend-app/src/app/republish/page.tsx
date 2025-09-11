@@ -5,7 +5,17 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import Image from 'next/image';
-import { DOMNode, Element } from 'html-react-parser';
+
+interface ElementNode {
+  type: 'element';
+  tagName: string;
+  properties?: Record<string, unknown>;
+  children: Array<{ value?: string }>;
+}
+
+interface TextNode {
+  value?: string;
+}
 
 const PublishPage: React.FC = async () => {
   const filePath = path.join(process.cwd(), 'src', 'content', 'publish.md');
@@ -17,7 +27,7 @@ const PublishPage: React.FC = async () => {
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
         components={{
-          img: ({ node, ...props }) => {
+          img: ({ ...props }) => {
             let imageUrl = props.src;
             if (typeof imageUrl === 'string') {
               imageUrl = imageUrl.startsWith('http://') ? imageUrl.replace('http://', 'https://') : imageUrl;
@@ -33,7 +43,7 @@ const PublishPage: React.FC = async () => {
               />
             );
           },
-          a: ({ node, ...props }) => {
+          a: ({ ...props }) => {
             if (props.href && (props.href.startsWith('http://') || props.href.startsWith('https://'))) {
               return (
                 <a href={props.href} target="_blank" rel="noopener noreferrer" className={props.className}>
@@ -43,20 +53,21 @@ const PublishPage: React.FC = async () => {
             }
             return <a {...props}>{props.children}</a>;
           },
-          h1: ({ node, ...props }) => <h1 className="mb-4" {...props}>{props.children}</h1>,
-          h4: ({ node, ...props }) => <h4 className="mb-3" {...props}>{props.children}</h4>,
-          p: ({ node, ...props }) => <p className="mb-2" {...props}>{props.children}</p>,
-          div: ({ node, ...props }) => {
+          h1: ({ ...props }) => <h1 className="mb-4" {...props}>{props.children}</h1>,
+          h4: ({ ...props }) => <h4 className="mb-3" {...props}>{props.children}</h4>,
+          p: ({ ...props }) => <p className="mb-2" {...props}>{props.children}</p>,
+          div: ({ ...props }) => {
             if (props.className?.includes('wp-block-file')) {
-              const fileChildren = node!.children;
+              const fileChildren = (props.node as ElementNode)?.children || [];
               return (
                 <div className="my-3">
                   {fileChildren.map((childNode, index) => {
-                    if (childNode.type === 'element' && childNode.tagName === 'a') {
-                      const href = (childNode.properties as any)?.href;
-                      const className = (childNode.properties as any)?.className;
-                      const download = (childNode.properties as any)?.download;
-                      const textContent = (childNode.children[0] as any)?.value;
+                    if ((childNode as ElementNode).type === 'element' && (childNode as ElementNode).tagName === 'a') {
+                      const elementNode = childNode as ElementNode;
+                      const href = elementNode.properties?.href as string;
+                      const className = elementNode.properties?.className as string;
+                      const download = elementNode.properties?.download as string;
+                      const textContent = (elementNode.children[0] as TextNode)?.value;
 
                       const isDownloadButton = className?.includes('wp-block-file__button');
 
@@ -81,7 +92,7 @@ const PublishPage: React.FC = async () => {
               );
             }
             if (props.className?.includes('wp-block-embed__wrapper')) {
-              const rawHtml = (node!.children[0] as any)?.value;
+              const rawHtml = ((_node as ElementNode)?.children[0] as TextNode)?.value;
               if (rawHtml) {
                 const embedUrl = rawHtml.trim();
                 if (typeof embedUrl === 'string' && embedUrl.includes('youtu.be')) {

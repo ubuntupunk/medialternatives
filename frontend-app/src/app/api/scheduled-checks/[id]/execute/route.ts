@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { wordpressApi } from '@/services/wordpress-api';
 import { checkMultiplePostsLinks } from '@/utils/deadLinkChecker';
+import { ScheduledCheck } from '@/utils/scheduler';
 
 // Import the in-memory storage (in production, use a database)
 // This is a simplified approach for demo purposes
-const scheduledChecks: any[] = [];
+const scheduledChecks: ScheduledCheck[] = [];
 
 /**
  * POST /api/scheduled-checks/[id]/execute - Execute a scheduled check
@@ -19,10 +20,11 @@ const scheduledChecks: any[] = [];
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const checkId = params.id;
+    const { id } = await params;
+    const checkId = id;
 
     // Find the scheduled check
     const checkIndex = scheduledChecks.findIndex(check => check.id === checkId);
@@ -112,7 +114,7 @@ export async function POST(
  * @param {any} check - Completed scheduled check with results
  * @returns {Promise<void>}
  */
-async function sendScheduledCheckNotifications(check: any): Promise<void> {
+async function sendScheduledCheckNotifications(check: ScheduledCheck): Promise<void> {
   try {
     const { results } = check;
     const deadLinks = results.result.deadLinks;

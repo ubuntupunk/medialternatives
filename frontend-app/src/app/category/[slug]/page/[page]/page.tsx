@@ -10,10 +10,10 @@ import { mockPosts } from '@/utils/mockData';
 import Link from 'next/link';
 
 interface CategoryPagePaginatedProps {
-  params: {
+  params: Promise<{
     slug: string;
     page: string;
-  };
+  }>;
 }
 
 /**
@@ -21,8 +21,8 @@ interface CategoryPagePaginatedProps {
  * Accessible via /category/[slug]/page/[page] URLs
  */
 export default async function CategoryPagePaginated({ params }: CategoryPagePaginatedProps) {
-  const { slug } = params;
-  const currentPage = parseInt(params.page, 10);
+  const { slug, page } = await params;
+  const currentPage = parseInt(page, 10);
   
   // Validate page number
   if (isNaN(currentPage) || currentPage < 1) {
@@ -206,8 +206,9 @@ export default async function CategoryPagePaginated({ params }: CategoryPagePagi
 /**
  * Generate metadata for SEO
  */
-export async function generateMetadata({ params }: { params: { slug: string; page: string } }) {
-  const currentPage = parseInt(params.page, 10);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string; page: string }> }) {
+  const { slug, page } = await params;
+  const currentPage = parseInt(page, 10);
   
   if (isNaN(currentPage) || currentPage < 1) {
     return {
@@ -217,7 +218,7 @@ export async function generateMetadata({ params }: { params: { slug: string; pag
   }
 
   try {
-    const category = await wordpressApi.getCategory(params.slug);
+    const category = await wordpressApi.getCategory(slug);
     
     if (!category) {
       return {

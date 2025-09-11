@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
 
-import { setToken, getToken } from '../auth/route';
+import { setToken, getToken } from '../auth/token-utils';
 
 const OAUTH2_CLIENT = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,

@@ -1,9 +1,21 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
+interface ChartDataset {
+  data: number[];
+  backgroundColor?: string | string[];
+  borderColor?: string;
+  label?: string;
+}
+
+interface ChartData {
+  labels: string[];
+  datasets: ChartDataset[];
+}
+
 interface D3ChartProps {
   type: 'bar' | 'line' | 'pie' | 'doughnut' | 'radar';
-  data: any;
+  data: ChartData;
   width?: number;
   height?: number;
 }
@@ -44,7 +56,7 @@ export default function D3Chart({ type, data, width = 640, height = 400 }: D3Cha
     }
   }, [type, data, width, height]);
 
-  const renderBarChart = (g: d3.Selection<SVGGElement, unknown, null, undefined>, data: any, width: number, height: number) => {
+  const renderBarChart = (g: d3.Selection<SVGGElement, unknown, null, undefined>, data: ChartData, width: number, height: number) => {
     if (!data.labels || !data.datasets) return;
 
     const x = d3.scaleBand()
@@ -53,7 +65,7 @@ export default function D3Chart({ type, data, width = 640, height = 400 }: D3Cha
       .padding(0.1);
 
     const y = d3.scaleLinear()
-      .domain([0, d3.max(data.datasets[0].data as number[])])
+      .domain([0, d3.max(data.datasets[0].data as number[], d => d) || 0])
       .nice()
       .range([height, 0]);
 
@@ -68,14 +80,14 @@ export default function D3Chart({ type, data, width = 640, height = 400 }: D3Cha
       .data(data.datasets[0].data)
       .enter().append('rect')
       .attr('class', 'bar')
-      .attr('x', (d, i) => x(data.labels[i])!)
-      .attr('y', d => y(d))
+      .attr('x', (_, i) => x(data.labels[i])!)
+      .attr('y', (d) => y(d as number))
       .attr('width', x.bandwidth())
-      .attr('height', d => height - y(d))
+      .attr('height', (d) => height - y(d as number))
       .attr('fill', data.datasets[0].backgroundColor || '#36A2EB');
   };
 
-  const renderLineChart = (g: d3.Selection<SVGGElement, unknown, null, undefined>, data: any, width: number, height: number) => {
+  const renderLineChart = (g: d3.Selection<SVGGElement, unknown, null, undefined>, data: ChartData, width: number, height: number) => {
     if (!data.labels || !data.datasets) return;
 
     const x = d3.scaleLinear()
@@ -83,7 +95,7 @@ export default function D3Chart({ type, data, width = 640, height = 400 }: D3Cha
       .range([0, width]);
 
     const y = d3.scaleLinear()
-      .domain(d3.extent(data.datasets[0].data as number[]))
+      .domain(d3.extent(data.datasets[0].data as number[], d => d) as [number, number])
       .nice()
       .range([height, 0]);
 
@@ -109,15 +121,15 @@ export default function D3Chart({ type, data, width = 640, height = 400 }: D3Cha
       .data(data.datasets[0].data)
       .enter().append('circle')
       .attr('class', 'dot')
-      .attr('cx', (d, i) => x(i))
-      .attr('cy', d => y(d))
+      .attr('cx', (_, i) => x(i))
+      .attr('cy', (d) => y(d as number))
       .attr('r', 2.5)
       .attr('fill', 'white')
       .attr('stroke', data.datasets[0].borderColor || 'currentColor')
       .attr('stroke-width', 1.5);
   };
 
-  const renderPieChart = (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, data: any, width: number, height: number) => {
+  const renderPieChart = (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, data: ChartData, width: number, height: number) => {
     if (!data.labels || !data.datasets) return;
 
     const radius = Math.min(width, height) / 2;
@@ -149,7 +161,7 @@ export default function D3Chart({ type, data, width = 640, height = 400 }: D3Cha
       .text((d, i) => data.labels[i]);
   };
 
-  const renderDoughnutChart = (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, data: any, width: number, height: number) => {
+  const renderDoughnutChart = (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, data: ChartData, width: number, height: number) => {
     if (!data.labels || !data.datasets) return;
 
     const radius = Math.min(width, height) / 2;
@@ -182,7 +194,7 @@ export default function D3Chart({ type, data, width = 640, height = 400 }: D3Cha
       .text((d, i) => data.labels[i]);
   };
 
-  const renderRadarChart = (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, data: any, width: number, height: number) => {
+  const renderRadarChart = (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, data: ChartData, width: number, height: number) => {
     if (!data.labels || !data.datasets) return;
 
     const radius = Math.min(width, height) / 2;
@@ -192,7 +204,7 @@ export default function D3Chart({ type, data, width = 640, height = 400 }: D3Cha
     const angleSlice = (Math.PI * 2) / data.labels.length;
 
     const rScale = d3.scaleLinear()
-      .domain([0, d3.max(data.datasets.flatMap((d: any) => d.data))])
+      .domain([0, d3.max(data.datasets.flatMap((d: ChartDataset) => d.data), d => d) || 0])
       .range([0, radius]);
 
     // Draw axes
@@ -218,14 +230,14 @@ export default function D3Chart({ type, data, width = 640, height = 400 }: D3Cha
     });
 
     // Draw data
-    data.datasets.forEach((dataset: any) => {
-      const points = data.labels.map((_: string, i: number) => {
+    data.datasets.forEach((dataset: ChartDataset) => {
+      const points: [number, number][] = data.labels.map((_: string, i: number) => {
         const angle = i * angleSlice - Math.PI / 2;
         const r = rScale(dataset.data[i]);
         return [centerX + Math.cos(angle) * r, centerY + Math.sin(angle) * r];
       });
 
-      const line = d3.line()
+      const line = d3.line<[number, number]>()
         .x(d => d[0])
         .y(d => d[1]);
 

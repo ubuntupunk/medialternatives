@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { JetpackAnalyticsData, JetpackCacheEntry, WordPressComToken, WordPressComTopPost, WordPressComReferrer, WordPressComStatsSummary } from '@/types/google';
 
 /**
  * Jetpack analytics data structure
@@ -70,7 +71,7 @@ export async function GET(request: NextRequest) {
 }
 
 // Simple in-memory cache for WordPress.com API responses
-const analyticsCache = new Map<string, { data: any; timestamp: number }>();
+const analyticsCache = new Map<string, JetpackCacheEntry>();
 const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
 
 /**
@@ -114,7 +115,7 @@ export async function POST(request: NextRequest) {
  * @param {string} period - Time period in days
  * @returns {Promise<NextResponse>} Analytics data response
  */
-async function fetchAuthenticatedStats(token: any, period: string) {
+async function fetchAuthenticatedStats(token: WordPressComToken, period: string) {
   try {
     console.log('🔐 Backend: Fetching authenticated stats for site:', token.siteId);
 
@@ -199,13 +200,13 @@ async function fetchAuthenticatedStats(token: any, period: string) {
         views: summaryData.views || 0,
         visitors: summaryData.visitors || 0,
         visits: summaryData.visits || 0,
-        topPosts: topPostsData?.days?.[0]?.postviews?.map((post: any) => ({
+        topPosts: topPostsData?.days?.[0]?.postviews?.map((post: WordPressComTopPost) => ({
           title: post.title,
           url: post.href,
           views: post.views,
           percentage: parseFloat(((post.views / summaryData.views) * 100).toFixed(1))
         })) || [],
-        referrers: referrersData?.days?.[0]?.groups?.map((ref: any) => ({
+        referrers: referrersData?.days?.[0]?.groups?.map((ref: WordPressComReferrer) => ({
           name: ref.name,
           views: ref.views,
           percentage: parseFloat(((ref.views / summaryData.views) * 100).toFixed(1))
@@ -257,7 +258,6 @@ async function fetchAuthenticatedStats(token: any, period: string) {
  * @returns {NextResponse} Mock analytics data response
  */
 function getMockDataResponse(period: string) {
-  const periodNum = parseInt(period);
   const mockData = getJetpackMockData(period);
   
   return NextResponse.json({

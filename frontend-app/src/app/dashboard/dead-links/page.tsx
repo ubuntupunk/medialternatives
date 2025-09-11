@@ -517,7 +517,7 @@ export default function DeadLinksPage() {
               </div>
 
               {/* Dead Links List */}
-              {(results.deadLinks || results.result?.deadLinks) && (results.deadLinks?.length || results.result?.deadLinks.length) > 0 && (
+              {(results.deadLinks || results.result?.deadLinks) && (results.deadLinks?.length || results.result?.deadLinks?.length || 0) > 0 && (
                 <div className="col-12">
                   <div className="card">
                     <div className="card-header">

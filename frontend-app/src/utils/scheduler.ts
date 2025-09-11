@@ -26,13 +26,101 @@ export interface ScheduleSettings {
 }
 
 /**
+ * Results of a scheduled check execution
+ * @interface ScheduledCheckResults
+ * @property {string} type - Type of check performed
+ * @property {number} postsChecked - Number of posts checked
+ * @property {LinkCheckResult} result - Detailed link check results
+ * @property {ScheduledCheckSummary} summary - Summary of the check
+ */
+export interface ScheduledCheckResults {
+  type: string;
+  postsChecked: number;
+  result: LinkCheckResult;
+  summary: ScheduledCheckSummary;
+}
+
+/**
+ * Summary of scheduled check results
+ * @interface ScheduledCheckSummary
+ * @property {number} totalPosts - Total posts processed
+ * @property {number} totalLinks - Total links found
+ * @property {number} deadLinks - Number of dead links found
+ * @property {number} workingLinks - Number of working links
+ * @property {number} processingTimeMs - Processing time in milliseconds
+ * @property {number} [processingTimeMinutes] - Processing time in minutes
+ */
+export interface ScheduledCheckSummary {
+  totalPosts: number;
+  totalLinks: number;
+  deadLinks: number;
+  workingLinks: number;
+  processingTimeMs: number;
+  processingTimeMinutes?: number;
+}
+
+/**
+ * Result of checking multiple links
+ * @interface LinkCheckResult
+ * @property {number} totalLinks - Total number of links found
+ * @property {number} checkedLinks - Number of links successfully checked
+ * @property {DeadLink[]} deadLinks - Array of dead/broken links found
+ * @property {number} workingLinks - Number of working links
+ * @property {number} skippedLinks - Number of links skipped due to errors
+ * @property {number} processingTime - Time taken to process in milliseconds
+ * @property {number} retryableErrors - Number of retryable errors
+ * @property {number} forbiddenErrors - Number of 403 forbidden errors
+ * @property {number} timeoutErrors - Number of timeout errors
+ */
+export interface LinkCheckResult {
+  totalLinks: number;
+  checkedLinks: number;
+  deadLinks: DeadLink[];
+  workingLinks: number;
+  skippedLinks: number;
+  processingTime: number;
+  retryableErrors: number;
+  forbiddenErrors: number;
+  timeoutErrors: number;
+}
+
+/**
+ * Dead link information structure
+ * @interface DeadLink
+ * @property {string} url - The broken URL
+ * @property {number | null} status - HTTP status code or null if unreachable
+ * @property {string | null} error - Error message or null if successful
+ * @property {string} context - Surrounding text for context
+ * @property {number} postId - WordPress post ID containing the link
+ * @property {string} postTitle - Title of the post containing the link
+ * @property {string} postSlug - Slug of the post containing the link
+ * @property {string} [archiveUrl] - Internet Archive Wayback Machine URL
+ * @property {string[]} [suggestions] - Alternative suggestions for the broken link
+ * @property {boolean} [retryable] - Whether the error is retryable
+ * @property {string} [checkedAt] - ISO timestamp when the link was checked
+ */
+export interface DeadLink {
+  url: string;
+  status: number | null;
+  error: string | null;
+  context: string;
+  postId: number;
+  postTitle: string;
+  postSlug: string;
+  archiveUrl?: string;
+  suggestions?: string[];
+  retryable?: boolean;
+  checkedAt?: string;
+}
+
+/**
  * Scheduled check information
  * @interface ScheduledCheck
  * @property {string} id - Unique identifier for the scheduled check
  * @property {string} timestamp - ISO timestamp when check was created
  * @property {'pending' | 'running' | 'completed' | 'failed'} status - Current status of the check
  * @property {ScheduleSettings} settings - Settings used for this check
- * @property {any} [results] - Results of the completed check
+ * @property {ScheduledCheckResults} [results] - Results of the completed check
  * @property {string} [error] - Error message if check failed
  */
 export interface ScheduledCheck {
@@ -40,7 +128,7 @@ export interface ScheduledCheck {
   timestamp: string;
   status: 'pending' | 'running' | 'completed' | 'failed';
   settings: ScheduleSettings;
-  results?: any;
+  results?: ScheduledCheckResults;
   error?: string;
 }
 
@@ -53,7 +141,7 @@ export function calculateNextRun(settings: ScheduleSettings): Date {
   const now = new Date();
   const [hours, minutes] = settings.time.split(':').map(Number);
   
-  let nextRun = new Date();
+  const nextRun = new Date();
   nextRun.setHours(hours, minutes, 0, 0);
   
   switch (settings.frequency) {
@@ -112,7 +200,7 @@ export function shouldRunCheck(settings: ScheduleSettings): boolean {
  */
 export async function createScheduledCheck(settings: ScheduleSettings): Promise<ScheduledCheck> {
   const check: ScheduledCheck = {
-    id: `check_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    id: `check_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
     timestamp: new Date().toISOString(),
     status: 'pending',
     settings: {
@@ -146,7 +234,7 @@ export async function createScheduledCheck(settings: ScheduleSettings): Promise<
  * @param {string} checkId - ID of the scheduled check to execute
  * @returns {Promise<any>} Results of the executed check
  */
-export async function executeScheduledCheck(checkId: string): Promise<any> {
+export async function executeScheduledCheck(checkId: string): Promise<ScheduledCheck> {
   try {
     const response = await fetch(`/api/scheduled-checks/${checkId}/execute`, {
       method: 'POST'

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getToken } from '../auth/route';
+import { readToken } from '../auth/token-storage';
 
 /**
  * GET /api/adsense/status - Check AdSense authentication status
@@ -11,7 +11,7 @@ import { getToken } from '../auth/route';
  */
 export async function GET() {
   try {
-    const tokens = await getToken();
+    const tokens = await readToken();
     
     return NextResponse.json({
       authenticated: !!tokens,

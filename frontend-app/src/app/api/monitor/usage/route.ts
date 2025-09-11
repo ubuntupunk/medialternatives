@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 /**
  * GET /api/monitor/usage - Monitor Vercel function usage
@@ -28,7 +28,7 @@ export async function GET() {
         current: 0, // Within free tier
         projected: 0
       },
-      alerts: []
+      alerts: [] as Array<{ level: string; message: string }>
     };
 
     // Add alerts based on usage

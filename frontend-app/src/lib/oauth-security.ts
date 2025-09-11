@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import { NextRequest } from 'next/server';
 
 /**
  * OAuth security utilities for secure authentication flows

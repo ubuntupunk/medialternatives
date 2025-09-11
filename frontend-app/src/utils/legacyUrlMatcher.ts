@@ -41,7 +41,7 @@ export async function findPostByLegacyUrl(
             strategy: 'exact_slug'
           };
         }
-      } catch (error) {
+      } catch (_error) {
         // Post not found, continue
       }
       return null;
@@ -85,8 +85,7 @@ export async function findPostByLegacyUrl(
       try {
         const dateString = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
         const posts = await wordpressApi.getPosts({
-          after: `${dateString}T00:00:00`,
-          before: `${dateString}T23:59:59`,
+          search: dateString,
           per_page: 10
         });
         
@@ -131,12 +130,12 @@ export async function findPostByLegacyUrl(
                 strategy: 'fuzzy_match'
               };
             }
-          } catch (error) {
+          } catch (_error) {
             // Continue to next variation
           }
         }
-      } catch (error) {
-        console.error('Fuzzy search failed:', error);
+      } catch (_error) {
+        console.error('Fuzzy search failed:', _error);
       }
       return null;
     }

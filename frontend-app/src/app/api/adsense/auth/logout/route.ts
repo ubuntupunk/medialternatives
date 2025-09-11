@@ -26,13 +26,13 @@ export async function POST() {
     }
 
     // Clear the stored token
-    await writeToken(null);
+    await writeToken({});
 
     return NextResponse.json({ message: 'Successfully signed out' }, { status: 200 });
   } catch (error) {
     console.error('Error signing out of AdSense:', error);
     // Even if revocation fails, we should clear the local token to allow re-authentication
-    await writeToken(null);
+    await writeToken({});
     return NextResponse.json({ error: 'Failed to sign out' }, { status: 500 });
   }
 }

@@ -1,5 +1,4 @@
 import React from 'react';
-import PostGrid from '@/components/Posts/PostGrid';
 import LoadMore from '@/components/UI/LoadMore';
 import { wordpressApi } from '@/services/wordpress-api';
 import { SITE_CONFIG } from '@/lib/constants';

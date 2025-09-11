@@ -1,20 +1,21 @@
 /**
+/**
  * Progress update interface
- * @typedef {Object} ProgressUpdate
- * @property {number} current - Current number of items processed
- * @property {number} total - Total number of items to process
- * @property {number} percentage - Completion percentage (0-100)
- * @property {string} [currentItem] - Name of currently processing item
- * @property {'checking'|'completed'|'error'} status - Current processing status
- * @property {number} timeElapsed - Time elapsed in milliseconds
- * @property {number} [estimatedTimeRemaining] - Estimated remaining time in milliseconds
  */
+export interface ProgressUpdate {
+  current: number;
+  total: number;
+  percentage: number;
+  currentItem?: string;
+  status: 'checking' | 'completed' | 'error';
+  timeElapsed: number;
+  estimatedTimeRemaining?: number;
+}
 
 /**
  * Progress callback function type
- * @callback ProgressCallback
- * @param {ProgressUpdate} update - Progress update information
  */
+export type ProgressCallback = (update: ProgressUpdate) => void;
 
 /**
  * Progress Tracker Class

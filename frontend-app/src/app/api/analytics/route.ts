@@ -219,8 +219,8 @@ async function getGoogleAnalyticsData(propertyId: string, serviceAccountKey: str
     });
 
     // Get comparison data (previous period)
-    const { previousStartDate, previousEndDate } = calculatePreviousPeriod(period, startDate, endDate);
-    const [previousPeriodResponse] = await analyticsDataClient.runReport({
+    const { previousStartDate, previousEndDate } = calculatePreviousPeriod(period);
+    const previousPeriodResponse = await analyticsDataClient.runReport({
       property: `properties/${propertyId}`,
       dateRanges: [{ startDate: previousStartDate, endDate: previousEndDate }],
       metrics: [
@@ -230,8 +230,8 @@ async function getGoogleAnalyticsData(propertyId: string, serviceAccountKey: str
     });
 
     // Get year-over-year comparison
-    const { yearAgoStartDate, yearAgoEndDate } = calculateYearOverYearPeriod(period, startDate, endDate);
-    const [yearOverYearResponse] = await analyticsDataClient.runReport({
+    const { yearAgoStartDate, yearAgoEndDate } = calculateYearOverYearPeriod(period);
+    const yearOverYearResponse = await analyticsDataClient.runReport({
       property: `properties/${propertyId}`,
       dateRanges: [{ startDate: yearAgoStartDate, endDate: yearAgoEndDate }],
       metrics: [
@@ -284,11 +284,11 @@ async function getGoogleAnalyticsData(propertyId: string, serviceAccountKey: str
     }) || [];
 
     // Parse comparison data
-    const previousVisitors = parseInt(previousPeriodResponse.rows?.[0]?.metricValues?.[0]?.value || '0');
-    const previousPageviews = parseInt(previousPeriodResponse.rows?.[0]?.metricValues?.[1]?.value || '0');
-    
-    const yearAgoVisitors = parseInt(yearOverYearResponse.rows?.[0]?.metricValues?.[0]?.value || '0');
-    const yearAgoPageviews = parseInt(yearOverYearResponse.rows?.[0]?.metricValues?.[1]?.value || '0');
+    const previousVisitors = parseInt(previousPeriodResponse[0].rows?.[0]?.metricValues?.[0]?.value || '0');
+    const previousPageviews = parseInt(previousPeriodResponse[0].rows?.[0]?.metricValues?.[1]?.value || '0');
+
+    const yearAgoVisitors = parseInt(yearOverYearResponse[0].rows?.[0]?.metricValues?.[0]?.value || '0');
+    const yearAgoPageviews = parseInt(yearOverYearResponse[0].rows?.[0]?.metricValues?.[1]?.value || '0');
 
     const realTimeUsers = parseInt(realtimeResponse.rows?.[0]?.metricValues?.[0]?.value || '0');
 

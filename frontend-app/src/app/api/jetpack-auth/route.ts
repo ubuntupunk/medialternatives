@@ -12,7 +12,7 @@ interface JetpackAuthStatus {
   permissions: string[];
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Check current authentication status
     const authStatus = await checkJetpackAuthStatus();
@@ -43,13 +43,13 @@ export async function POST(request: NextRequest) {
     
     switch (action) {
       case 'initiate_oauth':
-        return await initiateOAuthFlow(params);
+        return await initiateOAuthFlow();
       case 'exchange_code':
         return await exchangeOAuthCode(params);
       case 'refresh_token':
         return await refreshAccessToken(params);
       case 'generate_nonce':
-        return await generateWPNonce(params);
+        return await generateWPNonce();
       default:
         return NextResponse.json(
           { success: false, error: 'Invalid action' },
@@ -126,7 +126,7 @@ async function checkJetpackAuthStatus(): Promise<JetpackAuthStatus> {
 /**
  * Initiate WordPress.com OAuth flow
  */
-async function initiateOAuthFlow(params: any) {
+async function initiateOAuthFlow() {
   const clientId = process.env.WORDPRESS_COM_CLIENT_ID;
   const redirectUri = process.env.WORDPRESS_COM_REDIRECT_URI || 
     `${process.env.NEXT_PUBLIC_SITE_URL}/api/jetpack-auth/callback`;
@@ -244,7 +244,7 @@ async function refreshAccessToken(params: { refreshToken: string }) {
 /**
  * Generate WordPress nonce for API requests
  */
-async function generateWPNonce(params: { siteUrl: string; action?: string }) {
+async function generateWPNonce() {
   // This would typically require authenticated access to the WordPress site
   // For now, return instructions for manual nonce generation
   

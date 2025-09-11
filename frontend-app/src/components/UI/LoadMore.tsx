@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { WordPressPost, PaginationInfo } from '@/types/wordpress';
 import { wordpressApi } from '@/services/wordpress-api';
 import { SITE_CONFIG } from '@/lib/constants';
@@ -182,7 +183,7 @@ const LoadMore: React.FC<LoadMoreProps> = ({
             <strong>You&apos;ve reached the end!</strong> 
             <p className="mb-0">
               You&apos;ve viewed all {posts.length} posts. 
-              <a href="/blog" className="alert-link ms-1">Browse by categories</a> or 
+              <Link href="/blog" className="alert-link ms-1">Browse by categories</Link> or 
               <a href="#" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="alert-link ms-1">
                 scroll to top
               </a>.

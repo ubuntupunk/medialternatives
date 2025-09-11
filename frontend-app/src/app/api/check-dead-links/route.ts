@@ -96,10 +96,16 @@ export async function GET(request: NextRequest) {
 
 interface DeadLink {
   url: string;
-  status?: number;
-  error?: string;
-  postId?: number;
-  postTitle?: string;
+  status: number | null;
+  error: string | null;
+  context: string;
+  postId: number;
+  postTitle: string;
+  postSlug: string;
+  archiveUrl?: string;
+  suggestions?: string[];
+  retryable?: boolean;
+  checkedAt?: string;
 }
 
 /**
@@ -118,7 +124,7 @@ function generateRecommendations(deadLinks: DeadLink[]) {
     try {
       const domain = new URL(link.url).hostname;
       acc[domain] = (acc[domain] || 0) + 1;
-    } catch (_error) {
+    } catch {
       // Invalid URL
     }
     return acc;

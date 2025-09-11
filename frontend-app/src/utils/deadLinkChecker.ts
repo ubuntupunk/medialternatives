@@ -184,7 +184,7 @@ export async function checkUrl(url: string, timeout: number = 10000): Promise<{ 
           error: getResponse.ok ? null : `HTTP ${getResponse.status} ${getResponse.statusText}`,
           retryable: getResponse.status >= 500 || getResponse.status === 429
         };
-      } catch (getError) {
+      } catch (_getError) {
         return {
           status: 403,
           error: 'Forbidden - Server blocks automated requests',
@@ -303,7 +303,7 @@ export function generateSuggestions(url: string): string[] {
     // Suggest checking if the site moved
     suggestions.push(`Check if ${domain} has moved or rebranded`);
     
-  } catch (error) {
+  } catch (_error) {
     suggestions.push('Manually verify the URL');
   }
   

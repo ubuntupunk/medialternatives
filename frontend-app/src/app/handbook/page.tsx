@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Metadata } from 'next';
 import styles from './handbook.module.css';
 
@@ -52,12 +53,14 @@ const HandbookPage: React.FC = () => {
             </div>
             
             <div className="col-12 col-md-5 mb-5 align-self-center">
-              <div className={`${styles.bookCoverHolder} text-center position-relative`}>
-                <img 
-                  className={`img-fluid ${styles.bookCover}`}
-                  src="/images/handbook-cover.jpg" 
-                  alt="Media Activist's Handbook cover"
-                />
+               <div className={`${styles.bookCoverHolder} text-center position-relative`}>
+                 <Image
+                   className={`img-fluid ${styles.bookCover}`}
+                   src="/images/handbook-cover.jpg"
+                   alt="Media Activist's Handbook cover"
+                   width={300}
+                   height={400}
+                 />
                 <div className={styles.bookBadge}>
                   New<br />Release
                 </div>

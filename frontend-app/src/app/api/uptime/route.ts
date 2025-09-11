@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 /**
  * Uptime monitoring data structure
@@ -37,10 +37,9 @@ interface UptimeData {
  * Returns uptime statistics and incident history.
  * Currently uses mock data - requires uptime monitoring service integration.
  *
- * @param {NextRequest} request - Next.js request object
  * @returns {Promise<NextResponse>} Uptime data or error response
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // TODO: Replace with actual uptime monitoring service integration
     // Popular services: UptimeRobot, Pingdom, StatusCake, etc.

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRateLimit, rateLimitConfigs } from '@/lib/rate-limit';
+import { createRateLimit } from '@/lib/rate-limit';
 import { createAPIResponse } from '@/lib/validation';
 
 /**
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
     const type = searchParams.get('type') || 'general';
 
     const body = await request.json();
-    const { prompt, width = 512, height = 512, style } = body;
+    const { prompt, width = 512, height = 512 } = body;
 
     if (!prompt || typeof prompt !== 'string' || prompt.trim().length < 3) {
       return NextResponse.json(createAPIResponse(false, undefined, {
@@ -118,13 +118,13 @@ export async function POST(request: NextRequest) {
     let result;
     switch (model) {
       case 'hf':
-        result = await generateWithHuggingFace(prompt, width, height, style);
+        result = await generateWithHuggingFace(prompt, width, height);
         break;
       case 'v2':
-        result = await generateWithV2(prompt, width, height, style);
+        result = await generateWithV2(prompt, width, height);
         break;
       case 'post':
-        result = await generatePostImage(prompt, width, height, style);
+        result = await generatePostImage(prompt, width, height);
         break;
       default:
         return NextResponse.json(createAPIResponse(false, undefined, {
@@ -168,8 +168,7 @@ export async function POST(request: NextRequest) {
 async function generateWithHuggingFace(
   prompt: string,
   width: number,
-  height: number,
-  style?: string
+  height: number
 ): Promise<{ success: boolean; imageUrl?: string; generationTime?: number; error?: string }> {
   try {
     const startTime = Date.now();
@@ -197,8 +196,7 @@ async function generateWithHuggingFace(
 async function generateWithV2(
   prompt: string,
   width: number,
-  height: number,
-  style?: string
+  height: number
 ): Promise<{ success: boolean; imageUrl?: string; generationTime?: number; error?: string }> {
   try {
     const startTime = Date.now();
@@ -226,8 +224,7 @@ async function generateWithV2(
 async function generatePostImage(
   prompt: string,
   width: number,
-  height: number,
-  style?: string
+  height: number
 ): Promise<{ success: boolean; imageUrl?: string; generationTime?: number; error?: string }> {
   try {
     const startTime = Date.now();

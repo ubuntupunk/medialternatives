@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import D3Chart from '../../../components/Charts/D3Chart';
+import AdSenseSettings from '../../../components/AdSense/AdSenseSettings';
 
 interface AdSenseAccount {
   name: string;
@@ -213,6 +215,71 @@ export default function AdSenseManagementPage() {
                   <h6 className="card-title">Active Ads</h6>
                   <h3 className="mb-0">{adSenseData.adUnits?.filter(u => u.state === 'ACTIVE').length || 0}</h3>
                   <small className="opacity-75">Currently running</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="row">
+            {/* Revenue Chart */}
+            <div className="col-lg-8 mb-4">
+              <div className="card">
+                <div className="card-header d-flex justify-content-between align-items-center">
+                  <h5 className="card-title mb-0">
+                    <i className="bi bi-graph-up me-2"></i>
+                    Revenue Trends
+                  </h5>
+                  <button className="btn btn-outline-primary btn-sm" onClick={fetchData}>
+                    <i className="bi bi-arrow-clockwise me-1"></i>
+                    Refresh
+                  </button>
+                </div>
+                <div className="card-body">
+                  <D3Chart
+                    type="line"
+                    data={{
+                      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                      datasets: [
+                        {
+                          label: 'Revenue ($)',
+                          data: [1250, 2100, 1850, 3200, 2800, 3500],
+                          borderColor: '#34A853',
+                          backgroundColor: 'rgba(52, 168, 83, 0.1)',
+                          fill: true
+                        }
+                      ]
+                    }}
+                    width={600}
+                    height={300}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* AdSense Settings */}
+            <div className="col-lg-4 mb-4">
+              <AdSenseSettings />
+
+              {/* Quick Actions */}
+              <div className="card mt-3">
+                <div className="card-header">
+                  <h6 className="card-title mb-0">Quick Actions</h6>
+                </div>
+                <div className="card-body">
+                  <div className="d-grid gap-2">
+                    <button className="btn btn-outline-primary btn-sm" disabled>
+                      <i className="bi bi-plus-circle me-2"></i>
+                      Create Ad Unit
+                    </button>
+                    <button className="btn btn-outline-secondary btn-sm" disabled>
+                      <i className="bi bi-gear me-2"></i>
+                      Manage Ad Units
+                    </button>
+                    <button className="btn btn-outline-info btn-sm" disabled>
+                      <i className="bi bi-file-earmark-text me-2"></i>
+                      View Reports
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

@@ -385,8 +385,8 @@ export default function OverviewPage() {
                           </td>
                           <td>
                             <div className="btn-group btn-group-sm">
-                              <Link 
-                                href={`/post/${post.slug}`}
+                              <Link
+                                href={`/${post.slug}`}
                                 className="btn btn-outline-primary"
                                 title="View Post"
                               >

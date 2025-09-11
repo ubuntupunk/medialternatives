@@ -191,7 +191,7 @@ export function WordPressAuthProvider({ children }: WordPressAuthProviderProps) 
       const user: WordPressUser = {
         id: 1,
         name: 'David Robert Lewis', // Fallback - will be fetched from API later
-        avatar_url: '/images/avatar.png'
+        avatar_url: '/images/avatar.jpeg'
       };
 
       setState({

@@ -2,12 +2,23 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import ImageGenerator from '@/components/ImageGenerator/ImageGenerator';
+import { WordPressPost } from '@/types/wordpress';
+
+interface PostWithStatus extends Omit<WordPressPost, 'status'> {
+  generationStatus?: 'idle' | 'generating' | 'completed' | 'failed' | 'error';
+  progress?: number;
+  error?: string;
+  featured_image_url?: string;
+  generated_at?: string;
+  needs_image?: boolean;
+}
 
 export default function ImageGeneratorPage() {
   const { user, useRequireAuth } = useAuth();
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<PostWithStatus[]>([]);
   const [loading, setLoading] = useState(true);
   const [bulkProcessing, setBulkProcessing] = useState(false);
   const [processedCount, setProcessedCount] = useState(0);
@@ -30,7 +41,7 @@ export default function ImageGeneratorPage() {
     try {
       setLoading(true);
       const response = await fetch('/api/posts-with-placeholders');
-      const data = await response.json();
+      const data: { posts?: PostWithStatus[] } = await response.json();
       setPosts(data.posts || []);
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -57,7 +68,7 @@ export default function ImageGeneratorPage() {
     await fetchPosts(); // Refresh the list
   };
 
-  const generateImageForPost = async (post: any, customSettings?: any) => {
+  const generateImageForPost = async (post: PostWithStatus, customSettings?: typeof generationSettings) => {
     // Add post to processing set
     setProcessingPosts(prev => new Set(prev).add(post.id));
     
@@ -111,16 +122,16 @@ export default function ImageGeneratorPage() {
       return result;
     } catch (error) {
       console.error(`Error generating image for post ${post.id}:`, error);
-      
+
       // Update post status to error
-      setPosts(prevPosts => 
-        prevPosts.map(p => 
-          p.id === post.id 
+      setPosts(prevPosts =>
+        prevPosts.map(p =>
+          p.id === post.id
             ? { ...p, status: 'error', progress: 0, error: error instanceof Error ? error.message : 'Unknown error' }
             : p
         )
       );
-      
+
       throw error;
     } finally {
       // Remove post from processing set
@@ -390,32 +401,34 @@ export default function ImageGeneratorPage() {
                                   ></div>
                                 </div>
                               )}
-                              {post.status === 'completed' && (
+                               {post.generationStatus === 'completed' && (
                                 <div className="mt-1">
                                   <small className="text-success">
                                     <i className="bi bi-check-circle me-1"></i>
-                                    Generated {new Date(post.generated_at).toLocaleTimeString()}
+                                    Generated {post.generated_at ? new Date(post.generated_at).toLocaleTimeString() : 'recently'}
                                   </small>
                                 </div>
-                              )}
-                              {post.status === 'error' && (
-                                <div className="mt-1">
-                                  <small className="text-danger">
-                                    <i className="bi bi-exclamation-triangle me-1"></i>
-                                    {post.error}
-                                  </small>
-                                </div>
-                              )}
+                               )}
+                               {post.generationStatus === 'error' && (
+                                 <div className="mt-1">
+                                   <small className="text-danger">
+                                     <i className="bi bi-exclamation-triangle me-1"></i>
+                                     {post.error}
+                                   </small>
+                                 </div>
+                               )}
                             </div>
                           </td>
                           <td>
-                            <div className="position-relative">
-                              <img 
-                                src={post.featured_image_url || 'https://picsum.photos/100/60'} 
-                                alt="Current featured image"
-                                className="img-thumbnail"
-                                style={{ width: '100px', height: '60px', objectFit: 'cover' }}
-                              />
+                             <div className="position-relative">
+                               <Image
+                                 src={post.featured_image_url || 'https://picsum.photos/100/60'}
+                                 alt="Current featured image"
+                                 className="img-thumbnail"
+                                 width={100}
+                                 height={60}
+                                 style={{ objectFit: 'cover' }}
+                               />
                               {processingPosts.has(post.id) && (
                                 <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50 rounded">
                                   <div className="spinner-border spinner-border-sm text-light" role="status">
@@ -431,12 +444,12 @@ export default function ImageGeneratorPage() {
                                 <i className="bi bi-arrow-repeat me-1"></i>
                                 Generating...
                               </span>
-                            ) : post.status === 'completed' ? (
+                            ) : post.generationStatus === 'completed' ? (
                               <span className="badge bg-success">
                                 <i className="bi bi-check-circle me-1"></i>
                                 Complete
                               </span>
-                            ) : post.status === 'error' ? (
+                            ) : post.generationStatus === 'error' ? (
                               <span className="badge bg-danger">
                                 <i className="bi bi-exclamation-triangle me-1"></i>
                                 Error
@@ -452,13 +465,13 @@ export default function ImageGeneratorPage() {
                             <div className="d-flex flex-column gap-1">
                               <button 
                                 className="btn btn-primary btn-sm"
-                                onClick={async () => {
-                                  try {
-                                    await generateImageForPost(post);
-                                  } catch (error) {
-                                    // Error is already handled in the function
-                                  }
-                                }}
+                                 onClick={async () => {
+                                   try {
+                                     await generateImageForPost(post);
+                                   } catch (_error) {
+                                     // Error is already handled in the function
+                                   }
+                                 }}
                                 disabled={bulkProcessing || processingPosts.has(post.id)}
                               >
                                 {processingPosts.has(post.id) ? (
@@ -473,16 +486,16 @@ export default function ImageGeneratorPage() {
                                   </>
                                 )}
                               </button>
-                              {post.status === 'error' && (
+                              {post.generationStatus === 'error' && (
                                 <button 
                                   className="btn btn-outline-secondary btn-sm"
-                                  onClick={async () => {
-                                    try {
-                                      await generateImageForPost(post);
-                                    } catch (error) {
-                                      // Error is already handled in the function
-                                    }
-                                  }}
+                                 onClick={async () => {
+                                     try {
+                                       await generateImageForPost(post);
+                                     } catch (_error) {
+                                       // Error is already handled in the function
+                                     }
+                                   }}
                                   disabled={bulkProcessing || processingPosts.has(post.id)}
                                 >
                                   <i className="bi bi-arrow-clockwise me-1"></i>

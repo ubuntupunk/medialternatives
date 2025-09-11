@@ -9,12 +9,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 interface AuthorPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     page?: string;
-  };
+  }>;
 }
 
 /**
@@ -22,8 +22,9 @@ interface AuthorPageProps {
  * Accessible via /author/[slug] URLs from author links
  */
 export default async function AuthorPage({ params, searchParams }: AuthorPageProps) {
-  const { slug } = params;
-  const currentPage = parseInt(searchParams.page || '1', 10);
+  const { slug } = await params;
+  const { page } = await searchParams;
+  const currentPage = parseInt(page || '1', 10);
   
   let author: WordPressUser | null = null;
   let posts: WordPressPost[] = [];
@@ -185,9 +186,10 @@ export default async function AuthorPage({ params, searchParams }: AuthorPagePro
 /**
  * Generate metadata for SEO
  */
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   try {
-    const author = await wordpressApi.getUserBySlug(params.slug);
+    const author = await wordpressApi.getUserBySlug(slug);
     
     if (!author) {
       return {

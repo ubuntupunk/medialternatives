@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { ScheduledCheck, ScheduleSettings } from '@/utils/scheduler';
 
 // In-memory storage for demo purposes
 // In production, use a database like PostgreSQL, MongoDB, or Redis
-let scheduledChecks: any[] = [];
-let scheduleSettings: any = null;
+let scheduledChecks: ScheduledCheck[] = [];
+let scheduleSettings: ScheduleSettings | null = null;
 
 /**
  * GET /api/scheduled-checks - Retrieve scheduled checks
@@ -69,7 +70,7 @@ export async function POST(request: NextRequest) {
 
     // Generate ID if not provided
     if (!checkData.id) {
-      checkData.id = `check_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      checkData.id = `check_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
     }
 
     // Set default values

@@ -16,7 +16,7 @@ const SupportPage: React.FC = async () => {
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
         components={{
-          img: ({ node, ...props }) => {
+          img: ({ ...props }) => {
             let imageUrl = props.src;
             if (typeof imageUrl === 'string') {
               imageUrl = imageUrl.startsWith('http://') ? imageUrl.replace('http://', 'https://') : imageUrl;
@@ -32,7 +32,7 @@ const SupportPage: React.FC = async () => {
               />
             );
           },
-          a: ({ node, ...props }) => {
+          a: ({ ...props }) => {
             if (props.href && (props.href.startsWith('http://') || props.href.startsWith('https://'))) {
               return (
                 <a href={props.href} target="_blank" rel="noopener noreferrer" className={props.className}>
@@ -42,9 +42,9 @@ const SupportPage: React.FC = async () => {
             }
             return <a {...props}>{props.children}</a>;
           },
-          h1: ({ node, ...props }) => <h1 className="mb-4" {...props}>{props.children}</h1>,
-          h4: ({ node, ...props }) => <h4 className="mb-3" {...props}>{props.children}</h4>,
-          p: ({ node, ...props }) => <p className="mb-2" {...props}>{props.children}</p>,
+          h1: ({ ...props }) => <h1 className="mb-4" {...props}>{props.children}</h1>,
+          h4: ({ ...props }) => <h4 className="mb-3" {...props}>{props.children}</h4>,
+          p: ({ ...props }) => <p className="mb-2" {...props}>{props.children}</p>,
         }}
       >
         {markdownContent}

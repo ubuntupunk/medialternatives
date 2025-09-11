@@ -19,6 +19,31 @@ export default function ChartsPage() {
 
   // Sample chart configurations
   const chartConfigs: Record<string, ChartData> = useMemo(() => ({
+    adsense: {
+      type: 'line',
+      title: 'AdSense Revenue',
+      description: 'Monthly revenue and page view trends',
+      data: {
+        labels: ['2024-01', '2024-02', '2024-03', '2024-04', '2024-05', '2024-06'],
+        datasets: [
+          {
+            label: 'Revenue ($)',
+            data: [1250.50, 2100.75, 1850.25, 3200.00, 2800.50, 3500.25],
+            borderColor: '#34A853',
+            backgroundColor: 'rgba(52, 168, 83, 0.1)',
+            fill: true
+          },
+          {
+            label: 'Page Views',
+            data: [12500, 18200, 15600, 24800, 22100, 28900],
+            borderColor: '#4285F4',
+            backgroundColor: 'rgba(66, 133, 244, 0.1)',
+            fill: true,
+            yAxisID: 'y1'
+          }
+        ]
+      }
+    },
     analytics: {
       type: 'bar',
       title: 'Website Analytics',
@@ -114,18 +139,63 @@ export default function ChartsPage() {
   }
   ), []);
 
+  // Fetch AdSense data from API
+  const fetchAdSenseData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/adsense/revenue');
+      const result = await response.json();
+
+      if (result.success) {
+        return result.data;
+      } else {
+        throw new Error(result.message || 'Failed to fetch AdSense data');
+      }
+    } catch (error) {
+      console.error('Error fetching AdSense data:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   // Generate chart using D3
-  const generateChart = useCallback((chartKey: string) => {
-    const config = chartConfigs[chartKey];
-    setChartData({
-      type: config.type,
-      title: config.title,
-      description: config.description,
-      data: config.data,
-      isRendered: true,
-      timestamp: new Date().toISOString()
-    });
-  }, [chartConfigs]);
+  const generateChart = useCallback(async (chartKey: string) => {
+    try {
+      setLoading(true);
+
+      let chartData;
+      if (chartKey === 'adsense') {
+        // Fetch real AdSense data for the revenue chart
+        chartData = await fetchAdSenseData();
+      } else {
+        // Use static data for other charts
+        const config = chartConfigs[chartKey];
+        chartData = config.data;
+      }
+
+      setChartData({
+        type: chartConfigs[chartKey].type,
+        title: chartConfigs[chartKey].title,
+        description: chartConfigs[chartKey].description,
+        data: chartData,
+        isRendered: true,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      setChartData({
+        type: chartConfigs[chartKey].type,
+        title: chartConfigs[chartKey].title,
+        description: chartConfigs[chartKey].description,
+        data: null,
+        error: error instanceof Error ? error.message : 'Failed to generate chart',
+        isRendered: false,
+        timestamp: new Date().toISOString()
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [chartConfigs, fetchAdSenseData]);
 
   useEffect(() => {
     generateChart(selectedChart);
@@ -175,13 +245,14 @@ export default function ChartsPage() {
                       <div className="fw-semibold">{config.title}</div>
                       <small className="text-muted">{config.type.toUpperCase()}</small>
                     </div>
-                    <i className={`bi bi-${
-                      config.type === 'bar' ? 'bar-chart' :
-                      config.type === 'line' ? 'graph-up' :
-                      config.type === 'pie' ? 'pie-chart' :
-                      config.type === 'doughnut' ? 'circle' :
-                      config.type === 'radar' ? 'diagram-3' : 'graph-up'
-                    }`}></i>
+                     <i className={`bi bi-${
+                       config.type === 'bar' ? 'bar-chart' :
+                       config.type === 'line' ? 'graph-up' :
+                       config.type === 'pie' ? 'pie-chart' :
+                       config.type === 'doughnut' ? 'circle' :
+                       config.type === 'radar' ? 'diagram-3' :
+                       key === 'adsense' ? 'currency-dollar' : 'graph-up'
+                     }`}></i>
                   </button>
                 ))}
               </div>
