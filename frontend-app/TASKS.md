@@ -50,6 +50,11 @@ This file contains a centralized list of pending tasks.
   - [x] Update `AuthorWidget.tsx` to include RSS/Atom feed icon
   - [x] Position next to existing social media links (Facebook, X/Twitter)
   - [x] Use Bootstrap RSS icon with proper accessibility attributes
+- [x] **Add Atom Feed Icon to Footer**: Add social links section to footer with atom feed subscription
+  - [x] Update `Footer.tsx` to include social links section
+  - [x] Add RSS/Atom feed icon alongside X/Twitter and Facebook links
+  - [x] Position above "Powered by" text with consistent styling
+  - [x] Ensure proper accessibility and responsive design
 
 ## From docs/google/ADSENSE_TODO.md
 
