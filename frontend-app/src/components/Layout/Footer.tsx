@@ -34,16 +34,16 @@ const Footer: React.FC<FooterProps> = ({
               </p>
             </div>
             
-            <div className="col-md-4 col-sm-12 text-md-end">
+            <div className="col-md-4 col-sm-12 text-md-end d-flex align-items-center justify-content-md-end justify-content-start">
               {/* Social Links */}
-              <div className="footer-social-links mb-2">
+              <div className="footer-social-links me-3">
                 <a 
                   href="/feed.atom" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   title="Subscribe to Atom Feed"
-                  className="text-decoration-none me-3"
-                  style={{ color: '#6c757d', fontSize: '18px' }}
+                  className="text-decoration-none me-2"
+                  style={{ color: '#6c757d', fontSize: '16px' }}
                 >
                   <i className="bi bi-rss"></i>
                 </a>
@@ -52,8 +52,8 @@ const Footer: React.FC<FooterProps> = ({
                   target="_blank" 
                   rel="noopener noreferrer" 
                   title="Follow on X"
-                  className="text-decoration-none me-3"
-                  style={{ color: '#6c757d', fontSize: '18px' }}
+                  className="text-decoration-none me-2"
+                  style={{ color: '#6c757d', fontSize: '16px' }}
                 >
                   <i className="bi bi-twitter-x"></i>
                 </a>
@@ -63,7 +63,7 @@ const Footer: React.FC<FooterProps> = ({
                   rel="noopener noreferrer" 
                   title="Follow on Facebook"
                   className="text-decoration-none"
-                  style={{ color: '#6c757d', fontSize: '18px' }}
+                  style={{ color: '#6c757d', fontSize: '16px' }}
                 >
                   <i className="bi bi-facebook"></i>
                 </a>
