@@ -195,7 +195,7 @@ export default async function PostPage({ params }: PostPageProps) {
             </div>
 
             {/* Share Buttons - Right Side */}
-            <div className="share-buttons d-flex align-items-center flex-wrap gap-2 justify-content-center justify-content-md-end">
+            <div className="share-buttons d-flex align-items-center flex-wrap gap-2 justify-content-center justify-content-md-end" style={{ minHeight: 'auto' }}>
               <span 
                 className="text-muted me-2" 
                 style={{
@@ -211,7 +211,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(post.link)}&text=${encodeURIComponent(decodeHtmlEntities(post.title.rendered))}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-sm d-flex align-items-center share-btn-twitter"
+                className="btn btn-sm d-inline-flex align-items-center share-btn-twitter"
                 style={{
                   backgroundColor: '#1da1f2',
                   borderColor: '#1da1f2',
@@ -233,7 +233,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(post.link)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-sm d-flex align-items-center share-btn-facebook"
+                className="btn btn-sm d-inline-flex align-items-center share-btn-facebook"
                 style={{
                   backgroundColor: '#1877f2',
                   borderColor: '#1877f2',
@@ -255,7 +255,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(post.link)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-sm d-flex align-items-center share-btn-linkedin"
+                className="btn btn-sm d-inline-flex align-items-center share-btn-linkedin"
                 style={{
                   backgroundColor: '#0077b5',
                   borderColor: '#0077b5',
@@ -277,7 +277,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 href={`https://www.reddit.com/submit?url=${encodeURIComponent(post.link)}&title=${encodeURIComponent(decodeHtmlEntities(post.title.rendered))}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-sm d-flex align-items-center share-btn-reddit"
+                className="btn btn-sm d-inline-flex align-items-center share-btn-reddit"
                 style={{
                   backgroundColor: '#ff4500',
                   borderColor: '#ff4500',
