@@ -133,6 +133,7 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
               <li>
                 <a href="https://x.com/davidrobertlewis" target="_blank" rel="noopener noreferrer" title="Follow on X">
                   <i className="bi bi-twitter-x"></i>
+                  X  
                 </a>
               </li>
               <li>
