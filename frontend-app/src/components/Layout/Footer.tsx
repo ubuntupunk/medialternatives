@@ -36,7 +36,7 @@ const Footer: React.FC<FooterProps> = ({
             
             <div className="col-md-4 col-sm-12 text-md-end d-flex align-items-center justify-content-md-end justify-content-start">
               {/* Social Links */}
-              <div className="footer-social-links me-3">
+              <div className="footer-social-links me-3 d-flex">
                 <a 
                   href="/feed.atom" 
                   target="_blank" 
