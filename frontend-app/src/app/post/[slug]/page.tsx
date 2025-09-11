@@ -211,7 +211,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(post.link)}&text=${encodeURIComponent(decodeHtmlEntities(post.title.rendered))}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-sm d-inline-flex align-items-center share-btn-twitter"
+                className="btn btn-sm d-inline-flex align-items-center justify-content-center share-btn-twitter"
                 style={{
                   backgroundColor: '#1da1f2',
                   borderColor: '#1da1f2',
@@ -235,7 +235,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(post.link)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-sm d-inline-flex align-items-center share-btn-facebook"
+                className="btn btn-sm d-inline-flex align-items-center justify-content-center share-btn-facebook"
                 style={{
                   backgroundColor: '#1877f2',
                   borderColor: '#1877f2',
@@ -259,7 +259,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(post.link)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-sm d-inline-flex align-items-center share-btn-linkedin"
+                className="btn btn-sm d-inline-flex align-items-center justify-content-center share-btn-linkedin"
                 style={{
                   backgroundColor: '#0077b5',
                   borderColor: '#0077b5',
@@ -283,7 +283,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 href={`https://www.reddit.com/submit?url=${encodeURIComponent(post.link)}&title=${encodeURIComponent(decodeHtmlEntities(post.title.rendered))}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-sm d-inline-flex align-items-center share-btn-reddit"
+                className="btn btn-sm d-inline-flex align-items-center justify-content-center share-btn-reddit"
                 style={{
                   backgroundColor: '#ff4500',
                   borderColor: '#ff4500',
@@ -306,21 +306,23 @@ export default async function PostPage({ params }: PostPageProps) {
               {/* Email */}
               <a 
                 href={`mailto:?subject=${encodeURIComponent(decodeHtmlEntities(post.title.rendered))}&body=${encodeURIComponent(`Check out this article: ${decodeHtmlEntities(post.title.rendered)}\n\n${post.link}`)}`}
-                className="btn btn-sm d-flex align-items-center share-btn-email"
+                className="btn btn-sm d-inline-flex align-items-center justify-content-center share-btn-email"
                 style={{
                   backgroundColor: '#6c757d',
                   borderColor: '#6c757d',
                   color: 'white',
                   fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
                   fontWeight: '500',
-                  padding: '0.375rem 0.75rem',
-                  transition: 'all 0.2s ease'
+                  padding: '0.5rem',
+                  transition: 'all 0.2s ease',
+                  minWidth: '38px',
+                  minHeight: '38px'
                 }}
               >
-                <svg width="16" height="16" fill="currentColor" className="me-1" viewBox="0 0 16 16">
+                <svg width="16" height="16" fill="currentColor" className="me-md-1" viewBox="0 0 16 16">
                   <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 14H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
                 </svg>
-                Email
+                <span className="d-none d-md-inline">Email</span>
               </a>
             </div>
           </div>
