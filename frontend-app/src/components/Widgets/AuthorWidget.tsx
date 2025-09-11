@@ -43,7 +43,7 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
           id: 1,
           name: 'David Robert Lewis',
           slug: 'david-robert-lewis',
-          description: 'Media activist, investigative journalist, and author focused on media alternatives and press freedom in South Africa.',
+          description: 'Media activist, Code Hacker, Musician, living in South Africa.',
           link: '/author/david-robert-lewis',
           avatar_urls: {
             '24': '/images/avatar.jpeg',
@@ -133,7 +133,7 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
               <li>
                 <a href="https://x.com/davidrobertlewis" target="_blank" rel="noopener noreferrer" title="Follow on X">
                   <i className="bi bi-twitter-x"></i>
-                  X  
+                  X.com  
                 </a>
               </li>
               <li>
