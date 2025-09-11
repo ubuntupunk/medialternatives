@@ -62,41 +62,40 @@ export function useAuth() {
   
   const router = useRouter();
 
-  // Check authentication status
+  // Check authentication status using secure session validation API
   useEffect(() => {
-    const checkAuth = () => {
+    const checkAuth = async () => {
       try {
-        const authCookie = document.cookie
-          .split('; ')
-          .find(row => row.startsWith('auth-session='));
+        const response = await fetch('/api/auth/session', {
+          method: 'GET',
+          credentials: 'include', // Include httpOnly cookies
+        });
 
-        if (authCookie) {
-          const sessionData = JSON.parse(decodeURIComponent(authCookie.split('=')[1]));
+        if (response.ok) {
+          const result = await response.json();
           
-          // Check if session is still valid
-          if (Date.now() < sessionData.expires) {
+          if (result.success && result.data.isAuthenticated) {
             setAuthState({
-              user: {
-                userId: sessionData.userId,
-                username: sessionData.username,
-                isAdmin: sessionData.isAdmin,
-              },
+              user: result.data.user,
               isLoading: false,
               isAuthenticated: true,
             });
-            return;
           } else {
-            // Session expired, clear cookie
-            document.cookie = 'auth-session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            // Not authenticated or session expired/invalid
+            setAuthState({
+              user: null,
+              isLoading: false,
+              isAuthenticated: false,
+            });
           }
+        } else {
+          // API error, assume not authenticated
+          setAuthState({
+            user: null,
+            isLoading: false,
+            isAuthenticated: false,
+          });
         }
-
-        // No valid session
-        setAuthState({
-          user: null,
-          isLoading: false,
-          isAuthenticated: false,
-        });
 
       } catch (error) {
         console.error('Auth check error:', error);
@@ -124,20 +123,23 @@ export function useAuth() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include cookies for httpOnly session
         body: JSON.stringify({ password }),
       });
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.ok && data.success) {
+        // Update auth state with user data from login response
         setAuthState({
-          user: data.user,
+          user: data.data.user,
           isLoading: false,
           isAuthenticated: true,
         });
         return { success: true };
       } else {
-        return { success: false, error: data.error };
+        const errorMessage = data.error?.message || data.error || 'Login failed';
+        return { success: false, error: errorMessage };
       }
     } catch (_error) {
       return { success: false, error: 'Network error' };
@@ -149,6 +151,7 @@ export function useAuth() {
     try {
       await fetch('/api/auth/logout', {
         method: 'POST',
+        credentials: 'include', // Include httpOnly cookies
       });
     } catch (error) {
       console.error('Logout error:', error);
@@ -160,8 +163,7 @@ export function useAuth() {
         isAuthenticated: false,
       });
       
-      // Clear cookie
-      document.cookie = 'auth-session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      // Note: No need to manually clear httpOnly cookies - the server handles this
       
       // Redirect to home
       router.push('/');

@@ -15,24 +15,28 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/profile';
 
-  // Check if already authenticated
+  // Check if already authenticated using secure session validation
   useEffect(() => {
-    const checkAuth = () => {
-      const authCookie = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('auth-session='));
-      
-      if (authCookie) {
-        try {
-          const sessionData = JSON.parse(decodeURIComponent(authCookie.split('=')[1]));
-          if (Date.now() < sessionData.expires) {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/session', {
+          method: 'GET',
+          credentials: 'include', // Include httpOnly cookies
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          
+          if (result.success && result.data.isAuthenticated) {
             // Already authenticated, redirect
             router.push(callbackUrl);
             return;
           }
-        } catch {
-          // Invalid session, continue with login
         }
+        // If not authenticated or API error, continue with login form
+      } catch (error) {
+        console.error('Auth check error:', error);
+        // Continue with login form on error
       }
     };
 
@@ -50,17 +54,19 @@ function LoginForm() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include cookies for httpOnly session
         body: JSON.stringify({ password }),
       });
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.ok && data.success) {
         // Login successful, redirect
         router.push(callbackUrl);
         router.refresh(); // Refresh to update middleware
       } else {
-        setError(data.error || 'Login failed');
+        const errorMessage = data.error?.message || data.error || 'Login failed';
+        setError(errorMessage);
       }
     } catch {
       setError('Network error. Please try again.');
