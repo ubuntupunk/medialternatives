@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { JetpackAnalyticsData, JetpackCacheEntry, WordPressComToken, WordPressComTopPost, WordPressComReferrer, WordPressComStatsSummary } from '@/types/google';
+import { JetpackAnalyticsData, JetpackCacheEntry, WordPressComToken, WordPressComTopPost, WordPressComReferrer } from '@/types/google';
 
 /**
  * Jetpack analytics data structure

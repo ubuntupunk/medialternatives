@@ -11,7 +11,6 @@ const nextConfig: NextConfig = {
   },
 
   // Try to optimize build performance
-  swcMinify: false,
   compiler: {
     removeConsole: false,
   },
@@ -41,6 +40,14 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'medialternatives.wordpress.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'paypal.com',
+      }, 
+      {
+        protocol: 'https',
+        hostname: 'www.paypal.com',
       },
       {
         protocol: 'https',

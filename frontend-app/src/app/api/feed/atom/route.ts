@@ -53,8 +53,8 @@ export async function GET() {
       const tags = post._embedded?.['wp:term']?.[1] || [];
       
       const categoryElements = [
-        ...categories.map((cat: any) => `    <category term="${escapeXml(cat.name)}" scheme="${baseUrl}/category/${cat.slug}"/>`),
-        ...tags.map((tag: any) => `    <category term="${escapeXml(tag.name)}" scheme="${baseUrl}/tag/${tag.slug}"/>`)
+        ...categories.map((cat: { name: string; slug: string }) => `    <category term="${escapeXml(cat.name)}" scheme="${baseUrl}/category/${cat.slug}"/>`),
+        ...tags.map((tag: { name: string; slug: string }) => `    <category term="${escapeXml(tag.name)}" scheme="${baseUrl}/tag/${tag.slug}"/>`)
       ].join('\n');
 
       return `  <entry>

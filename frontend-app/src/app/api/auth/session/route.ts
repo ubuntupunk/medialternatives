@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
         }
       });
 
-    } catch (parseError) {
+    } catch {
       // Invalid session data, clear the cookie
       const response = NextResponse.json({
         success: true,

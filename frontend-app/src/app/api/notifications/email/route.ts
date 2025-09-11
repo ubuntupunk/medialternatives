@@ -1,5 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+interface DeadLinkDetail {
+  url: string;
+  status?: string;
+  postTitle: string;
+  error?: string;
+}
+
+interface DeadLinkNotification {
+  totalDeadLinks: number;
+  postsAffected: number;
+  summary: string;
+  details: DeadLinkDetail[];
+  timestamp: string;
+}
+
+interface EmailContent {
+  subject: string;
+  html: string;
+  text: string;
+}
+
 /**
  * POST /api/notifications/email - Send email notification for dead links
  *
@@ -63,10 +84,10 @@ export async function POST(request: NextRequest) {
 
 /**
  * Generate email content for dead link notification
- * @param {any} notification - Dead link notification data
- * @returns {Object} Email content with subject, HTML, and text versions
+ * @param {DeadLinkNotification} notification - Dead link notification data
+ * @returns {EmailContent} Email content with subject, HTML, and text versions
  */
-function generateEmailContent(notification: any) {
+function generateEmailContent(notification: DeadLinkNotification): EmailContent {
   const { totalDeadLinks, postsAffected, summary, details, timestamp } = notification;
   
   const subject = `🔗 Dead Links Alert: ${totalDeadLinks} broken links found`;
@@ -109,7 +130,7 @@ function generateEmailContent(notification: any) {
             </div>
             
             <h3>Broken Links Details</h3>
-            ${details.slice(0, 10).map((link: any) => `
+            ${details.slice(0, 10).map((link: DeadLinkDetail) => `
                 <div class="link-item">
                     <strong>URL:</strong> ${link.url}<br>
                     <strong>Status:</strong> ${link.status || 'Timeout/Error'}<br>
@@ -147,7 +168,7 @@ Summary:
 ${summary}
 
 Broken Links:
-${details.slice(0, 5).map((link: any) => 
+${details.slice(0, 5).map((link: DeadLinkDetail) => 
   `- ${link.url} (${link.status || 'Timeout'}) in "${link.postTitle}"`
 ).join('\n')}
 
@@ -163,10 +184,10 @@ View the full report: ${process.env.NEXT_PUBLIC_SITE_URL || 'https://medialterna
  * Mock email sending function
  * Replace with actual email service integration
  * @param {string} email - Recipient email address
- * @param {any} content - Email content with subject, HTML, and text
+ * @param {EmailContent} content - Email content with subject, HTML, and text
  * @returns {Promise<boolean>} True if email sent successfully
  */
-async function sendEmail(email: string, content: any): Promise<boolean> {
+async function sendEmail(email: string, content: EmailContent): Promise<boolean> {
   try {
     // This is a mock implementation
     // In production, integrate with:
