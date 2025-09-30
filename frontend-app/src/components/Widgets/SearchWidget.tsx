@@ -81,8 +81,11 @@ export const SearchWidget: React.FC<SearchWidgetProps> = ({ className = '' }) =>
         throw new Error('Search failed');
       }
 
-      const data = await response.json();
-      
+      const responseData = await response.json();
+
+      // Extract data from API response wrapper
+      const data = responseData.success ? responseData.data : responseData;
+
       // Transform WordPress.com results
       const searchResults: SearchResult[] = data.map((item: unknown) => {
         const post = item as { ID: number; title: string; excerpt?: string; slug: string; type: string; date: string };

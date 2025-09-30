@@ -43,7 +43,9 @@ export default function SearchResults() {
           throw new Error('Search failed');
         }
 
-        const data = await response.json();
+        const responseData = await response.json();
+        // Extract data from API response wrapper
+        const data = responseData.success ? responseData.data : responseData;
         setResults(data);
       } catch (_err) {
         setError('Search failed. Please try again.');

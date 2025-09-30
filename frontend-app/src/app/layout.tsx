@@ -6,6 +6,7 @@ import Layout from "@/components/Layout/Layout"; // Import the custom Layout com
 import StructuredData from "@/components/SEO/StructuredData";
 import { WordPressAuthProvider } from "@/contexts/WordPressAuthContext";
 import AddToHomeScreen from "@/components/UI/AddToHomeScreen";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 /**
  * Configure Copse Google Font
@@ -256,6 +257,7 @@ export default function RootLayout({
           <Layout>
             {children}
           </Layout>
+          <SpeedInsights/>
           <AddToHomeScreen />
         </WordPressAuthProvider>
       </body>

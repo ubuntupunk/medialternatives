@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "NODE_ENV=production next build",
     "build:vercel": "NODE_ENV=production SKIP_ENV_VALIDATION=true next build",
     "start": "next start",
@@ -27,6 +27,7 @@
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-react": "^5.18.0",
     "@vercel/blob": "^1.1.1",
+    "@vercel/speed-insights": "^1.2.0",
     "bcrypt": "^6.0.0",
     "bootstrap": "5",
     "bootstrap-icons": "^1.13.1",
