@@ -338,7 +338,7 @@ export default async function PostPage({ params }: PostPageProps) {
 }
 
 /**
- * Generate metadata for SEO
+ * Generate metadata for SEO and social media previews
  */
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   try {
@@ -355,24 +355,76 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     const excerpt = post.excerpt.rendered 
       ? decodeHtmlEntities(post.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 160))
       : `Read ${cleanTitle} on ${SITE_CONFIG.SITE_TITLE}`;
+    
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://medialternatives.com';
+    const postUrl = `${baseUrl}/post/${params.slug}`;
+    const featuredImage = getFeaturedImageUrl(post);
+    const fallbackImage = `${baseUrl}/images/site-logo.svg`;
+    const imageUrl = featuredImage || fallbackImage;
+    const author = getPostAuthor(post);
 
     return {
       title: `${cleanTitle} - ${SITE_CONFIG.SITE_TITLE}`,
       description: excerpt,
+      keywords: ['media activism', 'journalism', 'south africa', 'digital storytelling'],
+      authors: [{ name: author?.name || SITE_CONFIG.SITE_TITLE }],
+      creator: author?.name || SITE_CONFIG.SITE_TITLE,
+      publisher: SITE_CONFIG.SITE_TITLE,
+      formatDetection: {
+        email: false,
+        address: false,
+        telephone: false,
+      },
       openGraph: {
         title: cleanTitle,
         description: excerpt,
+        url: postUrl,
+        siteName: SITE_CONFIG.SITE_TITLE,
         type: 'article',
         publishedTime: post.date,
         modifiedTime: post.modified,
-        authors: post._embedded?.author?.[0]?.name ? [post._embedded.author[0].name] : undefined,
-        images: getFeaturedImageUrl(post) ? [getFeaturedImageUrl(post)!] : undefined,
+        authors: author?.name ? [author.name] : undefined,
+        section: 'Media Activism',
+        tags: ['media activism', 'journalism', 'south africa'],
+        images: [
+          {
+            url: imageUrl,
+            width: 1200,
+            height: 630,
+            alt: cleanTitle,
+            type: 'image/jpeg',
+          }
+        ],
+        locale: 'en_US',
       },
       twitter: {
         card: 'summary_large_image',
         title: cleanTitle,
         description: excerpt,
-        images: getFeaturedImageUrl(post) ? [getFeaturedImageUrl(post)!] : undefined,
+        site: '@medialternatives',
+        creator: author?.slug ? `@${author.slug}` : '@medialternatives',
+        images: [
+          {
+            url: imageUrl,
+            alt: cleanTitle,
+            width: 1200,
+            height: 630,
+          }
+        ],
+      },
+      robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          'max-video-preview': -1,
+          'max-image-preview': 'large',
+          'max-snippet': -1,
+        },
+      },
+      alternates: {
+        canonical: postUrl,
       },
     };
   } catch (error) {

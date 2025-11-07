@@ -7,61 +7,8 @@ import StructuredData from "@/components/SEO/StructuredData";
 import { WordPressAuthProvider } from "@/contexts/WordPressAuthContext";
 
 /**
- * Configure Copse Google Font
- * @constant {Object} copse
+ * Configure Google Fonts
  */
-const copse = Copse({
-  weight: '400',
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-copse'
-});
-
-/**
- * Configure Quattrocento Google Font
- * @constant {Object} quattrocento
- */
-const quattrocento = Quattrocento({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-quattrocento'
-});
-
-/**
- * Configure Revalia Google Font
- * @constant {Object} revalia
- */
-const revalia = Revalia({
-  weight: '400',
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-revalia'
-});
-
-/**
- * Configure Quicksand Google Font for handbook
- * @constant {Object} quicksand
- */
-const quicksand = Quicksand({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-quicksand'
-});
-
-/**
- * Configure Roboto Google Font for handbook
- * @constant {Object} roboto
- */
-const roboto = Roboto({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-roboto'
-});
-
-// Configure Google Fonts
 const copse = Copse({
   weight: '400',
   subsets: ['latin'],
