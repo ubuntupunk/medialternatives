@@ -1,0 +1,14 @@
+https://medialternatives.com/2021/06/22/there-is-no-vaccine-for-climate-change/
+https://medialternatives.com/2020/12/03/greens-should-challenge-notion-that-banks-determine-environmental-leadership/
+https://medialternatives.com/2019/11/20/towards-an-african-humanist-environmentalism-for-south-africa/
+https://medialternatives.com/2020/04/03/our-peoples-health-is-an-environmental-issue/
+https://medialternatives.com/2019/06/25/dear-climate-youth-of-south-africa/
+https://medialternatives.com/2020/08/28/revisiting-eskom-and-the-energy-commons/
+https://medialternatives.com/2018/11/05/south-africas-anti-climate-science-agenda/
+https://medialternatives.com/2017/03/30/has-the-environmental-movement-failed/
+https://medialternatives.com/2016/09/22/environmental-activism-during-apartheid/
+https://medialternatives.com/2018/03/27/edna-molewas-sasol-greenwashing-faux-pas/
+https://medialternatives.com/2017/03/12/ivo-vegters-rampant-denialism/
+https://medialternatives.com/2017/03/08/old-king-coal-be-dammned/
+https://medialternatives.com/2016/01/26/burning-platinum-no-solution-to-power-crisis/
+https://medialternatives.com/2010/10/08/south-africas-shambolic-energy-policy/

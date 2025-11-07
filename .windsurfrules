@@ -1,0 +1,246 @@
+# Windsurf Rules: React TypeScript WordPress.com Headless CMS Project 
+
+This document defines the coding standards, project structure, technology stack, and project management guidelines for the React TypeScript WordPress.com headless CMS project using Next.js. All developers must adhere to these rules to ensure code quality, consistency, maintainability, and effective collaboration.
+
+## Core Principles
+1. **Code Quality**: Write clean, type-safe, and maintainable code following strict TypeScript and ESLint rules.
+2. **Performance**: Optimize for fast rendering, efficient data fetching, and minimal bundle size using Next.js ISR.
+3. **Security**: Validate inputs, handle errors robustly, and protect sensitive data.
+4. **Consistency**: Follow defined conventions for structure, styling, naming, and architecture.
+5. **Headless CMS Focus**: Ensure all features work seamlessly with WordPress.com public API limitations.
+6. **Project Management**: Track tasks and document progress to maintain team alignment.
+
+## Technology Stack
+### Core
+- **TypeScript**: ^5.6.x
+- **Node.js**: ^22.x.x
+- **npm/yarn**: Package manager
+- **ESLint**: ^10.x.x
+
+### Frontend
+- **React**: ^18.x.x
+- **Next.js**: ^14.x.x
+- **Bootstrap**: ^5.x.x (primary CSS framework)
+- **CSS Modules**: For component-specific styling
+
+### Backend
+- **WordPress.com**: Hosted CMS (davidrobertlewis5.wordpress.com)
+- **WordPress.com Public API**: Content delivery via REST API
+
+### Deployment
+- **Vercel**: Primary hosting platform
+- **Cloudflare Pages**: Backup deployment option
+
+### Development Tools
+- **Bun**: ^1.1.46
+- **Prettier**: ^3.x.x
+- **Husky**: Git hooks for quality control
+- **Lint-staged**: Pre-commit linting
+
+## Project Structure
+
+```
+frontend-app/
+├── components/
+│   ├── Header/
+│   │   ├── Header.tsx
+│   │   ├── Navigation.tsx
+│   │   ├── SearchForm.tsx
+│   │   └── SocialMenu.tsx
+│   ├── Layout/
+│   │   ├── Layout.tsx
+│   │   ├── Sidebar.tsx
+│   │   └── Footer.tsx
+│   ├── Posts/
+│   │   ├── PostCard.tsx
+│   │   ├── PostCardBig.tsx
+│   │   ├── PostGrid.tsx
+│   │   └── PostMeta.tsx
+│   ├── Widgets/
+│   │   ├── AuthorWidget.tsx
+│   │   ├── CategoryCloud.tsx
+│   │   ├── RecentPosts.tsx
+│   │   └── AdSenseWidget.tsx
+│   └── UI/
+│       ├── Pagination.tsx
+│       └── LoadingSpinner.tsx
+├── pages/
+│   ├── index.tsx (home page)
+│   ├── post/[slug].tsx
+│   ├── category/[slug].tsx
+│   └── author/[slug].tsx
+├── services/
+│   └── wordpress-api.ts
+├── styles/
+│   ├── globals.css
+│   └── components/
+├── types/
+│   ├── wordpress.ts
+│   └── index.ts
+├── utils/
+│   └── helpers.ts
+├── lib/
+│   └── constants.ts
+└── public/
+    ├── images/
+    └── icons/
+```
+
+## WordPress.com API Integration
+- Use the `services/wordpress-api.ts` file for all API calls
+- Base URL: `https://public-api.wordpress.com/wp/v2/sites/davidrobertlewis5.wordpress.com`
+- Always include `_embed=true` for related data (featured images, authors)
+- Handle API rate limits and errors gracefully
+- Cache responses appropriately using Next.js built-in caching
+
+## Code Style & Formatting
+- Follow the **Airbnb TypeScript Style Guide**.
+- Use **PascalCase** for React component files (e.g., `UserCard.tsx`).
+- Prefer **named exports** for components and utilities.
+- Use **Prettier** for automatic formatting.
+- One export per file unless explicitly justified.
+- Avoid blank lines within function bodies.
+- Keep files under **500 lines**; refactor large files into modules or helpers.
+- Organize code by **feature or responsibility** (e.g., `Header/`, `Posts/`).
+- Use **relative imports** within packages for clarity.
+
+## Type Safety
+- Declare types for all variables, function parameters, and return values.
+- Avoid `any` type; use `unknown` when necessary.
+- Create comprehensive TypeScript interfaces for WordPress.com API responses.
+- Use **JSDoc** for public classes, methods, and complex functions.
+
+## WordPress.com Specific Rules
+- **No Custom Endpoints**: All data must come from standard WordPress.com public API
+- **Error Handling**: Always handle API failures gracefully with fallbacks
+- **Rate Limiting**: Implement proper caching to avoid hitting API limits
+- **Image Optimization**: Use Next.js Image component for WordPress.com media
+- **SEO**: Implement proper meta tags since we can't rely on WordPress SEO plugins
+
+## Component Guidelines
+### React Components
+- Use **functional components** with hooks
+- Implement proper **error boundaries** for API-dependent components
+- Use **React.memo** for performance optimization where appropriate
+- Keep components **single-responsibility** and reusable
+
+### Styling
+- Use **Bootstrap classes** for layout and common UI elements
+- Create **CSS Modules** for component-specific styles
+- Maintain **responsive design** principles
+- Follow **mobile-first** approach
+
+### State Management
+- Use **React hooks** (useState, useEffect, useContext) for local state
+- Implement **custom hooks** for WordPress.com API interactions
+- Consider **SWR** or **React Query** for data fetching and caching
+
+## Performance Guidelines
+- Use **Next.js Image** component for all images
+- Implement **lazy loading** for components and images
+- Use **ISR (Incremental Static Regeneration)** for blog posts
+- Optimize **bundle size** by code splitting
+- Implement **proper caching** strategies
+
+## Security Guidelines
+- **Validate all inputs** from WordPress.com API
+- **Sanitize HTML content** from WordPress posts
+- Use **environment variables** for sensitive configuration
+- Implement **CSP headers** for XSS protection
+- **Never expose** API keys or sensitive data in client-side code
+
+## Testing Guidelines
+- Write **unit tests** for utility functions and hooks
+- Create **integration tests** for API service functions
+- Use **React Testing Library** for component testing
+- Implement **E2E tests** for critical user journeys
+- Maintain **minimum 80% code coverage**
+
+## Git Workflow
+### Branch Naming
+- `feature/component-name` - New features
+- `fix/issue-description` - Bug fixes
+- `refactor/area-name` - Code refactoring
+- `docs/update-description` - Documentation updates
+
+### Commit Messages
+- Use **conventional commits** format
+- Examples:
+  - `feat: add post card component`
+  - `fix: resolve API caching issue`
+  - `docs: update README with setup instructions`
+  - `refactor: optimize wordpress api service`
+
+### Pull Request Guidelines
+- **Small, focused PRs** (max 400 lines changed)
+- Include **screenshots** for UI changes
+- Update **TASK.md** with completed items
+- Ensure **all tests pass** before merging
+- Require **code review** from at least one team member
+
+## Project Management
+### Task Tracking
+- Maintain **TASK.md** file with current sprint tasks
+- Update task status after each commit
+- Include **time estimates** and **actual time spent**
+- Track **blockers** and **dependencies**
+
+### Documentation
+- Update **README.md** for setup instructions
+- Document **API changes** in PLAN.md
+- Create **component documentation** with examples
+- Maintain **deployment notes** and troubleshooting guides
+
+## Environment Configuration
+### Development
+```bash
+WORDPRESS_API_URL=WORDPRESS_API_URL=https://public-api.wordpress.com/wp/v2/sites/medialternatives.wordpress.com
+NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-CZNQG5YM3Z
+NEXT_PUBLIC_ADSENSE_CLIENT_ID=ca-pub-1630578712653878
+NODE_ENV=development
+```
+
+### Production
+```bash
+WORDPRESS_API_URL=WORDPRESS_API_URL=https://public-api.wordpress.com/wp/v2/sites/medialternatives.wordpress.com
+NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-CZNQG5YM3Z
+NEXT_PUBLIC_ADSENSE_CLIENT_ID=ca-pub-1630578712653878
+NODE_ENV=production
+```
+
+## Best Practices
+- **No hardcoding** of values or magic numbers inside functions
+- Create **constants** in `lib/constants.ts` for reusable values
+- Keep code **DRY (Don't Repeat Yourself)**
+- Use **semantic HTML** elements for accessibility
+- Implement **proper loading states** for all async operations
+- Handle **offline scenarios** gracefully
+- Optimize for **Core Web Vitals** metrics
+
+## Quality Gates
+Before any deployment:
+1. ✅ All TypeScript errors resolved
+2. ✅ ESLint passes with no errors
+3. ✅ Prettier formatting applied
+4. ✅ All tests passing
+5. ✅ Lighthouse score > 90
+6. ✅ No console errors in production build
+7. ✅ TASK.md updated with completed items
+8. ✅ Documentation updated if needed
+
+## Deployment Checklist
+### Pre-deployment
+- [ ] Run `bun run build` successfully
+- [ ] Test production build locally
+- [ ] Verify all environment variables set
+- [ ] Check WordPress.com API connectivity
+- [ ] Validate SEO meta tags
+- [ ] Test responsive design on multiple devices
+
+### Post-deployment
+- [ ] Verify site loads correctly
+- [ ] Test critical user journeys
+- [ ] Check Google Analytics tracking
+- [ ] Validate AdSense integration
+- [ ] Monitor Core Web Vitals
+- [ ] Update TASK.md with deployment notes

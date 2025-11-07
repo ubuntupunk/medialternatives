@@ -1,0 +1,27 @@
+{
+  "name": "Medialternatives - Reaching out from the Global South",
+  "short_name": "Medialternatives",
+  "description": "Media activism and alternative journalism from the Global South",
+  "icons": [
+    {
+      "src": "/images/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#e3e3e3",
+  "background_color": "#e3e3e3",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "start_url": "/",
+  "categories": ["news", "education", "lifestyle"],
+  "lang": "en-US"
+}

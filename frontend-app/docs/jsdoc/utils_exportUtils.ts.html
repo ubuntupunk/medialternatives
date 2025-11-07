@@ -1,0 +1,494 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> utils/exportUtils.ts</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AvatarManager.html">AvatarManager</a></li></ul><h3>Interfaces</h3><ul><li><a href="APITestResult.html">APITestResult</a></li><li><a href="AvatarOptions.html">AvatarOptions</a></li><li><a href="HeaderProps.html">HeaderProps</a></li><li><a href="NotificationSettings.html">NotificationSettings</a></li><li><a href="ScheduleSettings.html">ScheduleSettings</a></li><li><a href="WordPressToken.html">WordPressToken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AdSenseFeed">AdSenseFeed</a></li><li><a href="global.html#AdSenseWidget">AdSenseWidget</a></li><li><a href="global.html#AddToHomeScreen">AddToHomeScreen</a></li><li><a href="global.html#AuthStatus">AuthStatus</a></li><li><a href="global.html#AuthorDisplay">AuthorDisplay</a></li><li><a href="global.html#AuthorWidget">AuthorWidget</a></li><li><a href="global.html#Avatar">Avatar</a></li><li><a href="global.html#AvatarUpload">AvatarUpload</a></li><li><a href="global.html#AvatarUploadV2">AvatarUploadV2</a></li><li><a href="global.html#CategoryCards">CategoryCards</a></li><li><a href="global.html#CategoryCloud">CategoryCloud</a></li><li><a href="global.html#CategoryCloudEnhanced">CategoryCloudEnhanced</a></li><li><a href="global.html#CategoryList">CategoryList</a></li><li><a href="global.html#CategoryPills">CategoryPills</a></li><li><a href="global.html#CreativeCommonsWidget">CreativeCommonsWidget</a></li><li><a href="global.html#CustomHeader">CustomHeader</a></li><li><a href="global.html#DonateWidget">DonateWidget</a></li><li><a href="global.html#EnhancedAuthorWidget">EnhancedAuthorWidget</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#InteractiveButton">InteractiveButton</a></li><li><a href="global.html#KNOWN_LEGACY_MAPPINGS">KNOWN_LEGACY_MAPPINGS</a></li><li><a href="global.html#LoadMore">LoadMore</a></li><li><a href="global.html#OfflineIndicator">OfflineIndicator</a></li><li><a href="global.html#Pagination">Pagination</a></li><li><a href="global.html#PostCard">PostCard</a></li><li><a href="global.html#PostCardBig">PostCardBig</a></li><li><a href="global.html#PostGrid">PostGrid</a></li><li><a href="global.html#WORDPRESS_API_ENDPOINTS">WORDPRESS_API_ENDPOINTS</a></li><li><a href="global.html#WebringWidget">WebringWidget</a></li><li><a href="global.html#WordPressAuthProvider">WordPressAuthProvider</a></li><li><a href="global.html#calculateCategoryFontSize">calculateCategoryFontSize</a></li><li><a href="global.html#calculateNextRun">calculateNextRun</a></li><li><a href="global.html#calculateSimilarity">calculateSimilarity</a></li><li><a href="global.html#checkMultiplePostsLinks">checkMultiplePostsLinks</a></li><li><a href="global.html#checkPostLinks">checkPostLinks</a></li><li><a href="global.html#checkUrl">checkUrl</a></li><li><a href="global.html#clearStoredToken">clearStoredToken</a></li><li><a href="global.html#createExcerpt">createExcerpt</a></li><li><a href="global.html#createGravatarUrl">createGravatarUrl</a></li><li><a href="global.html#createScheduledCheck">createScheduledCheck</a></li><li><a href="global.html#createUrlParams">createUrlParams</a></li><li><a href="global.html#dataURLToBlob">dataURLToBlob</a></li><li><a href="global.html#debounce">debounce</a></li><li><a href="global.html#decodeHtmlEntities">decodeHtmlEntities</a></li><li><a href="global.html#downloadFile">downloadFile</a></li><li><a href="global.html#executeScheduledCheck">executeScheduledCheck</a></li><li><a href="global.html#exportDeadLinks">exportDeadLinks</a></li><li><a href="global.html#exportToCSV">exportToCSV</a></li><li><a href="global.html#exportToJSON">exportToJSON</a></li><li><a href="global.html#extractUrlsFromContent">extractUrlsFromContent</a></li><li><a href="global.html#findPostByLegacyUrl">findPostByLegacyUrl</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#formatNextRun">formatNextRun</a></li><li><a href="global.html#formatReadingTime">formatReadingTime</a></li><li><a href="global.html#formatRelativeDate">formatRelativeDate</a></li><li><a href="global.html#generateArchiveUrl">generateArchiveUrl</a></li><li><a href="global.html#generateAvatarSizes">generateAvatarSizes</a></li><li><a href="global.html#generateColorFromString">generateColorFromString</a></li><li><a href="global.html#generateInitialsAvatar">generateInitialsAvatar</a></li><li><a href="global.html#generatePDFHTML">generatePDFHTML</a></li><li><a href="global.html#generatePDFReport">generatePDFReport</a></li><li><a href="global.html#generateRandomState">generateRandomState</a></li><li><a href="global.html#generateSlug">generateSlug</a></li><li><a href="global.html#generateSlugVariations">generateSlugVariations</a></li><li><a href="global.html#generateSuggestions">generateSuggestions</a></li><li><a href="global.html#generateTestReport">generateTestReport</a></li><li><a href="global.html#getAuthStatus">getAuthStatus</a></li><li><a href="global.html#getDefaultExportOptions">getDefaultExportOptions</a></li><li><a href="global.html#getDefaultNotificationSettings">getDefaultNotificationSettings</a></li><li><a href="global.html#getDefaultScheduleSettings">getDefaultScheduleSettings</a></li><li><a href="global.html#getFeaturedImageUrl">getFeaturedImageUrl</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getKnownMapping">getKnownMapping</a></li><li><a href="global.html#getLocalStorage">getLocalStorage</a></li><li><a href="global.html#getPostAuthor">getPostAuthor</a></li><li><a href="global.html#getPostAuthorId">getPostAuthorId</a></li><li><a href="global.html#getPostCategories">getPostCategories</a></li><li><a href="global.html#getPostTags">getPostTags</a></li><li><a href="global.html#getReadingTime">getReadingTime</a></li><li><a href="global.html#getScheduledChecks">getScheduledChecks</a></li><li><a href="global.html#getStoredToken">getStoredToken</a></li><li><a href="global.html#handleOAuthCallback">handleOAuthCallback</a></li><li><a href="global.html#initiateWordPressOAuth">initiateWordPressOAuth</a></li><li><a href="global.html#isAuthenticated">isAuthenticated</a></li><li><a href="global.html#isBrowser">isBrowser</a></li><li><a href="global.html#isDebugMode">isDebugMode</a></li><li><a href="global.html#isValidEmail">isValidEmail</a></li><li><a href="global.html#loadAvatarFromStorage">loadAvatarFromStorage</a></li><li><a href="global.html#loadNotificationSettings">loadNotificationSettings</a></li><li><a href="global.html#loadScheduleSettings">loadScheduleSettings</a></li><li><a href="global.html#logAPIResponse">logAPIResponse</a></li><li><a href="global.html#makeAuthenticatedRequest">makeAuthenticatedRequest</a></li><li><a href="global.html#processNotifications">processNotifications</a></li><li><a href="global.html#removeAvatarFromStorage">removeAvatarFromStorage</a></li><li><a href="global.html#requestNotificationPermission">requestNotificationPermission</a></li><li><a href="global.html#resizeImageToSquare">resizeImageToSquare</a></li><li><a href="global.html#saveAvatarToStorage">saveAvatarToStorage</a></li><li><a href="global.html#saveNotificationSettings">saveNotificationSettings</a></li><li><a href="global.html#saveScheduleSettings">saveScheduleSettings</a></li><li><a href="global.html#searchArchiveSnapshots">searchArchiveSnapshots</a></li><li><a href="global.html#sendEmailNotification">sendEmailNotification</a></li><li><a href="global.html#sendWebhookNotification">sendWebhookNotification</a></li><li><a href="global.html#setLocalStorage">setLocalStorage</a></li><li><a href="global.html#shouldRunCheck">shouldRunCheck</a></li><li><a href="global.html#showBrowserNotification">showBrowserNotification</a></li><li><a href="global.html#storeToken">storeToken</a></li><li><a href="global.html#stripHtml">stripHtml</a></li><li><a href="global.html#testEndpoint">testEndpoint</a></li><li><a href="global.html#testWordPressEndpoints">testWordPressEndpoints</a></li><li><a href="global.html#truncateText">truncateText</a></li><li><a href="global.html#updateScheduleSettings">updateScheduleSettings</a></li><li><a href="global.html#useAuthenticatedAPI">useAuthenticatedAPI</a></li><li><a href="global.html#useClientOnly">useClientOnly</a></li><li><a href="global.html#useClientState">useClientState</a></li><li><a href="global.html#useWordPressAuth">useWordPressAuth</a></li><li><a href="global.html#validateImageFile">validateImageFile</a></li><li><a href="global.html#validateSiteSetup">validateSiteSetup</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>utils/exportUtils.ts</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Export utilities for dead link checker results
+ */
+
+import { DeadLink, LinkCheckResult } from './deadLinkChecker';
+
+export interface ExportOptions {
+  format: 'csv' | 'json' | 'pdf';
+  includeContext: boolean;
+  includeSuggestions: boolean;
+  includeArchiveLinks: boolean;
+  groupByPost: boolean;
+}
+
+/**
+ * Export dead links to CSV format
+ */
+export function exportToCSV(
+  deadLinks: DeadLink[],
+  options: ExportOptions = { format: 'csv', includeContext: true, includeSuggestions: true, includeArchiveLinks: true, groupByPost: false }
+): string {
+  const headers = [
+    'URL',
+    'Status',
+    'Error',
+    'Post ID',
+    'Post Title',
+    'Post Slug'
+  ];
+
+  if (options.includeContext) {
+    headers.push('Context');
+  }
+
+  if (options.includeArchiveLinks) {
+    headers.push('Archive URL');
+  }
+
+  if (options.includeSuggestions) {
+    headers.push('Suggestions');
+  }
+
+  const csvRows = [headers.join(',')];
+
+  deadLinks.forEach(link => {
+    const row = [
+      `"${link.url.replace(/"/g, '""')}"`,
+      link.status?.toString() || 'null',
+      `"${(link.error || '').replace(/"/g, '""')}"`,
+      link.postId.toString(),
+      `"${link.postTitle.replace(/"/g, '""')}"`,
+      `"${link.postSlug.replace(/"/g, '""')}"`
+    ];
+
+    if (options.includeContext) {
+      row.push(`"${(link.context || '').replace(/"/g, '""')}"`);
+    }
+
+    if (options.includeArchiveLinks) {
+      row.push(`"${(link.archiveUrl || '').replace(/"/g, '""')}"`);
+    }
+
+    if (options.includeSuggestions) {
+      const suggestions = link.suggestions?.join('; ') || '';
+      row.push(`"${suggestions.replace(/"/g, '""')}"`);
+    }
+
+    csvRows.push(row.join(','));
+  });
+
+  return csvRows.join('\n');
+}
+
+/**
+ * Export dead links to JSON format
+ */
+export function exportToJSON(
+  deadLinks: DeadLink[],
+  summary?: any,
+  options: ExportOptions = { format: 'json', includeContext: true, includeSuggestions: true, includeArchiveLinks: true, groupByPost: false }
+): string {
+  const exportData: any = {
+    exportDate: new Date().toISOString(),
+    summary: summary || {
+      totalDeadLinks: deadLinks.length,
+      exportedAt: new Date().toISOString()
+    },
+    deadLinks: deadLinks.map(link => {
+      const exportLink: any = {
+        url: link.url,
+        status: link.status,
+        error: link.error,
+        postId: link.postId,
+        postTitle: link.postTitle,
+        postSlug: link.postSlug
+      };
+
+      if (options.includeContext) {
+        exportLink.context = link.context;
+      }
+
+      if (options.includeArchiveLinks) {
+        exportLink.archiveUrl = link.archiveUrl;
+      }
+
+      if (options.includeSuggestions) {
+        exportLink.suggestions = link.suggestions;
+      }
+
+      return exportLink;
+    })
+  };
+
+  if (options.groupByPost) {
+    const groupedByPost = deadLinks.reduce((acc, link) => {
+      const postKey = `${link.postId}`;
+      if (!acc[postKey]) {
+        acc[postKey] = {
+          postId: link.postId,
+          postTitle: link.postTitle,
+          postSlug: link.postSlug,
+          deadLinks: []
+        };
+      }
+      acc[postKey].deadLinks.push(link);
+      return acc;
+    }, {} as Record&lt;string, any>);
+
+    exportData.groupedByPost = Object.values(groupedByPost);
+  }
+
+  return JSON.stringify(exportData, null, 2);
+}
+
+/**
+ * Generate PDF report (returns HTML that can be converted to PDF)
+ */
+export function generatePDFHTML(
+  deadLinks: DeadLink[],
+  summary?: any,
+  options: ExportOptions = { format: 'pdf', includeContext: true, includeSuggestions: true, includeArchiveLinks: true, groupByPost: false }
+): string {
+  const now = new Date();
+  const totalLinks = summary?.totalLinks || 0;
+  const workingLinks = summary?.workingLinks || 0;
+  const processingTime = summary?.processingTimeMs || 0;
+
+  let html = `
+&lt;!DOCTYPE html>
+&lt;html>
+&lt;head>
+    &lt;meta charset="utf-8">
+    &lt;title>Dead Links Report - ${now.toLocaleDateString()}&lt;/title>
+    &lt;style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .summary { background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
+        .summary-item { text-align: center; }
+        .summary-value { font-size: 24px; font-weight: bold; color: #dc3545; }
+        .summary-label { font-size: 12px; color: #6c757d; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f8f9fa; font-weight: bold; }
+        .status-badge { padding: 2px 6px; border-radius: 3px; font-size: 11px; }
+        .status-danger { background: #dc3545; color: white; }
+        .status-warning { background: #ffc107; color: black; }
+        .status-secondary { background: #6c757d; color: white; }
+        .url-cell { max-width: 200px; word-break: break-all; }
+        .context-cell { max-width: 150px; font-size: 11px; color: #6c757d; }
+        .suggestions-cell { max-width: 200px; font-size: 11px; }
+        .footer { margin-top: 30px; text-align: center; font-size: 12px; color: #6c757d; }
+    &lt;/style>
+&lt;/head>
+&lt;body>
+    &lt;div class="header">
+        &lt;h1>Dead Links Report&lt;/h1>
+        &lt;p>Generated on ${now.toLocaleString()}&lt;/p>
+    &lt;/div>
+
+    &lt;div class="summary">
+        &lt;h3>Summary&lt;/h3>
+        &lt;div class="summary-grid">
+            &lt;div class="summary-item">
+                &lt;div class="summary-value">${deadLinks.length}&lt;/div>
+                &lt;div class="summary-label">Dead Links&lt;/div>
+            &lt;/div>
+            &lt;div class="summary-item">
+                &lt;div class="summary-value" style="color: #28a745;">${workingLinks}&lt;/div>
+                &lt;div class="summary-label">Working Links&lt;/div>
+            &lt;/div>
+            &lt;div class="summary-item">
+                &lt;div class="summary-value" style="color: #17a2b8;">${totalLinks}&lt;/div>
+                &lt;div class="summary-label">Total Links&lt;/div>
+            &lt;/div>
+            &lt;div class="summary-item">
+                &lt;div class="summary-value" style="color: #6c757d;">${Math.round(processingTime / 1000)}s&lt;/div>
+                &lt;div class="summary-label">Processing Time&lt;/div>
+            &lt;/div>
+        &lt;/div>
+    &lt;/div>
+`;
+
+  if (deadLinks.length === 0) {
+    html += `
+    &lt;div style="text-align: center; padding: 40px; background: #d4edda; color: #155724; border-radius: 5px;">
+        &lt;h3>🎉 No Dead Links Found!&lt;/h3>
+        &lt;p>All external links in the checked posts are working properly.&lt;/p>
+    &lt;/div>
+`;
+  } else {
+    html += `
+    &lt;table>
+        &lt;thead>
+            &lt;tr>
+                &lt;th>URL&lt;/th>
+                &lt;th>Status&lt;/th>
+                &lt;th>Post&lt;/th>`;
+
+    if (options.includeContext) {
+      html += '&lt;th>Context&lt;/th>';
+    }
+
+    if (options.includeArchiveLinks) {
+      html += '&lt;th>Archive&lt;/th>';
+    }
+
+    if (options.includeSuggestions) {
+      html += '&lt;th>Suggestions&lt;/th>';
+    }
+
+    html += `
+            &lt;/tr>
+        &lt;/thead>
+        &lt;tbody>
+`;
+
+    deadLinks.forEach(link => {
+      const statusClass = link.status === null ? 'status-secondary' : 
+                         link.status >= 500 ? 'status-danger' : 'status-warning';
+
+      html += `
+            &lt;tr>
+                &lt;td class="url-cell">${link.url}&lt;/td>
+                &lt;td>&lt;span class="status-badge ${statusClass}">${link.status || 'Timeout'}&lt;/span>&lt;/td>
+                &lt;td>${link.postTitle}&lt;/td>`;
+
+      if (options.includeContext) {
+        html += `&lt;td class="context-cell">${link.context || ''}&lt;/td>`;
+      }
+
+      if (options.includeArchiveLinks) {
+        html += `&lt;td>${link.archiveUrl ? '&lt;a href="' + link.archiveUrl + '">Archive&lt;/a>' : ''}&lt;/td>`;
+      }
+
+      if (options.includeSuggestions) {
+        const suggestions = link.suggestions?.join('&lt;br>') || '';
+        html += `&lt;td class="suggestions-cell">${suggestions}&lt;/td>`;
+      }
+
+      html += '&lt;/tr>';
+    });
+
+    html += `
+        &lt;/tbody>
+    &lt;/table>
+`;
+  }
+
+  html += `
+    &lt;div class="footer">
+        &lt;p>Report generated by MediaAlternatives Dead Link Checker&lt;/p>
+        &lt;p>For more information, visit your dashboard at /dashboard/dead-links&lt;/p>
+    &lt;/div>
+&lt;/body>
+&lt;/html>
+`;
+
+  return html;
+}
+
+/**
+ * Download file with given content
+ */
+export function downloadFile(content: string, filename: string, mimeType: string): void {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.style.display = 'none';
+  
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  
+  URL.revokeObjectURL(url);
+}
+
+/**
+ * Export dead links with the specified options
+ */
+export function exportDeadLinks(
+  deadLinks: DeadLink[],
+  summary: any,
+  options: ExportOptions
+): void {
+  const timestamp = new Date().toISOString().split('T')[0];
+  
+  switch (options.format) {
+    case 'csv':
+      const csvContent = exportToCSV(deadLinks, options);
+      downloadFile(csvContent, `dead-links-${timestamp}.csv`, 'text/csv');
+      break;
+      
+    case 'json':
+      const jsonContent = exportToJSON(deadLinks, summary, options);
+      downloadFile(jsonContent, `dead-links-${timestamp}.json`, 'application/json');
+      break;
+      
+    case 'pdf':
+      const htmlContent = generatePDFHTML(deadLinks, summary, options);
+      // For PDF, we'll send to server to convert
+      generatePDFReport(htmlContent, `dead-links-${timestamp}.pdf`);
+      break;
+  }
+}
+
+/**
+ * Generate PDF report via server
+ */
+async function generatePDFReport(htmlContent: string, filename: string): Promise&lt;void> {
+  try {
+    const response = await fetch('/api/export/pdf', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ html: htmlContent, filename })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to generate PDF');
+    }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.style.display = 'none';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    // Fallback: download HTML file
+    downloadFile(htmlContent, filename.replace('.pdf', '.html'), 'text/html');
+  }
+}
+
+/**
+ * Get default export options
+ */
+export function getDefaultExportOptions(): ExportOptions {
+  return {
+    format: 'csv',
+    includeContext: true,
+    includeSuggestions: true,
+    includeArchiveLinks: true,
+    groupByPost: false
+  };
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sun Aug 31 2025 10:28:25 GMT-0400 (Eastern Daylight Time)</p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

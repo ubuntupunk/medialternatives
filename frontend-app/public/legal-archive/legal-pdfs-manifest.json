@@ -1,0 +1,956 @@
+{
+  "metadata": {
+    "title": "Medialternatives Legal Documents Manifest",
+    "description": "Comprehensive catalog of downloaded legal PDFs for pCloud migration",
+    "created": "2025-07-11T06:50:41.691Z",
+    "version": "1.0.0",
+    "generator": "create-legal-pdfs-manifest.js",
+    "baseDirectory": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs"
+  },
+  "summary": {
+    "totalFiles": 32,
+    "totalDirectories": 2,
+    "totalSize": 120361442,
+    "totalSizeKB": 117540,
+    "totalSizeMB": "114.79",
+    "fileTypes": {
+      "pdf": 32,
+      "other": 0
+    },
+    "validation": {
+      "validPDFs": 31,
+      "invalidPDFs": 1,
+      "validationRate": "96.9%"
+    },
+    "sizeDistribution": {
+      "under_100KB": 7,
+      "100KB_1MB": 15,
+      "1MB_10MB": 6,
+      "over_10MB": 4
+    },
+    "largestFile": {
+      "name": "Annexures-PAJA-3.pdf",
+      "size": 26161064,
+      "sizeMB": "24.95"
+    },
+    "smallestFile": {
+      "name": "C88-07-Vol_3-6-November-2009-FP-1.pdf",
+      "size": 70001,
+      "sizeKB": 68
+    }
+  },
+  "fileMappings": {
+    "Supplement-Affidavit-CBC-Kahanovitz-9-MAY-2017-TUE.pdf": {
+      "originalName": "Supplement-Affidavit-CBC-Kahanovitz-9-MAY-2017-TUE-.doc-0BycjkxOoSHFeRV8zOTl6NjZYbGM.pdf",
+      "reason": "Removed problematic characters and Google Drive ID suffix",
+      "renamedBy": "manual",
+      "date": "2025-07-11T06:50:41.691Z"
+    }
+  },
+  "contents": [
+    {
+      "name": "court-transcripts",
+      "type": "directory",
+      "path": "court-transcripts",
+      "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/court-transcripts",
+      "stats": {
+        "size": 4096,
+        "sizeKB": 4,
+        "sizeMB": "0.00",
+        "created": "2025-07-11T06:30:39.560Z",
+        "modified": "2025-07-11T06:31:01.333Z",
+        "fileType": "Unknown",
+        "extension": "",
+        "isFile": false,
+        "isDirectory": true
+      },
+      "children": [
+        {
+          "name": "C88-07-Vol_1-4-November-2009-1.pdf",
+          "type": "file",
+          "path": "court-transcripts/C88-07-Vol_1-4-November-2009-1.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/court-transcripts/C88-07-Vol_1-4-November-2009-1.pdf",
+          "stats": {
+            "size": 433576,
+            "sizeKB": 423,
+            "sizeMB": "0.41",
+            "created": "2025-07-11T06:30:42.161Z",
+            "modified": "2025-07-11T06:30:43.045Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "e6026612083a524d1e0a51bb997318b11195179566f247da36ce98163ff40692",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 433576
+          }
+        },
+        {
+          "name": "C88-07-Vol_1-4-November-2009-FP-1.pdf",
+          "type": "file",
+          "path": "court-transcripts/C88-07-Vol_1-4-November-2009-FP-1.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/court-transcripts/C88-07-Vol_1-4-November-2009-FP-1.pdf",
+          "stats": {
+            "size": 90598,
+            "sizeKB": 88,
+            "sizeMB": "0.09",
+            "created": "2025-07-11T06:30:40.624Z",
+            "modified": "2025-07-11T06:30:41.648Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "f9d461d09f1edb98997624b21a89b8278f7e6031f0393b3c586652717f0cbc8a",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 90598
+          }
+        },
+        {
+          "name": "C88-07-Vol_2-5-November-2009-1.pdf",
+          "type": "file",
+          "path": "court-transcripts/C88-07-Vol_2-5-November-2009-1.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/court-transcripts/C88-07-Vol_2-5-November-2009-1.pdf",
+          "stats": {
+            "size": 526568,
+            "sizeKB": 514,
+            "sizeMB": "0.50",
+            "created": "2025-07-11T06:30:46.662Z",
+            "modified": "2025-07-11T06:30:48.299Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "4680d975ace4a90e2d3c7baaa944afa4757d223d42d00cf627a3e5f81d4de6d4",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 526568
+          }
+        },
+        {
+          "name": "C88-07-Vol_2-5-November-2009-FP-1.pdf",
+          "type": "file",
+          "path": "court-transcripts/C88-07-Vol_2-5-November-2009-FP-1.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/court-transcripts/C88-07-Vol_2-5-November-2009-FP-1.pdf",
+          "stats": {
+            "size": 70011,
+            "sizeKB": 68,
+            "sizeMB": "0.07",
+            "created": "2025-07-11T06:30:45.131Z",
+            "modified": "2025-07-11T06:30:46.143Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "20d5dfebe4d219e5a37c4f75ab2628dd74c73f9c84e682a7a748fdd587ad56bd",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 70011
+          }
+        },
+        {
+          "name": "C88-07-Vol_2-5-November-2009-Letter-to-the-Chief-Registrar-Head-o...-1.pdf",
+          "type": "file",
+          "path": "court-transcripts/C88-07-Vol_2-5-November-2009-Letter-to-the-Chief-Registrar-Head-o...-1.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/court-transcripts/C88-07-Vol_2-5-November-2009-Letter-to-the-Chief-Registrar-Head-o...-1.pdf",
+          "stats": {
+            "size": 73817,
+            "sizeKB": 72,
+            "sizeMB": "0.07",
+            "created": "2025-07-11T06:30:43.567Z",
+            "modified": "2025-07-11T06:30:44.620Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "f5bb253c7801508dd7196c78265438cbf2e3cbae1bda54e33c9534b10a7af902",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 73817
+          }
+        },
+        {
+          "name": "C88-07-Vol_3-6-November-2009-1.pdf",
+          "type": "file",
+          "path": "court-transcripts/C88-07-Vol_3-6-November-2009-1.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/court-transcripts/C88-07-Vol_3-6-November-2009-1.pdf",
+          "stats": {
+            "size": 364073,
+            "sizeKB": 356,
+            "sizeMB": "0.35",
+            "created": "2025-07-11T06:30:51.875Z",
+            "modified": "2025-07-11T06:30:53.288Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "3181efe30efe461758ebbae284f1898d397fda2b73d862e714b721a0a3b2c008",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 364073
+          }
+        },
+        {
+          "name": "C88-07-Vol_3-6-November-2009-FP-1.pdf",
+          "type": "file",
+          "path": "court-transcripts/C88-07-Vol_3-6-November-2009-FP-1.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/court-transcripts/C88-07-Vol_3-6-November-2009-FP-1.pdf",
+          "stats": {
+            "size": 70001,
+            "sizeKB": 68,
+            "sizeMB": "0.07",
+            "created": "2025-07-11T06:30:50.378Z",
+            "modified": "2025-07-11T06:30:51.350Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "26552dfafc2865f36a0916ffc3d78c928e603301e1ab4efe648c935c22b2d062",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 70001
+          }
+        },
+        {
+          "name": "C88-07-Vol_3-6-November-2009-Letter-to-the-Chief-Registrar-Head-o...-1.pdf",
+          "type": "file",
+          "path": "court-transcripts/C88-07-Vol_3-6-November-2009-Letter-to-the-Chief-Registrar-Head-o...-1.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/court-transcripts/C88-07-Vol_3-6-November-2009-Letter-to-the-Chief-Registrar-Head-o...-1.pdf",
+          "stats": {
+            "size": 73338,
+            "sizeKB": 72,
+            "sizeMB": "0.07",
+            "created": "2025-07-11T06:30:48.814Z",
+            "modified": "2025-07-11T06:30:49.858Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "7794ab046a759c679029e138fd251e005349c555aa92df1158566254b62c762c",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 73338
+          }
+        },
+        {
+          "name": "C88-07-Vol_4-20-January-2010-1.pdf",
+          "type": "file",
+          "path": "court-transcripts/C88-07-Vol_4-20-January-2010-1.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/court-transcripts/C88-07-Vol_4-20-January-2010-1.pdf",
+          "stats": {
+            "size": 631468,
+            "sizeKB": 617,
+            "sizeMB": "0.60",
+            "created": "2025-07-11T06:30:56.965Z",
+            "modified": "2025-07-11T06:30:58.853Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "8921ca297ee10d54da1143100b2051ab158ecd5d419c0190135f412e059dad44",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 631468
+          }
+        },
+        {
+          "name": "C88-07-Vol_4-20-January-2010-FP-1.pdf",
+          "type": "file",
+          "path": "court-transcripts/C88-07-Vol_4-20-January-2010-FP-1.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/court-transcripts/C88-07-Vol_4-20-January-2010-FP-1.pdf",
+          "stats": {
+            "size": 76301,
+            "sizeKB": 75,
+            "sizeMB": "0.07",
+            "created": "2025-07-11T06:30:55.474Z",
+            "modified": "2025-07-11T06:30:56.453Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "03d2cebcf433149be3c27a567823f220aa01b660056f25eebc31194a98d6da5c",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 76301
+          }
+        },
+        {
+          "name": "C88-07-Vol_4-_-5-20-_-21-January-2010-Letter-to-the-Chief-Registrar...-1.pdf",
+          "type": "file",
+          "path": "court-transcripts/C88-07-Vol_4-_-5-20-_-21-January-2010-Letter-to-the-Chief-Registrar...-1.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/court-transcripts/C88-07-Vol_4-_-5-20-_-21-January-2010-Letter-to-the-Chief-Registrar...-1.pdf",
+          "stats": {
+            "size": 159005,
+            "sizeKB": 155,
+            "sizeMB": "0.15",
+            "created": "2025-07-11T06:30:53.807Z",
+            "modified": "2025-07-11T06:30:54.969Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "0d16460a91ed465b678ea4e339e6d55cfb436fbf49c83826fa385607a6a8687f",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 159005
+          }
+        },
+        {
+          "name": "C88-07-Vol_5-21-January-2010-1.pdf",
+          "type": "file",
+          "path": "court-transcripts/C88-07-Vol_5-21-January-2010-1.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/court-transcripts/C88-07-Vol_5-21-January-2010-1.pdf",
+          "stats": {
+            "size": 381136,
+            "sizeKB": 372,
+            "sizeMB": "0.36",
+            "created": "2025-07-11T06:30:59.368Z",
+            "modified": "2025-07-11T06:31:00.830Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "d15a5b2798bfbd81fe9387c07cc255a5cb8164dc8987bcee75ab75dbcf3e4d62",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 381136
+          }
+        },
+        {
+          "name": "Cheadle-Report-to-Cape-Law-Society-6-September-2011-1.pdf",
+          "type": "file",
+          "path": "court-transcripts/Cheadle-Report-to-Cape-Law-Society-6-September-2011-1.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/court-transcripts/Cheadle-Report-to-Cape-Law-Society-6-September-2011-1.pdf",
+          "stats": {
+            "size": 680492,
+            "sizeKB": 665,
+            "sizeMB": "0.65",
+            "created": "2025-07-11T06:31:01.333Z",
+            "modified": "2025-07-11T06:31:03.064Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "2f238dee0f2b7865b3401cdaf3f9b6e5644ad82dc448f2b94369ffc1007eee0a",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
+            "actualSize": 680492
+          }
+        },
+        {
+          "name": "Transcripts-Index-1.pdf",
+          "type": "file",
+          "path": "court-transcripts/Transcripts-Index-1.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/court-transcripts/Transcripts-Index-1.pdf",
+          "stats": {
+            "size": 133924,
+            "sizeKB": 131,
+            "sizeMB": "0.13",
+            "created": "2025-07-11T06:30:39.628Z",
+            "modified": "2025-07-11T06:30:40.108Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "81b16c637d60a22096ca74c8eb05b9a5cf7c8dada3811efe0463fb40d710bdda",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.4",
+            "actualSize": 133924
+          }
+        }
+      ],
+      "fileCount": 14
+    },
+    {
+      "name": "legal-documents",
+      "type": "directory",
+      "path": "legal-documents",
+      "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents",
+      "stats": {
+        "size": 4096,
+        "sizeKB": 4,
+        "sizeMB": "0.00",
+        "created": "2025-07-11T06:30:39.560Z",
+        "modified": "2025-07-11T06:36:05.758Z",
+        "fileType": "Unknown",
+        "extension": "",
+        "isFile": false,
+        "isDirectory": true
+      },
+      "children": [
+        {
+          "name": "Affidavit-20-November-2017-Addendum-4.pdf",
+          "type": "file",
+          "path": "legal-documents/Affidavit-20-November-2017-Addendum-4.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/Affidavit-20-November-2017-Addendum-4.pdf",
+          "stats": {
+            "size": 116859,
+            "sizeKB": 114,
+            "sizeMB": "0.11",
+            "created": "2025-07-11T06:31:39.732Z",
+            "modified": "2025-07-11T06:31:40.964Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "b247df33dd30140e737fa0b46d58168df5dfc869556e88f92d5261789428156b",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.4",
+            "actualSize": 116859
+          }
+        },
+        {
+          "name": "Annexures-PAJA-3.pdf",
+          "type": "file",
+          "path": "legal-documents/Annexures-PAJA-3.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/Annexures-PAJA-3.pdf",
+          "stats": {
+            "size": 26161064,
+            "sizeKB": 25548,
+            "sizeMB": "24.95",
+            "created": "2025-07-11T06:31:20.545Z",
+            "modified": "2025-07-11T06:31:39.220Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "4c522f4f93170ece1160d983dea1e0ae7f4361115d30e346f155507f2f366722",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.4",
+            "actualSize": 26161064
+          }
+        },
+        {
+          "name": "Associate-Professor-Lesley-Cowling-Rejects-Plagiarism-Accusation.pdf",
+          "type": "file",
+          "path": "legal-documents/Associate-Professor-Lesley-Cowling-Rejects-Plagiarism-Accusation.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/Associate-Professor-Lesley-Cowling-Rejects-Plagiarism-Accusation.pdf",
+          "stats": {
+            "size": 783576,
+            "sizeKB": 765,
+            "sizeMB": "0.75",
+            "created": "2025-07-11T06:32:01.760Z",
+            "modified": "2025-07-11T06:32:03.492Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "18f9386d043b2415229e1c875c3b41ede778e11eddf7b06f9b341eff44b1191d",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
+            "actualSize": 783576
+          }
+        },
+        {
+          "name": "DOC065-1.pdf",
+          "type": "file",
+          "path": "legal-documents/DOC065-1.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/DOC065-1.pdf",
+          "stats": {
+            "size": 228356,
+            "sizeKB": 223,
+            "sizeMB": "0.22",
+            "created": "2025-07-11T06:32:45.989Z",
+            "modified": "2025-07-11T06:32:47.343Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "eff1814c7c05193ad79a869259a04aeb8a342370f65d67cf6bd5c88627e12197",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.4",
+            "actualSize": 228356
+          }
+        },
+        {
+          "name": "Founding-Affidavit-Perjury-A-Dean.pdf",
+          "type": "file",
+          "path": "legal-documents/Founding-Affidavit-Perjury-A-Dean.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/Founding-Affidavit-Perjury-A-Dean.pdf",
+          "stats": {
+            "size": 8857447,
+            "sizeKB": 8650,
+            "sizeMB": "8.45",
+            "created": "2025-07-11T06:31:54.332Z",
+            "modified": "2025-07-11T06:32:01.258Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "07d5b23247daa2f664aef8b19f9fb8be4543f7fbc88e12ca2b7572f0015c14ef",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
+            "actualSize": 8857447
+          }
+        },
+        {
+          "name": "Founding-Affidavit.pdf",
+          "type": "file",
+          "path": "legal-documents/Founding-Affidavit.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/Founding-Affidavit.pdf",
+          "stats": {
+            "size": 25647065,
+            "sizeKB": 25046,
+            "sizeMB": "24.46",
+            "created": "2025-07-11T06:31:03.573Z",
+            "modified": "2025-07-11T06:31:20.026Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "63616931a8ee4e3bf99bab19a77ba994ec4a9e372276c1c6e891679577bb7ce2",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 25647065
+          }
+        },
+        {
+          "name": "Fxi-Letter-to-Hein-Brand-per-Jeenah-and-Delaney-29-Aug-2006.pdf",
+          "type": "file",
+          "path": "legal-documents/Fxi-Letter-to-Hein-Brand-per-Jeenah-and-Delaney-29-Aug-2006.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/Fxi-Letter-to-Hein-Brand-per-Jeenah-and-Delaney-29-Aug-2006.pdf",
+          "stats": {
+            "size": 3039108,
+            "sizeKB": 2968,
+            "sizeMB": "2.90",
+            "created": "2025-07-11T06:32:35.367Z",
+            "modified": "2025-07-11T06:32:38.527Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "0a4a8b6199529eb4fc613cb178e16679e2e3bed45c6f2ce7276c42345c112e70",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
+            "actualSize": 3039108
+          }
+        },
+        {
+          "name": "Gagging-Letter-JS-De-Villiers-26-June-2006.pdf",
+          "type": "file",
+          "path": "legal-documents/Gagging-Letter-JS-De-Villiers-26-June-2006.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/Gagging-Letter-JS-De-Villiers-26-June-2006.pdf",
+          "stats": {
+            "size": 1724222,
+            "sizeKB": 1684,
+            "sizeMB": "1.64",
+            "created": "2025-07-11T06:32:32.592Z",
+            "modified": "2025-07-11T06:32:34.852Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "57fb2cc677b0c29c21a3058f5ce091eea4df94fd9e8fb0d70c3e84e8df12fb1f",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
+            "actualSize": 1724222
+          }
+        },
+        {
+          "name": "Gmail-FW-Lewis-_-Naspers-Copyright-protection.pdf",
+          "type": "file",
+          "path": "legal-documents/Gmail-FW-Lewis-_-Naspers-Copyright-protection.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/Gmail-FW-Lewis-_-Naspers-Copyright-protection.pdf",
+          "stats": {
+            "size": 1165255,
+            "sizeKB": 1138,
+            "sizeMB": "1.11",
+            "created": "2025-07-11T06:32:26.669Z",
+            "modified": "2025-07-11T06:32:28.586Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "2375f60a754ba11eb565045db52f3c458b1944bdcbcb6b6bea3b8f21924c528c",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 1165255
+          }
+        },
+        {
+          "name": "LIT10153ZA00-Letter-to-Naspers-26.07.2016.pdf",
+          "type": "file",
+          "path": "legal-documents/LIT10153ZA00-Letter-to-Naspers-26.07.2016.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/LIT10153ZA00-Letter-to-Naspers-26.07.2016.pdf",
+          "stats": {
+            "size": 338905,
+            "sizeKB": 331,
+            "sizeMB": "0.32",
+            "created": "2025-07-11T06:32:24.745Z",
+            "modified": "2025-07-11T06:32:26.160Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "327a446c374d04a05976f40d634f516967e272ee7f887ff59096c8d05237593d",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 338905
+          }
+        },
+        {
+          "name": "NASPERS-LTD-AND-MEDIA24-DIE-BURGER-COPYRIGHT-PROTECTION-IN-THE-NAME-OF....pdf",
+          "type": "file",
+          "path": "legal-documents/NASPERS-LTD-AND-MEDIA24-DIE-BURGER-COPYRIGHT-PROTECTION-IN-THE-NAME-OF....pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/NASPERS-LTD-AND-MEDIA24-DIE-BURGER-COPYRIGHT-PROTECTION-IN-THE-NAME-OF....pdf",
+          "stats": {
+            "size": 416953,
+            "sizeKB": 407,
+            "sizeMB": "0.40",
+            "created": "2025-07-11T06:32:29.089Z",
+            "modified": "2025-07-11T06:32:30.528Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "b60869b82b3803c1e3dfd745304458e7136d129898c5d7f23ab1b7d089bcd8c8",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 416953
+          }
+        },
+        {
+          "name": "RWR-Letter-to-Maserumule-12.10.2016.pdf",
+          "type": "file",
+          "path": "legal-documents/RWR-Letter-to-Maserumule-12.10.2016.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/RWR-Letter-to-Maserumule-12.10.2016.pdf",
+          "stats": {
+            "size": 93909,
+            "sizeKB": 92,
+            "sizeMB": "0.09",
+            "created": "2025-07-11T06:32:31.040Z",
+            "modified": "2025-07-11T06:32:32.087Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "f1ca64bdfb9f7398e297bb98e4ec830a5ae79abecdb05e02273fdf618b6cd4d5",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 93909
+          }
+        },
+        {
+          "name": "Supplement-Affidavit-CBC-Kahanovitz-9-MAY-2017-TUE.pdf",
+          "type": "file",
+          "path": "legal-documents/Supplement-Affidavit-CBC-Kahanovitz-9-MAY-2017-TUE.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/Supplement-Affidavit-CBC-Kahanovitz-9-MAY-2017-TUE.pdf",
+          "stats": {
+            "size": 22741161,
+            "sizeKB": 22208,
+            "sizeMB": "21.69",
+            "created": "2025-07-11T06:32:08.690Z",
+            "modified": "2025-07-11T06:32:24.240Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "2c9d05d5fc3e6ecda8cfc4495748e630f5f7ff52d4fc537ce4a6dcbf96ec7d6e",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.5",
+            "actualSize": 22741161
+          }
+        },
+        {
+          "name": "TRC-Unit-26-Oct-2006.pdf",
+          "type": "file",
+          "path": "legal-documents/TRC-Unit-26-Oct-2006.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/TRC-Unit-26-Oct-2006.pdf",
+          "stats": {
+            "size": 1095901,
+            "sizeKB": 1070,
+            "sizeMB": "1.05",
+            "created": "2025-07-11T06:32:41.338Z",
+            "modified": "2025-07-11T06:32:43.250Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "79b1cbc458e2f079f1c80195ce91a15bf635d16ec7798c2430e737b0322a84b6",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
+            "actualSize": 1095901
+          }
+        },
+        {
+          "name": "TRC-Unit-26-Sept-2007.pdf",
+          "type": "file",
+          "path": "legal-documents/TRC-Unit-26-Sept-2007.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/TRC-Unit-26-Sept-2007.pdf",
+          "stats": {
+            "size": 965320,
+            "sizeKB": 943,
+            "sizeMB": "0.92",
+            "created": "2025-07-11T06:32:43.756Z",
+            "modified": "2025-07-11T06:32:45.481Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "81b75dfd3cd3e020eb96bd456320631137642b630f6b623d4d2ddbdc527e060c",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
+            "actualSize": 965320
+          }
+        },
+        {
+          "name": "TRC-Unit-28-Sept-2006.pdf",
+          "type": "file",
+          "path": "legal-documents/TRC-Unit-28-Sept-2006.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/TRC-Unit-28-Sept-2006.pdf",
+          "stats": {
+            "size": 992289,
+            "sizeKB": 969,
+            "sizeMB": "0.95",
+            "created": "2025-07-11T06:32:39.039Z",
+            "modified": "2025-07-11T06:32:40.834Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "2579fbc3f31d03caeb8afdcb98e427c033e1bfafb3902758dc965a6389af0c48",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
+            "actualSize": 992289
+          }
+        },
+        {
+          "name": "Third-Supplementary-Affidavit-Perjury-A-Dean.pdf",
+          "type": "file",
+          "path": "legal-documents/Third-Supplementary-Affidavit-Perjury-A-Dean.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/Third-Supplementary-Affidavit-Perjury-A-Dean.pdf",
+          "stats": {
+            "size": 17661952,
+            "sizeKB": 17248,
+            "sizeMB": "16.84",
+            "created": "2025-07-11T06:31:41.486Z",
+            "modified": "2025-07-11T06:31:53.820Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "7dbd32eede0f617d22ccd54613482db583502e23f74375a77119c49e18dd295a",
+          "validation": {
+            "isValid": false,
+            "hasPDFHeader": true,
+            "hasTrailer": false,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
+            "actualSize": 17661952
+          }
+        },
+        {
+          "name": "Trace-Report-A-Dean.pdf",
+          "type": "file",
+          "path": "legal-documents/Trace-Report-A-Dean.pdf",
+          "fullPath": "/home/user/Projects/medialternatives/frontend-app/downloads/legal-pdfs/legal-documents/Trace-Report-A-Dean.pdf",
+          "stats": {
+            "size": 4567792,
+            "sizeKB": 4461,
+            "sizeMB": "4.36",
+            "created": "2025-07-11T06:32:03.998Z",
+            "modified": "2025-07-11T06:32:08.181Z",
+            "fileType": "Portable Document Format",
+            "extension": ".pdf",
+            "isFile": true,
+            "isDirectory": false
+          },
+          "hash": "518b0775a25f5ad1813cd6646bb197279b490b2365896d1526288474fb0fa05c",
+          "validation": {
+            "isValid": true,
+            "hasPDFHeader": true,
+            "hasTrailer": true,
+            "minSize": true,
+            "hasVersion": true,
+            "version": "1.3",
+            "actualSize": 4567792
+          }
+        }
+      ],
+      "fileCount": 18
+    }
+  ]
+}

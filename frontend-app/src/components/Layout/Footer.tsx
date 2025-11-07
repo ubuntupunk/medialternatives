@@ -1,0 +1,61 @@
+import React from 'react';
+import Link from 'next/link';
+import { FooterProps } from '@/types';
+
+/**
+ * Footer component with copyright and navigation
+ */
+const Footer: React.FC<FooterProps> = ({
+  className = '',
+  showNavigation = true,
+  copyrightText
+}) => {
+  const year = new Date().getFullYear();
+  const defaultCopyrightText = `© 2005-${year}`;
+  
+  return (
+    <footer id="colophon" className={`site-footer mt-5 ${className}`} role="contentinfo">
+      {/* Divider */}
+      <div className="footer-divider">
+        <div className="container">
+          <hr className="border-secondary opacity-25" />
+        </div>
+      </div>
+      
+      <div className="site-info py-4">
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-md-8 col-sm-12 mb-2 mb-md-0">
+              <p className="mb-0" style={{ 
+                fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                fontSize: '14px',
+                color: '#6c757d'
+              }}>
+                {copyrightText || defaultCopyrightText} Medialternatives
+              </p>
+            </div>
+            
+            <div className="col-md-4 col-sm-12 text-md-end">
+              <Link 
+                href="https://netbones.co.za/" 
+                className="text-decoration-none text-nowrap"
+                style={{ 
+                  fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                  fontSize: '13px',
+                  color: '#8B008B',
+                  fontWeight: '500'
+                }}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Powered by Netbones South&nbsp;Africa
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

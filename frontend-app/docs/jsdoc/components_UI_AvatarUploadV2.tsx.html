@@ -1,0 +1,452 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> components/UI/AvatarUploadV2.tsx</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AvatarManager.html">AvatarManager</a></li></ul><h3>Interfaces</h3><ul><li><a href="APITestResult.html">APITestResult</a></li><li><a href="AvatarOptions.html">AvatarOptions</a></li><li><a href="HeaderProps.html">HeaderProps</a></li><li><a href="NotificationSettings.html">NotificationSettings</a></li><li><a href="ScheduleSettings.html">ScheduleSettings</a></li><li><a href="WordPressToken.html">WordPressToken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AdSenseFeed">AdSenseFeed</a></li><li><a href="global.html#AdSenseWidget">AdSenseWidget</a></li><li><a href="global.html#AddToHomeScreen">AddToHomeScreen</a></li><li><a href="global.html#AuthStatus">AuthStatus</a></li><li><a href="global.html#AuthorDisplay">AuthorDisplay</a></li><li><a href="global.html#AuthorWidget">AuthorWidget</a></li><li><a href="global.html#Avatar">Avatar</a></li><li><a href="global.html#AvatarUpload">AvatarUpload</a></li><li><a href="global.html#AvatarUploadV2">AvatarUploadV2</a></li><li><a href="global.html#CategoryCards">CategoryCards</a></li><li><a href="global.html#CategoryCloud">CategoryCloud</a></li><li><a href="global.html#CategoryCloudEnhanced">CategoryCloudEnhanced</a></li><li><a href="global.html#CategoryList">CategoryList</a></li><li><a href="global.html#CategoryPills">CategoryPills</a></li><li><a href="global.html#CreativeCommonsWidget">CreativeCommonsWidget</a></li><li><a href="global.html#CustomHeader">CustomHeader</a></li><li><a href="global.html#DonateWidget">DonateWidget</a></li><li><a href="global.html#EnhancedAuthorWidget">EnhancedAuthorWidget</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#InteractiveButton">InteractiveButton</a></li><li><a href="global.html#KNOWN_LEGACY_MAPPINGS">KNOWN_LEGACY_MAPPINGS</a></li><li><a href="global.html#LoadMore">LoadMore</a></li><li><a href="global.html#OfflineIndicator">OfflineIndicator</a></li><li><a href="global.html#Pagination">Pagination</a></li><li><a href="global.html#PostCard">PostCard</a></li><li><a href="global.html#PostCardBig">PostCardBig</a></li><li><a href="global.html#PostGrid">PostGrid</a></li><li><a href="global.html#WORDPRESS_API_ENDPOINTS">WORDPRESS_API_ENDPOINTS</a></li><li><a href="global.html#WebringWidget">WebringWidget</a></li><li><a href="global.html#WordPressAuthProvider">WordPressAuthProvider</a></li><li><a href="global.html#calculateCategoryFontSize">calculateCategoryFontSize</a></li><li><a href="global.html#calculateNextRun">calculateNextRun</a></li><li><a href="global.html#calculateSimilarity">calculateSimilarity</a></li><li><a href="global.html#checkMultiplePostsLinks">checkMultiplePostsLinks</a></li><li><a href="global.html#checkPostLinks">checkPostLinks</a></li><li><a href="global.html#checkUrl">checkUrl</a></li><li><a href="global.html#clearStoredToken">clearStoredToken</a></li><li><a href="global.html#createExcerpt">createExcerpt</a></li><li><a href="global.html#createGravatarUrl">createGravatarUrl</a></li><li><a href="global.html#createScheduledCheck">createScheduledCheck</a></li><li><a href="global.html#createUrlParams">createUrlParams</a></li><li><a href="global.html#dataURLToBlob">dataURLToBlob</a></li><li><a href="global.html#debounce">debounce</a></li><li><a href="global.html#decodeHtmlEntities">decodeHtmlEntities</a></li><li><a href="global.html#downloadFile">downloadFile</a></li><li><a href="global.html#executeScheduledCheck">executeScheduledCheck</a></li><li><a href="global.html#exportDeadLinks">exportDeadLinks</a></li><li><a href="global.html#exportToCSV">exportToCSV</a></li><li><a href="global.html#exportToJSON">exportToJSON</a></li><li><a href="global.html#extractUrlsFromContent">extractUrlsFromContent</a></li><li><a href="global.html#findPostByLegacyUrl">findPostByLegacyUrl</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#formatNextRun">formatNextRun</a></li><li><a href="global.html#formatReadingTime">formatReadingTime</a></li><li><a href="global.html#formatRelativeDate">formatRelativeDate</a></li><li><a href="global.html#generateArchiveUrl">generateArchiveUrl</a></li><li><a href="global.html#generateAvatarSizes">generateAvatarSizes</a></li><li><a href="global.html#generateColorFromString">generateColorFromString</a></li><li><a href="global.html#generateInitialsAvatar">generateInitialsAvatar</a></li><li><a href="global.html#generatePDFHTML">generatePDFHTML</a></li><li><a href="global.html#generatePDFReport">generatePDFReport</a></li><li><a href="global.html#generateRandomState">generateRandomState</a></li><li><a href="global.html#generateSlug">generateSlug</a></li><li><a href="global.html#generateSlugVariations">generateSlugVariations</a></li><li><a href="global.html#generateSuggestions">generateSuggestions</a></li><li><a href="global.html#generateTestReport">generateTestReport</a></li><li><a href="global.html#getAuthStatus">getAuthStatus</a></li><li><a href="global.html#getDefaultExportOptions">getDefaultExportOptions</a></li><li><a href="global.html#getDefaultNotificationSettings">getDefaultNotificationSettings</a></li><li><a href="global.html#getDefaultScheduleSettings">getDefaultScheduleSettings</a></li><li><a href="global.html#getFeaturedImageUrl">getFeaturedImageUrl</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getKnownMapping">getKnownMapping</a></li><li><a href="global.html#getLocalStorage">getLocalStorage</a></li><li><a href="global.html#getPostAuthor">getPostAuthor</a></li><li><a href="global.html#getPostAuthorId">getPostAuthorId</a></li><li><a href="global.html#getPostCategories">getPostCategories</a></li><li><a href="global.html#getPostTags">getPostTags</a></li><li><a href="global.html#getReadingTime">getReadingTime</a></li><li><a href="global.html#getScheduledChecks">getScheduledChecks</a></li><li><a href="global.html#getStoredToken">getStoredToken</a></li><li><a href="global.html#handleOAuthCallback">handleOAuthCallback</a></li><li><a href="global.html#initiateWordPressOAuth">initiateWordPressOAuth</a></li><li><a href="global.html#isAuthenticated">isAuthenticated</a></li><li><a href="global.html#isBrowser">isBrowser</a></li><li><a href="global.html#isDebugMode">isDebugMode</a></li><li><a href="global.html#isValidEmail">isValidEmail</a></li><li><a href="global.html#loadAvatarFromStorage">loadAvatarFromStorage</a></li><li><a href="global.html#loadNotificationSettings">loadNotificationSettings</a></li><li><a href="global.html#loadScheduleSettings">loadScheduleSettings</a></li><li><a href="global.html#logAPIResponse">logAPIResponse</a></li><li><a href="global.html#makeAuthenticatedRequest">makeAuthenticatedRequest</a></li><li><a href="global.html#processNotifications">processNotifications</a></li><li><a href="global.html#removeAvatarFromStorage">removeAvatarFromStorage</a></li><li><a href="global.html#requestNotificationPermission">requestNotificationPermission</a></li><li><a href="global.html#resizeImageToSquare">resizeImageToSquare</a></li><li><a href="global.html#saveAvatarToStorage">saveAvatarToStorage</a></li><li><a href="global.html#saveNotificationSettings">saveNotificationSettings</a></li><li><a href="global.html#saveScheduleSettings">saveScheduleSettings</a></li><li><a href="global.html#searchArchiveSnapshots">searchArchiveSnapshots</a></li><li><a href="global.html#sendEmailNotification">sendEmailNotification</a></li><li><a href="global.html#sendWebhookNotification">sendWebhookNotification</a></li><li><a href="global.html#setLocalStorage">setLocalStorage</a></li><li><a href="global.html#shouldRunCheck">shouldRunCheck</a></li><li><a href="global.html#showBrowserNotification">showBrowserNotification</a></li><li><a href="global.html#storeToken">storeToken</a></li><li><a href="global.html#stripHtml">stripHtml</a></li><li><a href="global.html#testEndpoint">testEndpoint</a></li><li><a href="global.html#testWordPressEndpoints">testWordPressEndpoints</a></li><li><a href="global.html#truncateText">truncateText</a></li><li><a href="global.html#updateScheduleSettings">updateScheduleSettings</a></li><li><a href="global.html#useAuthenticatedAPI">useAuthenticatedAPI</a></li><li><a href="global.html#useClientOnly">useClientOnly</a></li><li><a href="global.html#useClientState">useClientState</a></li><li><a href="global.html#useWordPressAuth">useWordPressAuth</a></li><li><a href="global.html#validateImageFile">validateImageFile</a></li><li><a href="global.html#validateSiteSetup">validateSiteSetup</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>components/UI/AvatarUploadV2.tsx</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use client';
+
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import Image from 'next/image';
+import { createAvatarStorage } from '@/services/avatarStorage';
+import { getAvatarConfig } from '@/config/avatarConfig';
+import { generateInitialsAvatar, validateImageFile, resizeImageToSquare } from '@/utils/avatarUtils';
+
+interface AvatarUploadV2Props {
+  userId: string;
+  userName?: string;
+  onAvatarChange?: (avatarUrl: string) => void;
+  size?: number;
+  className?: string;
+  showStorageInfo?: boolean;
+}
+
+/**
+ * Enhanced Avatar upload widget with configurable storage backends
+ * Supports localStorage, Vercel Blob, Cloudinary, Supabase, and file system
+ */
+const AvatarUploadV2: React.FC&lt;AvatarUploadV2Props> = ({
+  userId,
+  userName = 'User',
+  onAvatarChange,
+  size = 120,
+  className = '',
+  showStorageInfo = false
+}) => {
+  const [avatar, setAvatar] = useState&lt;string>('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [dragOver, setDragOver] = useState(false);
+  const [error, setError] = useState&lt;string | null>(null);
+  const [storageInfo, setStorageInfo] = useState&lt;string>('');
+  
+  const fileInputRef = useRef&lt;HTMLInputElement>(null);
+  const storageService = useRef(createAvatarStorage());
+  const config = getAvatarConfig();
+
+  // Load existing avatar on mount
+  useEffect(() => {
+    const loadAvatar = async () => {
+      try {
+        setIsLoading(true);
+        const existingAvatar = await storageService.current.loadAvatar(userId);
+        if (existingAvatar) {
+          setAvatar(existingAvatar);
+          onAvatarChange?.(existingAvatar);
+        }
+      } catch (error) {
+        console.error('Failed to load existing avatar:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadAvatar();
+  }, [userId, onAvatarChange]);
+
+  // Handle file upload
+  const handleFileUpload = useCallback(async (file: File) => {
+    setError(null);
+    
+    // Validate file
+    const validation = validateImageFile(file);
+    if (!validation.valid) {
+      setError(validation.error || 'Invalid file');
+      return;
+    }
+
+    setIsUploading(true);
+    setStorageInfo(`Uploading to ${config.storage}...`);
+
+    try {
+      // Resize image
+      const resizedImage = await resizeImageToSquare(file, size);
+      
+      // Save to configured storage
+      const savedUrl = await storageService.current.saveAvatar(userId, resizedImage, {
+        filename: file.name,
+        mimeType: file.type,
+        size: file.size,
+        uploadedAt: new Date(),
+        originalName: file.name,
+      });
+
+      setAvatar(savedUrl);
+      onAvatarChange?.(savedUrl);
+      setStorageInfo(`Saved to ${config.storage} successfully`);
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setStorageInfo(''), 3000);
+      
+    } catch (error) {
+      console.error('Error uploading avatar:', error);
+      setError(error instanceof Error ? error.message : 'Upload failed');
+      setStorageInfo('');
+    } finally {
+      setIsUploading(false);
+    }
+  }, [userId, size, onAvatarChange, config.storage]);
+
+  // Handle drag and drop
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+      handleFileUpload(files[0]);
+    }
+  }, [handleFileUpload]);
+
+  // Handle file input change
+  const handleFileInputChange = useCallback((e: React.ChangeEvent&lt;HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files &amp;&amp; files.length > 0) {
+      handleFileUpload(files[0]);
+    }
+  }, [handleFileUpload]);
+
+  // Generate initials avatar
+  const handleGenerateInitials = useCallback(async () => {
+    setError(null);
+    setIsUploading(true);
+    setStorageInfo(`Generating avatar and saving to ${config.storage}...`);
+
+    try {
+      const generatedAvatar = generateInitialsAvatar(userName, { size });
+      
+      const savedUrl = await storageService.current.saveAvatar(userId, generatedAvatar, {
+        filename: `${userId}-initials.png`,
+        mimeType: 'image/png',
+        uploadedAt: new Date(),
+        originalName: 'Generated Initials Avatar',
+      });
+
+      setAvatar(savedUrl);
+      onAvatarChange?.(savedUrl);
+      setStorageInfo(`Generated avatar saved to ${config.storage}`);
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setStorageInfo(''), 3000);
+      
+    } catch (error) {
+      console.error('Error generating avatar:', error);
+      setError(error instanceof Error ? error.message : 'Generation failed');
+      setStorageInfo('');
+    } finally {
+      setIsUploading(false);
+    }
+  }, [userId, userName, size, onAvatarChange, config.storage]);
+
+  // Remove avatar
+  const handleRemoveAvatar = useCallback(async () => {
+    setError(null);
+    setIsUploading(true);
+    setStorageInfo(`Removing avatar from ${config.storage}...`);
+
+    try {
+      await storageService.current.removeAvatar(userId);
+      setAvatar('');
+      onAvatarChange?.('');
+      setStorageInfo(`Avatar removed from ${config.storage}`);
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setStorageInfo(''), 3000);
+      
+    } catch (error) {
+      console.error('Error removing avatar:', error);
+      setError(error instanceof Error ? error.message : 'Removal failed');
+      setStorageInfo('');
+    } finally {
+      setIsUploading(false);
+    }
+  }, [userId, onAvatarChange, config.storage]);
+
+  // Get current avatar URL or generate fallback
+  const currentAvatarUrl = avatar || generateInitialsAvatar(userName, { size });
+
+  if (isLoading) {
+    return (
+      &lt;div className={`avatar-upload ${className}`}>
+        &lt;div className="text-center">
+          &lt;div className="placeholder-glow">
+            &lt;div 
+              className="placeholder rounded-circle mx-auto mb-3" 
+              style={{ width: size, height: size }}
+            >&lt;/div>
+          &lt;/div>
+          &lt;p className="text-muted">Loading avatar...&lt;/p>
+        &lt;/div>
+      &lt;/div>
+    );
+  }
+
+  return (
+    &lt;div className={`avatar-upload ${className}`}>
+      &lt;div className="text-center">
+        {/* Storage Info */}
+        {showStorageInfo &amp;&amp; (
+          &lt;div className="mb-2">
+            &lt;small className="text-muted">
+              &lt;i className="bi bi-cloud me-1">&lt;/i>
+              Storage: {config.storage}
+            &lt;/small>
+          &lt;/div>
+        )}
+
+        {/* Avatar Display */}
+        &lt;div className="avatar-container mb-3 position-relative d-inline-block">
+          &lt;Image
+            src={currentAvatarUrl}
+            alt="Avatar"
+            width={size}
+            height={size}
+            className="rounded-circle border shadow-sm"
+            style={{ objectFit: 'cover' }}
+          />
+          {isUploading &amp;&amp; (
+            &lt;div 
+              className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50 rounded-circle"
+            >
+              &lt;div className="spinner-border spinner-border-sm text-light" role="status">
+                &lt;span className="visually-hidden">Processing...&lt;/span>
+              &lt;/div>
+            &lt;/div>
+          )}
+        &lt;/div>
+
+        {/* Status Messages */}
+        {error &amp;&amp; (
+          &lt;div className="alert alert-danger alert-sm mb-3" role="alert">
+            &lt;i className="bi bi-exclamation-triangle me-1">&lt;/i>
+            {error}
+          &lt;/div>
+        )}
+
+        {storageInfo &amp;&amp; (
+          &lt;div className="alert alert-info alert-sm mb-3" role="alert">
+            &lt;i className="bi bi-info-circle me-1">&lt;/i>
+            {storageInfo}
+          &lt;/div>
+        )}
+
+        {/* Upload Area */}
+        &lt;div
+          className={`upload-area border-2 border-dashed rounded p-3 mb-3 ${
+            dragOver ? 'border-primary bg-light' : 'border-secondary'
+          }`}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          style={{ cursor: 'pointer' }}
+          onClick={() => fileInputRef.current?.click()}
+        >
+          &lt;div className="text-center">
+            &lt;i className="bi bi-cloud-upload fs-4 text-muted mb-2">&lt;/i>
+            &lt;p className="mb-1">
+              &lt;strong>Click to upload&lt;/strong> or drag and drop
+            &lt;/p>
+            &lt;small className="text-muted">
+              {config.allowedTypes.map(type => type.split('/')[1].toUpperCase()).join(', ')} up to {Math.round(config.maxFileSize / 1024 / 1024)}MB
+            &lt;/small>
+          &lt;/div>
+        &lt;/div>
+
+        {/* Hidden file input */}
+        &lt;input
+          ref={fileInputRef}
+          type="file"
+          accept={config.allowedTypes.join(',')}
+          onChange={handleFileInputChange}
+          className="d-none"
+        />
+
+        {/* Action Buttons */}
+        &lt;div className="d-flex gap-2 justify-content-center flex-wrap">
+          &lt;button
+            type="button"
+            className="btn btn-outline-primary btn-sm"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isUploading}
+          >
+            &lt;i className="bi bi-upload me-1">&lt;/i>
+            Upload Photo
+          &lt;/button>
+          
+          &lt;button
+            type="button"
+            className="btn btn-outline-secondary btn-sm"
+            onClick={handleGenerateInitials}
+            disabled={isUploading}
+          >
+            &lt;i className="bi bi-person-circle me-1">&lt;/i>
+            Generate Avatar
+          &lt;/button>
+          
+          {avatar &amp;&amp; (
+            &lt;button
+              type="button"
+              className="btn btn-outline-danger btn-sm"
+              onClick={handleRemoveAvatar}
+              disabled={isUploading}
+            >
+              &lt;i className="bi bi-trash me-1">&lt;/i>
+              Remove
+            &lt;/button>
+          )}
+        &lt;/div>
+
+        {/* Tips */}
+        &lt;div className="mt-3">
+          &lt;small className="text-muted">
+            &lt;i className="bi bi-info-circle me-1">&lt;/i>
+            Images are automatically cropped to square and resized to {size}px. 
+            Stored using {config.storage}.
+          &lt;/small>
+        &lt;/div>
+      &lt;/div>
+    &lt;/div>
+  );
+};
+
+export default AvatarUploadV2;</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sun Aug 31 2025 10:28:25 GMT-0400 (Eastern Daylight Time)</p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

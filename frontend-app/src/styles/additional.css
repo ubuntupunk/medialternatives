@@ -1,0 +1,287 @@
+/*
+ * This file contains custom styling from the original site's additional.css
+ * These styles override the default theme styling and provide custom look and feel
+ */
+
+/* Site title and description styling */
+h1.site-title {
+    font-size: 40px;
+    font-style: italic;
+    color: #000;
+    font-family: var(--font-revalia), cursive;
+    text-shadow: 0 0 8px #FFF;
+}
+
+.site-description {
+    font-size: 18px;
+    font-style: italic;
+    color: #000;
+    font-family: var(--font-quattrocento), serif !important; 
+    text-shadow: 0 0 6px #FFF;
+}
+
+/* Navigation hover states */
+.blaskan-main-menu:hover {
+    color: blue;
+}
+
+.blog a:hover {
+    color: purple;
+}
+
+/* Typography */
+.site-content p {
+    font-family: var(--font-copse), serif;
+}
+
+/* Background color */
+body {
+    background: #e3e3e3;
+}
+
+/* Footer styling */
+footer {
+    display: flex;
+    justify-content: center;
+    font-size: 12px !important;
+    color: #8B008B;
+}
+
+/* Link colors */
+a {
+    color: #0031FF;
+}
+
+a:link {
+    color: #0031FF;
+}
+
+div.entry-meta {
+    color: #0031FF;
+    font-size: 12px;
+    margin-top: 16px;
+}
+
+.entry-thumbnail {
+    margin-bottom: 20px;
+}
+
+aside {
+    color: #0031FF;
+}
+
+span.byline {
+    color: #0031FF;
+}
+
+a:hover {
+    color: blueviolet;
+}
+
+a:visited {
+    color: #B800FF;
+}
+
+/* Button styling */
+a.more-link, button {
+    background-color: #04AA6D;
+    border: 1px;
+    font-family: helvetica;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #00e7ff !important;
+    padding: 12px;
+    text-align: center;
+    display: inline-block;
+    margin: 2px 2px;
+    border-radius: 2px;
+}
+
+/* Widget styling */
+.widget-title {
+    font-size: 16px;
+    font-weight: 300;
+    text-align: center;
+}
+
+.widget {
+    font-family: cambria;
+    font-size: 14px;
+    font-weight: 200;
+    text-align: left;
+}
+
+.widget ul {
+    list-style: none;
+    margin: 0;
+}
+
+.widget.posts {
+    font-family: cambria;
+}
+
+.widget.archives {
+    font-family: cambria;
+}
+
+/* Pagination styling */
+.page-numbers {
+    text-align: center;
+}
+
+.copyright-info {
+    visibility: visible;
+    text-align: right;
+}
+
+.entry-content a:not(.more-link):not(.wp-block-button__link):hover {
+    color: blueviolet;
+}
+
+/* Tag cloud styling */
+.tagcloud, .widget_tag_cloud, .wp_widget_tag_cloud {
+    line-height: 1.5;
+}
+
+.tagcloud ul li {
+    float: left;
+    border-top: 0;
+    border-bottom: 0;
+    padding: 0;
+    margin: 4px 4px 0 0;
+}
+
+/* Colored tag cloud items */
+.tagcloud a {
+    font-family: cambria;
+    opacity: 0.80;
+    color: #FFF;
+    display: inline-block;
+    margin: 0 5px 5px 0;
+    padding: 0 6px;
+    line-height: 30px;
+    border-radius: 5px;
+}
+.tagcloud a:nth-child(9n) { background-color: #4A4A4A; }
+.tagcloud a:nth-child(9n+1) { background-color: #428BCA; }
+.tagcloud a:nth-child(9n+2) { background-color: #5CB85C; }
+.tagcloud a:nth-child(9n+3) { background-color: #D9534F; }
+.tagcloud a:nth-child(9n+4) { background-color: #567E95; }
+.tagcloud a:nth-child(9n+5) { background-color: #B433FF; }
+.tagcloud a:nth-child(9n+6) { background-color: #FF8C00; } /* Dark Orange */
+.tagcloud a:nth-child(9n+7) { background-color: #00CED1; } /* Dark Cyan */
+.tagcloud a:nth-child(9n+8) { background-color: #8B0000; } /* Dark Red */
+
+/* Quote styling */
+.wp-block-quote {
+    font-size: 14px;
+    font-family: helvetica !important;
+    justify-content: left;
+}
+
+/* AdSense styling */
+ins.adsbygoogle {
+    background: transparent !important;
+}
+
+/* Social share button hover effects */
+.share-btn-twitter:hover {
+    background-color: #0d8bd9 !important;
+    border-color: #0d8bd9 !important;
+}
+
+.share-btn-facebook:hover {
+    background-color: #166fe5 !important;
+    border-color: #166fe5 !important;
+}
+
+.share-btn-linkedin:hover {
+    background-color: #005885 !important;
+    border-color: #005885 !important;
+}
+
+.share-btn-reddit:hover {
+    background-color: #cc3700 !important;
+    border-color: #cc3700 !important;
+}
+
+.share-btn-email:hover {
+    background-color: #5a6268 !important;
+    border-color: #5a6268 !important;
+}
+
+/* Read more pill button styling */
+.read-more-pill:hover {
+    background-color: #038a5a !important;
+    border-color: #038a5a !important;
+    color: #00e7ff !important;
+    text-decoration: none !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(4, 170, 109, 0.3);
+}
+
+/* Mobile typography improvements */
+@media (max-width: 767.98px) {
+    .entry-title {
+        font-weight: 500 !important;
+    }
+}
+
+/* Mobile responsiveness for post footer */
+@media (max-width: 767.98px) {
+    .entry-footer .d-flex {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 1rem !important;
+    }
+    
+    .entry-footer .post-navigation {
+        order: 2;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .entry-footer .share-buttons {
+        order: 1;
+        justify-content: center !important;
+        flex-wrap: wrap;
+        gap: 0.5rem !important;
+        max-width: 100%;
+    }
+    
+    .entry-footer .share-buttons span {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.5rem;
+        margin-right: 0 !important;
+    }
+    
+    /* Two buttons per row on mobile */
+    .entry-footer .share-buttons a {
+        flex: 0 0 calc(50% - 0.25rem);
+        max-width: calc(50% - 0.25rem);
+        justify-content: center !important;
+    }
+    
+    /* Normal horizontal buttons on mobile */
+    .entry-footer .btn-sm {
+        padding: 0.375rem 0.75rem !important;
+        font-size: 0.875rem !important;
+        width: auto !important;
+        min-width: 0 !important;
+        height: auto !important;
+        white-space: nowrap;
+    }
+    
+    .entry-footer .btn-sm svg {
+        width: 14px !important;
+        height: 14px !important;
+    }
+}
+
+/* Tablet responsiveness */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .entry-footer .share-buttons {
+        gap: 0.75rem !important;
+    }
+}

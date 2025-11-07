@@ -1,0 +1,33 @@
+/**
+ * Theme Name:     Blaskan Child
+ * Author:         Dawid
+ * Template:       blaskan
+ * Text Domain:	   blaskan-child
+ * Description:    Blaskan is a responsive and accessible WordPress theme that
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Copse&family=Quattrocento:wght@400;700&family=Revalia&display=swap');
+
+/* Pagination */
+.page_nav .page-numbers{
+        background:#BCBCBC;
+	color:#fff;
+	display:block;
+	width:auto;
+	float:left;
+	margin: 4px 4px 4px 0;
+	padding:15px 18px 14px 18px;
+	text-decoration:none;
+}
+
+.page_nav .page-numbers:hover{
+	background: #24221D;
+	color:#fff;
+	text-decoration: none;
+}
+
+.page_nav .current{
+        background: #24221D;
+	color:#fff;
+        padding:15px 18px 14px 18px;
+}

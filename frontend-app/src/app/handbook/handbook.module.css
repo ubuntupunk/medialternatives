@@ -1,0 +1,171 @@
+/* Handbook-specific styling */
+.handbook {
+  font-family: var(--font-handbook-body);
+}
+
+.handbook h1, 
+.handbook h2, 
+.handbook h3, 
+.handbook h4, 
+.handbook h5, 
+.handbook h6 {
+  font-family: var(--font-handbook-heading);
+  font-weight: 700;
+}
+
+.heroSection {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.heroSection .headline {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.heroSection .subheadline {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.bookCoverHolder {
+  position: relative;
+}
+
+.bookCover {
+  max-width: 300px;
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.bookCover:hover {
+  transform: translateY(-10px);
+}
+
+.bookBadge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #ff6b6b;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+}
+
+.benefitsSection {
+  background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+}
+
+.benefitItem {
+  padding: 2rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+}
+
+.benefitItem:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.iconHolder {
+  margin-bottom: 1.5rem;
+}
+
+.iconHolder i {
+  color: #667eea;
+}
+
+.benefitTitle {
+  font-family: var(--font-handbook-heading);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.benefitDesc {
+  color: #6c757d;
+  line-height: 1.6;
+}
+
+.contentSection {
+  background: white;
+}
+
+.chapter {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.chapter:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+}
+
+.chapterTitle {
+  font-family: var(--font-handbook-heading);
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.chapterDesc {
+  color: #6c757d;
+  margin-bottom: 0;
+  line-height: 1.6;
+}
+
+.ctaSection {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.ctaSection .btn {
+  font-weight: 600;
+  padding: 12px 30px;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+}
+
+.ctaSection .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .heroSection .headline {
+    font-size: 2.5rem;
+  }
+  
+  .heroSection .subheadline {
+    font-size: 1.1rem;
+  }
+  
+  .bookCover {
+    max-width: 250px;
+  }
+  
+  .benefitItem {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .heroSection .headline {
+    font-size: 2rem;
+  }
+  
+  .bookCover {
+    max-width: 200px;
+  }
+}

@@ -1,0 +1,427 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> components/widgets-extra/WebringWidget.tsx</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="AvatarManager.html">AvatarManager</a></li></ul><h3>Interfaces</h3><ul><li><a href="APITestResult.html">APITestResult</a></li><li><a href="AvatarOptions.html">AvatarOptions</a></li><li><a href="HeaderProps.html">HeaderProps</a></li><li><a href="NotificationSettings.html">NotificationSettings</a></li><li><a href="ScheduleSettings.html">ScheduleSettings</a></li><li><a href="WordPressToken.html">WordPressToken</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AdSenseFeed">AdSenseFeed</a></li><li><a href="global.html#AdSenseWidget">AdSenseWidget</a></li><li><a href="global.html#AddToHomeScreen">AddToHomeScreen</a></li><li><a href="global.html#AuthStatus">AuthStatus</a></li><li><a href="global.html#AuthorDisplay">AuthorDisplay</a></li><li><a href="global.html#AuthorWidget">AuthorWidget</a></li><li><a href="global.html#Avatar">Avatar</a></li><li><a href="global.html#AvatarUpload">AvatarUpload</a></li><li><a href="global.html#AvatarUploadV2">AvatarUploadV2</a></li><li><a href="global.html#CategoryCards">CategoryCards</a></li><li><a href="global.html#CategoryCloud">CategoryCloud</a></li><li><a href="global.html#CategoryCloudEnhanced">CategoryCloudEnhanced</a></li><li><a href="global.html#CategoryList">CategoryList</a></li><li><a href="global.html#CategoryPills">CategoryPills</a></li><li><a href="global.html#CreativeCommonsWidget">CreativeCommonsWidget</a></li><li><a href="global.html#CustomHeader">CustomHeader</a></li><li><a href="global.html#DonateWidget">DonateWidget</a></li><li><a href="global.html#EnhancedAuthorWidget">EnhancedAuthorWidget</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#InteractiveButton">InteractiveButton</a></li><li><a href="global.html#KNOWN_LEGACY_MAPPINGS">KNOWN_LEGACY_MAPPINGS</a></li><li><a href="global.html#LoadMore">LoadMore</a></li><li><a href="global.html#OfflineIndicator">OfflineIndicator</a></li><li><a href="global.html#Pagination">Pagination</a></li><li><a href="global.html#PostCard">PostCard</a></li><li><a href="global.html#PostCardBig">PostCardBig</a></li><li><a href="global.html#PostGrid">PostGrid</a></li><li><a href="global.html#WORDPRESS_API_ENDPOINTS">WORDPRESS_API_ENDPOINTS</a></li><li><a href="global.html#WebringWidget">WebringWidget</a></li><li><a href="global.html#WordPressAuthProvider">WordPressAuthProvider</a></li><li><a href="global.html#calculateCategoryFontSize">calculateCategoryFontSize</a></li><li><a href="global.html#calculateNextRun">calculateNextRun</a></li><li><a href="global.html#calculateSimilarity">calculateSimilarity</a></li><li><a href="global.html#checkMultiplePostsLinks">checkMultiplePostsLinks</a></li><li><a href="global.html#checkPostLinks">checkPostLinks</a></li><li><a href="global.html#checkUrl">checkUrl</a></li><li><a href="global.html#clearStoredToken">clearStoredToken</a></li><li><a href="global.html#createExcerpt">createExcerpt</a></li><li><a href="global.html#createGravatarUrl">createGravatarUrl</a></li><li><a href="global.html#createScheduledCheck">createScheduledCheck</a></li><li><a href="global.html#createUrlParams">createUrlParams</a></li><li><a href="global.html#dataURLToBlob">dataURLToBlob</a></li><li><a href="global.html#debounce">debounce</a></li><li><a href="global.html#decodeHtmlEntities">decodeHtmlEntities</a></li><li><a href="global.html#downloadFile">downloadFile</a></li><li><a href="global.html#executeScheduledCheck">executeScheduledCheck</a></li><li><a href="global.html#exportDeadLinks">exportDeadLinks</a></li><li><a href="global.html#exportToCSV">exportToCSV</a></li><li><a href="global.html#exportToJSON">exportToJSON</a></li><li><a href="global.html#extractUrlsFromContent">extractUrlsFromContent</a></li><li><a href="global.html#findPostByLegacyUrl">findPostByLegacyUrl</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#formatNextRun">formatNextRun</a></li><li><a href="global.html#formatReadingTime">formatReadingTime</a></li><li><a href="global.html#formatRelativeDate">formatRelativeDate</a></li><li><a href="global.html#generateArchiveUrl">generateArchiveUrl</a></li><li><a href="global.html#generateAvatarSizes">generateAvatarSizes</a></li><li><a href="global.html#generateColorFromString">generateColorFromString</a></li><li><a href="global.html#generateInitialsAvatar">generateInitialsAvatar</a></li><li><a href="global.html#generatePDFHTML">generatePDFHTML</a></li><li><a href="global.html#generatePDFReport">generatePDFReport</a></li><li><a href="global.html#generateRandomState">generateRandomState</a></li><li><a href="global.html#generateSlug">generateSlug</a></li><li><a href="global.html#generateSlugVariations">generateSlugVariations</a></li><li><a href="global.html#generateSuggestions">generateSuggestions</a></li><li><a href="global.html#generateTestReport">generateTestReport</a></li><li><a href="global.html#getAuthStatus">getAuthStatus</a></li><li><a href="global.html#getDefaultExportOptions">getDefaultExportOptions</a></li><li><a href="global.html#getDefaultNotificationSettings">getDefaultNotificationSettings</a></li><li><a href="global.html#getDefaultScheduleSettings">getDefaultScheduleSettings</a></li><li><a href="global.html#getFeaturedImageUrl">getFeaturedImageUrl</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getKnownMapping">getKnownMapping</a></li><li><a href="global.html#getLocalStorage">getLocalStorage</a></li><li><a href="global.html#getPostAuthor">getPostAuthor</a></li><li><a href="global.html#getPostAuthorId">getPostAuthorId</a></li><li><a href="global.html#getPostCategories">getPostCategories</a></li><li><a href="global.html#getPostTags">getPostTags</a></li><li><a href="global.html#getReadingTime">getReadingTime</a></li><li><a href="global.html#getScheduledChecks">getScheduledChecks</a></li><li><a href="global.html#getStoredToken">getStoredToken</a></li><li><a href="global.html#handleOAuthCallback">handleOAuthCallback</a></li><li><a href="global.html#initiateWordPressOAuth">initiateWordPressOAuth</a></li><li><a href="global.html#isAuthenticated">isAuthenticated</a></li><li><a href="global.html#isBrowser">isBrowser</a></li><li><a href="global.html#isDebugMode">isDebugMode</a></li><li><a href="global.html#isValidEmail">isValidEmail</a></li><li><a href="global.html#loadAvatarFromStorage">loadAvatarFromStorage</a></li><li><a href="global.html#loadNotificationSettings">loadNotificationSettings</a></li><li><a href="global.html#loadScheduleSettings">loadScheduleSettings</a></li><li><a href="global.html#logAPIResponse">logAPIResponse</a></li><li><a href="global.html#makeAuthenticatedRequest">makeAuthenticatedRequest</a></li><li><a href="global.html#processNotifications">processNotifications</a></li><li><a href="global.html#removeAvatarFromStorage">removeAvatarFromStorage</a></li><li><a href="global.html#requestNotificationPermission">requestNotificationPermission</a></li><li><a href="global.html#resizeImageToSquare">resizeImageToSquare</a></li><li><a href="global.html#saveAvatarToStorage">saveAvatarToStorage</a></li><li><a href="global.html#saveNotificationSettings">saveNotificationSettings</a></li><li><a href="global.html#saveScheduleSettings">saveScheduleSettings</a></li><li><a href="global.html#searchArchiveSnapshots">searchArchiveSnapshots</a></li><li><a href="global.html#sendEmailNotification">sendEmailNotification</a></li><li><a href="global.html#sendWebhookNotification">sendWebhookNotification</a></li><li><a href="global.html#setLocalStorage">setLocalStorage</a></li><li><a href="global.html#shouldRunCheck">shouldRunCheck</a></li><li><a href="global.html#showBrowserNotification">showBrowserNotification</a></li><li><a href="global.html#storeToken">storeToken</a></li><li><a href="global.html#stripHtml">stripHtml</a></li><li><a href="global.html#testEndpoint">testEndpoint</a></li><li><a href="global.html#testWordPressEndpoints">testWordPressEndpoints</a></li><li><a href="global.html#truncateText">truncateText</a></li><li><a href="global.html#updateScheduleSettings">updateScheduleSettings</a></li><li><a href="global.html#useAuthenticatedAPI">useAuthenticatedAPI</a></li><li><a href="global.html#useClientOnly">useClientOnly</a></li><li><a href="global.html#useClientState">useClientState</a></li><li><a href="global.html#useWordPressAuth">useWordPressAuth</a></li><li><a href="global.html#validateImageFile">validateImageFile</a></li><li><a href="global.html#validateSiteSetup">validateSiteSetup</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>components/widgets-extra/WebringWidget.tsx</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
+import { WebringWidgetProps, webringThemes } from './types';
+import styles from './WebringWidget.module.css';
+import { useClientOnly } from '@/hooks/useClientOnly';
+
+/**
+ * Interactive Webring Widget Component
+ *
+ * A dynamic widget that displays webring information with interactive theme changing.
+ * Users can hover over the widget and tooltip to cycle through different visual themes.
+ *
+ * @param {WebringWidgetProps} props - The component props
+ * @returns {JSX.Element} The rendered webring widget
+ *
+ * @example
+ * ```tsx
+ * &lt;WebringWidget
+ *   title="My Webring"
+ *   theme="dark"
+ *   size="medium"
+ *   showImage={true}
+ * />
+ * ```
+ */
+const WebringWidget: React.FC&lt;WebringWidgetProps> = ({
+  title = 'Webring',
+  webringUrl = 'https://meshring.netlify.app',
+  theme = 'dark',
+  size = 'medium',
+  showImage = true,
+  className = '',
+  showDescription = true
+}) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [isKeyboardNav, setIsKeyboardNav] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState&lt;string>('dark');
+  const [currentTheme, setCurrentTheme] = useState&lt;string>('dark');
+  const [isHoveringWidget, setIsHoveringWidget] = useState(false);
+  const [isHoveringTooltip, setIsHoveringTooltip] = useState(false);
+  const tooltipRef = useRef&lt;HTMLDivElement>(null);
+  const infoButtonRef = useRef&lt;HTMLAnchorElement>(null);
+  const widgetRef = useRef&lt;HTMLElement>(null);
+  const isClient = useClientOnly();
+  
+  // Available themes for theme changes
+  const availableThemes = ['default', 'minimal', 'ocean', 'sunset', 'dark', 'tokyo', 'dracula', 'disco'];
+
+  // Handle theme selection - default to dark
+  useEffect(() => {
+    if (isClient) {
+      const initialTheme = theme === 'random' ? 'dark' : theme;
+      setSelectedTheme(initialTheme);
+      setCurrentTheme(initialTheme);
+    }
+  }, [isClient, theme]);
+
+  /**
+   * Changes the widget theme to a random theme different from the current one
+   *
+   * @private
+   * @function changeToRandomTheme
+   * @returns {void}
+   */
+  const changeToRandomTheme = () => {
+    const currentIndex = availableThemes.indexOf(currentTheme);
+    let randomIndex;
+    do {
+      randomIndex = Math.floor(Math.random() * availableThemes.length);
+    } while (randomIndex === currentIndex &amp;&amp; availableThemes.length > 1); // Avoid same theme
+
+    const newTheme = availableThemes[randomIndex];
+    setCurrentTheme(newTheme);
+  };
+
+  /**
+   * Handles mouse entering the widget area
+   * Changes theme if not already hovering over tooltip
+   *
+   * @private
+   * @function handleWidgetMouseEnter
+   * @returns {void}
+   */
+  const handleWidgetMouseEnter = () => {
+    setIsHoveringWidget(true);
+    if (!isHoveringTooltip) {
+      changeToRandomTheme();
+    }
+  };
+
+  /**
+   * Handles mouse leaving the widget area
+   * Resets hover states and hides tooltip
+   *
+   * @private
+   * @function handleWidgetMouseLeave
+   * @returns {void}
+   */
+  const handleWidgetMouseLeave = () => {
+    setIsHoveringWidget(false);
+    setIsHoveringTooltip(false);
+    setShowTooltip(false);
+  };
+
+  /**
+   * Handles mouse entering the tooltip/info button
+   * Shows tooltip and changes theme
+   *
+   * @private
+   * @function handleTooltipMouseEnter
+   * @returns {void}
+   */
+  const handleTooltipMouseEnter = () => {
+    setIsHoveringTooltip(true);
+    setShowTooltip(true);
+    changeToRandomTheme();
+  };
+
+  /**
+   * Handles mouse leaving the tooltip/info button
+   * Hides tooltip
+   *
+   * @private
+   * @function handleTooltipMouseLeave
+   * @returns {void}
+   */
+  const handleTooltipMouseLeave = () => {
+    setIsHoveringTooltip(false);
+    setShowTooltip(false);
+  };
+  
+  // Use current theme for styling
+  const themeData = webringThemes[currentTheme] || webringThemes.dark;
+  
+  const getSizeClass = () => {
+    switch (size) {
+      case 'small': return styles.sizeSmall;
+      case 'large': return styles.sizeLarge;
+      default: return styles.sizeMedium;
+    }
+  };
+
+  // Handle keyboard navigation detection
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        setIsKeyboardNav(true);
+      }
+    };
+    
+    const handleMouseDown = () => {
+      setIsKeyboardNav(false);
+    };
+    
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('mousedown', handleMouseDown);
+    
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('mousedown', handleMouseDown);
+    };
+  }, []);
+
+  // Handle Escape key to close tooltip
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' &amp;&amp; showTooltip) {
+        setShowTooltip(false);
+        setIsHoveringTooltip(false);
+        infoButtonRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [showTooltip]);
+
+  const themeStyles = {
+    '--webring-bg': themeData.colors.background,
+    '--webring-border': themeData.colors.border,
+    '--webring-text': themeData.colors.text,
+    '--webring-accent': themeData.colors.accent,
+    '--webring-link': themeData.colors.linkColor,
+    '--webring-link-hover': themeData.colors.linkHover,
+    '--webring-button-bg': themeData.colors.buttonBackground,
+    '--webring-button-text': themeData.colors.buttonText,
+    '--webring-button-hover': themeData.colors.buttonHover,
+  } as React.CSSProperties;
+
+  return (
+    &lt;aside
+      ref={widgetRef}
+      className={`widget ${styles.webringWidget} ${getSizeClass()} ${styles[`theme-${currentTheme}`]} ${className} ${isKeyboardNav ? styles.keyboardNav : ''} ${(isHoveringWidget || isHoveringTooltip) ? styles.themeChanging : ''}`}
+      style={themeStyles}
+      role="complementary"
+      aria-labelledby="webring-title"
+      onMouseEnter={handleWidgetMouseEnter}
+      onMouseLeave={handleWidgetMouseLeave}
+    >
+      &lt;h3 id="webring-title" className={styles.widgetTitle}>{title}&lt;/h3>
+      
+      &lt;div className={styles.webringContent}>
+        {showImage &amp;&amp; (
+          &lt;div className={styles.surferImageContainer}>
+            &lt;Image
+              src="https://meshring.netlify.app/assets/images/surfer.jpg"
+              alt="Surfer on a wave"
+              width={size === 'small' ? 40 : size === 'large' ? 80 : 60}
+              height={size === 'small' ? 40 : size === 'large' ? 80 : 60}
+              className={styles.surferImage}
+              role="img"
+              aria-label="Surfer on a wave"
+              unoptimized={true}
+              onError={(e) => {
+                console.error('Surfer image failed to load:', e);
+                // Fallback to a simple icon or hide the image
+                e.currentTarget.style.display = 'none';
+              }}
+              onLoad={() => {
+                console.log('Surfer image loaded successfully');
+              }}
+            />
+          &lt;/div>
+        )}
+        
+        &lt;div className={styles.webringText}>
+          &lt;p className={styles.webringIntro}>Member of the&lt;/p>
+          &lt;h4 className={styles.webringName}>
+            &lt;a 
+              href={webringUrl}
+              aria-label="Visit MuizenMesh Webring homepage"
+            >
+              MuizenMesh Webring
+            &lt;/a>
+          &lt;/h4>
+          
+          {showDescription &amp;&amp; (
+            &lt;p className={styles.webringMembers}>
+              A community of independent websites
+            &lt;/p>
+          )}
+        &lt;/div>
+        
+        &lt;div className={styles.webringInfoContainer}>
+          &lt;a
+            ref={infoButtonRef}
+            href="https://en.wikipedia.org/wiki/Webring"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.webringInfo}
+            aria-describedby={showTooltip ? "webring-tooltip" : undefined}
+            onMouseEnter={handleTooltipMouseEnter}
+            onMouseLeave={handleTooltipMouseLeave}
+            onFocus={() => setShowTooltip(true)}
+            onBlur={() => setShowTooltip(false)}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                setShowTooltip(false);
+                setIsHoveringTooltip(false);
+              }
+            }}
+            title=""
+          >
+            ?
+          &lt;/a>
+          
+          {showTooltip &amp;&amp; (
+            &lt;div 
+              id="webring-tooltip"
+              ref={tooltipRef}
+              role="tooltip"
+              className={styles.webringTooltip}
+              aria-live="polite"
+            >
+              What is a webring? Click to learn more on Wikipedia
+            &lt;/div>
+          )}
+        &lt;/div>
+      &lt;/div>
+      
+      &lt;nav 
+        className={styles.webringNavigation}
+        aria-label="Webring navigation"
+      >
+        &lt;a 
+          href={`${webringUrl}/prev`} 
+          className={styles.webringLink}
+          aria-label="Go to previous website in the webring"
+        >
+          &amp;larr; Previous
+        &lt;/a>
+        &lt;a 
+          href={`${webringUrl}/random`} 
+          className={styles.webringLink}
+          aria-label="Go to a random website in the webring"
+        >
+          Random
+        &lt;/a>
+        &lt;a 
+          href={`${webringUrl}/next`} 
+          className={styles.webringLink}
+          aria-label="Go to next website in the webring"
+        >
+          Next &amp;rarr;
+        &lt;/a>
+      &lt;/nav>
+    &lt;/aside>
+  );
+};
+
+export default WebringWidget;</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sun Aug 31 2025 10:28:25 GMT-0400 (Eastern Daylight Time)</p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

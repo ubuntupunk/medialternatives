@@ -1,0 +1,194 @@
+/* Webring Widget Styles */
+.webringWidget {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.webringLogo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 0 auto 0.5rem;
+  display: block;
+  object-fit: cover;
+}
+
+.webringContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.surferImageContainer {
+  flex-shrink: 0;
+}
+
+.surferImage {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #0d6efd;
+}
+
+.webringText {
+  text-align: left;
+  flex-grow: 1;
+}
+
+.webringIntro {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #495057;
+}
+
+.webringName {
+  margin: 0.25rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.webringName a {
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.webringName a:hover {
+  text-decoration: underline;
+}
+
+.webringMembers {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #495057;
+}
+
+.webringNavigation {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.widgetTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #495057;
+  text-align: center;
+}
+
+.webringBanner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.webringImage {
+  margin-bottom: 0.5rem;
+}
+
+.webringLogo {
+  max-width: 120px;
+  height: auto;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.webringImage {
+  margin-bottom: 0.5rem;
+}
+
+.webringLogo {
+  max-width: 120px;
+  height: auto;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.webringImage {
+  margin-bottom: 0.75rem;
+}
+
+.webringBannerImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+
+.webringLink {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #ffffff;
+  color: #0d6efd;
+  text-decoration: none;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: 2px solid #0d6efd;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.webringLink:hover {
+  background: #0d6efd;
+  border-color: #0d6efd;
+  color: #ffffff !important;
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(13, 110, 253, 0.3);
+}
+
+.webringLink:active {
+  transform: translateY(0);
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .webringContent {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .webringText {
+    text-align: center;
+  }
+  
+  .webringNavigation {
+    gap: 0.5rem;
+  }
+  
+  .webringLink {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .surferImage {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+/* Alternative styling for embedded script content */
+.webringWidget :global(.webring-embed) {
+  text-align: center;
+}
+
+.webringWidget :global(.webring-embed a) {
+  color: #0d6efd;
+  text-decoration: none;
+  margin: 0 0.25rem;
+}
+
+.webringWidget :global(.webring-embed a:hover) {
+  text-decoration: underline;
+}

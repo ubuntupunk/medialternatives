@@ -1,0 +1,124 @@
+{
+  "name": "roots/bedrock",
+  "type": "project",
+  "license": "MIT",
+  "description": "WordPress boilerplate with modern development tools, easier configuration, and an improved folder structure",
+  "homepage": "https://roots.io/bedrock/",
+  "authors": [
+    {
+      "name": "Scott Walkinshaw",
+      "email": "scott.walkinshaw@gmail.com",
+      "homepage": "https://github.com/swalkinshaw"
+    },
+    {
+      "name": "Ben Word",
+      "email": "ben@benword.com",
+      "homepage": "https://github.com/retlehs"
+    }
+  ],
+  "keywords": [
+    "bedrock", "composer", "roots", "wordpress", "wp", "wp-config"
+  ],
+  "support": {
+    "issues": "https://github.com/roots/bedrock/issues",
+    "forum": "https://discourse.roots.io/category/bedrock"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org",
+      "only": ["wpackagist-plugin/*", "wpackagist-theme/*"] 
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "composer/installers": "^1.8",
+    "vlucas/phpdotenv": "^4.1.8",
+    "oscarotero/env": "^2.1",
+    "roots/bedrock-autoloader": "^1.0",
+    "roots/wordpress": ">=5.7.2",
+    "roots/wp-config": "1.0.0",
+    "roots/wp-password-bcrypt": "1.0.0",
+    "wpackagist-plugin/advanced-floating-content-lite":">=1.2.1",
+    "wpackagist-plugin/activitypub":">=3.1.0",
+    "wpackagist-plugin/akismet":"dev-trunk",
+    "wpackagist-plugin/block-navigation":">=3.1.0",
+    "wpackagist-plugin/cite":">=1.2.2",
+    "wpackagist-plugin/wp-cloudflare-cache":">=1.0.3",
+    "wpackagist-plugin/contact-form-7":">=5.4.2",
+    "wpackagist-plugin/contact-widgets":">=1.7.0",
+    "wpackagist-plugin/color-widgets":">=1.0",
+    "wpackagist-plugin/drop-caps":">=2.1",
+    "wpackagist-plugin/editor-blocks":">=1.2.1",
+    "wpackagist-plugin/worker":">=4.9.8",
+    "wpackagist-plugin/wordpress-seo":">=7.0.2",
+    "wpackagist-plugin/wordpress-importer":">=0.7",
+    "wpackagist-plugin/easy-google-fonts":">=1.4.4", 
+    "wpackagist-plugin/easy-adsense-ads-scripts-manager":">=0.57",
+    "wpackagist-plugin/backup-and-restore-for-wp":">=1.0.2",
+    "wpackagist-plugin/custom-css-js":">=3.34",
+    "wpackagist-plugin/cloudflare":">=3.4",
+    "wpackagist-plugin/cloudflare-flexible-ssl":">=1.3.1",    
+    "wpackagist-plugin/jetpack":">=9.1",
+    "wpackagist-plugin/jetpack-extras":">=3.3",
+    "wpackagist-plugin/jetpack-boost":">=1.2.0",
+    "wpackagist-plugin/olympus-google-fonts":">=2.2.4",
+    "wpackagist-plugin/olympus-widgets":">=1.0.1",
+    "wpackagist-plugin/google-website-translator":">=1.4.4",
+    "wpackagist-plugin/health-check":">=1.5.1",
+    "wpackagist-plugin/indieweb":">=3.4.3",
+    "wpackagist-plugin/litespeed-cache":">=3.5.2",
+    "wpackagist-plugin/manage-xml-rpc":">=1.0",
+    "wpackagist-plugin/loginizer":">=1.6.4",
+    "wpackagist-plugin/open-graphite":">=1.3.2",
+    "wpackagist-plugin/wp-optimize":"^3.2.14",
+    "wpackagist-plugin/wp-pagenavi":">=2.94.0",   
+    "wpackagist-plugin/wordpress-reset":">=1.4.2",
+    "wpackagist-plugin/semantic-linkbacks":">=4.7.5",
+    "wpackagist-plugin/google-site-kit":">=1.35.0",
+    "wpackagist-plugin/statically":">=0.9",
+    "wpackagist-plugin/social-time-master":">=1.0.5", 
+    "wpackagist-plugin/social-media-auto-publish":">=2.4.0",
+    "wpackagist-plugin/pwa4wp":">=0.6.0",
+    "wpackagist-plugin/tinymce-templates":">=4.8.1",
+    "wpackagist-plugin/webmention":">=4.0.5",
+    "wpackagist-plugin/wpadcenter":">=2.4.0",
+    "wpackagist-plugin/wp-super-minify":">=1.5.1",	    
+    "wpackagist-plugin/wp-search-with-algolia":">=2.8.2",
+    "wpackagist-plugin/wordfence":">=7.4.12",
+    "wpackagist-plugin/widget-css-classes":">=1.5.4.1",
+    "wpackagist-theme/blaskan":">=3.0.1",
+    "wpackagist-plugin/wp-graphql":">=1.6.5"
+ },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.5.6",	    
+    "roave/security-advisories": "dev-master"
+},
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "allow-plugins": {
+      "composer/installers": true,
+      "roots/wordpress-core-installer": true
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "extra": {
+    "installer-paths": {
+      "web/app/mu-plugins/{$name}/": ["type:wordpress-muplugin"],
+      "web/app/plugins/{$name}/": ["type:wordpress-plugin"],
+      "web/app/themes/{$name}/": ["type:wordpress-theme"]
+    },
+    "wordpress-install-dir": "web/wp"
+  },
+  "scripts": {
+    "post-root-package-install": [
+      "php -r \"copy('.env.example', '.env');\""
+    ],
+    "test": [
+      "phpcs"
+    ]
+  }
+}
+
