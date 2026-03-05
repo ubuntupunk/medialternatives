@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { POST } from '../generate-image/route';
+import { POST } from '../images/generate/route';
 
 // Mock environment variables
 process.env.HUGGINGFACE_API_TOKEN = 'test-token';

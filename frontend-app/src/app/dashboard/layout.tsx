@@ -8,10 +8,10 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { requireAuth, isLoading, isAuthenticated } = useAuth();
-  
+  const { useRequireAuth, isLoading, isAuthenticated } = useAuth();
+
   // Require authentication for this layout
-  requireAuth();
+  useRequireAuth();
 
   if (isLoading) {
     return (

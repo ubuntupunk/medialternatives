@@ -22,6 +22,8 @@
   font-size: 3.5rem;
   font-weight: 700;
   line-height: 1.2;
+  padding: 1rem 0;
+  margin-bottom: 1.5rem;
 }
 
 .heroSection .subheadline {
@@ -70,6 +72,56 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.benefitItem::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  z-index: 1;
+}
+
+.benefitItem > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Specific background images for each benefit type */
+.benefitItem.strategy {
+  background-image: url('/images/handbook_strategy.png');
+}
+
+.benefitItem.history {
+  background-image: url('/images/handbook_history.png');
+}
+
+.benefitItem.history::before {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.benefitItem.caseStudies {
+  background-image: url('/images/handbook_case.png');
+}
+
+.benefitItem.altMedia {
+  background-image: url('/images/handbook_altmedia.png');
+}
+
+.benefitItem.education {
+  background-image: url('/images/handbook_education.png');
+}
+
+.benefitItem.resistance {
+  background-image: url('/images/handbook_resistance.png');
 }
 
 .benefitItem:hover {
@@ -99,6 +151,31 @@
 
 .contentSection {
   background: white;
+  background-image: url('/images/handbook_education.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.contentSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.6);
+  z-index: 1;
+}
+
+.contentSection > .container {
+  position: relative;
+  z-index: 2;
+}
+
+.contentSection .section-heading {
+  color: #1a1a1a;
 }
 
 .chapter {
@@ -115,12 +192,12 @@
 
 .chapterTitle {
   font-family: var(--font-handbook-heading);
-  color: #2c3e50;
+  color: #1a1a1a;
   margin-bottom: 0.5rem;
 }
 
 .chapterDesc {
-  color: #6c757d;
+  color: #333333;
   margin-bottom: 0;
   line-height: 1.6;
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import PostGrid from '@/components/Posts/PostGrid';
 import Pagination from '@/components/UI/Pagination';
 import { wordpressApi } from '@/services/wordpress-api';
@@ -8,9 +9,9 @@ import { WordPressPost, PaginationInfo } from '@/types/wordpress';
 import { mockPosts } from '@/utils/mockData';
 
 interface HomePagePaginatedProps {
-  params: {
+  params: Promise<{
     page: string;
-  };
+  }>;
 }
 
 /**
@@ -18,7 +19,8 @@ interface HomePagePaginatedProps {
  * Accessible via /page/[page] URLs
  */
 export default async function HomePagePaginated({ params }: HomePagePaginatedProps) {
-  const currentPage = parseInt(params.page, 10);
+  const { page } = await params;
+  const currentPage = parseInt(page, 10);
   
   // Validate page number
   if (isNaN(currentPage) || currentPage < 1) {
@@ -89,7 +91,7 @@ export default async function HomePagePaginated({ params }: HomePagePaginatedPro
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
               <li className="breadcrumb-item">
-                <a href="/">Home</a>
+                <Link href="/">Home</Link>
               </li>
               <li className="breadcrumb-item active" aria-current="page">
                 Page {currentPage}
@@ -112,9 +114,9 @@ export default async function HomePagePaginated({ params }: HomePagePaginatedPro
         <div className="alert alert-info">
           <h4>No posts found on this page</h4>
           <p>There are no posts available on page {currentPage}.</p>
-          <a href="/" className="btn btn-primary">
+          <Link href="/" className="btn btn-primary">
             Go to First Page
-          </a>
+          </Link>
         </div>
       ) : (
         <>
@@ -152,8 +154,9 @@ export default async function HomePagePaginated({ params }: HomePagePaginatedPro
 /**
  * Generate metadata for SEO
  */
-export async function generateMetadata({ params }: { params: { page: string } }) {
-  const currentPage = parseInt(params.page, 10);
+export async function generateMetadata({ params }: { params: Promise<{ page: string }> }) {
+  const { page } = await params;
+  const currentPage = parseInt(page, 10);
   
   if (isNaN(currentPage) || currentPage < 1) {
     return {

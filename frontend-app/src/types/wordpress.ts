@@ -222,6 +222,7 @@ export interface WordPressTerm {
   name: string;
   slug: string;
   taxonomy: string;
+  count?: number;
 }
 
 /**

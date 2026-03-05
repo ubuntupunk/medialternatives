@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { wordpressApi } from '@/services/wordpress-api';
 
 /**
@@ -7,10 +7,9 @@ import { wordpressApi } from '@/services/wordpress-api';
  * Returns WordPress posts that have placeholder or missing featured images.
  * Useful for identifying posts that need image updates.
  *
- * @param {NextRequest} request - Next.js request object
  * @returns {Promise<NextResponse>} Posts with placeholder images or error response
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Fetch posts from WordPress.com API
     const posts = await wordpressApi.getPosts({

@@ -1,7 +1,7 @@
 import React from 'react';
+import Link from 'next/link';
 import Layout from '@/components/Layout/Layout';
 import { wordpressApi } from '@/services/wordpress-api';
-import { SITE_CONFIG } from '@/lib/constants';
 
 /**
  * Test page to verify pagination API functionality
@@ -160,15 +160,15 @@ export default async function PaginationTestPage() {
         </div>
 
         <div className="mt-4 text-center">
-          <a href="/" className="btn btn-primary me-3">
+          <Link href="/" className="btn btn-primary me-3">
             Test Home Page
-          </a>
-          <a href="/blog" className="btn btn-secondary me-3">
+          </Link>
+          <Link href="/blog" className="btn btn-secondary me-3">
             Test Blog Page
-          </a>
-          <a href="/category/politics" className="btn btn-outline-secondary">
+          </Link>
+          <Link href="/category/politics" className="btn btn-outline-secondary">
             Test Category Page
-          </a>
+          </Link>
         </div>
       </div>
     </Layout>

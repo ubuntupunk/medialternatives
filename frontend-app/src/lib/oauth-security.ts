@@ -1,10 +1,14 @@
 import crypto from 'crypto';
-import { NextRequest } from 'next/server';
 
 /**
  * OAuth security utilities for secure authentication flows
  */
 
+import fs from 'fs/promises';
+import path from 'path';
+import { GOOGLE_SCOPES } from '@/lib/constants';
+
+const STATE_FILE = path.join(process.cwd(), 'oauth-states.json');
 /**
  * Generate a secure state parameter for CSRF protection
  */
@@ -58,9 +62,9 @@ export function getRedirectURI(): string {
  * Validate OAuth scopes to ensure only necessary permissions
  */
 export function validateScopes(requestedScopes: string[]): boolean {
-  const allowedScopes = [
-    'https://www.googleapis.com/auth/adsense.readonly',
-    'https://www.googleapis.com/auth/analytics.readonly'
+  const allowedScopes: readonly string[] = [
+    GOOGLE_SCOPES.ADSENSE,
+    GOOGLE_SCOPES.ANALYTICS
   ];
 
   return requestedScopes.every(scope => allowedScopes.includes(scope));
@@ -75,16 +79,61 @@ const stateStore = new Map<string, { state: string; expires: number; pkce?: { co
 /**
  * Store OAuth state with expiration
  */
-export function storeOAuthState(sessionId: string, state: string, pkce?: { codeVerifier: string }): void {
-  const expires = Date.now() + (10 * 60 * 1000); // 10 minutes
+export async function storeOAuthState(sessionId: string, state: string, pkce?: { codeVerifier: string }): Promise<void> {
+  const expires = Date.now() + (15 * 60 * 1000); // 15 minutes (increased from 10)
   stateStore.set(sessionId, { state, expires, pkce });
+
+  // Persist to file for serverless environment
+  try {
+    const states: Record<string, any> = {};
+    for (const [sid, data] of stateStore.entries()) {
+      states[sid] = data;
+    }
+    await fs.writeFile(STATE_FILE, JSON.stringify(states, null, 2));
+    console.log('OAuth state stored and persisted:', { sessionId, stateLength: state.length, hasPkce: !!pkce });
+  } catch (error) {
+    console.error('Failed to persist OAuth state:', error);
+  }
+}
+
+/**
+ * Load states from file if not already loaded
+ */
+async function ensureStatesLoaded() {
+  if (stateStore.size > 0) return; // Already loaded
+
+  try {
+    const data = await fs.readFile(STATE_FILE, 'utf-8');
+    const states = JSON.parse(data);
+
+    for (const [sessionId, stateData] of Object.entries(states)) {
+      const data = stateData as any;
+      if (Date.now() < data.expires) {
+        stateStore.set(sessionId, data);
+      }
+    }
+
+    console.log(`Loaded ${stateStore.size} OAuth states from file`);
+  } catch (error) {
+    // File doesn't exist or is corrupted
+    console.log('No existing OAuth states file');
+  }
 }
 
 /**
  * Retrieve and validate OAuth state
  */
-export function getOAuthState(sessionId: string): { state: string; pkce?: { codeVerifier: string } } | null {
+export async function getOAuthState(sessionId: string): Promise<{ state: string; pkce?: { codeVerifier: string } } | null> {
+  await ensureStatesLoaded();
+
   const stored = stateStore.get(sessionId);
+
+  console.log('OAuth state retrieval:', {
+    sessionId,
+    found: !!stored,
+    storeSize: stateStore.size,
+    expired: stored ? Date.now() > stored.expires : 'N/A'
+  });
 
   if (!stored) {
     return null;
@@ -93,6 +142,7 @@ export function getOAuthState(sessionId: string): { state: string; pkce?: { code
   // Check if expired
   if (Date.now() > stored.expires) {
     stateStore.delete(sessionId);
+    console.log('OAuth state expired and removed');
     return null;
   }
 
@@ -131,11 +181,11 @@ setInterval(cleanupExpiredStates, 5 * 60 * 1000);
 /**
  * Validate OAuth callback parameters
  */
-export function validateOAuthCallback(
+export async function validateOAuthCallback(
   code: string,
   state: string,
   sessionId: string
-): { isValid: boolean; error?: string; codeVerifier?: string } {
+): Promise<{ isValid: boolean; error?: string; codeVerifier?: string }> {
   if (!code) {
     return { isValid: false, error: 'Authorization code is required' };
   }
@@ -144,7 +194,7 @@ export function validateOAuthCallback(
     return { isValid: false, error: 'State parameter is required' };
   }
 
-  const storedState = getOAuthState(sessionId);
+  const storedState = await getOAuthState(sessionId);
   if (!storedState) {
     return { isValid: false, error: 'Invalid or expired session' };
   }

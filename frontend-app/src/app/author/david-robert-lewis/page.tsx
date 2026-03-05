@@ -8,9 +8,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 interface DavidRobertLewisPageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
-  };
+  }>;
 }
 
 /**
@@ -19,7 +19,8 @@ interface DavidRobertLewisPageProps {
  * a proper bio page for the site's main author
  */
 export default async function DavidRobertLewisPage({ searchParams }: DavidRobertLewisPageProps) {
-  const currentPage = parseInt(searchParams.page || '1', 10);
+  const { page } = await searchParams;
+  const currentPage = parseInt(page || '1', 10);
   
   // Static author information for David Robert Lewis
   const author = {
@@ -131,7 +132,7 @@ export default async function DavidRobertLewisPage({ searchParams }: DavidRobert
                 <li className="mb-1">• Former journalist at South Press, Grassroots, and New Nation</li>
                 <li className="mb-1">• Graduate of Centre for African Studies, UCT</li>
                 <li className="mb-1">• Founding member of Earthlife Africa</li>
-                <li className="mb-1">• Past steering committee member of People's Health Movement</li>
+                <li className="mb-1">• Past steering committee member of People&apos;s Health Movement</li>
                 <li className="mb-1">• Technology activist and early hacktivist</li>
               </ul>
             </div>

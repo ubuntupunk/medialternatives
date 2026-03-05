@@ -16,6 +16,23 @@ interface DownloadTrackingData {
 }
 
 /**
+ * Download statistics interface
+ * @interface DownloadStats
+ * @property {number} count - Number of downloads
+ * @property {string} lastDownload - Timestamp of last download
+ * @property {string} firstDownload - Timestamp of first download
+ */
+interface DownloadStats {
+  count: number;
+  lastDownload: string;
+  firstDownload: string;
+}
+
+// In-memory storage for download statistics
+// In production, this should be replaced with a database
+const downloadStats = new Map<string, DownloadStats>();
+
+/**
  * POST /api/downloads/track - Track file download
  *
  * Records download events for analytics and monitoring.
@@ -82,13 +99,13 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   try {
     // Return download statistics
-    const stats = Array.from(downloadStats.entries()).map(([fileid, data]) => ({
+    const stats = Array.from(downloadStats.entries()).map(([fileid, data]: [string, DownloadStats]) => ({
       fileid,
       ...data
     }));
-    
+
     const totalDownloads = Array.from(downloadStats.values())
-      .reduce((sum, stat) => sum + stat.count, 0);
+      .reduce((sum: number, stat: DownloadStats) => sum + stat.count, 0);
     
     return NextResponse.json({
       totalFiles: downloadStats.size,

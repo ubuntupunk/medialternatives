@@ -1,7 +1,7 @@
 // Re-export all types for easier imports
 export * from './wordpress';
 
-import { WordPressUser } from './wordpress';
+
 
 /**
  * Props for the main layout component

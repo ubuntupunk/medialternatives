@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import CategoryCloud from '@/components/Widgets/CategoryCloud';
 import CategoryCloudEnhanced from '@/components/Widgets/CategoryCloudEnhanced';
 import CategoryList from '@/components/Widgets/CategoryList';
@@ -223,12 +224,12 @@ export default async function CategoryDemoPage() {
 
         {/* Navigation */}
         <div className="text-center mt-5">
-          <a href="/blog" className="btn btn-primary me-3">
+          <Link href="/blog" className="btn btn-primary me-3">
             View Blog
-          </a>
-          <a href="/components" className="btn btn-outline-secondary">
+          </Link>
+          <Link href="/components" className="btn btn-outline-secondary">
             Back to Components Demo
-          </a>
+          </Link>
         </div>
       </div>
     </>

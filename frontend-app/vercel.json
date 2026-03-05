@@ -2,15 +2,27 @@
   "functions": {
     "src/app/api/**/*.ts": {
       "maxDuration": 10,
+      "memory": 256
+    },
+    "src/app/api/analytics/**/*.ts": {
+      "maxDuration": 20,
       "memory": 512
+    },
+    "src/app/api/performance/**/*.ts": {
+      "maxDuration": 15,
+      "memory": 256
+    },
+    "src/app/api/jetpack-analytics/**/*.ts": {
+      "maxDuration": 15,
+      "memory": 256
     },
     "src/app/api/generate-image*/**/*.ts": {
       "maxDuration": 5,
       "memory": 256
     },
-    "src/app/api/scheduled-checks/**/*.ts": {
-      "maxDuration": 30,
-      "memory": 1024
+    "src/app/api/search/**/*.ts": {
+      "maxDuration": 12,
+      "memory": 256
     }
   },
   "rewrites": [
@@ -28,6 +40,15 @@
     }
   ],
   "headers": [
+    {
+      "source": "/(.*).(jpg|jpeg|png|gif|svg|ico|css|js)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [

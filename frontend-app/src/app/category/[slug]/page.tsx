@@ -11,12 +11,12 @@ import Link from 'next/link';
 export const revalidate = 300; // 5 minutes
 
 interface CategoryPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     page?: string;
-  };
+  }>;
 }
 
 /**
@@ -24,8 +24,9 @@ interface CategoryPageProps {
  * Accessible via /category/[slug] URLs from CategoryCloud widget
  */
 export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
-  const { slug } = params;
-  const currentPage = parseInt(searchParams.page || '1', 10);
+  const { slug } = await params;
+  const { page } = await searchParams;
+  const currentPage = parseInt(page || '1', 10);
   
   let category: WordPressCategory | null = null;
   let posts: WordPressPost[] = [];
@@ -139,7 +140,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
       {posts.length === 0 ? (
         <div className="alert alert-info">
           <h4>No posts found in this category</h4>
-          <p>There are currently no posts in the "{category?.name}" category.</p>
+          <p>There are currently no posts in the &quot;{category?.name}&quot; category.</p>
           <Link href="/blog" className="btn btn-primary">
             View All Posts
           </Link>
@@ -165,9 +166,10 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 /**
  * Generate metadata for SEO
  */
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   try {
-    const category = await wordpressApi.getCategory(params.slug);
+    const category = await wordpressApi.getCategory(slug);
     
     if (!category) {
       return {

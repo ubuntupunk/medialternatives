@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { DonateWidgetProps } from '@/types';
 
 /**
@@ -15,7 +16,7 @@ const DonateWidget: React.FC<DonateWidgetProps> = ({
   }
 
   return (
-    <div className="widget donate-widget" style={{ marginTop: '30px' }}>
+    <div className="widget donate-widget" style={{ marginTop: '30px', marginBottom: '30px' }}>
       <h3 className="widget-title">{title}</h3>
       <div className="donate-button-container text-center">
         <form action="https://www.paypal.com/donate" method="post" target="_top">
@@ -28,8 +29,15 @@ const DonateWidget: React.FC<DonateWidgetProps> = ({
             alt={buttonText}
             style={{ border: 0 }}
             className="mx-auto d-block"
-          />
-          <img alt="" src="https://www.paypal.com/en_ZA/i/scr/pixel.gif" width="1" height="1" style={{ border: 0 }} />
+           />
+            {/* PayPal tracking pixel removed - URL returns 404 */}
+            {/* <Image
+              alt=""
+              src="https://www.paypal.com/en_ZA/i/scr/pixel.gif"
+              width={1}
+              height={1}
+              style={{ border: 0 }}
+            /> */}
         </form>
       </div>
     </div>

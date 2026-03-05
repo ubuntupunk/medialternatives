@@ -52,8 +52,6 @@ export async function GET(request: NextRequest) {
     
     // Check for Google Search Console API credentials
     const searchConsoleCredentials = process.env.GOOGLE_SEARCH_CONSOLE_CREDENTIALS;
-    const facebookAccessToken = process.env.FACEBOOK_ACCESS_TOKEN;
-    const twitterBearerToken = process.env.TWITTER_BEARER_TOKEN;
     
     if (searchConsoleCredentials) {
       try {

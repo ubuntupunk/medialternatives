@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 /**
  * Performance data structure for PageSpeed Insights metrics
@@ -42,18 +43,64 @@ interface PerformanceData {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const url = searchParams.get('url') || 'https://medialternatives.com';
-    const strategy = searchParams.get('strategy') || 'mobile'; // mobile or desktop
+    const urlParam = searchParams.get('url') || 'https://medialternatives.com';
+    const strategyParam = searchParams.get('strategy') || 'mobile';
+
+    // Validate and sanitize inputs
+    const urlSchema = z.string().url().max(2048); // Reasonable URL length limit
+    const strategySchema = z.enum(['mobile', 'desktop']);
+
+    const urlValidation = urlSchema.safeParse(urlParam);
+    const strategyValidation = strategySchema.safeParse(strategyParam);
+
+    if (!urlValidation.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Invalid URL parameter',
+            details: 'URL must be a valid HTTP/HTTPS URL and less than 2048 characters'
+          }
+        },
+        { status: 400 }
+      );
+    }
+
+    if (!strategyValidation.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Invalid strategy parameter',
+            details: 'Strategy must be either "mobile" or "desktop"'
+          }
+        },
+        { status: 400 }
+      );
+    }
+
+    const url = urlValidation.data;
+    const strategy = strategyValidation.data; // mobile or desktop
     
     // PageSpeed Insights API integration - API key available in environment
     const apiKey = process.env.PAGESPEED_API_KEY;
     
     if (apiKey && url) {
       try {
-        // Make real PageSpeed Insights API call
+        // Make real PageSpeed Insights API call with timeout
         const apiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${apiKey}&strategy=${strategy}&category=performance&category=accessibility&category=best-practices&category=seo&category=pwa`;
-        
-        const response = await fetch(apiUrl);
+
+        // Add timeout to prevent hanging
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000); // 12 second timeout
+
+        const response = await fetch(apiUrl, {
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
         const data = await response.json();
         
         if (data.lighthouseResult) {

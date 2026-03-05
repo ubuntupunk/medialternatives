@@ -48,7 +48,7 @@ const PostCardBig: React.FC<PostCardProps> = ({
         
         {featuredImageUrl && (
           <div className="entry-thumbnail">
-            <Link href={`/post/${post.slug}`}>
+            <Link href={`/${post.slug}`}>
               <div style={{ position: 'relative', width: '100%', height: '400px' }}>
                 <Image 
                   src={featuredImageUrl}
@@ -68,7 +68,7 @@ const PostCardBig: React.FC<PostCardProps> = ({
         <div className="entry-content">
           <p className="text-pretty">{excerpt}</p>
           <div className="mt-3 mb-4">
-            <InteractiveButton href={`/post/${post.slug}`}>
+            <InteractiveButton href={`/${post.slug}`}>
               Read full story &rarr;
             </InteractiveButton>
           </div>

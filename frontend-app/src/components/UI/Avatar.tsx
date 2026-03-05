@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { generateInitialsAvatar, getInitials } from '@/utils/avatarUtils';
+import { generateInitialsAvatar } from '@/utils/avatarUtils';
 
 interface AvatarProps {
   src?: string;

@@ -16,7 +16,7 @@ const protectedRoutes = [
  * @constant {string[]} adminRoutes
  */
 const adminRoutes = [
-  '/admin',
+  '/dashboard',
   '/api/avatars',
 ];
 
@@ -54,39 +54,19 @@ export function middleware(request: NextRequest) {
   const isAdminRoute = adminRoutes.some(route => pathname.startsWith(route));
   
   if (isProtectedRoute || isAdminRoute) {
-    // Check for authentication
-    const authCookie = request.cookies.get('auth-session');
-    
-    if (!authCookie) {
+    // Check for JWT authentication
+    const accessToken = request.cookies.get('access_token');
+
+    if (!accessToken) {
       // Redirect to login page
       const loginUrl = new URL('/auth/login', request.url);
       loginUrl.searchParams.set('callbackUrl', pathname);
       return NextResponse.redirect(loginUrl);
     }
-    
-    // Verify the session (basic check for now)
-    try {
-      const sessionData = JSON.parse(authCookie.value);
-      const isExpired = Date.now() > sessionData.expires;
-      
-      if (isExpired) {
-        // Session expired, redirect to login
-        const response = NextResponse.redirect(new URL('/auth/login', request.url));
-        response.cookies.delete('auth-session');
-        return response;
-      }
-      
-      // For admin routes, check if user is admin
-      if (isAdminRoute && !sessionData.isAdmin) {
-        return NextResponse.redirect(new URL('/auth/unauthorized', request.url));
-      }
-      
-    } catch (error) {
-      // Invalid session, redirect to login
-      const response = NextResponse.redirect(new URL('/auth/login', request.url));
-      response.cookies.delete('auth-session');
-      return response;
-    }
+
+    // For now, just check if token exists (full JWT verification happens in API routes)
+    // In production, you might want to verify the token here too
+    // For admin routes, we trust the API will verify admin status
   }
   
   return NextResponse.next();

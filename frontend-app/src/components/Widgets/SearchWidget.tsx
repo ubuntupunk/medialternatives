@@ -5,20 +5,22 @@ import { useRouter } from 'next/navigation';
 
 /**
  * Search result interface
- * @typedef {Object} SearchResult
- * @property {number} id - Unique identifier
- * @property {string} title - Result title
- * @property {string} excerpt - Result excerpt/summary
- * @property {string} link - URL to the result
- * @property {'post'|'page'} type - Content type
- * @property {string} date - Publication date
  */
+export interface SearchResult {
+  id: number;
+  title: string;
+  excerpt: string;
+  link: string;
+  type: 'post' | 'page';
+  date: string;
+}
 
 /**
  * Search widget props interface
- * @typedef {Object} SearchWidgetProps
- * @property {string} [className] - Additional CSS classes
  */
+export interface SearchWidgetProps {
+  className?: string;
+}
 
 /**
  * Search Widget Component
@@ -79,21 +81,27 @@ export const SearchWidget: React.FC<SearchWidgetProps> = ({ className = '' }) =>
         throw new Error('Search failed');
       }
 
-      const data = await response.json();
-      
+      const responseData = await response.json();
+
+      // Extract data from API response wrapper
+      const data = responseData.success ? responseData.data : responseData;
+
       // Transform WordPress.com results
-      const searchResults: SearchResult[] = data.map((item: any) => ({
-        id: item.ID,
-        title: item.title,
-        excerpt: item.excerpt || '',
-        link: `/post/${item.slug}`,
-        type: item.type === 'page' ? 'page' : 'post',
-        date: item.date
-      }));
+      const searchResults: SearchResult[] = data.map((item: unknown) => {
+        const post = item as { ID: number; title: string; excerpt?: string; slug: string; type: string; date: string };
+        return {
+          id: post.ID,
+          title: post.title,
+          excerpt: post.excerpt || '',
+          link: `/${post.slug}`,
+          type: post.type === 'page' ? 'page' : 'post',
+          date: post.date
+        };
+      });
 
       setResults(searchResults);
       setShowResults(true);
-    } catch (err) {
+    } catch (_err) {
       setError('Search failed. Please try again.');
       setResults([]);
     } finally {
@@ -121,7 +129,7 @@ export const SearchWidget: React.FC<SearchWidgetProps> = ({ className = '' }) =>
   };
 
   return (
-    <div className={`search-widget mt-4 ${className}`}>
+    <div className={`search-widget mt-4 mb-4 ${className}`}>
       <div className="widget-header mb-3">
         <h5 className="widget-title text-center">
           <i className="bi bi-search me-2"></i>
@@ -168,7 +176,7 @@ export const SearchWidget: React.FC<SearchWidgetProps> = ({ className = '' }) =>
             {results.length === 0 && !error && !isLoading && (
               <div className="p-3 text-muted small">
                 <i className="bi bi-info-circle me-1"></i>
-                No results found for "{query}"
+                No results found for &quot;{query}&quot;
               </div>
             )}
 
@@ -212,7 +220,7 @@ export const SearchWidget: React.FC<SearchWidgetProps> = ({ className = '' }) =>
                     setShowResults(false);
                   }}
                 >
-                  View all results for "{query}"
+                  View all results for &quot;{query}&quot;
                 </button>
               </div>
             )}

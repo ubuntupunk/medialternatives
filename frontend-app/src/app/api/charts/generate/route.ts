@@ -48,13 +48,25 @@ export async function POST(request: NextRequest) {
   }
 }
 
+interface ChartDataset {
+  label?: string;
+  data: number[];
+  backgroundColor?: string | string[];
+  borderColor?: string | string[];
+}
+
+interface ChartData {
+  labels?: string[];
+  datasets: ChartDataset[];
+}
+
 /**
  * Generate SVG chart from data
  * @param {string} type - Chart type (bar, pie, etc.)
- * @param {any} data - Chart data in Chart.js format
+ * @param {ChartData} data - Chart data in Chart.js format
  * @returns {string} SVG string representation of the chart
  */
-function generateSVGChart(type: string, data: any): string {
+function generateSVGChart(type: string, data: ChartData): string {
   const { labels = [], datasets = [] } = data;
   const width = 600;
   const height = 400;

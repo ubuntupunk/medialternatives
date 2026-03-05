@@ -26,46 +26,69 @@ const AddToHomeScreen: React.FC<AddToHomeScreenProps> = ({ className = '' }) => 
   const [isStandalone, setIsStandalone] = useState(false);
 
   useEffect(() => {
+    console.log('AddToHomeScreen: Initializing PWA detection');
+
+    // Check service worker registration
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        console.log('AddToHomeScreen: Service worker registrations:', registrations.length);
+        registrations.forEach(reg => {
+          console.log('AddToHomeScreen: SW scope:', reg.scope, 'state:', reg.active?.state);
+        });
+      });
+    } else {
+      console.log('AddToHomeScreen: Service Worker not supported');
+    }
+
     // Check if running on iOS
     const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     setIsIOS(iOS);
+    console.log('AddToHomeScreen: iOS detected:', iOS);
 
     // Check if already installed (standalone mode)
     const standalone = window.matchMedia('(display-mode: standalone)').matches;
     setIsStandalone(standalone);
+    console.log('AddToHomeScreen: Standalone mode:', standalone);
 
     // Check if already dismissed
     const dismissed = localStorage.getItem('addToHomeScreenDismissed');
     const dismissedTime = dismissed ? parseInt(dismissed) : 0;
     const oneDayAgo = Date.now() - (24 * 60 * 60 * 1000);
+    console.log('AddToHomeScreen: Dismissed time:', dismissedTime, 'One day ago:', oneDayAgo);
 
     // Don't show if already installed or recently dismissed
     if (standalone || (dismissed && dismissedTime > oneDayAgo)) {
+      console.log('AddToHomeScreen: Not showing prompt - already installed or recently dismissed');
       return;
     }
 
     // Listen for the beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
+      console.log('AddToHomeScreen: beforeinstallprompt event fired');
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      
+
       // Show prompt after a short delay
       setTimeout(() => {
+        console.log('AddToHomeScreen: Showing install prompt');
         setShowPrompt(true);
       }, 3000);
     };
 
     // For iOS devices, show manual instructions
     if (iOS && !standalone) {
+      console.log('AddToHomeScreen: iOS device, showing manual instructions');
       setTimeout(() => {
         setShowPrompt(true);
       }, 3000);
     }
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    console.log('AddToHomeScreen: Added beforeinstallprompt event listener');
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      console.log('AddToHomeScreen: Removed beforeinstallprompt event listener');
     };
   }, []);
 
@@ -90,8 +113,12 @@ const AddToHomeScreen: React.FC<AddToHomeScreenProps> = ({ className = '' }) => 
     localStorage.setItem('addToHomeScreenDismissed', Date.now().toString());
   };
 
+  // For debugging: always show on desktop for testing
+  const isDesktop = typeof window !== 'undefined' && !/Mobi|Android/i.test(navigator.userAgent);
+  const shouldShow = showPrompt || (isDesktop && !isStandalone);
+
   // Don't show if already installed or no prompt available
-  if (!showPrompt || isStandalone || (!deferredPrompt && !isIOS)) {
+  if (!shouldShow) {
     return null;
   }
 
@@ -166,7 +193,7 @@ const AddToHomeScreen: React.FC<AddToHomeScreenProps> = ({ className = '' }) => 
               Not now
             </button>
             
-            {!isIOS && (
+            {!isIOS && deferredPrompt && (
               <button
                 onClick={handleInstallClick}
                 className="btn btn-sm btn-primary"
@@ -178,6 +205,25 @@ const AddToHomeScreen: React.FC<AddToHomeScreenProps> = ({ className = '' }) => 
                 }}
               >
                 Install
+              </button>
+            )}
+
+            {!deferredPrompt && !isIOS && (
+              <button
+                onClick={() => {
+                  // Fallback: try to trigger installation manually
+                  if ('serviceWorker' in navigator && 'caches' in window) {
+                    alert('PWA is ready! Use your browser\'s install button or menu to add to home screen.');
+                  }
+                }}
+                className="btn btn-sm btn-outline-primary"
+                style={{
+                  fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+                  fontSize: '12px',
+                  padding: '0.25rem 0.75rem'
+                }}
+              >
+                PWA Ready
               </button>
             )}
           </div>

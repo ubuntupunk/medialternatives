@@ -97,7 +97,7 @@ export default function About() {
             <div className="card-body">
               <h5 className="card-title">📖 Handbook</h5>
               <p className="card-text">
-                Media Activist's Handbook integration.
+                Media Activist&apos;s Handbook integration.
               </p>
               <button className="btn btn-secondary" disabled>
                 Coming Soon

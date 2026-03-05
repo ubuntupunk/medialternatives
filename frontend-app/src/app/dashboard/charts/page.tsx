@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import Link from 'next/link';
-import ChartRenderer from './ChartRenderer';
-import { initializeMCPTools } from './mcp-chart-loader';
+import D3Chart from '../../../components/Charts/D3Chart';
 
 interface ChartData {
   type: string;
@@ -19,7 +18,32 @@ export default function ChartsPage() {
   const [loading, setLoading] = useState(false);
 
   // Sample chart configurations
-  const chartConfigs: Record<string, ChartData> = {
+  const chartConfigs: Record<string, ChartData> = useMemo(() => ({
+    adsense: {
+      type: 'line',
+      title: 'AdSense Revenue',
+      description: 'Monthly revenue and page view trends',
+      data: {
+        labels: ['2024-01', '2024-02', '2024-03', '2024-04', '2024-05', '2024-06'],
+        datasets: [
+          {
+            label: 'Revenue ($)',
+            data: [1250.50, 2100.75, 1850.25, 3200.00, 2800.50, 3500.25],
+            borderColor: '#34A853',
+            backgroundColor: 'rgba(52, 168, 83, 0.1)',
+            fill: true
+          },
+          {
+            label: 'Page Views',
+            data: [12500, 18200, 15600, 24800, 22100, 28900],
+            borderColor: '#4285F4',
+            backgroundColor: 'rgba(66, 133, 244, 0.1)',
+            fill: true,
+            yAxisID: 'y1'
+          }
+        ]
+      }
+    },
     analytics: {
       type: 'bar',
       title: 'Website Analytics',
@@ -112,141 +136,70 @@ export default function ChartsPage() {
         ]
       }
     }
-  };
+  }
+  ), []);
 
-  // Generate chart using direct MCP tools
-  const generateChart = async (chartKey: string) => {
-    setLoading(true);
-    const config = chartConfigs[chartKey];
-    
+  // Fetch AdSense data from API
+  const fetchAdSenseData = useCallback(async () => {
     try {
-      console.log(`Generating ${config.type} chart directly via MCP tools:`, config.data);
-      
-      // Use the direct MCP chart tools that we know work
-      let chartResult;
-      
-      switch (config.type) {
-        case 'bar':
-          chartResult = await window.mcpTools?.bar?.(config.data);
-          break;
-        case 'line':
-          chartResult = await window.mcpTools?.line?.(config.data);
-          break;
-        case 'pie':
-          chartResult = await window.mcpTools?.pie?.(config.data);
-          break;
-        case 'doughnut':
-          chartResult = await window.mcpTools?.doughnut?.(config.data);
-          break;
-        case 'radar':
-          chartResult = await window.mcpTools?.radar?.(config.data);
-          break;
-        default:
-          throw new Error(`Chart type ${config.type} not supported`);
-      }
-      
-      if (chartResult) {
-        setChartData({
-          type: config.type,
-          title: config.title,
-          description: config.description,
-          chartResult: chartResult,
-          data: config.data,
-          isRendered: true,
-          timestamp: new Date().toISOString()
-        });
+      setLoading(true);
+      const response = await fetch('/api/adsense/revenue');
+      const result = await response.json();
+
+      if (result.success) {
+        return result.data;
       } else {
-        // Fallback to API call if direct tools not available
-        console.log('Direct MCP tools not available, falling back to API...');
-        await generateChartViaAPI(config);
+        throw new Error(result.message || 'Failed to fetch AdSense data');
       }
     } catch (error) {
-      console.error('Error with direct MCP tools, trying API fallback:', error);
-      await generateChartViaAPI(config);
+      console.error('Error fetching AdSense data:', error);
+      throw error;
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  // Fallback API method
-  const generateChartViaAPI = async (config: ChartData) => {
+  // Generate chart using D3
+  const generateChart = useCallback(async (chartKey: string) => {
     try {
-      const response = await fetch('/api/charts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: config.type,
-          data: config.data,
-          options: {
-            responsive: true,
-            plugins: {
-              title: {
-                display: true,
-                text: config.title
-              },
-              legend: {
-                display: true,
-                position: 'top'
-              }
-            }
-          }
-        }),
-      });
+      setLoading(true);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const contentType = response.headers.get('content-type');
-      
-      if (contentType?.startsWith('image/')) {
-        const blob = await response.blob();
-        const imageUrl = URL.createObjectURL(blob);
-        
-        setChartData({
-          type: config.type,
-          title: config.title,
-          description: config.description,
-          imageUrl: imageUrl,
-          data: config.data,
-          isImage: true
-        });
+      let chartData;
+      if (chartKey === 'adsense') {
+        // Fetch real AdSense data for the revenue chart
+        chartData = await fetchAdSenseData();
       } else {
-        const result = await response.json();
-        
-        if (result.success) {
-          setChartData({
-            type: config.type,
-            title: config.title,
-            description: config.description,
-            chartResult: result.chart,
-            data: config.data,
-            timestamp: result.timestamp,
-            fallback: result.fallback
-          });
-        } else {
-          throw new Error(result.error || 'Failed to generate chart');
-        }
+        // Use static data for other charts
+        const config = chartConfigs[chartKey];
+        chartData = config.data;
       }
-    } catch (error) {
-      console.error('Error generating chart via API:', error);
+
       setChartData({
-        type: config.type,
-        title: config.title,
-        description: config.description,
-        error: error instanceof Error ? error.message : 'Unknown error occurred',
-        data: config.data
+        type: chartConfigs[chartKey].type,
+        title: chartConfigs[chartKey].title,
+        description: chartConfigs[chartKey].description,
+        data: chartData,
+        isRendered: true,
+        timestamp: new Date().toISOString()
       });
+    } catch (error) {
+      setChartData({
+        type: chartConfigs[chartKey].type,
+        title: chartConfigs[chartKey].title,
+        description: chartConfigs[chartKey].description,
+        data: null,
+        error: error instanceof Error ? error.message : 'Failed to generate chart',
+        isRendered: false,
+        timestamp: new Date().toISOString()
+      });
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [chartConfigs, fetchAdSenseData]);
 
   useEffect(() => {
-    // Initialize MCP tools
-    initializeMCPTools();
     generateChart(selectedChart);
-  }, [selectedChart]);
+  }, [selectedChart, generateChart]);
 
   return (
     <div className="container-fluid px-4 py-4">
@@ -292,13 +245,14 @@ export default function ChartsPage() {
                       <div className="fw-semibold">{config.title}</div>
                       <small className="text-muted">{config.type.toUpperCase()}</small>
                     </div>
-                    <i className={`bi bi-${
-                      config.type === 'bar' ? 'bar-chart' :
-                      config.type === 'line' ? 'graph-up' :
-                      config.type === 'pie' ? 'pie-chart' :
-                      config.type === 'doughnut' ? 'circle' :
-                      config.type === 'radar' ? 'diagram-3' : 'graph-up'
-                    }`}></i>
+                     <i className={`bi bi-${
+                       config.type === 'bar' ? 'bar-chart' :
+                       config.type === 'line' ? 'graph-up' :
+                       config.type === 'pie' ? 'pie-chart' :
+                       config.type === 'doughnut' ? 'circle' :
+                       config.type === 'radar' ? 'diagram-3' :
+                       key === 'adsense' ? 'currency-dollar' : 'graph-up'
+                     }`}></i>
                   </button>
                 ))}
               </div>
@@ -369,25 +323,15 @@ export default function ChartsPage() {
                           Try Again
                         </button>
                       </div>
-                    ) : (
-                      // Render Chart using ChartRenderer
-                      <ChartRenderer
-                        type={chartConfigs[selectedChart]?.type}
-                        data={chartConfigs[selectedChart]?.data}
-                        title={chartConfigs[selectedChart]?.title}
-                        onChartGenerated={(chartUrl) => {
-                          setChartData({
-                            type: chartConfigs[selectedChart]?.type,
-                            title: chartConfigs[selectedChart]?.title,
-                            description: chartConfigs[selectedChart]?.description,
-                            chartUrl: chartUrl,
-                            data: chartConfigs[selectedChart]?.data,
-                            isRendered: true,
-                            timestamp: new Date().toISOString()
-                          });
-                        }}
-                      />
-                    )}
+                     ) : (
+                       // Render Chart using D3
+                       <D3Chart
+                         type={chartConfigs[selectedChart]?.type as any}
+                         data={chartConfigs[selectedChart]?.data}
+                         width={600}
+                         height={400}
+                       />
+                     )}
                   </div>
                   
                   {/* Chart Data & Status */}
@@ -403,13 +347,13 @@ export default function ChartsPage() {
                           <div className="col-6">
                             <small className="text-muted d-block">Status:</small>
                             <span className={`badge ${
-                              chartData?.error ? 'bg-danger' : 
-                              chartData?.isRendered || chartData?.chartUrl ? 'bg-success' : 
+                              chartData?.error ? 'bg-danger' :
+                              chartData?.isRendered ? 'bg-success' :
                               loading ? 'bg-warning' :
                               'bg-secondary'
                             }`}>
-                              {chartData?.error ? 'Error' : 
-                               chartData?.isRendered || chartData?.chartUrl ? 'Rendered' : 
+                              {chartData?.error ? 'Error' :
+                               chartData?.isRendered ? 'Rendered' :
                                loading ? 'Generating' :
                                'Ready'}
                             </span>

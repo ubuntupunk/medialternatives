@@ -93,7 +93,8 @@ export const SITE_CONFIG = {
   CATEGORIES_PER_PAGE: 50,
   EXCERPT_LENGTH: 150,
   SITE_TITLE: 'Medialternatives',
-  SITE_DESCRIPTION: 'Reaching out from the Global South'
+  SITE_DESCRIPTION: 'Reaching out from the Global South',
+  SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'https://medialternatives.com'
 } as const;
 
 /**
@@ -149,6 +150,7 @@ export const HEADER_CONFIG = {
  * @property {Object} DEFAULT_PARAMS - Default parameters for all API requests
  * @property {number} CACHE_TIME - Cache duration in milliseconds
  * @property {number} RETRY_ATTEMPTS - Number of retry attempts for failed requests
+ * @property {number} TIMEOUT - API request timeout in milliseconds
  */
 export const API_CONFIG = {
   DEFAULT_PARAMS: {
@@ -156,5 +158,29 @@ export const API_CONFIG = {
     // per_page will be set by individual calls
   },
   CACHE_TIME: 5 * 60 * 1000, // 5 minutes
-  RETRY_ATTEMPTS: 3
+  RETRY_ATTEMPTS: 3,
+  TIMEOUT: 10000 // 10 seconds
 } as const;
+
+/**
+ * Jetpack analytics cache duration
+ * @constant {number} JETPACK_CACHE_DURATION
+ */
+export const JETPACK_CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
+
+/**
+ * Google OAuth scopes
+ * @constant {Object} GOOGLE_SCOPES
+ * @property {string} ADSENSE - AdSense readonly scope
+ * @property {string} ANALYTICS - Analytics readonly scope
+ */
+export const GOOGLE_SCOPES = {
+  ADSENSE: 'https://www.googleapis.com/auth/adsense.readonly' as const,
+  ANALYTICS: 'https://www.googleapis.com/auth/analytics.readonly' as const
+};
+
+/**
+ * Default admin email for user store
+ * @constant {string} DEFAULT_ADMIN_EMAIL
+ */
+export const DEFAULT_ADMIN_EMAIL = 'admin@medialternatives.com';

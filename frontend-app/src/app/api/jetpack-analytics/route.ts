@@ -1,44 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { JetpackAnalyticsData, JetpackCacheEntry, WordPressComToken, WordPressComTopPost, WordPressComReferrer } from '@/types/google';
 
-/**
- * Jetpack analytics data structure
- * @interface JetpackAnalyticsData
- * @property {number} visits - Total visits
- * @property {number} views - Total page views
- * @property {number} visitors - Unique visitors
- * @property {Array<{title: string, url: string, views: number, percentage: number}>} topPosts - Top performing posts
- * @property {Array<{name: string, views: number, percentage: number}>} referrers - Traffic referrers
- * @property {Array<{term: string, views: number, percentage: number}>} searchTerms - Search terms
- * @property {{period: string, views: number, visitors: number, likes: number, comments: number}} summary - Period summary
- */
-interface JetpackAnalyticsData {
-  visits: number;
-  views: number;
-  visitors: number;
-  topPosts: Array<{
-    title: string;
-    url: string;
-    views: number;
-    percentage: number;
-  }>;
-  referrers: Array<{
-    name: string;
-    views: number;
-    percentage: number;
-  }>;
-  searchTerms: Array<{
-    term: string;
-    views: number;
-    percentage: number;
-  }>;
-  summary: {
-    period: string;
-    views: number;
-    visitors: number;
-    likes: number;
-    comments: number;
-  };
-}
+
 
 /**
  * GET /api/jetpack-analytics - Get Jetpack analytics data
@@ -52,7 +16,30 @@ interface JetpackAnalyticsData {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const period = searchParams.get('period') || '30'; // days
+    const periodParam = searchParams.get('period') || '30';
+
+    // Validate and sanitize period parameter
+    const periodSchema = z.string().regex(/^\d+$/).transform(val => parseInt(val)).refine(val => val >= 1 && val <= 365, {
+      message: 'Period must be between 1 and 365 days'
+    });
+
+    const periodValidation = periodSchema.safeParse(periodParam);
+
+    if (!periodValidation.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Invalid period parameter',
+            details: 'Period must be a number between 1 and 365'
+          }
+        },
+        { status: 400 }
+      );
+    }
+
+    const period = periodValidation.data.toString();
     
     // For GET requests, return mock data (demo mode)
     return getMockDataResponse(period);
@@ -69,9 +56,10 @@ export async function GET(request: NextRequest) {
   }
 }
 
+import { JETPACK_CACHE_DURATION, API_CONFIG } from '@/lib/constants';
+
 // Simple in-memory cache for WordPress.com API responses
-const analyticsCache = new Map<string, { data: any; timestamp: number }>();
-const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
+const analyticsCache = new Map<string, JetpackCacheEntry>();
 
 /**
  * POST /api/jetpack-analytics - Fetch authenticated Jetpack analytics
@@ -84,15 +72,50 @@ const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
  */
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { token, action, period } = body;
+    // Validate request body size (prevent DoS)
+    const contentLength = request.headers.get('content-length');
+    if (contentLength && parseInt(contentLength) > 1024 * 1024) { // 1MB limit
+      return NextResponse.json(
+        { success: false, error: 'Request body too large' },
+        { status: 413 }
+      );
+    }
 
-    if (action === 'fetch_stats' && token) {
-      return await fetchAuthenticatedStats(token, period || '30');
+    const body = await request.json();
+
+    // Validate inputs
+    const requestSchema = z.object({
+      token: z.any().optional(), // Token validation happens in fetchAuthenticatedStats
+      action: z.string().min(1).max(50),
+      period: z.string().regex(/^\d+$/).transform(val => parseInt(val)).refine(val => val >= 1 && val <= 365, {
+        message: 'Period must be between 1 and 365 days'
+      }).optional()
+    });
+
+    const validation = requestSchema.safeParse(body);
+
+    if (!validation.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Invalid request parameters',
+            details: validation.error.issues
+          }
+        },
+        { status: 400 }
+      );
+    }
+
+    const validatedData = validation.data;
+
+    if (validatedData.action === 'fetch_stats' && validatedData.token) {
+      return await fetchAuthenticatedStats(validatedData.token, validatedData.period?.toString() || '30');
     }
 
     return NextResponse.json(
-      { success: false, error: 'Invalid request' },
+      { success: false, error: 'Invalid request action' },
       { status: 400 }
     );
   } catch (error) {
@@ -114,14 +137,14 @@ export async function POST(request: NextRequest) {
  * @param {string} period - Time period in days
  * @returns {Promise<NextResponse>} Analytics data response
  */
-async function fetchAuthenticatedStats(token: any, period: string) {
+async function fetchAuthenticatedStats(token: WordPressComToken, period: string) {
   try {
     console.log('🔐 Backend: Fetching authenticated stats for site:', token.siteId);
 
     // Check cache first
     const cacheKey = `${token.siteId}_${period}`;
     const cached = analyticsCache.get(cacheKey);
-    if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
+    if (cached && (Date.now() - cached.timestamp) < JETPACK_CACHE_DURATION) {
       console.log('📊 Using cached analytics data');
       return NextResponse.json({
         success: true,
@@ -134,13 +157,13 @@ async function fetchAuthenticatedStats(token: any, period: string) {
     }
 
     const headers = {
-      'Authorization': `Bearer ${token.accessToken}`,
+      'Authorization': `Bearer ${token.access_token}`,
       'Content-Type': 'application/json'
     };
 
     // Make requests from backend (no CORS issues) - with timeout to prevent hanging
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.TIMEOUT);
 
     try {
       const [summaryResponse, topPostsResponse, referrersResponse] = await Promise.all([
@@ -199,13 +222,13 @@ async function fetchAuthenticatedStats(token: any, period: string) {
         views: summaryData.views || 0,
         visitors: summaryData.visitors || 0,
         visits: summaryData.visits || 0,
-        topPosts: topPostsData?.days?.[0]?.postviews?.map((post: any) => ({
+        topPosts: topPostsData?.days?.[0]?.postviews?.map((post: WordPressComTopPost) => ({
           title: post.title,
           url: post.href,
           views: post.views,
           percentage: parseFloat(((post.views / summaryData.views) * 100).toFixed(1))
         })) || [],
-        referrers: referrersData?.days?.[0]?.groups?.map((ref: any) => ({
+        referrers: referrersData?.days?.[0]?.groups?.map((ref: WordPressComReferrer) => ({
           name: ref.name,
           views: ref.views,
           percentage: parseFloat(((ref.views / summaryData.views) * 100).toFixed(1))
@@ -257,7 +280,6 @@ async function fetchAuthenticatedStats(token: any, period: string) {
  * @returns {NextResponse} Mock analytics data response
  */
 function getMockDataResponse(period: string) {
-  const periodNum = parseInt(period);
   const mockData = getJetpackMockData(period);
   
   return NextResponse.json({

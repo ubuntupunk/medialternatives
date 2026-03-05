@@ -7,7 +7,6 @@ import { FooterProps } from '@/types';
  */
 const Footer: React.FC<FooterProps> = ({
   className = '',
-  showNavigation = true,
   copyrightText
 }) => {
   const year = new Date().getFullYear();
@@ -35,7 +34,41 @@ const Footer: React.FC<FooterProps> = ({
               </p>
             </div>
             
-            <div className="col-md-4 col-sm-12 text-md-end">
+            <div className="col-md-4 col-sm-12 text-md-end d-flex align-items-center justify-content-md-end justify-content-start">
+              {/* Social Links */}
+              <div className="footer-social-links me-3 d-flex">
+                <a 
+                  href="/feed.atom" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  title="Subscribe to Atom Feed"
+                  className="text-decoration-none me-2"
+                  style={{ color: '#6c757d', fontSize: '16px' }}
+                >
+                  <i className="bi bi-rss"></i>
+                </a>
+                <a 
+                  href="https://x.com/davidrobertlewis" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  title="Follow on X"
+                  className="text-decoration-none me-2"
+                  style={{ color: '#6c757d', fontSize: '16px' }}
+                >
+                  <i className="bi bi-twitter-x"></i>
+                </a>
+                <a 
+                  href="https://facebook.com/davidrobertlewis" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  title="Follow on Facebook"
+                  className="text-decoration-none"
+                  style={{ color: '#6c757d', fontSize: '16px' }}
+                >
+                  <i className="bi bi-facebook"></i>
+                </a>
+              </div>
+              
               <Link 
                 href="https://netbones.co.za/" 
                 className="text-decoration-none text-nowrap"

@@ -79,14 +79,6 @@ export default function DocsPage() {
           <SwaggerUI
             spec={spec}
             tryItOutEnabled={true}
-            requestInterceptor={(req: any) => {
-              // Add any custom request headers here if needed
-              return req;
-            }}
-            responseInterceptor={(res: any) => {
-              // Add any custom response handling here if needed
-              return res;
-            }}
             docExpansion="list"
             defaultModelsExpandDepth={1}
             defaultModelExpandDepth={1}

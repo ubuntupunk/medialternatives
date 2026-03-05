@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { WordPressUser } from '@/types/wordpress';
 import { wordpressApi } from '@/services/wordpress-api';
 
@@ -10,6 +11,8 @@ interface AuthorDisplayProps {
   author?: WordPressUser;
   className?: string;
   showPrefix?: boolean;
+  showAvatar?: boolean;
+  showBio?: boolean;
 }
 
 /**
@@ -20,7 +23,9 @@ const AuthorDisplay: React.FC<AuthorDisplayProps> = ({
   authorId,
   author: initialAuthor,
   className = '',
-  showPrefix = true
+  showPrefix = true,
+  showAvatar = true,
+  showBio = false
 }) => {
   const [author, setAuthor] = useState<WordPressUser | null>(initialAuthor || null);
   const [isLoading, setIsLoading] = useState(!initialAuthor && !!authorId);
@@ -93,14 +98,30 @@ const AuthorDisplay: React.FC<AuthorDisplayProps> = ({
   }
 
   return (
-    <span className={`byline ${className}`}>
-      {showPrefix && 'by '}
-      <span className="author vcard">
-        <Link href={`/author/${author.slug}`}>
-          {author.name}
-        </Link>
+    <div className={`author-display ${className}`}>
+      {showAvatar && author.avatar_urls && (
+        <Image
+          src={author.avatar_urls['96'] || author.avatar_urls['48'] || author.avatar_urls['24']}
+          alt={`${author.name} avatar`}
+          className="author-avatar rounded-circle me-2"
+          width={32}
+          height={32}
+        />
+      )}
+      <span className="byline">
+        {showPrefix && 'by '}
+        <span className="author vcard">
+          <Link href={`/author/${author.slug}`}>
+            {author.name}
+          </Link>
+        </span>
       </span>
-    </span>
+      {showBio && author.description && (
+        <div className="author-bio mt-2 text-muted small">
+          {author.description}
+        </div>
+      )}
+    </div>
   );
 };
 

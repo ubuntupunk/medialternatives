@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { wordpressApi } from '@/services/wordpress-api';
 import { WordPressPost } from '@/types/wordpress';
@@ -17,7 +17,7 @@ export default function ContentManagementPage() {
   const [selectedTab, setSelectedTab] = useState('recent');
 
   // Fetch popular posts from Google Analytics
-  const fetchPopularPosts = async () => {
+  const fetchPopularPosts = useCallback(async () => {
     setAnalyticsLoading(true);
     setAnalyticsError(null);
     try {
@@ -78,7 +78,7 @@ export default function ContentManagementPage() {
     } finally {
       setAnalyticsLoading(false);
     }
-  };
+  }, [posts]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -106,7 +106,7 @@ export default function ContentManagementPage() {
     if (posts.length > 0) {
       fetchPopularPosts();
     }
-  }, [posts]);
+  }, [posts, fetchPopularPosts]);
 
   const getStatusBadge = (status: string) => {
     const statusMap = {
@@ -284,15 +284,15 @@ export default function ContentManagementPage() {
                               </td>
                               <td>
                                 <div className="btn-group btn-group-sm">
-                                  <Link 
-                                    href={`/post/${post.slug}`}
+                                  <Link
+                                    href={`/${post.slug}`}
                                     className="btn btn-outline-primary"
                                     title="View Post"
                                   >
                                     <i className="bi bi-eye"></i>
                                   </Link>
-                                  <a 
-                                    href={`{WORDPRESS_URLS.getEditPostUrl(post.id)}`}
+                                  <a
+                                    href={WORDPRESS_URLS.getEditPostUrl(post.id)}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="btn btn-outline-secondary"
@@ -324,7 +324,7 @@ export default function ContentManagementPage() {
                       <p className="text-muted mt-3">
                         Draft posts would be displayed here
                         <br />
-                        <small>WordPress.com API doesn't expose draft posts in public API</small>
+                        <small>WordPress.com API doesn&apos;t expose draft posts in public API</small>
                       </p>
                       <a 
                         href={WORDPRESS_URLS.DRAFT_POSTS}
@@ -406,15 +406,15 @@ export default function ContentManagementPage() {
                                     <div className="btn-group btn-group-sm">
                                       {!post.isAnalyticsOnly && (
                                         <>
-                                          <Link 
-                                            href={`/post/${post.slug}`}
+                                          <Link
+                                            href={`/${post.slug}`}
                                             className="btn btn-outline-primary"
                                             title="View Post"
                                           >
                                             <i className="bi bi-eye"></i>
                                           </Link>
-                                          <a 
-                                            href={`{WORDPRESS_URLS.getEditPostUrl(post.id)}`}
+                                          <a
+                                            href={WORDPRESS_URLS.getEditPostUrl(post.id)}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="btn btn-outline-secondary"

@@ -10,6 +10,7 @@ import AuthorWidget from '../Widgets/AuthorWidget';
 import AdSenseWidget from '../Widgets/AdSenseWidget';
 import CreativeCommonsWidget from '../Widgets/CreativeCommonsWidget';
 import DonateWidget from '../Widgets/DonateWidget';
+import DonateWidgetImproved from '../Widgets/DonateWidgetImproved.tsx'
 import WebringWidget from '../widgets-extra/WebringWidget';
 
 /**
@@ -47,7 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <AuthorWidget key="author" authorId={1} />,
     <CategoryCloudEnhanced key="categories" />,
     !isDashboardPage && <AdSenseWidget key="adsense" />,
-    <DonateWidget key="donate" paypalHostedButtonId={process.env.NEXT_PUBLIC_PAYPAL_HOSTED_BUTTON_ID || ''} />,
+    <DonateWidgetImproved key="donate" paypalHostedButtonId={process.env.NEXT_PUBLIC_PAYPAL_HOSTED_BUTTON_ID || ''} />,
     <WebringWidget key="webring" />,
     <CreativeCommonsWidget key="creative-commons" />
   ].filter(Boolean); // Filter out false values

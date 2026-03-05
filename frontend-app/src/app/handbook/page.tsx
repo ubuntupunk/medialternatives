@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Metadata } from 'next';
 import styles from './handbook.module.css';
 
@@ -52,12 +53,14 @@ const HandbookPage: React.FC = () => {
             </div>
             
             <div className="col-12 col-md-5 mb-5 align-self-center">
-              <div className={`${styles.bookCoverHolder} text-center position-relative`}>
-                <img 
-                  className={`img-fluid ${styles.bookCover}`}
-                  src="/images/handbook-cover.jpg" 
-                  alt="Media Activist's Handbook cover"
-                />
+               <div className={`${styles.bookCoverHolder} text-center position-relative`}>
+                 <Image
+                   className={`img-fluid ${styles.bookCover}`}
+                   src="/images/handbook-cover.jpg"
+                   alt="Media Activist's Handbook cover"
+                   width={300}
+                   height={400}
+                 />
                 <div className={styles.bookBadge}>
                   New<br />Release
                 </div>
@@ -76,77 +79,77 @@ const HandbookPage: React.FC = () => {
           </div>
           
           <div className="row text-center">
-            <div className="col-12 col-md-6 col-lg-4 mb-5">
-              <div className={styles.benefitItem}>
-                <div className={styles.iconHolder}>
-                  <i className="fas fa-bullhorn fa-3x"></i>
-                </div>
-                <h5 className={`${styles.benefitTitle} text-balance`}>Media Strategy</h5>
-                <div className={`${styles.benefitDesc} text-pretty`}>
-                  Learn proven strategies for effective media activism and communication campaigns.
-                </div>
-              </div>
-            </div>
-            
-            <div className="col-12 col-md-6 col-lg-4 mb-5">
-              <div className={styles.benefitItem}>
-                <div className={styles.iconHolder}>
-                  <i className="fas fa-history fa-3x"></i>
-                </div>
-                <h5 className={styles.benefitTitle}>Historical Context</h5>
-                <div className={styles.benefitDesc}>
-                  Understand the historical context of media resistance during apartheid South Africa.
-                </div>
-              </div>
-            </div>
-            
-            <div className="col-12 col-md-6 col-lg-4 mb-5">
-              <div className={styles.benefitItem}>
-                <div className={styles.iconHolder}>
-                  <i className="fas fa-users fa-3x"></i>
-                </div>
-                <h5 className={styles.benefitTitle}>Case Studies</h5>
-                <div className={styles.benefitDesc}>
-                  Real-world case studies and examples from successful media activism campaigns.
-                </div>
-              </div>
-            </div>
-            
-            <div className="col-12 col-md-6 col-lg-4 mb-5">
-              <div className={styles.benefitItem}>
-                <div className={styles.iconHolder}>
-                  <i className="fas fa-newspaper fa-3x"></i>
-                </div>
-                <h5 className={styles.benefitTitle}>Alternative Media</h5>
-                <div className={styles.benefitDesc}>
-                  Explore the role and impact of alternative media in social movements.
-                </div>
-              </div>
-            </div>
-            
-            <div className="col-12 col-md-6 col-lg-4 mb-5">
-              <div className={styles.benefitItem}>
-                <div className={styles.iconHolder}>
-                  <i className="fas fa-graduation-cap fa-3x"></i>
-                </div>
-                <h5 className={styles.benefitTitle}>Educational Resource</h5>
-                <div className={styles.benefitDesc}>
-                  Comprehensive coursework and essays for students and educators.
-                </div>
-              </div>
-            </div>
-            
-            <div className="col-12 col-md-6 col-lg-4 mb-5">
-              <div className={styles.benefitItem}>
-                <div className={styles.iconHolder}>
-                  <i className="fas fa-fist-raised fa-3x"></i>
-                </div>
-                <h5 className={styles.benefitTitle}>Resistance Tactics</h5>
-                <div className={styles.benefitDesc}>
-                  Learn about effective resistance tactics and their application in media activism.
-                </div>
-              </div>
-            </div>
+             <div className="col-12 col-md-6 col-lg-4 mb-5">
+               <div className={`${styles.benefitItem} ${styles.strategy}`}>
+                 <div className={styles.iconHolder}>
+                   <i className="fas fa-bullhorn fa-3x"></i>
+                 </div>
+                 <h5 className={`${styles.benefitTitle} text-balance`}>Media Strategy</h5>
+                 <div className={`${styles.benefitDesc} text-pretty`}>
+                   Learn proven strategies for effective media activism and communication campaigns.
+                 </div>
+               </div>
+             </div>
+
+             <div className="col-12 col-md-6 col-lg-4 mb-5">
+               <div className={`${styles.benefitItem} ${styles.history}`}>
+                 <div className={styles.iconHolder}>
+                   <i className="fas fa-history fa-3x"></i>
+                 </div>
+                 <h5 className={styles.benefitTitle}>Historical Context</h5>
+                 <div className={styles.benefitDesc}>
+                   Understand the historical context of media resistance during apartheid South Africa.
+                 </div>
+               </div>
+             </div>
+
+             <div className="col-12 col-md-6 col-lg-4 mb-5">
+               <div className={`${styles.benefitItem} ${styles.caseStudies}`}>
+                 <div className={styles.iconHolder}>
+                   <i className="fas fa-users fa-3x"></i>
+                 </div>
+                 <h5 className={styles.benefitTitle}>Case Studies</h5>
+                 <div className={styles.benefitDesc}>
+                   Real-world case studies and examples from successful media activism campaigns.
+                 </div>
+               </div>
+             </div>
+
+             <div className="col-12 col-md-6 col-lg-4 mb-5">
+               <div className={`${styles.benefitItem} ${styles.altMedia}`}>
+                 <div className={styles.iconHolder}>
+                   <i className="fas fa-newspaper fa-3x"></i>
+                 </div>
+                 <h5 className={styles.benefitTitle}>Alternative Media</h5>
+                 <div className={styles.benefitDesc}>
+                   Explore the role and impact of alternative media in social movements.
+                 </div>
+               </div>
+             </div>
+
+             <div className="col-12 col-md-6 col-lg-4 mb-5">
+               <div className={`${styles.benefitItem} ${styles.education}`}>
+                 <div className={styles.iconHolder}>
+                   <i className="fas fa-graduation-cap fa-3x"></i>
+                 </div>
+                 <h5 className={styles.benefitTitle}>Educational Resource</h5>
+                 <div className={styles.benefitDesc}>
+                   Comprehensive coursework and essays for students and educators.
+                 </div>
+               </div>
+             </div>
+
+             <div className="col-12 col-md-6 col-lg-4 mb-5">
+               <div className={`${styles.benefitItem} ${styles.resistance}`}>
+                 <div className={styles.iconHolder}>
+                   <i className="fas fa-fist-raised fa-3x"></i>
+                 </div>
+                 <h5 className={styles.benefitTitle}>Resistance Tactics</h5>
+                 <div className={styles.benefitDesc}>
+                   Learn about effective resistance tactics and their application in media activism.
+                 </div>
+               </div>
+             </div>
           </div>
         </div>
       </section>
@@ -154,38 +157,38 @@ const HandbookPage: React.FC = () => {
       {/* Content Preview Section */}
       <section className={`${styles.contentSection} py-5`}>
         <div className="container">
-          <h2 className="section-heading text-center mb-5">What's Inside</h2>
+          <h2 className="section-heading text-center mb-5">What&apos;s Inside</h2>
           
           <div className="row">
             <div className="col-12 col-lg-8 mx-auto">
               <div className="content-preview">
-                <div className={`${styles.chapter} mb-4 p-4`}>
-                  <h4 className={styles.chapterTitle}>Chapter 1: Understanding Media Power</h4>
-                  <p className={styles.chapterDesc}>
-                    An introduction to the role of media in society and how it can be leveraged for social change.
-                  </p>
-                </div>
-                
-                <div className={`${styles.chapter} mb-4 p-4`}>
-                  <h4 className={styles.chapterTitle}>Chapter 2: Historical Resistance</h4>
-                  <p className={styles.chapterDesc}>
-                    Case studies from the South African anti-apartheid movement and lessons for modern activists.
-                  </p>
-                </div>
-                
-                <div className={`${styles.chapter} mb-4 p-4`}>
-                  <h4 className={styles.chapterTitle}>Chapter 3: Alternative Media Strategies</h4>
-                  <p className={styles.chapterDesc}>
-                    Building and maintaining alternative media platforms for grassroots movements.
-                  </p>
-                </div>
-                
-                <div className={`${styles.chapter} mb-4 p-4`}>
-                  <h4 className={styles.chapterTitle}>Chapter 4: Digital Activism</h4>
-                  <p className={styles.chapterDesc}>
-                    Leveraging digital tools and social media for effective activism campaigns.
-                  </p>
-                </div>
+                 <div className={`${styles.chapter} mb-4 p-5`}>
+                   <h4 className={styles.chapterTitle}>Chapter 1: Understanding Media Power</h4>
+                   <p className={styles.chapterDesc}>
+                     An introduction to the role of media in society and how it can be leveraged for social change.
+                   </p>
+                 </div>
+
+                 <div className={`${styles.chapter} mb-4 p-5`}>
+                   <h4 className={styles.chapterTitle}>Chapter 2: Historical Resistance</h4>
+                   <p className={styles.chapterDesc}>
+                     Case studies from the South African anti-apartheid movement and lessons for modern activists.
+                   </p>
+                 </div>
+
+                 <div className={`${styles.chapter} mb-4 p-5`}>
+                   <h4 className={styles.chapterTitle}>Chapter 3: Alternative Media Strategies</h4>
+                   <p className={styles.chapterDesc}>
+                     Building and maintaining alternative media platforms for grassroots movements.
+                   </p>
+                 </div>
+
+                 <div className={`${styles.chapter} mb-4 p-5`}>
+                   <h4 className={styles.chapterTitle}>Chapter 4: Digital Activism</h4>
+                   <p className={styles.chapterDesc}>
+                     Leveraging digital tools and social media for effective activism campaigns.
+                   </p>
+                 </div>
               </div>
             </div>
           </div>

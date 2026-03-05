@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     return new NextResponse(pdfBuffer, {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="${filename || 'dead-links-report.pdf'}"`,
+        'Content-Disposition': `attachment; filename="${filename || 'report.pdf'}"`,
         'Cache-Control': 'no-cache'
       }
     });
@@ -120,7 +120,7 @@ async function generatePDFFromHTML(html: string): Promise<Buffer> {
  * @param {NextRequest} request - Next.js request object
  * @returns {Promise<NextResponse>} Endpoint information and alternatives
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   return NextResponse.json({
     message: 'PDF generation endpoint',
     note: 'Use POST method with HTML content to generate PDF',

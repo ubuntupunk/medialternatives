@@ -34,7 +34,6 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [isKeyboardNav, setIsKeyboardNav] = useState(false);
-  const [selectedTheme, setSelectedTheme] = useState<string>('dark');
   const [currentTheme, setCurrentTheme] = useState<string>('dark');
   const [isHoveringWidget, setIsHoveringWidget] = useState(false);
   const [isHoveringTooltip, setIsHoveringTooltip] = useState(false);
@@ -50,7 +49,6 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
   useEffect(() => {
     if (isClient) {
       const initialTheme = theme === 'random' ? 'dark' : theme;
-      setSelectedTheme(initialTheme);
       setCurrentTheme(initialTheme);
     }
   }, [isClient, theme]);
@@ -211,6 +209,7 @@ const WebringWidget: React.FC<WebringWidgetProps> = ({
               role="img"
               aria-label="Surfer on a wave"
               unoptimized={true}
+              data-nosnippet="true"
               onError={(e) => {
                 console.error('Surfer image failed to load:', e);
                 // Fallback to a simple icon or hide the image

@@ -104,11 +104,11 @@ describe('AdSenseWidget', () => {
   });
 
   it('handles AdSense errors gracefully', async () => {
-    window.adsbygoogle = {
+    window.adsbygoogle = [{
       push: jest.fn(() => {
         throw new Error('AdSense error');
       })
-    };
+    }] as any;
     
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     

@@ -7,7 +7,7 @@
 /**
  * WordPress.com OAuth token structure
  * @interface WordPressToken
- * @property {string} accessToken - OAuth access token
+ * @property {string} access_token - OAuth access token
  * @property {string} tokenType - Token type (usually 'bearer')
  * @property {number} expiresIn - Token expiration time in seconds
  * @property {string} scope - Granted OAuth scopes
@@ -16,7 +16,7 @@
  * @property {Date} expiresAt - Token expiration timestamp
  */
 interface WordPressToken {
-  accessToken: string;
+  access_token: string;
   tokenType: string;
   expiresIn: number;
   scope: string;
@@ -72,14 +72,13 @@ export function initiateWordPressOAuth(): void {
   
   authUrl.searchParams.set('response_type', 'token');
   
-  // WordPress.com OAuth scopes - using only documented scopes
-  // Based on https://developer.wordpress.com/docs/oauth2/#token-scope
-  // Note: WordPress.com only supports 'read', 'write', 'global', 'auth' scopes
-  // Stats access is included in 'read' scope for Jetpack sites
-  const scopes = [
-    'read',              // Basic read access (includes stats for Jetpack sites)
-    'global'             // Access to WordPress.com account information
-  ].join(',');
+   // WordPress.com OAuth scopes - using documented scopes
+   // Based on https://developer.wordpress.com/docs/oauth2/#token-scope
+   // Stats access is included in 'read' scope for Jetpack sites
+   const scopes = [
+     'read',              // Basic read access (includes stats for Jetpack sites)
+     'global'             // Access to WordPress.com account information
+   ].join(' ');
   
   authUrl.searchParams.set('scope', scopes);
   authUrl.searchParams.set('blog', 'medialternatives.wordpress.com');
@@ -87,7 +86,8 @@ export function initiateWordPressOAuth(): void {
   
   console.log('OAuth URL:', authUrl.toString());
   console.log('Redirect URI:', redirectUri);
-  console.log('Requested Scopes:', scopes);
+   console.log('Requested Scopes:', scopes);
+   console.log('Target Blog:', 'medialternatives.wordpress.com');
   console.log('Target Blog:', 'medialternatives.wordpress.com');
   
   // Redirect to WordPress.com
@@ -133,12 +133,12 @@ export function handleOAuthCallback(): AuthState {
     
     // Create token object
     const token: WordPressToken = {
-      accessToken,
+      access_token: accessToken, // Match the WordPressComToken interface
       tokenType: tokenType || 'bearer',
       expiresIn: parseInt(expiresIn || '3600'),
       scope: scope || 'read',
       siteId,
-      state,
+      state: state || '',
       expiresAt: new Date(Date.now() + parseInt(expiresIn || '3600') * 1000)
     };
     
@@ -266,10 +266,10 @@ export async function makeAuthenticatedRequest(endpoint: string, options: Reques
   }
   
   console.log('🔐 Making authenticated request to:', endpoint);
-  console.log('🎫 Using token:', token.accessToken.substring(0, 20) + '...');
-  
+  console.log('🎫 Using token:', token.access_token.substring(0, 20) + '...');
+
   const headers = {
-    'Authorization': `Bearer ${token.accessToken}`,
+    'Authorization': `Bearer ${token.access_token}`,
     'Content-Type': 'application/json',
     // Remove User-Agent header - causes CORS issues
     ...options.headers

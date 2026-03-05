@@ -27,8 +27,19 @@ const Header: React.FC<HeaderProps> = ({
     <header id="masthead" className="site-header" role="banner">
       <div className="site-branding">
         <div className="top-header container">
-          {/* Social menu will be implemented later */}
-          
+          {/* Social menu and Atom feed icon */}
+          <div className="d-flex justify-content-end align-items-center">
+            <a
+              href="/feed.atom"
+              title="Subscribe to Atom Feed"
+              className="text-decoration-none me-3"
+              aria-label="Subscribe to Atom Feed"
+            >
+              <i className="bi bi-rss text-muted" style={{ fontSize: '1.2rem' }}></i>
+            </a>
+            {/* Social menu will be implemented later */}
+          </div>
+
           <div className="clearfix"></div>
         </div>
 

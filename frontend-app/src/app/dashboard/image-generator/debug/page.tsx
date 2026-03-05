@@ -388,7 +388,7 @@ const ImageGeneratorDebugPage: React.FC = () => {
                 <li>Ensure token has <strong>Read</strong> permissions</li>
                 <li>Add <code>HUGGINGFACE_API_TOKEN=your_token_here</code> to your <code>.env</code> file</li>
                 <li>Restart the development server</li>
-                <li>Run "Test HF Client" to verify setup</li>
+                <li>Run &quot;Test HF Client&quot; to verify setup</li>
               </ol>
               
               <h6 className="mt-3">Current Status:</h6>
@@ -396,7 +396,7 @@ const ImageGeneratorDebugPage: React.FC = () => {
                 <li><strong>Official HF Client:</strong> Installed and configured</li>
                 <li><strong>Prompt Generation:</strong> Working - Creates content-aware prompts</li>
                 <li><strong>Model Fallback:</strong> FLUX.1-dev → Stable Diffusion 2.1 → Placeholder</li>
-                <li><strong>Authentication:</strong> Test with "Test HF Client" button</li>
+                <li><strong>Authentication:</strong> Test with &quot;Test HF Client&quot; button</li>
                 <li><strong>WordPress Integration:</strong> Not implemented - images not saved to posts</li>
               </ul>
               

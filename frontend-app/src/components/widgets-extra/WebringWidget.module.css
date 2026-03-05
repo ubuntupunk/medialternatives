@@ -4,6 +4,7 @@
   border: 1px solid var(--webring-border, #dee2e6);
   border-radius: 8px;
   padding: 1rem;
+  padding-top: 1.5rem;
   text-align: center;
   color: var(--webring-text, #495057);
   transition: all 0.5s ease;

@@ -43,9 +43,11 @@ export default function SearchResults() {
           throw new Error('Search failed');
         }
 
-        const data = await response.json();
+        const responseData = await response.json();
+        // Extract data from API response wrapper
+        const data = responseData.success ? responseData.data : responseData;
         setResults(data);
-      } catch (err) {
+      } catch (_err) {
         setError('Search failed. Please try again.');
       } finally {
         setIsLoading(false);
@@ -74,9 +76,9 @@ export default function SearchResults() {
           ) : (
             <>
               {results.length > 0 ? (
-                <>Found {results.length} result{results.length !== 1 ? 's' : ''} for <strong>"{query}"</strong></>
+                <>Found {results.length} result{results.length !== 1 ? 's' : ''} for <strong>&quot;{query}&quot;</strong></>
               ) : (
-                <>No results found for <strong>"{query}"</strong></>
+                <>No results found for <strong>&quot;{query}&quot;</strong></>
               )}
             </>
           )}
@@ -122,14 +124,28 @@ export default function SearchResults() {
                 <PostCard
                   post={{
                     id: result.ID,
-                    title: { rendered: result.title },
-                    excerpt: { rendered: result.excerpt },
-                    slug: result.slug,
                     date: result.date,
-                    author: result.author,
-                    featured_media_url: result.featured_media,
-                    categories: result.categories,
-                    tags: result.tags
+                    date_gmt: result.date,
+                    guid: { rendered: '' },
+                    modified: result.date,
+                    modified_gmt: result.date,
+                    slug: result.slug,
+                    status: 'publish' as const,
+                    type: 'post',
+                    link: `/${result.slug}`,
+                    title: { rendered: result.title },
+                    content: { rendered: result.excerpt || '', protected: false },
+                    excerpt: { rendered: result.excerpt || '', protected: false },
+                    author: parseInt(result.author) || 0,
+                    featured_media: result.featured_media ? parseInt(result.featured_media) : 0,
+                    comment_status: 'open' as const,
+                    ping_status: 'open' as const,
+                    sticky: false,
+                    template: '',
+                    format: 'standard',
+                    meta: {},
+                    categories: result.categories.map((cat: string) => parseInt(cat) || 0),
+                    tags: result.tags.map((tag: string) => parseInt(tag) || 0)
                   }}
                   showExcerpt={true}
                 />

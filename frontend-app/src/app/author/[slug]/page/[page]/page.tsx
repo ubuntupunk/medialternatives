@@ -11,10 +11,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 interface AuthorPagePaginatedProps {
-  params: {
+  params: Promise<{
     slug: string;
     page: string;
-  };
+  }>;
 }
 
 /**
@@ -22,8 +22,8 @@ interface AuthorPagePaginatedProps {
  * Accessible via /author/[slug]/page/[page] URLs
  */
 export default async function AuthorPagePaginated({ params }: AuthorPagePaginatedProps) {
-  const { slug } = params;
-  const currentPage = parseInt(params.page, 10);
+  const { slug, page } = await params;
+  const currentPage = parseInt(page, 10);
   
   // Validate page number
   if (isNaN(currentPage) || currentPage < 1) {
@@ -180,7 +180,7 @@ export default async function AuthorPagePaginated({ params }: AuthorPagePaginate
         {posts.length === 0 ? (
           <div className="alert alert-info">
             <h4>No posts found on this page</h4>
-            <p>There are no posts by "{author?.name}" on page {currentPage}.</p>
+            <p>There are no posts by &quot;{author?.name}&quot; on page {currentPage}.</p>
             <Link href={`/author/${slug}`} className="btn btn-primary">
               Go to First Page
             </Link>
@@ -209,7 +209,7 @@ export default async function AuthorPagePaginated({ params }: AuthorPagePaginate
         {/* Debug info for development */}
         {process.env.NODE_ENV === 'development' && (
           <div className="mt-4 p-3 bg-light border rounded">
-            <h6>Author "{author?.name}" Page {currentPage} Debug Info:</h6>
+            <h6>Author &quot;{author?.name}&quot; Page {currentPage} Debug Info:</h6>
             <small>
               Total posts: {pagination.total} | 
               Total pages: {pagination.totalPages} | 
@@ -229,8 +229,9 @@ export default async function AuthorPagePaginated({ params }: AuthorPagePaginate
 /**
  * Generate metadata for SEO
  */
-export async function generateMetadata({ params }: { params: { slug: string; page: string } }) {
-  const currentPage = parseInt(params.page, 10);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string; page: string }> }) {
+  const { slug, page } = await params;
+  const currentPage = parseInt(page, 10);
   
   if (isNaN(currentPage) || currentPage < 1) {
     return {
@@ -240,7 +241,7 @@ export async function generateMetadata({ params }: { params: { slug: string; pag
   }
 
   try {
-    const author = await wordpressApi.getUserBySlug(params.slug);
+    const author = await wordpressApi.getUserBySlug(slug);
     
     if (!author) {
       return {

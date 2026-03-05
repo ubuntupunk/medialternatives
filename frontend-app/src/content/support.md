@@ -1,4 +1,4 @@
-"The media has also been known to resort to censorship to protect its commercial viability. In the process, it draws boundaries around public discourse. Rapport’s firing of columnist Deon Maas, after he penned a controversial column, falls into this category. So does Media24’s threatened defamation action against media activist and former employee David Robert Lewis, for criticising the company." **Jane Duncan, Business Day**
+*"The media has also been known to resort to censorship to protect its commercial viability. In the process, it draws boundaries around public discourse. Rapport’s firing of columnist Deon Maas, after he penned a controversial column, falls into this category. So does Media24’s threatened defamation action against media activist and former employee David Robert Lewis, for criticising the company."* **Jane Duncan, Business Day**
 
 Here are details about how you can support my work as a media activist and alternative social critic.
 

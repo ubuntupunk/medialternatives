@@ -5,25 +5,27 @@ import PCloudFileHandler from './PCloudFileHandler';
 
 /**
  * PCloud file interface
- * @typedef {Object} PCloudFile
- * @property {string} filename - Original filename
- * @property {string} publicUrl - Public download URL
- * @property {string} pcloudPath - Path in PCloud storage
- * @property {string} fileid - PCloud file ID
- * @property {'transcripts'|'legal'} category - File category
- * @property {number} size - File size in bytes
- * @property {string} [title] - Optional display title
  */
+export interface PCloudFile {
+  filename: string;
+  publicUrl: string;
+  pcloudPath: string;
+  fileid: string;
+  category: 'transcripts' | 'legal';
+  size: number;
+  title?: string;
+}
 
 /**
  * PCloud download grid props interface
- * @typedef {Object} PCloudDownloadGridProps
- * @property {PCloudFile[]} files - Array of files to display
- * @property {string} [title='Legal Documents'] - Grid title
- * @property {boolean} [showCategories=true] - Whether to show category filters
- * @property {boolean} [showSearch=true] - Whether to show search functionality
- * @property {string} [className=''] - Additional CSS classes
  */
+export interface PCloudDownloadGridProps {
+  files: PCloudFile[];
+  title?: string;
+  showCategories?: boolean;
+  showSearch?: boolean;
+  className?: string;
+}
 
 /**
  * PCloud Download Grid Component

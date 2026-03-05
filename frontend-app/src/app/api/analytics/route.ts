@@ -63,12 +63,15 @@ interface AnalyticsData {
  */
 export async function GET(request: NextRequest) {
   try {
-    // Validate query parameters
+    // Validate and sanitize query parameters
     const { searchParams } = new URL(request.url);
     const periodParam = searchParams.get('period') || '7d';
 
+    // Sanitize input - only allow alphanumeric and specific characters
+    const sanitizedPeriod = periodParam.replace(/[^a-zA-Z0-9]/g, '');
+
     const periodSchema = z.enum(['7d', '30d', '90d', '1y']);
-    const validation = periodSchema.safeParse(periodParam);
+    const validation = periodSchema.safeParse(sanitizedPeriod);
 
     if (!validation.success) {
       return NextResponse.json(
@@ -93,8 +96,15 @@ export async function GET(request: NextRequest) {
     if (propertyId && serviceAccountKey) {
       try {
         console.log('Attempting Google Analytics Data API integration...');
-        const analyticsData = await getGoogleAnalyticsData(propertyId, serviceAccountKey, period);
-        
+
+        // Add timeout to prevent hanging
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          setTimeout(() => reject(new Error('Analytics API timeout')), 15000); // 15 second timeout
+        });
+
+        const analyticsPromise = getGoogleAnalyticsData(propertyId, serviceAccountKey, period);
+        const analyticsData = await Promise.race([analyticsPromise, timeoutPromise]);
+
         return NextResponse.json({
           success: true,
           data: analyticsData,
@@ -105,6 +115,7 @@ export async function GET(request: NextRequest) {
         });
       } catch (error) {
         console.error('Google Analytics API error:', error);
+        // Fall through to mock data
       }
     }
     
@@ -219,8 +230,8 @@ async function getGoogleAnalyticsData(propertyId: string, serviceAccountKey: str
     });
 
     // Get comparison data (previous period)
-    const { previousStartDate, previousEndDate } = calculatePreviousPeriod(period, startDate, endDate);
-    const [previousPeriodResponse] = await analyticsDataClient.runReport({
+    const { previousStartDate, previousEndDate } = calculatePreviousPeriod(period);
+    const previousPeriodResponse = await analyticsDataClient.runReport({
       property: `properties/${propertyId}`,
       dateRanges: [{ startDate: previousStartDate, endDate: previousEndDate }],
       metrics: [
@@ -230,8 +241,8 @@ async function getGoogleAnalyticsData(propertyId: string, serviceAccountKey: str
     });
 
     // Get year-over-year comparison
-    const { yearAgoStartDate, yearAgoEndDate } = calculateYearOverYearPeriod(period, startDate, endDate);
-    const [yearOverYearResponse] = await analyticsDataClient.runReport({
+    const { yearAgoStartDate, yearAgoEndDate } = calculateYearOverYearPeriod(period);
+    const yearOverYearResponse = await analyticsDataClient.runReport({
       property: `properties/${propertyId}`,
       dateRanges: [{ startDate: yearAgoStartDate, endDate: yearAgoEndDate }],
       metrics: [
@@ -284,11 +295,11 @@ async function getGoogleAnalyticsData(propertyId: string, serviceAccountKey: str
     }) || [];
 
     // Parse comparison data
-    const previousVisitors = parseInt(previousPeriodResponse.rows?.[0]?.metricValues?.[0]?.value || '0');
-    const previousPageviews = parseInt(previousPeriodResponse.rows?.[0]?.metricValues?.[1]?.value || '0');
-    
-    const yearAgoVisitors = parseInt(yearOverYearResponse.rows?.[0]?.metricValues?.[0]?.value || '0');
-    const yearAgoPageviews = parseInt(yearOverYearResponse.rows?.[0]?.metricValues?.[1]?.value || '0');
+    const previousVisitors = parseInt(previousPeriodResponse[0].rows?.[0]?.metricValues?.[0]?.value || '0');
+    const previousPageviews = parseInt(previousPeriodResponse[0].rows?.[0]?.metricValues?.[1]?.value || '0');
+
+    const yearAgoVisitors = parseInt(yearOverYearResponse[0].rows?.[0]?.metricValues?.[0]?.value || '0');
+    const yearAgoPageviews = parseInt(yearOverYearResponse[0].rows?.[0]?.metricValues?.[1]?.value || '0');
 
     const realTimeUsers = parseInt(realtimeResponse.rows?.[0]?.metricValues?.[0]?.value || '0');
 
@@ -336,13 +347,11 @@ function formatDuration(seconds: number): string {
 }
 
 /**
- * Calculate previous period dates for comparison
+ * Calculate previous period date range for comparison
  * @param {string} period - Current period (7d, 30d, 90d, 1y)
- * @param {string} startDate - Current period start date
- * @param {string} endDate - Current period end date
  * @returns {{previousStartDate: string, previousEndDate: string}} Previous period date range
  */
-function calculatePreviousPeriod(period: string, startDate: string, endDate: string) {
+function calculatePreviousPeriod(period: string) {
   const today = new Date();
   
   switch (period) {
@@ -378,11 +387,9 @@ function calculatePreviousPeriod(period: string, startDate: string, endDate: str
 /**
  * Calculate year-over-year comparison dates
  * @param {string} period - Current period (7d, 30d, 90d, 1y)
- * @param {string} startDate - Current period start date
- * @param {string} endDate - Current period end date
  * @returns {{yearAgoStartDate: string, yearAgoEndDate: string}} Year-over-year date range
  */
-function calculateYearOverYearPeriod(period: string, startDate: string, endDate: string) {
+function calculateYearOverYearPeriod(period: string) {
   const today = new Date();
   const currentYear = today.getFullYear();
   const lastYear = currentYear - 1;

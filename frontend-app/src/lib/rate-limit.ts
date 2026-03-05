@@ -135,11 +135,14 @@ export function createRateLimit(config: RateLimitConfig) {
   return async function rateLimitMiddleware(
     request: NextRequest
   ): Promise<NextResponse | null> {
-    // Get client identifier (IP address)
-    const clientIP = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-                     request.headers.get('x-real-ip') ||
-                     request.headers.get('x-client-ip') ||
-                     'unknown';
+    // Get client identifier (IP address) - prioritize Vercel headers
+    const clientIP = request.headers.get('x-vercel-ip') || // Vercel-specific header
+                      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+                      request.headers.get('x-real-ip') ||
+                      request.headers.get('x-client-ip') ||
+                      request.headers.get('cf-connecting-ip') || // Cloudflare
+                      (request.headers.get('x-forwarded-proto')?.includes('https') ? request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() : null) ||
+                      'unknown';
 
     // Skip rate limiting for health checks or specific paths
     if (request.nextUrl.pathname === '/api/health' ||

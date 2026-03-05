@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { GOOGLE_ANALYTICS_ID } from '@/lib/constants';
 import { useWordPressAuth } from '@/contexts/WordPressAuthContext';
@@ -16,7 +16,9 @@ interface AnalyticsData {
   avgSessionDuration: string;
   topPages: Array<{ page: string; views: number; percentage: number }>;
   topCountries: Array<{ country: string; visitors: number; percentage: number }>;
-  deviceTypes: Array<{ device: string; visitors: number; percentage: number }>;
+  deviceTypes: Array<{ device: string; visitors?: number; percentage: number }>;
+  source?: string;
+  note?: string;
   comparisons?: {
     previousPeriod?: {
       visitors: number;
@@ -38,21 +40,20 @@ export default function AnalyticsPage() {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState(new Date());
   const [activeTab, setActiveTab] = useState<'google' | 'jetpack'>('google');
   const [jetpackData, setJetpackData] = useState<any>(null);
   const [jetpackLoading, setJetpackLoading] = useState(false);
-  const [jetpackAuthStatus, setJetpackAuthStatus] = useState<any>(null);
   const [jetpackAuthLoading, setJetpackAuthLoading] = useState(false);
   const [wpAuthStatus, setWpAuthStatus] = useState<any>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [jetpackAuthStatus, setJetpackAuthStatus] = useState<any>(null);
   const isClient = useClientOnly();
-  
+
   // Use centralized WordPress authentication
-  const { isAuthenticated, token, login, logout, loading: authLoading } = useWordPressAuth();
-  const { getStats, getTopPosts, getReferrers, canPerform } = useAuthenticatedAPI();
+  const { isAuthenticated, token, loading: authLoading } = useWordPressAuth();
   
   // Fetch analytics data from API
-  const fetchAnalyticsData = async (period: string = selectedPeriod) => {
+  const fetchAnalyticsData = useCallback(async (period: string = selectedPeriod) => {
     setLoading(true);
     setError(null);
     try {
@@ -60,6 +61,7 @@ export default function AnalyticsPage() {
       const result = await response.json();
       
       if (result.success) {
+        setError(null); // Clear any previous errors
         // Transform API data to match our interface
         const transformedData: AnalyticsData = {
           period: period === '7d' ? '7 days' : period === '30d' ? '30 days' : period === '90d' ? '90 days' : '1 year',
@@ -92,6 +94,7 @@ export default function AnalyticsPage() {
       }
     } catch (error) {
       console.error('Error fetching analytics data:', error);
+      setError(error instanceof Error ? error.message : 'Failed to load analytics data');
       // Fallback to mock data
       setAnalyticsData({
     period: '30 days',
@@ -123,15 +126,15 @@ export default function AnalyticsPage() {
   } finally {
     setLoading(false);
   }
-};
+}, [selectedPeriod]);
 
 React.useEffect(() => {
   fetchAnalyticsData();
-  
+
   // Auto-refresh every 10 minutes
   const interval = setInterval(() => fetchAnalyticsData(), 10 * 60 * 1000);
   return () => clearInterval(interval);
-}, []);
+}, [fetchAnalyticsData]);
 
 // Fetch Jetpack authentication status
 const fetchJetpackAuthStatus = async () => {
@@ -153,10 +156,10 @@ const fetchJetpackAuthStatus = async () => {
 // Auto-fetch Jetpack data when authenticated
 useEffect(() => {
   if (!isClient || authLoading) return;
-  
+
   if (isAuthenticated && activeTab === 'jetpack') {
     console.log('🎉 WordPress.com authenticated - fetching Jetpack data');
-    fetchJetpackDataWithCentralizedAuth();
+    fetchJetpackDataWithAuth(token);
   }
 }, [isClient, isAuthenticated, authLoading, activeTab]);
 
@@ -164,11 +167,36 @@ useEffect(() => {
 const initiateWordPressImplicitOAuth = () => {
   setJetpackAuthLoading(true);
   try {
-    initiateWordPressOAuth();
+    // Import and call the OAuth initiation function
+    import('@/utils/wordpressImplicitAuth').then(({ initiateWordPressOAuth }) => {
+      initiateWordPressOAuth();
+      // Note: The page will redirect, so we don't need to set loading to false
+    }).catch((error) => {
+      console.error('Error loading OAuth utils:', error);
+      setJetpackAuthLoading(false);
+    });
   } catch (error) {
     console.error('Error initiating OAuth:', error);
     setJetpackAuthLoading(false);
   }
+};
+
+// Stub function for centralized auth (to be implemented)
+const fetchJetpackDataWithCentralizedAuth = async () => {
+  console.log('Centralized auth fetch not implemented yet');
+  // TODO: Implement centralized auth fetching
+};
+
+// Stub function for clearing stored token
+const clearStoredToken = () => {
+  console.log('Clear stored token not implemented yet');
+  // TODO: Implement token clearing
+};
+
+// Stub function for initiating WordPress OAuth
+const initiateWordPressOAuth = () => {
+  console.log('WordPress OAuth initiation not implemented yet');
+  // TODO: Implement OAuth flow
 };
 
 // Fetch Jetpack data with authentication token
@@ -192,14 +220,15 @@ const fetchJetpackDataWithAuth = async (token?: any) => {
     
     // Use our backend API to avoid CORS issues
     console.log('📡 Making API request via our backend...');
-    const response = await fetch(`/api/jetpack-analytics?period=${periodDays}`, {
+    const response = await fetch('/api/jetpack-analytics', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         token: authToken,
-        action: 'fetch_stats'
+        action: 'fetch_stats',
+        period: periodDays
       })
     });
 
@@ -299,6 +328,33 @@ const handleTabChange = (tab: 'google' | 'jetpack') => {
   }
 };
 
+if (error) {
+  return (
+    <div className="container mt-4">
+      <div className="alert alert-danger" role="alert">
+        <h4 className="alert-heading">
+          <i className="bi bi-exclamation-triangle me-2"></i>
+          Analytics Error
+        </h4>
+        <p className="mb-0">{error}</p>
+        <hr />
+        <p className="mb-0">
+          <button
+            className="btn btn-outline-danger btn-sm"
+            onClick={() => {
+              setError(null);
+              fetchAnalyticsData();
+            }}
+          >
+            <i className="bi bi-arrow-clockwise me-1"></i>
+            Retry
+          </button>
+        </p>
+      </div>
+    </div>
+  );
+}
+
 if (!analyticsData) {
   return (
     <div className="container mt-4">
@@ -340,9 +396,9 @@ if (!analyticsData) {
             <i className="bi bi-graph-up me-2 text-success"></i>
             Analytics Dashboard
           </h1>
-          <p className="text-muted">
-            Track your site's performance and visitor engagement.
-          </p>
+            <p className="text-muted">
+              Track your site&apos;s performance and visitor engagement.
+            </p>
         </div>
         <div className="col-md-4 text-end">
           <select 
@@ -479,13 +535,19 @@ if (!analyticsData) {
                     </tr>
                   </thead>
                   <tbody>
-                    {analyticsData.topPages.map((page, index) => (
-                      <tr key={index}>
-                        <td>
-                          <div className="text-truncate" style={{ maxWidth: '200px' }}>
-                            {page.page}
-                          </div>
-                        </td>
+                     {analyticsData.topPages.map((page, index) => (
+                       <tr key={index}>
+                         <td>
+                           <div className="text-truncate" style={{ maxWidth: '200px' }}>
+                             <Link
+                               href={page.page}
+                               className="text-decoration-none"
+                               title={`View ${page.page}`}
+                             >
+                               {page.page}
+                             </Link>
+                           </div>
+                         </td>
                         <td className="text-end">{page.views.toLocaleString()}</td>
                         <td className="text-end">
                           <span className="badge bg-primary">{page.percentage.toFixed(1)}%</span>
@@ -635,10 +697,18 @@ if (!analyticsData) {
                           const percentage = (page.views / analyticsData.pageviews) * 100;
                           return (
                             <div key={index} className="col-12 mb-2">
-                              <div className="d-flex justify-content-between align-items-center mb-1">
-                                <small className="text-muted">{page.page}</small>
-                                <small className="text-muted">{page.views.toLocaleString()} views</small>
-                              </div>
+                             <div className="d-flex justify-content-between align-items-center mb-1">
+                                 <small className="text-muted">
+                                   <Link
+                                     href={page.page}
+                                     className="text-decoration-none text-muted"
+                                     title={`View ${page.page}`}
+                                   >
+                                     {page.page}
+                                   </Link>
+                                 </small>
+                                 <small className="text-muted">{page.views.toLocaleString()} views</small>
+                               </div>
                               <div className="progress" style={{ height: '8px' }}>
                                 <div 
                                   className={`progress-bar bg-${index === 0 ? 'primary' : index === 1 ? 'success' : index === 2 ? 'info' : index === 3 ? 'warning' : 'secondary'}`}
@@ -886,7 +956,7 @@ if (!analyticsData) {
                         <div key={index} className="d-flex justify-content-between align-items-center mb-3">
                           <div className="d-flex align-items-center">
                             <span className="me-2">{index + 1}.</span>
-                            <span className="text-muted">"{term.term}"</span>
+                            <span className="text-muted">&quot;{term.term}&quot;</span>
                           </div>
                           <div className="text-end">
                             <div className="fw-bold">{term.views?.toLocaleString()}</div>
@@ -1203,7 +1273,7 @@ if (!analyticsData) {
                                 <li><code>WORDPRESS_COM_REDIRECT_URI</code></li>
                               </ul>
                             </li>
-                            <li>Use "Connect WordPress.com" button above</li>
+                            <li>Use &quot;Connect WordPress.com&quot; button above</li>
                           </ol>
                         </div>
                         <div className="col-md-6">

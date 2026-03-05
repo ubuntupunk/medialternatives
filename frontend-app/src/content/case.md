@@ -60,7 +60,7 @@ Here are submissions regarding the suborned perjury by A Dean in which she makes
 
 ## The Copyright Issue
 
-Aside from the fact that the articles under my copyright were outside of the scope of the employment contract, the company appears to have destroyed several items of jazz history including an interview with the family of the late Josh and Robert Sithole
+Aside from the fact that the articles under my copyright were outside of the scope of the employment contract, which in any event was null and void, the company appears to have destroyed several items of jazz history including an interview with the family of the late Josh and Robert Sithole
 
 [LIT10153ZA00 - Letter to Naspers - 26.07.2016](/legal-archive/legal-documents/LIT10153ZA00-Letter-to-Naspers-26.07.2016.pdf)
 

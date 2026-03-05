@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRateLimit, rateLimitConfigs } from '@/lib/rate-limit';
+import { createRateLimit } from '@/lib/rate-limit';
 import { createAPIResponse } from '@/lib/validation';
+import { z } from 'zod';
 
 /**
  * POST /api/images/generate - Consolidated Image Generation Endpoint
@@ -103,28 +104,50 @@ export async function POST(request: NextRequest) {
     const model = searchParams.get('model') || 'hf';
     const type = searchParams.get('type') || 'general';
 
-    const body = await request.json();
-    const { prompt, width = 512, height = 512, style } = body;
+    // Validate request body size
+    const contentLength = request.headers.get('content-length');
+    if (contentLength && parseInt(contentLength) > 10 * 1024) { // 10KB limit for image generation requests
+      return NextResponse.json(createAPIResponse(false, undefined, {
+        code: 'PAYLOAD_TOO_LARGE',
+        message: 'Request body too large',
+        details: 'Image generation requests must be less than 10KB'
+      }), { status: 413 });
+    }
 
-    if (!prompt || typeof prompt !== 'string' || prompt.trim().length < 3) {
+    const body = await request.json();
+
+    // Validate inputs using Zod schema
+    const imageGenSchema = z.object({
+      prompt: z.string().min(3, 'Prompt must be at least 3 characters').max(1000, 'Prompt must be less than 1000 characters'),
+      width: z.number().int().min(256).max(1024).optional().default(512),
+      height: z.number().int().min(256).max(1024).optional().default(512),
+      style: z.string().max(100).optional()
+    });
+
+    const validation = imageGenSchema.safeParse(body);
+
+    if (!validation.success) {
       return NextResponse.json(createAPIResponse(false, undefined, {
         code: 'VALIDATION_ERROR',
-        message: 'Prompt is required and must be at least 3 characters',
-        details: 'Please provide a descriptive prompt for image generation'
+        message: 'Invalid input parameters',
+        details: validation.error.issues.map(issue => `${issue.path.join('.')}: ${issue.message}`).join(', ')
       }), { status: 400 });
     }
+
+    const validatedData = validation.data;
+    const { prompt: validatedPrompt, width: validatedWidth, height: validatedHeight } = validatedData;
 
     // Route to appropriate generation method based on model
     let result;
     switch (model) {
       case 'hf':
-        result = await generateWithHuggingFace(prompt, width, height, style);
+        result = await generateWithHuggingFace(validatedPrompt, validatedWidth, validatedHeight);
         break;
       case 'v2':
-        result = await generateWithV2(prompt, width, height, style);
+        result = await generateWithV2(validatedPrompt, validatedWidth, validatedHeight);
         break;
       case 'post':
-        result = await generatePostImage(prompt, width, height, style);
+        result = await generatePostImage(validatedPrompt, validatedWidth, validatedHeight);
         break;
       default:
         return NextResponse.json(createAPIResponse(false, undefined, {
@@ -147,7 +170,8 @@ export async function POST(request: NextRequest) {
       model,
       type,
       generationTime: result.generationTime,
-      dimensions: { width, height }
+      dimensions: { width: validatedWidth, height: validatedHeight },
+      prompt: validatedPrompt.substring(0, 100) + (validatedPrompt.length > 100 ? '...' : '') // Truncate for response
     });
 
     return NextResponse.json(successResponse);
@@ -168,8 +192,7 @@ export async function POST(request: NextRequest) {
 async function generateWithHuggingFace(
   prompt: string,
   width: number,
-  height: number,
-  style?: string
+  height: number
 ): Promise<{ success: boolean; imageUrl?: string; generationTime?: number; error?: string }> {
   try {
     const startTime = Date.now();
@@ -197,8 +220,7 @@ async function generateWithHuggingFace(
 async function generateWithV2(
   prompt: string,
   width: number,
-  height: number,
-  style?: string
+  height: number
 ): Promise<{ success: boolean; imageUrl?: string; generationTime?: number; error?: string }> {
   try {
     const startTime = Date.now();
@@ -226,8 +248,7 @@ async function generateWithV2(
 async function generatePostImage(
   prompt: string,
   width: number,
-  height: number,
-  style?: string
+  height: number
 ): Promise<{ success: boolean; imageUrl?: string; generationTime?: number; error?: string }> {
   try {
     const startTime = Date.now();

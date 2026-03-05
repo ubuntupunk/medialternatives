@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAPIResponse } from '@/lib/validation';
-import { gdprAPI, dpo } from '@/lib/compliance';
+import { gdprAPI } from '@/lib/compliance';
 
 /**
  * GET /api/privacy/data - Access personal data (GDPR Article 15)

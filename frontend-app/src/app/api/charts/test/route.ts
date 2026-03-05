@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 // Test endpoint to verify MCP connectivity
-export async function GET(request: NextRequest) {
+export async function GET() {
   const MCP_CHART_URL = process.env.MCP_CHART_URL || 'https://chart.mcp.cloudcertainty.com/mcp';
   
   try {
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
 }
 
 // Test chart generation with minimal data
-export async function POST(request: NextRequest) {
+export async function POST() {
   const MCP_CHART_URL = process.env.MCP_CHART_URL || 'https://chart.mcp.cloudcertainty.com/mcp';
   
   try {

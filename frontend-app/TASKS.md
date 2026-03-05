@@ -1,0 +1,90 @@
+# Project Tasks
+
+This file contains a centralized list of pending tasks.
+
+## Authentication & Security
+
+### Authentication System Fix
+- [x] **Fix Sign-in Redirect Loop**: Resolved critical authentication issue where users were immediately redirected back to login after successful sign-in
+  - [x] **Root Cause Analysis**: Identified mismatch between httpOnly cookies (server) and client-side cookie reading attempts
+  - [x] **Secure Session Validation API**: Created `/api/auth/session` endpoint for server-side cookie validation
+    - [x] Validates httpOnly auth-session cookies securely
+    - [x] Returns authentication status and user data for client-side state management
+    - [x] Handles session expiration and invalid sessions gracefully
+  - [x] **Updated useAuth Hook**: Modified to use session validation API instead of direct cookie access
+    - [x] Replaced `document.cookie` reading with secure API calls
+    - [x] Added proper error handling and loading states
+    - [x] Maintained periodic session validation (every 60 seconds)
+  - [x] **Updated Login Page**: Fixed authentication checks to use session validation API
+    - [x] Removed client-side httpOnly cookie reading attempts
+    - [x] Improved error handling and user feedback
+  - [x] **Security Benefits Maintained**: 
+    - [x] XSS Protection (httpOnly cookies remain inaccessible to JavaScript)
+    - [x] CSRF Protection (SameSite=strict cookies)
+    - [x] Industry security standards (OWASP compliant)
+  - [x] **Testing**: Verified authentication flow works correctly with curl and API testing
+    - [x] Login API sets httpOnly cookies properly
+    - [x] Session validation API reads cookies correctly
+    - [x] Authentication state management functions as expected
+
+## Atom Feed Integration
+
+### Atom Feed Widget & Header Icon
+- [x] **Create Atom Feed Endpoint**: Implement `/feed.atom` API route to generate Atom feed
+  - [x] Create `/api/feed/atom/route.ts` endpoint
+  - [x] Fetch real posts from WordPress.com API with proper content and metadata
+  - [x] Generate proper Atom XML format with XML escaping and CDATA sections
+  - [x] Add proper caching and error handling
+  - [x] Create `/feed.atom` redirect route for SEO-friendly URLs
+- [x] **Create Atom Feed Widget**: Implement a subscription prompt widget based on the design in `atom-note.md`
+  - [x] Create `AtomFeedWidget.tsx` component with Tailwind styling
+  - [x] Add sticky footer or pop-up implementation
+  - [x] Include link to `/feed.atom` feed URL
+  - [x] Add RSS Feed Reader extension link
+- [x] **Add Atom Feed Icon to Header**: Add an atom/rss feed icon link in the site header
+  - [x] Update `Header.tsx` component to include feed icon
+  - [x] Link to `/feed.atom` endpoint
+  - [x] Use appropriate icon (atom/rss symbol)
+  - [x] Ensure responsive design and accessibility
+- [x] **Add Atom Feed Icon to Author Widget**: Add atom feed subscription link to author social menu
+  - [x] Update `AuthorWidget.tsx` to include RSS/Atom feed icon
+  - [x] Position next to existing social media links (Facebook, X/Twitter)
+  - [x] Use Bootstrap RSS icon with proper accessibility attributes
+- [x] **Add Atom Feed Icon to Footer**: Add social links section to footer with atom feed subscription
+  - [x] Update `Footer.tsx` to include social links section
+  - [x] Add RSS/Atom feed icon alongside X/Twitter and Facebook links
+  - [x] Position above "Powered by" text with consistent styling
+  - [x] Ensure proper accessibility and responsive design
+
+## From docs/google/ADSENSE_TODO.md
+
+### Phase 2: Frontend Implementation & UI Restoration (In Progress)
+
+- [x] **Performance Chart**: Implement a chart to visualize revenue trends over time.
+  - [x] Use D3.js library (already installed as dependency).
+  - [x] Fetch historical report data for the chart.
+  - [x] Create a chart component to display the data.
+
+### Phase 3: Ad Unit Management (CRUD Operations)
+
+- [ ] **Create Ad Unit**: Implement the functionality to create a new ad unit.
+  - [ ] Create a new API endpoint (`/api/adsense/adunits/create`).
+  - [ ] Implement the `accounts.adclients.adunits.create` API call.
+  - [ ] Create a form/modal in the frontend to capture new ad unit details.
+  - [ ] Enable the "Add New Slot" button and connect it to the creation form.
+- [ ] **Edit Ad Unit**: Implement the functionality to edit an existing ad unit.
+  - [ ] Create a new API endpoint (`/api/adsense/adunits/update`).
+  - [ ] Implement the `accounts.adclients.adunits.patch` API call.
+  - [ ] Create a form/modal in the frontend to edit ad unit details.
+  - [ ] Enable the "Edit" button for each ad unit.
+- [ ] **View Ad Unit Code**: Implement a way for the user to view the ad code for a specific ad unit.
+  - [ ] The `adUnitCode` is already available in the `AdUnit` object.
+  - [ ] Create a modal or a separate view to display the code snippet.
+
+### Phase 4: Settings & Finalization
+
+- [x] **Restore Settings UI**: Re-implement the "AdSense Settings" section from the original design.
+- [ ] **API for Settings**: Investigate the AdSense API for options to manage settings programmatically.
+- [ ] **Implement Settings**: Connect the UI to the API to allow users to modify their AdSense settings.
+- [ ] **Error Handling**: Enhance error handling throughout the application to provide clear feedback to the user.
+- [ ] **Testing**: Write tests for the API routes and frontend components.

@@ -1,7 +1,6 @@
 // frontend-app/src/app/api/adsense/auth/route.ts
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { readToken, writeToken } from './token-storage';
 import {
   generateState,
   generatePKCE,
@@ -10,6 +9,9 @@ import {
   storeOAuthState,
   generateSessionId
 } from '@/lib/oauth-security';
+import { CodeChallengeMethod as PKCEChallengeMethod } from '@/types/google';
+import { GOOGLE_SCOPES } from '@/lib/constants';
+import { getToken } from './token-utils';
 
 const OAUTH2_CLIENT = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -17,22 +19,7 @@ const OAUTH2_CLIENT = new google.auth.OAuth2(
   getRedirectURI()
 );
 
-/**
- * Get stored AdSense OAuth token
- * @returns {Promise<any>} Stored OAuth token or null
- */
-export async function getToken() {
-  return await readToken();
-}
 
-/**
- * Store AdSense OAuth token
- * @param {object} newToken - OAuth token to store
- * @returns {Promise<void>}
- */
-export async function setToken(newToken: object) {
-  await writeToken(newToken);
-}
 
 /**
  * GET /api/adsense/auth - Initiate secure AdSense OAuth flow
@@ -42,18 +29,25 @@ export async function setToken(newToken: object) {
  *
  * @returns {NextResponse} Redirect response to Google OAuth with security parameters
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
+    // Check if we have tokens but no refresh token - force re-auth
+    const existingTokens = await getToken();
+    if (existingTokens && !existingTokens.refresh_token) {
+      console.log('Existing tokens found but no refresh token - forcing re-authentication');
+      // Don't clear tokens here, let the OAuth flow handle it
+    }
+
     // Generate security parameters
     const state = generateState();
     const pkce = generatePKCE();
     const sessionId = generateSessionId();
 
     // Store state and PKCE values for later verification
-    storeOAuthState(sessionId, state, { codeVerifier: pkce.codeVerifier });
+    await storeOAuthState(sessionId, state, { codeVerifier: pkce.codeVerifier });
 
     // Define allowed scopes
-    const scopes = ['https://www.googleapis.com/auth/adsense.readonly'];
+    const scopes = [GOOGLE_SCOPES.ADSENSE];
 
     // Validate scopes
     if (!validateScopes(scopes)) {
@@ -70,10 +64,10 @@ export async function GET(request: NextRequest) {
     const authUrl = OAUTH2_CLIENT.generateAuthUrl({
       access_type: 'offline',
       scope: scopes,
-      prompt: 'consent',
+      prompt: 'consent', // Force consent to ensure refresh token
       state: `${sessionId}:${state}`, // Include session ID with state
       code_challenge: pkce.codeChallenge,
-      code_challenge_method: 'S256' as any // Type assertion for Google OAuth client
+       code_challenge_method: 'S256' as any
     });
 
     // Create response with session cookie

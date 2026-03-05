@@ -1,15 +1,26 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { AuthorWidgetProps, WordPressUser } from '@/types';
-import { wordpressApi } from '@/services/wordpress-api';
 
 /**
  * Author widget component
  * Displays author information with optional social menu
  */
+// Available themes for theme changes (similar to WebringWidget)
+const authorThemes = {
+  default: { colors: { background: '#f8f9fa', border: '#dee2e6', text: '#495057', accent: '#007bff', linkColor: '#007bff', linkHover: '#0056b3', buttonBackground: '#007bff', buttonText: '#ffffff', buttonHover: '#0056b3' } },
+  minimal: { colors: { background: '#ffffff', border: '#e9ecef', text: '#212529', accent: '#6c757d', linkColor: '#6c757d', linkHover: '#495057', buttonBackground: '#6c757d', buttonText: '#ffffff', buttonHover: '#495057' } },
+  ocean: { colors: { background: '#e3f2fd', border: '#bbdefb', text: '#0d47a1', accent: '#1976d2', linkColor: '#1976d2', linkHover: '#0d47a1', buttonBackground: '#1976d2', buttonText: '#ffffff', buttonHover: '#0d47a1' } },
+  sunset: { colors: { background: '#fff3e0', border: '#ffcc02', text: '#e65100', accent: '#ff6f00', linkColor: '#ff6f00', linkHover: '#e65100', buttonBackground: '#ff6f00', buttonText: '#ffffff', buttonHover: '#e65100' } },
+  dark: { colors: { background: '#343a40', border: '#495057', text: '#ffffff', accent: '#ffc107', linkColor: '#ffc107', linkHover: '#ffca2c', buttonBackground: '#ffc107', buttonText: '#000000', buttonHover: '#ffca2c' } },
+  tokyo: { colors: { background: '#1a1a2e', border: '#16213e', text: '#e94560', accent: '#0f3460', linkColor: '#e94560', linkHover: '#f39c12', buttonBackground: '#e94560', buttonText: '#ffffff', buttonHover: '#f39c12' } },
+  dracula: { colors: { background: '#282a36', border: '#44475a', text: '#f8f8f2', accent: '#bd93f9', linkColor: '#bd93f9', linkHover: '#ff79c6', buttonBackground: '#bd93f9', buttonText: '#282a36', buttonHover: '#ff79c6' } },
+  disco: { colors: { background: '#2d1b69', border: '#7c3aed', text: '#fbbf24', accent: '#ec4899', linkColor: '#fbbf24', linkHover: '#f59e0b', buttonBackground: '#ec4899', buttonText: '#ffffff', buttonHover: '#f59e0b' } }
+};
+
 const AuthorWidget: React.FC<AuthorWidgetProps> = ({
   authorId,
   author: initialAuthor, // Renamed to avoid conflict with state
@@ -18,7 +29,91 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
 }) => {
   const [author, setAuthor] = useState<WordPressUser | null>(initialAuthor || null);
   const [isLoading, setIsLoading] = useState(!initialAuthor);
-  const [error, setError] = useState<string | null>(null);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [isKeyboardNav, setIsKeyboardNav] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState<string>('default');
+  const [isHoveringTooltip, setIsHoveringTooltip] = useState(false);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const infoButtonRef = useRef<HTMLAnchorElement>(null);
+
+  // Available themes for theme changes
+  const availableThemes = ['default', 'minimal', 'ocean', 'sunset', 'dark', 'tokyo', 'dracula', 'disco'];
+
+  // Handle theme selection - default to default
+  useEffect(() => {
+    setCurrentTheme('default');
+  }, []);
+
+  /**
+   * Changes the widget theme to a random theme different from the current one
+   */
+  const changeToRandomTheme = () => {
+    const currentIndex = availableThemes.indexOf(currentTheme);
+    let randomIndex;
+    do {
+      randomIndex = Math.floor(Math.random() * availableThemes.length);
+    } while (randomIndex === currentIndex && availableThemes.length > 1); // Avoid same theme
+
+    const newTheme = availableThemes[randomIndex];
+    setCurrentTheme(newTheme);
+  };
+
+  /**
+   * Handles mouse entering the tooltip/info button
+   * Shows tooltip and changes theme
+   */
+  const handleTooltipMouseEnter = () => {
+    setIsHoveringTooltip(true);
+    setShowTooltip(true);
+    changeToRandomTheme();
+  };
+
+  /**
+   * Handles mouse leaving the tooltip/info button
+   * Hides tooltip
+   */
+  const handleTooltipMouseLeave = () => {
+    setIsHoveringTooltip(false);
+    setShowTooltip(false);
+  };
+
+  // Handle keyboard navigation detection
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        setIsKeyboardNav(true);
+      }
+    };
+
+    const handleMouseDown = () => {
+      setIsKeyboardNav(false);
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('mousedown', handleMouseDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('mousedown', handleMouseDown);
+    };
+  }, []);
+
+  // Handle Escape key to close tooltip
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showTooltip) {
+        setShowTooltip(false);
+        setIsHoveringTooltip(false);
+        infoButtonRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [showTooltip]);
+
+  // Use current theme for styling
+  const themeData = authorThemes[currentTheme as keyof typeof authorThemes] || authorThemes.default;
 
   useEffect(() => {
     const fetchAuthor = async () => {
@@ -33,6 +128,27 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
         return;
       }
 
+      // For now, always use fallback author data to avoid WordPress API authentication issues
+      // The site's WordPress REST API v2 requires authentication that isn't properly configured
+      setAuthor({
+        id: 1,
+        name: 'David Robert Lewis',
+        slug: 'david-robert-lewis',
+        description: 'Media activist, code hacker, music journalist, living in South Africa.',
+        link: '/author/david-robert-lewis',
+        avatar_urls: {
+          '24': '/images/avatar.jpeg',
+          '48': '/images/avatar.jpeg',
+          '96': '/images/avatar.jpeg'
+        },
+        avatar_url: '/images/avatar.jpeg',
+        url: '/author/david-robert-lewis',
+        meta: {}
+      });
+      setIsLoading(false);
+
+      // TODO: Re-enable API fetching when WordPress REST API authentication is properly configured
+      /*
       try {
         setIsLoading(true);
         const data = await wordpressApi.getUser(authorId);
@@ -41,18 +157,24 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
         // If authentication is required, fall back to default author info
         console.warn('Author data requires authentication, using fallback:', err);
         setAuthor({
-          id: authorId,
+          id: 1,
           name: 'David Robert Lewis',
           slug: 'david-robert-lewis',
-          description: 'Media activist, researcher, and writer focusing on South African media landscape and social justice issues.',
+          description: 'Media activist, investigative journalist, and author focused on media alternatives and press freedom in South Africa.',
+          link: '/author/david-robert-lewis',
           avatar_urls: {
-            '96': '/images/avatar.png'
+            '24': '/images/avatar.jpeg',
+            '48': '/images/avatar.jpeg',
+            '96': '/images/avatar.jpeg'
           },
-          url: '/author/david-robert-lewis'
+          avatar_url: '/images/avatar.jpeg',
+          url: '/author/david-robert-lewis',
+          meta: {}
         });
       } finally {
         setIsLoading(false);
       }
+      */
     };
 
     fetchAuthor();
@@ -62,21 +184,36 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
     return <div className="widget author-widget">Loading author information...</div>;
   }
 
-  if (error) {
-    return <div className="widget author-widget">Error: {error}</div>;
-  }
-
   if (!author) {
     return <div className="widget author-widget"></div>;
   }
 
   // Get avatar URL with fallback and ensure it's a string
   let avatarUrl = '/images/default-avatar.png';
-  
+
   if (author.avatar_urls?.['96']) {
     avatarUrl = typeof author.avatar_urls['96'] === 'string' ? author.avatar_urls['96'] : '/images/default-avatar.png';
   } else if (author.avatar_url) {
     avatarUrl = typeof author.avatar_url === 'string' ? author.avatar_url : '/images/default-avatar.png';
+  }
+
+  // Fallback to Gravatar if no WordPress avatar or if it's the default
+  if (avatarUrl === '/images/default-avatar.png' || !avatarUrl || avatarUrl.includes('default-avatar')) {
+    // Create Gravatar URL from author name or email-like identifier
+    const gravatarId = author.slug || 'davidrobertlewis';
+    avatarUrl = `https://www.gravatar.com/avatar/${gravatarId}?s=96&d=mp`;
+  }
+
+  // Ensure we don't use non-existent avatar.png
+  if (avatarUrl === '/images/avatar.png') {
+    avatarUrl = '/images/avatar.jpeg';
+  }
+
+  // Fallback to Gravatar if no WordPress avatar or if it's the default
+  if (avatarUrl === '/images/default-avatar.png' || !avatarUrl || avatarUrl.includes('default-avatar')) {
+    // Create Gravatar URL from author name or email-like identifier
+    const gravatarId = author.slug || 'davidrobertlewis';
+    avatarUrl = `https://www.gravatar.com/avatar/${gravatarId}?s=96&d=mp`;
   }
   
   // Ensure we don't pass objects or malformed data to Image component
@@ -85,41 +222,100 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
     avatarUrl = '/images/default-avatar.png';
   }
 
+  const themeStyles = {
+    '--author-bg': themeData.colors.background,
+    '--author-border': themeData.colors.border,
+    '--author-text': themeData.colors.text,
+    '--author-accent': themeData.colors.accent,
+    '--author-link': themeData.colors.linkColor,
+    '--author-link-hover': themeData.colors.linkHover,
+    '--author-button-bg': themeData.colors.buttonBackground,
+    '--author-button-text': themeData.colors.buttonText,
+    '--author-button-hover': themeData.colors.buttonHover,
+  } as React.CSSProperties;
+
   return (
-    <div className="widget author-widget">
-      <h3 className="widget-title">{title}</h3>
+    <div
+      className={`widget author-widget ${isKeyboardNav ? 'keyboard-nav' : ''} ${isHoveringTooltip ? 'theme-changing' : ''}`}
+      style={themeStyles}
+    >
+      <h3 className="widget-title">
+        {title}
+        <div className="author-info-container">
+          <a
+            ref={infoButtonRef}
+            href="https://github.com/ubuntupunk"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="author-info"
+            aria-describedby={showTooltip ? "author-tooltip" : undefined}
+            onMouseEnter={handleTooltipMouseEnter}
+            onMouseLeave={handleTooltipMouseLeave}
+            onFocus={() => setShowTooltip(true)}
+            onBlur={() => setShowTooltip(false)}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                setShowTooltip(false);
+                setIsHoveringTooltip(false);
+              }
+            }}
+            title=""
+          >
+            ?
+          </a>
+
+          {showTooltip && (
+            <div
+              id="author-tooltip"
+              ref={tooltipRef}
+              role="tooltip"
+              className="author-tooltip"
+              aria-live="polite"
+            >
+              Check out my GitHub repos! Click to visit github.com/ubuntupunk
+            </div>
+          )}
+        </div>
+      </h3>
       <div className="user-info">
         <div className="author-avatar">
           <Image
             src={avatarUrl}
-            alt={author.name || 'Author avatar'}
+            alt={`${author.name} avatar`}
             width={75}
             height={75}
             style={{ borderRadius: '50%' }}
           />
         </div>
-        
+
         <Link href={`/author/${author.slug}`} className="author-name">
           {author.name}
         </Link>
-        
+
         {author.description && (
           <p className="author-description">{author.description}</p>
         )}
-        
+
         {showSocialMenu && (
           <div className="author-social-menu">
             <ul className="social-links">
-              {/* Social links would be dynamically generated here */}
-              {/* For now, we'll use placeholder links */}
+              {/* Social links with Bootstrap icons */}
               <li>
-                <a href="#" target="_blank" rel="noopener noreferrer">
+                <a href="https://x.com/davidrobertlewis" target="_blank" rel="noopener noreferrer" title="Follow on X">
+                  <i className="bi bi-twitter-x"></i>
                   X.com
                 </a>
               </li>
               <li>
-                <a href="#" target="_blank" rel="noopener noreferrer">
+                <a href="https://facebook.com/davidrobertlewis" target="_blank" rel="noopener noreferrer">
+                  <i className="bi bi-facebook"></i>
                   Facebook
+                </a>
+              </li>
+              <li>
+                <a href="/feed.atom" target="_blank" rel="noopener noreferrer" title="Subscribe to Atom Feed">
+                  <i className="bi bi-rss"></i>
+                  Atom Feed
                 </a>
               </li>
             </ul>

@@ -38,21 +38,21 @@ const Layout: React.FC<LayoutProps> = ({
       <OfflineIndicator />
       <Header />
       <CustomHeader />
-      
+
       <div id="content" className="site-content container">
         <div id="primary" className="content-area row">
-          <main 
-            id="main" 
+          <main
+            id="main"
             className={`site-main ${showSidebar ? LAYOUT_CONFIG.MAIN_COLUMN_CLASS : 'col-md-12'} ${className}`}
             role="main"
           >
             {children}
           </main>
-          
+
           {showSidebar && <Sidebar />}
         </div>
       </div>
-      
+
       <Footer />
       <AddToHomeScreen />
     </div>

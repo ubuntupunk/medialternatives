@@ -2,24 +2,26 @@ import React, { useState } from 'react';
 
 /**
  * PCloud file interface
- * @typedef {Object} PCloudFile
- * @property {string} filename - Original filename
- * @property {string} publicUrl - Public download URL
- * @property {string} pcloudPath - Path in PCloud storage
- * @property {string} fileid - PCloud file ID
- * @property {'transcripts'|'legal'} category - File category
- * @property {number} size - File size in bytes
  */
+export interface PCloudFile {
+  filename: string;
+  publicUrl: string;
+  pcloudPath: string;
+  fileid: string;
+  category: 'transcripts' | 'legal';
+  size: number;
+}
 
 /**
  * PCloud file handler props interface
- * @typedef {Object} PCloudFileHandlerProps
- * @property {PCloudFile} file - File information
- * @property {string} [title] - Optional display title
- * @property {string} [className=''] - Additional CSS classes
- * @property {boolean} [showFileInfo=false] - Whether to show file size and info
- * @property {boolean} [trackDownloads=true] - Whether to track download events
  */
+export interface PCloudFileHandlerProps {
+  file: PCloudFile;
+  title?: string;
+  className?: string;
+  showFileInfo?: boolean;
+  trackDownloads?: boolean;
+}
 
 /**
  * PCloud File Handler Component

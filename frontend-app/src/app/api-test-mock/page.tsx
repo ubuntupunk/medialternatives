@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 // Mock data for testing when WordPress.com site isn't ready
 const mockSiteInfo = {
@@ -109,9 +110,11 @@ export default function APITestMockPage() {
                         </p>
                         <div className="card-text">{post.excerpt.rendered}</div>
                         {post._embedded?.['wp:featuredmedia']?.[0] && (
-                          <img 
-                            src={post._embedded['wp:featuredmedia'][0].source_url} 
+                          <Image
+                            src={post._embedded['wp:featuredmedia'][0].source_url}
                             alt={post.title.rendered}
+                            width={300}
+                            height={150}
                             className="img-fluid mt-2"
                             style={{ maxHeight: '150px', objectFit: 'cover' }}
                           />

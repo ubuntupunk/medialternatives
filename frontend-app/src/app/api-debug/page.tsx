@@ -40,7 +40,7 @@ export default function ApiDebugPage() {
         
       } catch (error) {
         console.error('[API DEBUG] Error:', error);
-        setDebugInfo({ error: error.message });
+        setDebugInfo({ error: error instanceof Error ? error.message : 'Unknown error' });
       } finally {
         setLoading(false);
       }

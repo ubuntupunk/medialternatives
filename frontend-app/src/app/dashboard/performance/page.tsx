@@ -147,7 +147,7 @@ export default function PerformancePage() {
             Performance Monitoring
           </h1>
           <p className="text-muted">
-            Monitor your site's speed, uptime, and user experience metrics.
+            Monitor your site&apos;s speed, uptime, and user experience metrics.
           </p>
         </div>
       </div>

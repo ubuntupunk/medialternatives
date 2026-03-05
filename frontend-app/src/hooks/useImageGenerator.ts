@@ -1,39 +1,43 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 
 /**
  * Image generation settings interface
- * @typedef {Object} GenerationSettings
- * @property {string} style - Image style (photorealistic, illustration, abstract, etc.)
- * @property {string} aspectRatio - Image aspect ratio (16:9, 4:3, 1:1, etc.)
- * @property {string} quality - Generation quality (low, medium, high, ultra)
- * @property {boolean} includeText - Whether to include text in the image
  */
+export interface GenerationSettings {
+  style: string;
+  aspectRatio: string;
+  quality: string;
+  includeText: boolean;
+}
 
 /**
  * Hook options interface
- * @typedef {Object} UseImageGeneratorOptions
- * @property {Function} [onSuccess] - Callback when image generation succeeds
- * @property {Function} [onError] - Callback when image generation fails
  */
+export interface UseImageGeneratorOptions {
+  onSuccess?: (imageUrl: string) => void;
+  onError?: (error: string) => void;
+}
 
 /**
  * Image generation parameters interface
- * @typedef {Object} GenerateImageParams
- * @property {string} title - Title for image generation
- * @property {string} [content] - Optional content for context
- * @property {Partial<GenerationSettings>} [settings] - Generation settings
  */
+export interface GenerateImageParams {
+  title: string;
+  content?: string;
+  settings?: Partial<GenerationSettings>;
+}
 
 /**
  * Post image generation parameters interface
- * @typedef {Object} GeneratePostImageParams
- * @property {number} postId - WordPress post ID
- * @property {string} title - Post title
- * @property {string} content - Post content
- * @property {string} [excerpt] - Post excerpt
  */
+export interface GeneratePostImageParams {
+  postId: number;
+  title: string;
+  content: string;
+  excerpt?: string;
+}
 
 /**
  * Custom React hook for AI-powered image generation
@@ -77,12 +81,12 @@ export function useImageGenerator(options: UseImageGeneratorOptions = {}) {
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
 
-  const defaultSettings: GenerationSettings = {
+  const defaultSettings: GenerationSettings = useMemo(() => ({
     style: 'photorealistic',
     aspectRatio: '16:9',
     quality: 'high',
     includeText: false
-  };
+  }), []);
 
   const generateImage = useCallback(async ({ title, content, settings }: GenerateImageParams) => {
     if (!title?.trim()) {
@@ -127,22 +131,22 @@ export function useImageGenerator(options: UseImageGeneratorOptions = {}) {
       setGeneratedImage(data.imageUrl);
       options.onSuccess?.(data.imageUrl);
       
-      return {
-        imageUrl: data.imageUrl,
-        prompt: data.prompt,
-        settings: data.settings
-      };
+       return {
+         imageUrl: data.imageUrl,
+         prompt: data.prompt,
+         settings: data.settings
+       };
 
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Failed to generate image';
-      setError(errorMsg);
-      options.onError?.(errorMsg);
-      return null;
-    } finally {
-      setIsGenerating(false);
-      setTimeout(() => setProgress(0), 1000);
-    }
-  }, [options]);
+     } catch (err) {
+       const errorMsg = err instanceof Error ? err.message : 'Failed to generate image';
+       setError(errorMsg);
+       options.onError?.(errorMsg);
+       return null;
+     } finally {
+       setIsGenerating(false);
+       setTimeout(() => setProgress(0), 1000);
+     }
+   }, [options, defaultSettings]);
 
   const generatePostImage = useCallback(async ({ postId, title, content, excerpt }: GeneratePostImageParams) => {
     setIsGenerating(true);
@@ -228,7 +232,7 @@ export function useBulkImageGenerator() {
   const [currentPost, setCurrentPost] = useState<string | null>(null);
   const [errors, setErrors] = useState<Array<{ postId: number; error: string }>>([]);
 
-  const processBulkGeneration = useCallback(async (posts: any[]) => {
+  const processBulkGeneration = useCallback(async (posts: Array<{ id: number; title: { rendered: string }; content?: { rendered: string }; excerpt?: { rendered: string } }>) => {
     setIsProcessing(true);
     setProcessedCount(0);
     setTotalCount(posts.length);
@@ -249,8 +253,8 @@ export function useBulkImageGenerator() {
           body: JSON.stringify({
             postId: post.id,
             title: post.title.rendered,
-            content: post.content.rendered,
-            excerpt: post.excerpt.rendered
+            content: post.content?.rendered || '',
+            excerpt: post.excerpt?.rendered || ''
           }),
         });
 

@@ -5,18 +5,20 @@ import { SITE_CONFIG } from '@/lib/constants';
 
 /**
  * Breadcrumb item interface
- * @typedef {Object} BreadcrumbItem
- * @property {string} name - Display name of the breadcrumb
- * @property {string} url - URL path for the breadcrumb
  */
+export interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
 
 /**
  * Structured data props interface
- * @typedef {Object} StructuredDataProps
- * @property {WordPressPost} [post] - WordPress post data for article schema
- * @property {'article'|'website'|'organization'|'breadcrumb'} [type='website'] - Type of structured data to generate
- * @property {BreadcrumbItem[]} [breadcrumbs] - Breadcrumb navigation data
  */
+export interface StructuredDataProps {
+  post?: WordPressPost;
+  type?: 'article' | 'website' | 'organization' | 'breadcrumb';
+  breadcrumbs?: BreadcrumbItem[];
+}
 
 /**
  * Structured Data Component
@@ -61,7 +63,7 @@ export default function StructuredData({ post, type = 'website', breadcrumbs }: 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://medialternatives.com';
   
   const generateStructuredData = () => {
-    const structuredData: any[] = [];
+    const structuredData: Record<string, unknown>[] = [];
 
     // Organization Schema
     const organization = {
@@ -116,11 +118,11 @@ export default function StructuredData({ post, type = 'website', breadcrumbs }: 
       const author = getPostAuthor(post);
       const featuredImage = getFeaturedImageUrl(post);
       
-      const article = {
+      const article: Record<string, unknown> = {
         "@context": "https://schema.org",
         "@type": "Article",
         "headline": decodeHtmlEntities(post.title.rendered),
-        "description": post.excerpt?.rendered 
+        "description": post.excerpt?.rendered
           ? decodeHtmlEntities(post.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 160))
           : `Read ${decodeHtmlEntities(post.title.rendered)} on ${SITE_CONFIG.SITE_TITLE}`,
         "url": `${baseUrl}/${post.slug}`,

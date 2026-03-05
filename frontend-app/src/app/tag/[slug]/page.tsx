@@ -8,12 +8,12 @@ import { mockPosts } from '@/utils/mockData';
 import Link from 'next/link';
 
 interface TagPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     page?: string;
-  };
+  }>;
 }
 
 /**
@@ -21,8 +21,9 @@ interface TagPageProps {
  * Accessible via /tag/[slug] URLs from post tag links
  */
 export default async function TagPage({ params, searchParams }: TagPageProps) {
-  const { slug } = params;
-  const currentPage = parseInt(searchParams.page || '1', 10);
+  const { slug } = await params;
+  const { page } = await searchParams;
+  const currentPage = parseInt(page || '1', 10);
   
   let tag: WordPressTag | null = null;
   let posts: WordPressPost[] = [];
@@ -135,7 +136,7 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
       {posts.length === 0 ? (
         <div className="alert alert-info">
           <h4>No posts found with this tag</h4>
-          <p>There are currently no posts tagged with "{tag?.name}".</p>
+          <p>There are currently no posts tagged with &quot;{tag?.name}&quot;.</p>
           <Link href="/blog" className="btn btn-primary">
             View All Posts
           </Link>
@@ -161,9 +162,10 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
 /**
  * Generate metadata for SEO
  */
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   try {
-    const tag = await wordpressApi.getTag(params.slug);
+    const tag = await wordpressApi.getTag(slug);
     
     if (!tag) {
       return {

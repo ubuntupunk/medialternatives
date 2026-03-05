@@ -12,16 +12,16 @@ import {
 /**
  * WordPress.com OAuth token structure
  * @interface WordPressToken
- * @property {string} accessToken - The OAuth access token
+ * @property {string} access_token - The OAuth access token
  * @property {string} tokenType - Token type (usually 'bearer')
  * @property {number} expiresIn - Token expiration time in seconds
  * @property {string} scope - Granted OAuth scopes
- * @property {string} siteId - WordPress.com site ID
+ * @property {string} siteId - WordPress.com site identifier
  * @property {string} state - OAuth state parameter for CSRF protection
  * @property {Date} expiresAt - Token expiration timestamp
  */
 interface WordPressToken {
-  accessToken: string;
+  access_token: string;
   tokenType: string;
   expiresIn: number;
   scope: string;
@@ -141,6 +141,24 @@ export function WordPressAuthProvider({ children }: WordPressAuthProviderProps) 
 
   // Initialize authentication state
   useEffect(() => {
+    const initializeAuth = async () => {
+      try {
+        const currentAuth = getAuthStatus();
+        if (currentAuth.isAuthenticated && currentAuth.token) {
+          await updateAuthState(currentAuth.token);
+        } else {
+          setState(prev => ({ ...prev, loading: false }));
+        }
+      } catch (error) {
+        console.error('Error initializing auth:', error);
+        setState(prev => ({
+          ...prev,
+          loading: false,
+          error: error instanceof Error ? error.message : 'Authentication initialization failed'
+        }));
+      }
+    };
+
     initializeAuth();
   }, []);
 
@@ -157,27 +175,7 @@ export function WordPressAuthProvider({ children }: WordPressAuthProviderProps) 
     }
   }, []);
 
-  /**
-   * Initialize authentication state on component mount
-   * @returns {Promise<void>}
-   */
-  const initializeAuth = async () => {
-    try {
-      const currentAuth = getAuthStatus();
-      if (currentAuth.isAuthenticated && currentAuth.token) {
-        await updateAuthState(currentAuth.token);
-      } else {
-        setState(prev => ({ ...prev, loading: false }));
-      }
-    } catch (error) {
-      console.error('Error initializing auth:', error);
-      setState(prev => ({ 
-        ...prev, 
-        loading: false, 
-        error: error instanceof Error ? error.message : 'Authentication initialization failed'
-      }));
-    }
-  };
+
 
   /**
    * Update authentication state with new token
@@ -193,7 +191,7 @@ export function WordPressAuthProvider({ children }: WordPressAuthProviderProps) 
       const user: WordPressUser = {
         id: 1,
         name: 'David Robert Lewis', // Fallback - will be fetched from API later
-        avatar_url: '/images/avatar.png'
+        avatar_url: '/images/avatar.jpeg'
       };
 
       setState({
