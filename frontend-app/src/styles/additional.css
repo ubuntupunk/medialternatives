@@ -316,23 +316,20 @@ ins.adsbygoogle {
         text-align: center;
     }
 
-    .entry-footer .share-buttons {
-        order: 1;
+    /* Normal square buttons on mobile - stack horizontally */
+    .entry-footer .share-buttons,
+    .social-share .d-flex {
+        display: flex !important;
+        flex-direction: row !important;
         justify-content: center !important;
-        flex-wrap: wrap;
+        flex-wrap: wrap !important;
         gap: 0.5rem !important;
         max-width: 100%;
-    }
-
-    .entry-footer .share-buttons span {
         width: 100%;
-        text-align: center;
-        margin-bottom: 0.5rem;
-        margin-right: 0 !important;
     }
 
-    /* Normal square buttons on mobile */
-    .entry-footer .share-buttons a {
+    .entry-footer .share-buttons a,
+    .share-btn {
         width: 38px !important;
         height: 38px !important;
         padding: 0 !important;
@@ -340,10 +337,21 @@ ins.adsbygoogle {
         align-items: center;
         justify-content: center;
         flex: 0 0 38px !important;
+        max-width: 38px !important;
         border-radius: 4px;
+        margin: 0 !important;
     }
 
-    .entry-footer .btn-sm {
+    .entry-footer .share-buttons span,
+    .social-share h6 {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.5rem;
+        margin-right: 0 !important;
+    }
+
+    .entry-footer .btn-sm,
+    .share-btn {
         font-size: 0.875rem !important;
         white-space: nowrap;
     }

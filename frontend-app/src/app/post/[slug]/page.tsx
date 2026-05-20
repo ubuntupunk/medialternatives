@@ -230,10 +230,8 @@ export default async function PostPage({ params }: PostPageProps) {
                   color: 'white',
                   fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
                   fontWeight: '500',
-                  padding: '0',
-                  transition: 'all 0.2s ease',
-                  width: '38px',
-                  height: '38px'
+                  padding: '0.5rem',
+                  transition: 'all 0.2s ease'
                 }}
               >
                 <svg width="16" height="16" fill="currentColor" className="me-md-1" viewBox="0 0 16 16">
@@ -254,10 +252,8 @@ export default async function PostPage({ params }: PostPageProps) {
                   color: 'white',
                   fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
                   fontWeight: '500',
-                  padding: '0',
-                  transition: 'all 0.2s ease',
-                  width: '38px',
-                  height: '38px'
+                  padding: '0.5rem',
+                  transition: 'all 0.2s ease'
                 }}
               >
                 <svg width="16" height="16" fill="currentColor" className="me-md-1" viewBox="0 0 16 16">
@@ -278,10 +274,8 @@ export default async function PostPage({ params }: PostPageProps) {
                   color: 'white',
                   fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
                   fontWeight: '500',
-                  padding: '0',
-                  transition: 'all 0.2s ease',
-                  width: '38px',
-                  height: '38px'
+                  padding: '0.5rem',
+                  transition: 'all 0.2s ease'
                 }}
               >
                 <svg width="16" height="16" fill="currentColor" className="me-md-1" viewBox="0 0 16 16">
@@ -302,10 +296,8 @@ export default async function PostPage({ params }: PostPageProps) {
                   color: 'white',
                   fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
                   fontWeight: '500',
-                  padding: '0',
-                  transition: 'all 0.2s ease',
-                  width: '38px',
-                  height: '38px'
+                  padding: '0.5rem',
+                  transition: 'all 0.2s ease'
                 }}
               >
                 <svg width="16" height="16" fill="currentColor" className="me-md-1" viewBox="0 0 16 16">
@@ -325,10 +317,8 @@ export default async function PostPage({ params }: PostPageProps) {
                   color: 'white',
                   fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
                   fontWeight: '500',
-                  padding: '0',
-                  transition: 'all 0.2s ease',
-                  width: '38px',
-                  height: '38px'
+                  padding: '0.5rem',
+                  transition: 'all 0.2s ease'
                 }}
               >
                 <svg width="16" height="16" fill="currentColor" className="me-md-1" viewBox="0 0 16 16">

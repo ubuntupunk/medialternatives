@@ -28,7 +28,7 @@ const SocialShare: React.FC<SocialShareProps> = ({
           target="_blank"
           rel="noopener noreferrer"
           className="btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center share-btn"
-          style={{ width: '40px', height: '40px', padding: 0 }}
+          style={{ padding: '0.375rem 0.75rem' }}
           aria-label="Share on Twitter"
         >
           <i className="bi bi-twitter"></i>
@@ -40,7 +40,7 @@ const SocialShare: React.FC<SocialShareProps> = ({
           target="_blank"
           rel="noopener noreferrer"
           className="btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center share-btn"
-          style={{ width: '40px', height: '40px', padding: 0 }}
+          style={{ padding: '0.375rem 0.75rem' }}
           aria-label="Share on Facebook"
         >
           <i className="bi bi-facebook"></i>
@@ -52,7 +52,7 @@ const SocialShare: React.FC<SocialShareProps> = ({
           target="_blank"
           rel="noopener noreferrer"
           className="btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center share-btn"
-          style={{ width: '40px', height: '40px', padding: 0 }}
+          style={{ padding: '0.375rem 0.75rem' }}
           aria-label="Share on LinkedIn"
         >
           <i className="bi bi-linkedin"></i>
@@ -64,7 +64,7 @@ const SocialShare: React.FC<SocialShareProps> = ({
           target="_blank"
           rel="noopener noreferrer"
           className="btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center share-btn"
-          style={{ width: '40px', height: '40px', padding: 0 }}
+          style={{ padding: '0.375rem 0.75rem' }}
           aria-label="Share on Reddit"
         >
           <i className="bi bi-reddit"></i>
@@ -76,7 +76,7 @@ const SocialShare: React.FC<SocialShareProps> = ({
           target="_blank"
           rel="noopener noreferrer"
           className="btn btn-outline-success btn-sm d-flex align-items-center justify-content-center share-btn"
-          style={{ width: '40px', height: '40px', padding: 0 }}
+          style={{ padding: '0.375rem 0.75rem' }}
           aria-label="Share on WhatsApp"
         >
           <i className="bi bi-whatsapp"></i>
@@ -86,7 +86,7 @@ const SocialShare: React.FC<SocialShareProps> = ({
         <a
           href={`mailto:?subject=${encodedTitle}&body=${encodeURIComponent(`Check out this article: ${decodeHtmlEntities(title)}\n\n${url}`)}`}
           className="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center share-btn"
-          style={{ width: '40px', height: '40px', padding: 0 }}
+          style={{ padding: '0.375rem 0.75rem' }}
           aria-label="Share via Email"
         >
           <i className="bi bi-envelope"></i>
