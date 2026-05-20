@@ -340,6 +340,23 @@ ins.adsbygoogle {
         max-width: 38px !important;
         border-radius: 4px;
         margin: 0 !important;
+        transition: all 0.2s ease !important;
+    }
+
+    /* Hover and active states for mobile feedback */
+    .entry-footer .share-buttons a:hover,
+    .entry-footer .share-buttons a:active,
+    .share-btn:hover,
+    .share-btn:active {
+        opacity: 0.85 !important;
+        filter: brightness(1.1) !important;
+        transform: translateY(-1px);
+    }
+
+    .entry-footer .share-buttons a:active,
+    .share-btn:active {
+        transform: translateY(0);
+        opacity: 0.7 !important;
     }
 
     .entry-footer .share-buttons span,
