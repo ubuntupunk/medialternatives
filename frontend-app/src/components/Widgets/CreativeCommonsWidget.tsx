@@ -27,11 +27,12 @@ const CreativeCommonsWidget: React.FC<CreativeCommonsWidgetProps> = ({
             rel="noopener noreferrer"
           >
             <Image
-              src="/images/88x31.png"
+              src="https://i.creativecommons.org/l/by-nc-nd/2.5/za/88x31.png"
               alt="Creative Commons Attribution-NonCommercial-NoDerivs 2.5 South Africa License"
               width={88}
               height={31}
               style={{ border: 'none' }}
+              unoptimized
             />
           </a>
         </div>
