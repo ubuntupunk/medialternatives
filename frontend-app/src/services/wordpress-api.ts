@@ -441,11 +441,11 @@ class WordPressAPIService {
           slug: 'david-robert-lewis',
           description: 'Media activist, investigative journalist, and author focused on media alternatives and press freedom in South Africa.',
           avatar_urls: {
-            '24': '/images/avatar.jpeg',
-            '48': '/images/avatar.jpeg',
-            '96': '/images/avatar.jpeg'
+            '24': '/images/avatar.webp',
+            '48': '/images/avatar.webp',
+            '96': '/images/avatar.webp'
           },
-          avatar_url: '/images/avatar.jpeg',
+          avatar_url: '/images/avatar.webp',
           link: '/author/david-robert-lewis',
           url: 'https://medialternatives.com',
           meta: {}

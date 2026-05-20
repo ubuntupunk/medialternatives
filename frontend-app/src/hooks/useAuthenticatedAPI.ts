@@ -175,7 +175,7 @@ export function useAuthenticatedAPI() {
           id: 1,
           name: 'David Robert Lewis',
           description: 'Media activist, investigative journalist, and author focused on media alternatives and press freedom in South Africa.',
-          avatar_URL: '/images/avatar.jpeg',
+          avatar_URL: '/images/avatar.webp',
           profile_URL: '/author/david-robert-lewis'
         };
       }

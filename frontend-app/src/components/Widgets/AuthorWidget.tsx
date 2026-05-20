@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import Avatar from '@/components/UI/Avatar';
 import { AuthorWidgetProps, WordPressUser } from '@/types';
 
 /**
@@ -137,11 +137,11 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
         description: 'Media activist, code hacker, music journalist, living in South Africa.',
         link: '/author/david-robert-lewis',
         avatar_urls: {
-          '24': '/images/avatar.jpeg',
-          '48': '/images/avatar.jpeg',
-          '96': '/images/avatar.jpeg'
+          '24': '/images/avatar.webp',
+          '48': '/images/avatar.webp',
+          '96': '/images/avatar.webp'
         },
-        avatar_url: '/images/avatar.jpeg',
+        avatar_url: '/images/avatar.webp',
         url: '/author/david-robert-lewis',
         meta: {}
       });
@@ -163,11 +163,11 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
           description: 'Media activist, investigative journalist, and author focused on media alternatives and press freedom in South Africa.',
           link: '/author/david-robert-lewis',
           avatar_urls: {
-            '24': '/images/avatar.jpeg',
-            '48': '/images/avatar.jpeg',
-            '96': '/images/avatar.jpeg'
+            '24': '/images/avatar.webp',
+            '48': '/images/avatar.webp',
+            '96': '/images/avatar.webp'
           },
-          avatar_url: '/images/avatar.jpeg',
+          avatar_url: '/images/avatar.webp',
           url: '/author/david-robert-lewis',
           meta: {}
         });
@@ -188,38 +188,39 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
     return <div className="widget author-widget"></div>;
   }
 
-  // Get avatar URL with fallback and ensure it's a string
-  let avatarUrl = '/images/default-avatar.png';
-
-  if (author.avatar_urls?.['96']) {
-    avatarUrl = typeof author.avatar_urls['96'] === 'string' ? author.avatar_urls['96'] : '/images/default-avatar.png';
-  } else if (author.avatar_url) {
-    avatarUrl = typeof author.avatar_url === 'string' ? author.avatar_url : '/images/default-avatar.png';
-  }
-
-  // Fallback to Gravatar if no WordPress avatar or if it's the default
-  if (avatarUrl === '/images/default-avatar.png' || !avatarUrl || avatarUrl.includes('default-avatar')) {
-    // Create Gravatar URL from author name or email-like identifier
+  // Get avatar URL with fallback
+  const getAvatarUrl = () => {
+    // 1. Try high-res WordPress avatar
+    if (author.avatar_urls?.['96'] && typeof author.avatar_urls['96'] === 'string') {
+      return author.avatar_urls['96'];
+    }
+    
+    // 2. Try standard WordPress avatar
+    if (author.avatar_url && typeof author.avatar_url === 'string') {
+      return author.avatar_url;
+    }
+    
+    // 3. Fallback to Gravatar
     const gravatarId = author.slug || 'davidrobertlewis';
-    avatarUrl = `https://www.gravatar.com/avatar/${gravatarId}?s=96&d=mp`;
-  }
+    return `https://www.gravatar.com/avatar/${gravatarId}?s=96&d=mp`;
+  };
 
-  // Ensure we don't use non-existent avatar.png
-  if (avatarUrl === '/images/avatar.png') {
-    avatarUrl = '/images/avatar.jpeg';
-  }
+  let avatarUrl = getAvatarUrl();
 
-  // Fallback to Gravatar if no WordPress avatar or if it's the default
-  if (avatarUrl === '/images/default-avatar.png' || !avatarUrl || avatarUrl.includes('default-avatar')) {
-    // Create Gravatar URL from author name or email-like identifier
+  // Fix known legacy path issues
+  if (avatarUrl === '/images/avatar.png' || avatarUrl === '/avatar.png' || avatarUrl === '/images/avatar.webp' || avatarUrl === '/avatar.webp') {
+    avatarUrl = '/images/avatar.webp';
+  }
+  
+  // Ensure we don't have "default-avatar" in the URL if we want to use Gravatar
+  if (avatarUrl.includes('default-avatar')) {
     const gravatarId = author.slug || 'davidrobertlewis';
     avatarUrl = `https://www.gravatar.com/avatar/${gravatarId}?s=96&d=mp`;
   }
   
-  // Ensure we don't pass objects or malformed data to Image component
+  // Final sanitization
   if (typeof avatarUrl !== 'string' || avatarUrl.includes('{')) {
-    console.warn('Invalid avatar URL detected, using fallback:', avatarUrl);
-    avatarUrl = '/images/default-avatar.png';
+    avatarUrl = '/images/avatar.webp'; // Use the known good local avatar as ultimate fallback
   }
 
   const themeStyles = {
@@ -279,12 +280,11 @@ const AuthorWidget: React.FC<AuthorWidgetProps> = ({
       </h3>
       <div className="user-info">
         <div className="author-avatar">
-          <Image
+          <Avatar
             src={avatarUrl}
-            alt={`${author.name} avatar`}
-            width={75}
-            height={75}
-            style={{ borderRadius: '50%' }}
+            name={author.name}
+            size={75}
+            className="shadow-sm border"
           />
         </div>
 

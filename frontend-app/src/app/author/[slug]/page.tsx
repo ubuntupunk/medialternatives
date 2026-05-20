@@ -32,11 +32,11 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
       link: '/author/david-robert-lewis',
       url: '/author/david-robert-lewis',
       avatar_urls: {
-        '24': '/images/avatar.jpeg',
-        '48': '/images/avatar.jpeg',
-        '96': '/images/avatar.jpeg'
+        '24': '/images/avatar.webp',
+        '48': '/images/avatar.webp',
+        '96': '/images/avatar.webp'
       },
-      avatar_url: '/images/avatar.jpeg',
+      avatar_url: '/images/avatar.webp',
       meta: []
     };
   } else {
@@ -122,7 +122,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         title: 'David Robert Lewis - Medialternatives',
         description: 'Publisher and cognitive dissident, organic intellectual, and activist-at-large. Founder of Medialternatives, South Africa\'s most controversial blog.',
         type: 'profile',
-        images: ['/images/avatar.jpeg'],
+        images: ['/images/avatar.webp'],
       },
     };
   }

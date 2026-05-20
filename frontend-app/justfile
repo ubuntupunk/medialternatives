@@ -1,0 +1,75 @@
+# Medialternatives Justfile
+# Use 'just --list' to see all available commands
+
+set shell := ["bash", "-c"]
+
+# List available recipes
+default:
+    @just --list
+
+# Install dependencies
+install:
+    pnpm install
+
+# Run the development server
+dev:
+    pnpm dev
+
+# Build the project for production
+build:
+    pnpm build
+
+# Build the project for Vercel
+build-vercel:
+    pnpm build:vercel
+
+# Start the production server
+start:
+    pnpm start
+
+# Run linting
+lint:
+    pnpm lint
+
+# Fix linting issues
+lint-fix:
+    pnpm lint:fix
+
+# Run type checking
+type-check:
+    pnpm type-check
+
+# Run tests
+test:
+    pnpm test
+
+# Run tests in watch mode
+test-watch:
+    pnpm test:watch
+
+# Clean build artifacts
+clean:
+    pnpm clean
+
+# Generate JSDoc documentation
+jsdoc:
+    pnpm jsdoc
+
+# Lint JSDoc documentation
+jsdoc-check:
+    pnpm jsdoc:check
+
+# Clean JSDoc documentation
+jsdoc-clean:
+    pnpm jsdoc:clean
+
+# Hash a password
+hash-password:
+    pnpm hash-password
+
+# Debug authentication
+debug-auth:
+    pnpm debug-auth
+
+# Run all quality checks (lint, type-check, test)
+check: lint type-check test
