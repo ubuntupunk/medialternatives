@@ -53,8 +53,8 @@ This guide outlines the implementation of push notifications for Medialternative
 
 ```bash
 # Install required dependencies
-bun add web-push firebase-admin
-bun add -d @types/web-push
+pnpm add web-push firebase-admin
+pnpm add -D @types/web-push
 ```
 
 ### 2. Generate VAPID Keys

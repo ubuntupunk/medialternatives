@@ -70,7 +70,7 @@ frontend-app/
 ### Dependencies
 
 ```bash
-bun add next-pwa workbox-webpack-plugin
+pnpm add next-pwa workbox-webpack-plugin
 ```
 
 ### Configuration Files
@@ -286,9 +286,9 @@ module.exports = withPWA(nextConfig);
 1. **Installation Test**:
    ```bash
    # Build and serve the app
-   bun run build
-   bun run start
-   
+   pnpm build
+
+   pnpm start
    # Visit http://localhost:3000
    # Look for "Add to Home Screen" popup after 3 seconds
    ```
@@ -317,9 +317,9 @@ module.exports = withPWA(nextConfig);
 
 ```bash
 # Test PWA functionality
-bun test AddToHomeScreen.test.tsx
-bun test OfflineIndicator.test.tsx
+pnpm test AddToHomeScreen.test.tsx
 
+pnpm test OfflineIndicator.test.tsx
 # Lighthouse PWA audit
 npx lighthouse http://localhost:3000 --only-categories=pwa
 ```

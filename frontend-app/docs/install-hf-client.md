@@ -8,7 +8,7 @@ Install the official client and update our API:
 
 ```bash
 cd frontend-app
-bun add @huggingface/inference
+pnpm add @huggingface/inference
 ```
 
 ## Updated Implementation

@@ -24,7 +24,7 @@ fi
 cd frontend-app
 if [ ! -d "node_modules/pcloud-sdk-js" ]; then
     echo "📦 Installing pCloud SDK..."
-    bun add pcloud-sdk-js dotenv
+    pnpm add pcloud-sdk-js dotenv
 fi
 
 # Check pCloud OAuth2 credentials

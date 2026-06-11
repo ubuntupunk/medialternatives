@@ -111,7 +111,7 @@ The project includes an `additional.css` file in the root directory with critica
 
 ### Setup Requirements
 1. **Node.js**: Version 22.x.x
-2. **Package Manager**: bun
+2. **Package Manager**: pnpm
 3. **WordPress.com Account**: Access to davidrobertlewis5.wordpress.com
 4. **Vercel Account**: For deployment
 
