@@ -10,13 +10,41 @@ const tabs: { id: TabId; label: string }[] = [
 ];
 
 const SlideshareEmbed = () => (
-  <div className="ratio" style={{ maxWidth: '800px' }}>
+  <div style={{ maxWidth: '100%' }}>
     <iframe
       src="https://www.slideshare.net/slideshow/embed_code/key/kLOh1kOExSyFtU"
       title="Lewis v Media24 (2010) Anatomy of an Injustice"
+      width="510"
+      height="420"
+      frameBorder="0"
+      marginWidth="0"
+      marginHeight="0"
+      scrolling="no"
+      style={{ border: '1px solid #CCC', marginBottom: '5px', maxWidth: '100%' }}
       allowFullScreen
-      style={{ border: '1px solid #CCC', borderRadius: '4px' }}
     />
+    <div style={{ marginBottom: '5px' }}>
+      <strong>
+        <a
+          href="https://www.slideshare.net/slideshow/lewis-v-media24-2010-anatomy-of-an-injustice/288000289"
+          title="lewis-v-media24-2010-anatomy-of-an-injustice"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          lewis-v-media24-2010-anatomy-of-an-injustice
+        </a>
+      </strong>
+      {' from '}
+      <strong>
+        <a
+          href="https://www.slideshare.net/DavidRobertLewis"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          DavidRobertLewis
+        </a>
+      </strong>
+    </div>
   </div>
 );
 
@@ -64,17 +92,7 @@ export default function CaseTabs({
                   An audit of judicial failure compiled from court transcripts in
                   Lewis v Media24 (2010)
                 </p>
-                <SlideshareEmbed />
-                <div className="mt-2">
-                  <a
-                    href="https://www.slideshare.net/slideshow/lewis-v-media24-2010-anatomy-of-an-injustice/288000289"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-sm btn-outline-primary"
-                  >
-                    Open on SlideShare &rarr;
-                  </a>
-                </div>
+        <SlideshareEmbed />
               </div>
             </div>
           </div>
