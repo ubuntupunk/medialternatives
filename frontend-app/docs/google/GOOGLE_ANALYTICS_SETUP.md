@@ -5,7 +5,7 @@
 ### ✅ Active Google Analytics Property
 - **Account**: anaartjiepaartie@gmail.com
 - **Property ID**: 251633919
-- **Measurement ID**: G-2JG7BP50ZW
+- **Measurement ID**: G-CZNQG5YM3Z
 
 ### 🎯 Goal
 Enable the dashboard to read analytics data and show popular posts with real view counts.
@@ -66,7 +66,7 @@ GOOGLE_ANALYTICS_PROPERTY_ID=251633919
 GOOGLE_SERVICE_ACCOUNT_KEY=eyJ0eXBlIjoi...
 
 # Keep your existing tracking ID
-NEXT_PUBLIC_GOOGLE_ANALYTICS=G-2JG7BP50ZW
+NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-CZNQG5YM3Z
 ```
 
 ### 6. Convert JSON to Base64

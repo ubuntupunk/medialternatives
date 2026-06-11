@@ -38,6 +38,8 @@ This section is a repository for documentation and evidence from [Lewis v Media2
 
 [Founding Affidavit](/legal-archive/legal-documents/Founding-Affidavit-High-Court-Corruption.pdf)
 
+[Founding Affidavit - Lewis vs Cheadle & Others](https://u.pcloud.link/publink/show?code=XZB5sA5ZtkMLz7uJxyXUp6Doua1uTXhu8g3k)
+
 [Annexures PAJA-3](/legal-archive/legal-documents/Annexures-PAJA-3.pdf)
 
 [Affidavit - 20 November 2017 Addendum-4](/legal-archive/legal-documents/Affidavit-20-November-2017-Addendum-4.pdf)
