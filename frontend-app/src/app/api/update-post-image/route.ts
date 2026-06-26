@@ -29,3 +29,5 @@ async function updateWordPressPost(postId: number, mediaId: number): Promise<boo
 
   throw new Error('WordPress.com post update not implemented yet');
 }
+
+export {};

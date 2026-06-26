@@ -17,8 +17,6 @@ const SlideshareEmbed = () => (
       width="510"
       height="420"
       frameBorder="0"
-      marginWidth="0"
-      marginHeight="0"
       scrolling="no"
       style={{ border: '1px solid #CCC', marginBottom: '5px', maxWidth: '100%' }}
       allowFullScreen
