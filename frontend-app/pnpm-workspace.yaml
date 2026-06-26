@@ -10,4 +10,5 @@ allowBuilds:
   tree-sitter-json: true
   unrs-resolver: true
   yarn: true
-onlyBuiltDependencies: '["bcrypt"]'
+onlyBuiltDependencies:
+  - bcrypt
