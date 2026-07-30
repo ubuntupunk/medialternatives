@@ -108,7 +108,7 @@ export default async function AuthorPagePaginated({ params }: AuthorPagePaginate
         '48': '/images/default-avatar.svg',
         '96': '/images/default-avatar.svg'
       },
-      meta: []
+      meta: {}
     };
   }
 

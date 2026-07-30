@@ -1,3 +1,4 @@
+import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 
@@ -163,7 +164,7 @@ export class APIReviewManager {
   /**
    * Generate deprecation warning response
    */
-  generateDeprecationWarning(endpoint: string): any {
+  generateDeprecationWarning(endpoint: string): Record<string, unknown> | null {
     const deprecation = this.getDeprecationNotice(endpoint);
     if (!deprecation) return null;
 
@@ -238,7 +239,7 @@ export class APIReviewManager {
   /**
    * Export review data
    */
-  exportReviewData(): any {
+  exportReviewData(): Record<string, unknown> {
     return {
       reviews: Array.from(this.reviews.values()),
       changes: this.changes,
@@ -288,9 +289,9 @@ export const apiReviewManager = new APIReviewManager();
  * Middleware to check for deprecated endpoints
  */
 export function withDeprecationCheck(
-  handler: (request: any) => Promise<any>
+  handler: (request: NextRequest) => Promise<NextResponse>
 ) {
-  return async (request: any) => {
+  return async (request: NextRequest) => {
     const url = new URL(request.url);
     const endpoint = url.pathname;
 
@@ -301,12 +302,13 @@ export function withDeprecationCheck(
       const response = await handler(request);
 
       if (warning) {
+        const w = warning as Record<string, unknown>;
         response.headers.set('X-API-Deprecated', 'true');
-        response.headers.set('X-API-Deprecation-Message', warning.message);
-        response.headers.set('X-API-Sunset-Date', warning.sunsetDate);
+        response.headers.set('X-API-Deprecation-Message', String(w.message));
+        response.headers.set('X-API-Sunset-Date', String(w.sunsetDate));
 
-        if (warning.alternative) {
-          response.headers.set('X-API-Alternative', warning.alternative);
+        if (w.alternative) {
+          response.headers.set('X-API-Alternative', String(w.alternative));
         }
       }
 

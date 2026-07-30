@@ -37,7 +37,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
         '96': '/images/avatar.webp'
       },
       avatar_url: '/images/avatar.webp',
-      meta: []
+      meta: {}
     };
   } else {
     notFound();

@@ -12,10 +12,10 @@ export interface APITestCase {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   path: string;
   headers?: Record<string, string>;
-  body?: any;
+  body?: unknown;
   queryParams?: Record<string, string>;
   expectedStatus: number;
-  expectedResponse?: any;
+  expectedResponse?: unknown;
   expectedHeaders?: Record<string, string>;
   authRequired?: boolean;
   rateLimitTest?: boolean;
@@ -27,7 +27,7 @@ export interface APITestResult {
   passed: boolean;
   duration: number;
   statusCode?: number;
-  responseBody?: any;
+  responseBody?: unknown;
   responseHeaders?: Record<string, string>;
   error?: string;
   timestamp: string;
@@ -185,7 +185,7 @@ export class APITestRunner {
     testCase: APITestCase,
     actual: {
       statusCode: number;
-      responseBody: any;
+      responseBody: unknown;
       responseHeaders: Record<string, string>;
     }
   ): boolean {
@@ -215,7 +215,7 @@ export class APITestRunner {
   /**
    * Deep equality check for objects
    */
-  private deepEqual(expected: any, actual: any): boolean {
+  private deepEqual(expected: unknown, actual: unknown): boolean {
     if (expected === actual) return true;
 
     if (expected == null || actual == null) return expected === actual;
@@ -230,7 +230,9 @@ export class APITestRunner {
 
       for (const key of expectedKeys) {
         if (!actualKeys.includes(key)) return false;
-        if (!this.deepEqual(expected[key], actual[key])) return false;
+        const expVal = (expected as Record<string, unknown>)[key];
+        const actVal = (actual as Record<string, unknown>)[key];
+        if (!this.deepEqual(expVal, actVal)) return false;
       }
 
       return true;
@@ -389,8 +391,8 @@ export class APIContractTester {
     endpoint: string,
     contract: {
       method: string;
-      requestSchema?: any;
-      responseSchema?: any;
+      requestSchema?: unknown;
+      responseSchema?: unknown;
       requiredHeaders?: string[];
     }
   ): Promise<{
@@ -533,8 +535,7 @@ export class APIPerformanceTester {
     const {
       method = 'GET',
       concurrentUsers = 10,
-      duration = 60,
-      rampUp = 10
+      duration = 60
     } = options;
 
     const responseTimes: number[] = [];

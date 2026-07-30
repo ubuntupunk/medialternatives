@@ -29,11 +29,12 @@ const JWT_CONFIG = {
  */
 export function generateAccessToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
   try {
-    return jwt.sign(payload, JWT_CONFIG.secret, {
-      expiresIn: JWT_CONFIG.expiresIn,
+    const options: jwt.SignOptions = {
+      expiresIn: JWT_CONFIG.expiresIn as jwt.SignOptions['expiresIn'],
       issuer: JWT_CONFIG.issuer,
       audience: JWT_CONFIG.audience
-    } as any);
+    };
+    return jwt.sign(payload, JWT_CONFIG.secret, options);
   } catch (error) {
     console.error('Error generating access token:', error);
     throw new Error('Failed to generate access token');
@@ -45,11 +46,12 @@ export function generateAccessToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): s
  */
 export function generateRefreshToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
   try {
-    return jwt.sign(payload, JWT_CONFIG.refreshSecret, {
-      expiresIn: JWT_CONFIG.refreshExpiresIn,
+    const options: jwt.SignOptions = {
+      expiresIn: JWT_CONFIG.refreshExpiresIn as jwt.SignOptions['expiresIn'],
       issuer: JWT_CONFIG.issuer,
       audience: JWT_CONFIG.audience
-    } as any);
+    };
+    return jwt.sign(payload, JWT_CONFIG.refreshSecret, options);
   } catch (error) {
     console.error('Error generating refresh token:', error);
     throw new Error('Failed to generate refresh token');

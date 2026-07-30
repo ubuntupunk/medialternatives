@@ -8,13 +8,13 @@ interface ChartData {
   type: string;
   title: string;
   description: string;
-  data: any;
-  config?: any;
+  data: Record<string, unknown>;
+  config?: Record<string, unknown>;
 }
 
 export default function ChartsPage() {
   const [selectedChart, setSelectedChart] = useState<string>('analytics');
-  const [chartData, setChartData] = useState<any>(null);
+  const [chartData, setChartData] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(false);
 
   // Sample chart configurations
@@ -314,8 +314,8 @@ export default function ChartsPage() {
                       <div className="d-flex flex-column justify-content-center align-items-center h-100 text-center">
                         <i className="bi bi-exclamation-triangle display-1 text-warning mb-3"></i>
                         <h4 className="text-danger mb-2">Chart Generation Failed</h4>
-                        <p className="text-muted mb-3">{chartData.error}</p>
-                        <button 
+                        <p className="text-muted mb-3">{String(chartData.error)}</p>
+                        <button
                           className="btn btn-outline-primary"
                           onClick={() => generateChart(selectedChart)}
                         >
@@ -326,14 +326,14 @@ export default function ChartsPage() {
                      ) : (
                        // Render Chart using D3
                        <D3Chart
-                         type={chartConfigs[selectedChart]?.type as any}
-                         data={chartConfigs[selectedChart]?.data}
+                         type={chartConfigs[selectedChart]?.type as 'bar' | 'line' | 'pie' | 'doughnut' | 'radar'}
+                         data={chartConfigs[selectedChart]?.data as unknown as { labels: string[]; datasets: { data: number[]; backgroundColor?: string | string[]; borderColor?: string; label?: string }[] }}
                          width={600}
                          height={400}
                        />
-                     )}
+                      )}
                   </div>
-                  
+
                   {/* Chart Data & Status */}
                   <div className="row mt-4">
                     <div className="col-md-6">

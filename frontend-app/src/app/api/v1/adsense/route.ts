@@ -59,7 +59,7 @@ export async function GET() {
       prompt: 'consent',
       state: `${sessionId}:${state}`, // Include session ID with state
       code_challenge: pkce.codeChallenge,
-      code_challenge_method: 'S256' as any // Type assertion for Google OAuth client
+      code_challenge_method: 'S256' as 'S256' & 'plain'
     });
 
     // Create response with session cookie

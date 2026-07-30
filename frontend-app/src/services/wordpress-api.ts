@@ -34,7 +34,7 @@ import {
 class WordPressAPIService {
   private baseUrl: string;
   private siteInfoUrl: string;
-  private cache: Map<string, { data: any; timestamp: number }>;
+  private cache: Map<string, { data: unknown; timestamp: number }>;
 
   constructor() {
     this.baseUrl = WORDPRESS_API_BASE;
@@ -49,7 +49,7 @@ class WordPressAPIService {
     * @param {Record<string, any>} params - Request parameters
     * @returns {PaginationInfo} Pagination metadata
     */
-   private extractPaginationInfo(headers: Headers, params: Record<string, any>): PaginationInfo {
+   private extractPaginationInfo(headers: Headers, params: Record<string, unknown>): PaginationInfo {
     const total = parseInt(headers.get('X-WP-Total') || '0', 10);
     const totalPages = parseInt(headers.get('X-WP-TotalPages') || '1', 10);
     const currentPage = parseInt(String(params.page || '1'), 10);
@@ -78,9 +78,9 @@ class WordPressAPIService {
     */
    private async fetchWithHeaders<T>(
      endpoint: string,
-     params: Record<string, any> = {},
-     useCache: boolean = true
-   ): Promise<APIResponseWithHeaders<T>> {
+params: Record<string, unknown> = {},
+      useCache: boolean = true
+    ): Promise<APIResponseWithHeaders<T>> {
     // Build URL with parameters
     const url = new URL(endpoint);
     const allParams = {
@@ -125,7 +125,7 @@ class WordPressAPIService {
         mockHeaders.set('X-WP-TotalPages', String(estimatedTotalPages));
         
         return {
-          data: cached.data,
+          data: cached.data as T,
           headers: mockHeaders
         };
       }
@@ -203,9 +203,9 @@ class WordPressAPIService {
     */
    private async fetchWithCache<T>(
      endpoint: string,
-     params: Record<string, any> = {},
-     useCache: boolean = true
-   ): Promise<T> {
+params: Record<string, unknown> = {},
+      useCache: boolean = true
+    ): Promise<T> {
     // Build URL with parameters
     const url = new URL(endpoint);
     const allParams = {
@@ -232,9 +232,9 @@ class WordPressAPIService {
     if (useCache && this.cache.has(cacheKey)) {
       const cached = this.cache.get(cacheKey)!;
       const isExpired = Date.now() - cached.timestamp > API_CONFIG.CACHE_TIME;
-      
+
       if (!isExpired) {
-        return cached.data;
+        return cached.data as T;
       }
     }
 
@@ -303,7 +303,7 @@ class WordPressAPIService {
     */
    async getPosts(params: GetPostsParams = {}): Promise<WordPressPost[]> {
     const endpoint = `${this.baseUrl}/posts`;
-    return this.fetchWithCache<WordPressPost[]>(endpoint, params);
+    return this.fetchWithCache<WordPressPost[]>(endpoint, params as unknown as Record<string, unknown>);
   }
 
    /**
@@ -381,7 +381,7 @@ class WordPressAPIService {
     * @param {Record<string, any>} [params={}] - Query parameters for filtering tags
     * @returns {Promise<WordPressTag[]>} Array of WordPress tags
     */
-   async getTags(params: Record<string, any> = {}): Promise<WordPressTag[]> {
+   async getTags(params: Record<string, unknown> = {}): Promise<WordPressTag[]> {
     const endpoint = `${this.baseUrl}/tags`;
     const defaultParams = {
       per_page: 100,
@@ -415,7 +415,7 @@ class WordPressAPIService {
     * @param {Record<string, any>} [params={}] - Query parameters for filtering users
     * @returns {Promise<WordPressUser[]>} Array of WordPress users
     */
-   async getUsers(params: Record<string, any> = {}): Promise<WordPressUser[]> {
+   async getUsers(params: Record<string, unknown> = {}): Promise<WordPressUser[]> {
     const endpoint = `${this.baseUrl}/users`;
     return this.fetchWithCache<WordPressUser[]>(endpoint, params);
   }
@@ -559,8 +559,8 @@ class WordPressAPIService {
    async getPostsWithPagination(params: GetPostsParams = {}): Promise<PaginationResponse<WordPressPost[]>> {
     const endpoint = `${this.baseUrl}/posts`;
     try {
-      const { data, headers } = await this.fetchWithHeaders<WordPressPost[]>(endpoint, params);
-      const pagination = this.extractPaginationInfo(headers, params);
+      const { data, headers } = await this.fetchWithHeaders<WordPressPost[]>(endpoint, params as unknown as Record<string, unknown>);
+      const pagination = this.extractPaginationInfo(headers, params as unknown as Record<string, unknown>);
       
       return {
         data,

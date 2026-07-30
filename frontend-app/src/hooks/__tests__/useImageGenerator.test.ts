@@ -217,9 +217,8 @@ describe('useBulkImageGenerator Hook', () => {
 
     const { result } = renderHook(() => useBulkImageGenerator());
     
-    let bulkResult;
     await act(async () => {
-      bulkResult = await result.current.processBulkGeneration(mockPosts);
+      await result.current.processBulkGeneration(mockPosts);
     });
     
     expect(result.current.processedCount).toBe(2);

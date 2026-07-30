@@ -141,7 +141,7 @@ export function useAuth() {
         const errorMessage = data.error?.message || data.error || 'Login failed';
         return { success: false, error: errorMessage };
       }
-    } catch (_error) {
+    } catch {
       return { success: false, error: 'Network error' };
     }
   };

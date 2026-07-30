@@ -5,7 +5,7 @@
 export interface APITestResult {
   endpoint: string;
   success: boolean;
-  data?: any;
+  data?: unknown;
   error?: string;
   responseTime?: number;
   status?: number;
@@ -193,7 +193,7 @@ export function generateTestReport(results: APITestResult[]): string {
 /**
  * Log detailed API response for debugging
  */
-export function logAPIResponse(endpoint: string, data: any): void {
+export function logAPIResponse(endpoint: string, data: unknown): void {
   console.group(`📡 API Response: ${endpoint}`);
   
   if (Array.isArray(data)) {

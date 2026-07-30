@@ -156,6 +156,7 @@ export default function APITestPage() {
                             __html: post.excerpt.rendered.substring(0, 150) + '...' 
                           }} />
                           {post._embedded?.['wp:featuredmedia']?.[0] && (
+                            // eslint-disable-next-line @next/next/no-img-element
                             <img 
                               src={post._embedded['wp:featuredmedia'][0].source_url} 
                               alt={post.title.rendered}

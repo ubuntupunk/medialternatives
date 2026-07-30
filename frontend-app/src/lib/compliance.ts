@@ -179,7 +179,7 @@ export class DataProtectionOfficer {
   /**
    * Data portability (GDPR Article 20)
    */
-  exportSubjectData(subjectId: string): any | null {
+  exportSubjectData(subjectId: string): Record<string, unknown> | null {
     const data = this.getSubjectData(subjectId);
     if (!data) return null;
 
@@ -321,10 +321,10 @@ Last updated: ${new Date().toISOString().split('T')[0]}
     timestamp: string;
     action: string;
     subjectId?: string;
-    details: any;
+    details: unknown;
   }> = [];
 
-  private logAudit(action: string, subjectId?: string, details?: any): void {
+  private logAudit(action: string, subjectId?: string, details?: unknown): void {
     this.auditLog.push({
       timestamp: new Date().toISOString(),
       action,
@@ -336,7 +336,7 @@ Last updated: ${new Date().toISOString().split('T')[0]}
   /**
    * Get audit trail
    */
-  getAuditTrail(subjectId?: string): any[] {
+  getAuditTrail(subjectId?: string): unknown[] {
     if (subjectId) {
       return this.auditLog.filter(log => log.subjectId === subjectId);
     }
@@ -413,7 +413,7 @@ export class GDPRComplianceAPI {
   /**
    * Handle data subject access request
    */
-  async handleDataAccess(subjectId: string): Promise<any> {
+  async handleDataAccess(subjectId: string): Promise<Record<string, unknown>> {
     const data = dpo.getSubjectData(subjectId);
 
     if (!data) {
@@ -432,7 +432,7 @@ export class GDPRComplianceAPI {
   /**
    * Handle data erasure request
    */
-  async handleDataErasure(subjectId: string): Promise<any> {
+  async handleDataErasure(subjectId: string): Promise<Record<string, unknown>> {
     const success = dpo.eraseSubjectData(subjectId);
 
     return {
@@ -444,7 +444,7 @@ export class GDPRComplianceAPI {
   /**
    * Handle consent management
    */
-  async handleConsent(subjectId: string, consentType: string, granted: boolean): Promise<any> {
+  async handleConsent(subjectId: string, consentType: string, granted: boolean): Promise<Record<string, unknown>> {
     const consentId = dpo.recordConsent({
       subjectId,
       consentType,

@@ -1,7 +1,26 @@
+// @ts-expect-error - 'fb' has no type definitions; minimal local declarations
 import * as FB from 'fb';
-import { SITE_CONFIG } from '@/lib/constants';
-// @ts-ignore
-const FB = require('fb');
+
+interface FBOptions {
+  appId?: string;
+  appSecret?: string;
+  accessToken?: string;
+  version?: string;
+}
+
+type FBCallback<T> = (res: T & { error?: unknown }) => void;
+
+interface FBApi {
+  options(opts: FBOptions): void;
+  api<T = unknown>(
+    path: string,
+    method?: string,
+    params?: Record<string, unknown>,
+    callback?: FBCallback<T>
+  ): unknown;
+}
+
+const fbTyped: FBApi = FB as unknown as FBApi;
 
 export interface FacebookPostContent {
   message?: string;
@@ -48,14 +67,14 @@ class FacebookApiService {
     }
 
     // Initialize Facebook SDK
-    FB.options({
+    fbTyped.options({
       appId: process.env.FACEBOOK_APP_ID,
       appSecret: process.env.FACEBOOK_APP_SECRET,
       accessToken: this.accessToken,
       version: 'v18.0'
     });
 
-    this.fb = FB;
+    this.fb = fbTyped;
   }
 
   /**
@@ -105,7 +124,7 @@ class FacebookApiService {
       throw new Error('Facebook API not configured');
     }
 
-    const postData: any = {
+    const postData: Record<string, unknown> = {
       access_token: this.accessToken
     };
 
@@ -126,8 +145,8 @@ class FacebookApiService {
     }
 
     try {
-      const response = await new Promise<any>((resolve, reject) => {
-        this.fb.api(`/${this.pageId}/feed`, 'post', postData, (res: any) => {
+      const response = await new Promise<{ id: string }>((resolve, reject) => {
+        this.fb.api(`/${this.pageId}/feed`, 'post', postData, (res: { id: string; error?: unknown }) => {
           if (!res || res.error) {
             reject(res?.error || new Error('Facebook API error'));
           } else {
@@ -152,7 +171,7 @@ class FacebookApiService {
     }
 
     try {
-      const response = await new Promise<any>((resolve, reject) => {
+      const response = await new Promise<{ data?: FacebookPost[] }>((resolve, reject) => {
         this.fb.api(
           `/${this.pageId}/posts`,
           'get',
@@ -161,7 +180,7 @@ class FacebookApiService {
             limit,
             fields: 'id,message,link,picture,created_time,updated_time'
           },
-          (res: any) => {
+          (res: { data?: FacebookPost[]; error?: unknown }) => {
             if (!res || res.error) {
               reject(res?.error || new Error('Facebook API error'));
             } else {
@@ -181,13 +200,13 @@ class FacebookApiService {
   /**
    * Get Facebook page information
    */
-  async getPageInfo(): Promise<any> {
+  async getPageInfo(): Promise<Record<string, unknown>> {
     if (!this.isConfigured()) {
       throw new Error('Facebook API not configured');
     }
 
     try {
-      const response = await new Promise<any>((resolve, reject) => {
+      const response = await new Promise<Record<string, unknown>>((resolve, reject) => {
         this.fb.api(
           `/${this.pageId}`,
           'get',
@@ -195,7 +214,7 @@ class FacebookApiService {
             access_token: this.accessToken,
             fields: 'id,name,about,category,website,link'
           },
-          (res: any) => {
+          (res: Record<string, unknown> & { error?: unknown }) => {
             if (!res || res.error) {
               reject(res?.error || new Error('Facebook API error'));
             } else {
@@ -221,8 +240,8 @@ class FacebookApiService {
     }
 
     try {
-      await new Promise<any>((resolve, reject) => {
-        this.fb.api(`/${postId}`, 'delete', { access_token: this.accessToken }, (res: any) => {
+      await new Promise<unknown>((resolve, reject) => {
+        this.fb.api(`/${postId}`, 'delete', { access_token: this.accessToken }, (res: { error?: unknown }) => {
           if (!res || res.error) {
             reject(res?.error || new Error('Facebook API error'));
           } else {

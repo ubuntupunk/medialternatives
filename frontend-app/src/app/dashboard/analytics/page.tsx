@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { GOOGLE_ANALYTICS_ID } from '@/lib/constants';
 import { useWordPressAuth } from '@/contexts/WordPressAuthContext';
-import { useAuthenticatedAPI } from '@/hooks/useAuthenticatedAPI';
 import { useClientOnly } from '@/hooks/useClientOnly';
 
 interface AnalyticsData {
@@ -41,12 +40,10 @@ export default function AnalyticsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'google' | 'jetpack'>('google');
-  const [jetpackData, setJetpackData] = useState<any>(null);
+  const [jetpackData, setJetpackData] = useState<Record<string, unknown> | null>(null);
   const [jetpackLoading, setJetpackLoading] = useState(false);
   const [jetpackAuthLoading, setJetpackAuthLoading] = useState(false);
-  const [wpAuthStatus, setWpAuthStatus] = useState<any>(null);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [jetpackAuthStatus, setJetpackAuthStatus] = useState<any>(null);
+  const [wpAuthStatus, setWpAuthStatus] = useState<Record<string, unknown> | null>(null);
   const isClient = useClientOnly();
 
   // Use centralized WordPress authentication
@@ -70,7 +67,7 @@ export default function AnalyticsPage() {
           sessions: Math.floor(result.data.visitors * 1.1), // Estimate sessions
           bounceRate: result.data.bounceRate,
           avgSessionDuration: result.data.avgSessionDuration,
-          topPages: result.data.topPages.map((page: any, index: number) => ({
+          topPages: result.data.topPages.map((page: { page: string; views: number }) => ({
             page: page.page,
             views: page.views,
             percentage: parseFloat(((page.views / result.data.pageviews) * 100).toFixed(1))
@@ -90,7 +87,6 @@ export default function AnalyticsPage() {
           comparisons: result.data.comparisons
         };
         setAnalyticsData(transformedData);
-        setLastUpdated(new Date());
       }
     } catch (error) {
       console.error('Error fetching analytics data:', error);
@@ -128,13 +124,13 @@ export default function AnalyticsPage() {
   }
 }, [selectedPeriod]);
 
-React.useEffect(() => {
-  fetchAnalyticsData();
+  useEffect(() => {
+    fetchAnalyticsData();
 
-  // Auto-refresh every 10 minutes
-  const interval = setInterval(() => fetchAnalyticsData(), 10 * 60 * 1000);
-  return () => clearInterval(interval);
-}, [fetchAnalyticsData]);
+    // Auto-refresh every 10 minutes
+    const interval = setInterval(() => fetchAnalyticsData(), 10 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [fetchAnalyticsData]);
 
 // Fetch Jetpack authentication status
 const fetchJetpackAuthStatus = async () => {
@@ -142,9 +138,9 @@ const fetchJetpackAuthStatus = async () => {
   try {
     const response = await fetch('/api/jetpack-auth');
     const result = await response.json();
-    
+
     if (result.success) {
-      setJetpackAuthStatus(result.data);
+      setWpAuthStatus(result.data as Record<string, unknown>);
     }
   } catch (error) {
     console.error('Error fetching Jetpack auth status:', error);
@@ -154,14 +150,7 @@ const fetchJetpackAuthStatus = async () => {
 };
 
 // Auto-fetch Jetpack data when authenticated
-useEffect(() => {
-  if (!isClient || authLoading) return;
-
-  if (isAuthenticated && activeTab === 'jetpack') {
-    console.log('🎉 WordPress.com authenticated - fetching Jetpack data');
-    fetchJetpackDataWithAuth(token);
-  }
-}, [isClient, isAuthenticated, authLoading, activeTab]);
+// (moved below fetchJetpackDataWithAuth definition)
 
 // Initiate WordPress.com implicit OAuth flow (Grasshopper-style)
 const initiateWordPressImplicitOAuth = () => {
@@ -181,37 +170,65 @@ const initiateWordPressImplicitOAuth = () => {
   }
 };
 
-// Stub function for centralized auth (to be implemented)
-const fetchJetpackDataWithCentralizedAuth = async () => {
-  console.log('Centralized auth fetch not implemented yet');
-  // TODO: Implement centralized auth fetching
-};
-
 // Stub function for clearing stored token
 const clearStoredToken = () => {
   console.log('Clear stored token not implemented yet');
   // TODO: Implement token clearing
 };
 
-// Stub function for initiating WordPress OAuth
-const initiateWordPressOAuth = () => {
-  console.log('WordPress OAuth initiation not implemented yet');
-  // TODO: Implement OAuth flow
-};
+interface JetpackToken {
+  token?: string;
+  siteId?: string;
+  expiresAt?: string;
+  access_token?: string;
+}
+
+interface JetpackData {
+  views?: number;
+  visitors?: number;
+  summary?: {
+    likes?: number;
+    comments?: number;
+    views?: number;
+    visitors?: number;
+    period?: string;
+  };
+  topPosts?: Array<{ title?: string; views?: number; percentage?: number }>;
+  referrers?: Array<{ name?: string; views?: number; percentage?: number }>;
+  searchTerms?: Array<{ term?: string; views?: number; percentage?: number }>;
+}
+
+// Fetch Jetpack analytics data
+const fetchJetpackData = useCallback(async (period: string = selectedPeriod) => {
+  setJetpackLoading(true);
+  try {
+    const periodDays = period === '7d' ? '7' : period === '30d' ? '30' : period === '90d' ? '90' : '365';
+    const response = await fetch(`/api/jetpack-analytics?period=${periodDays}`);
+    const result = await response.json();
+
+    if (result.success) {
+      setJetpackData(result.data);
+    }
+  } catch (error) {
+    console.error('Error fetching Jetpack data:', error);
+  } finally {
+    setJetpackLoading(false);
+  }
+}, [selectedPeriod]);
 
 // Fetch Jetpack data with authentication token
-const fetchJetpackDataWithAuth = async (token?: any) => {
+const fetchJetpackDataWithAuth = useCallback(async (token?: JetpackToken | unknown) => {
   console.log('🚀 fetchJetpackDataWithAuth called with token:', token);
   setJetpackLoading(true);
   try {
-    const authToken = token || wpAuthStatus?.token;
+    const authToken = token || (wpAuthStatus as { token?: JetpackToken })?.token;
     console.log('🔑 Using auth token:', authToken);
     
     if (!authToken) {
       throw new Error('No authentication token available');
     }
 
-    if (!authToken.siteId) {
+    if (!(authToken as { siteId?: string }).siteId) {
       throw new Error('No site ID in token');
     }
 
@@ -264,31 +281,13 @@ const fetchJetpackDataWithAuth = async (token?: any) => {
   } finally {
     setJetpackLoading(false);
   }
-};
+}, [wpAuthStatus, selectedPeriod, fetchJetpackData]);
 
 // Disconnect WordPress.com authentication
 const disconnectWordPress = () => {
   clearStoredToken();
-  setWpAuthStatus({ isAuthenticated: false });
+  setWpAuthStatus({ isAuthenticated: false } as unknown as Record<string, unknown>);
   setJetpackData(null);
-};
-
-// Fetch Jetpack analytics data
-const fetchJetpackData = async (period: string = selectedPeriod) => {
-  setJetpackLoading(true);
-  try {
-    const periodDays = period === '7d' ? '7' : period === '30d' ? '30' : period === '90d' ? '90' : '365';
-    const response = await fetch(`/api/jetpack-analytics?period=${periodDays}`);
-    const result = await response.json();
-    
-    if (result.success) {
-      setJetpackData(result.data);
-    }
-  } catch (error) {
-    console.error('Error fetching Jetpack data:', error);
-  } finally {
-    setJetpackLoading(false);
-  }
 };
 
 const handlePeriodChange = (period: string) => {
@@ -300,14 +299,7 @@ const handlePeriodChange = (period: string) => {
 };
 
 // Initialize WordPress auth status on client side
-useEffect(() => {
-  if (isClient) {
-    import('@/utils/wordpressImplicitAuth').then(({ getAuthStatus }) => {
-      const currentAuth = getAuthStatus();
-      setWpAuthStatus(currentAuth);
-    });
-  }
-}, [isClient]);
+// (moved below fetchJetpackDataWithAuth definition)
 
 const handleTabChange = (tab: 'google' | 'jetpack') => {
   setActiveTab(tab);
@@ -315,11 +307,11 @@ const handleTabChange = (tab: 'google' | 'jetpack') => {
     // Import getAuthStatus dynamically to avoid SSR issues
     import('@/utils/wordpressImplicitAuth').then(({ getAuthStatus }) => {
       const currentAuth = getAuthStatus();
-      setWpAuthStatus(currentAuth);
-      
+      setWpAuthStatus(currentAuth as unknown as Record<string, unknown>);
+
       if (currentAuth.isAuthenticated) {
         // Always fetch live data when authenticated
-        fetchJetpackDataWithAuth(currentAuth.token);
+        fetchJetpackDataWithAuth(currentAuth.token as unknown as JetpackToken);
       } else {
         // Clear any existing data when not authenticated
         setJetpackData(null);
@@ -327,6 +319,26 @@ const handleTabChange = (tab: 'google' | 'jetpack') => {
     });
   }
 };
+
+// Initialize WordPress auth status on client side
+useEffect(() => {
+  if (isClient) {
+    import('@/utils/wordpressImplicitAuth').then(({ getAuthStatus }) => {
+      const currentAuth = getAuthStatus();
+      setWpAuthStatus(currentAuth as unknown as Record<string, unknown>);
+    });
+  }
+}, [isClient]);
+
+// Auto-fetch Jetpack data when authenticated
+useEffect(() => {
+  if (!isClient || authLoading) return;
+
+  if (isAuthenticated && activeTab === 'jetpack') {
+    console.log('🎉 WordPress.com authenticated - fetching Jetpack data');
+    fetchJetpackDataWithAuth(token as unknown as JetpackToken);
+  }
+}, [isClient, isAuthenticated, authLoading, activeTab, token, fetchJetpackDataWithAuth]);
 
 if (error) {
   return (
@@ -693,7 +705,7 @@ if (!analyticsData) {
                     <div className="mb-4">
                       <h6 className="mb-3">Top Pages</h6>
                       <div className="row">
-                        {analyticsData.topPages?.slice(0, 5).map((page: any, index: number) => {
+                        {analyticsData.topPages?.slice(0, 5).map((page: { page: string; views: number; percentage: number }, index: number) => {
                           const percentage = (page.views / analyticsData.pageviews) * 100;
                           return (
                             <div key={index} className="col-12 mb-2">
@@ -777,15 +789,15 @@ if (!analyticsData) {
                 <div className={`alert ${wpAuthStatus.isAuthenticated ? 'alert-success' : 'alert-info'} mb-0`}>
                   <div className="d-flex align-items-center justify-content-between">
                     <div className="d-flex align-items-center">
-                      <i className={`bi ${wpAuthStatus.isAuthenticated ? 'bi-check-circle' : 'bi-info-circle'} me-2`}></i>
+                      <i className={`bi ${Boolean(wpAuthStatus?.isAuthenticated) ? 'bi-check-circle' : 'bi-info-circle'} me-2`}></i>
                       <div>
                         <strong>
-                          {wpAuthStatus.isAuthenticated ? 'WordPress.com Connected' : 'Connect to WordPress.com'}
+                          {Boolean(wpAuthStatus?.isAuthenticated) ? 'WordPress.com Connected' : 'Connect to WordPress.com'}
                         </strong>
-                        {wpAuthStatus.isAuthenticated && wpAuthStatus.token && (
+                        {Boolean(wpAuthStatus?.isAuthenticated) && (wpAuthStatus as { token?: { siteId?: string; expiresAt?: string } }).token && (
                           <div className="small text-muted">
-                            Site ID: {wpAuthStatus.token.siteId} | 
-                            Expires: {new Date(wpAuthStatus.token.expiresAt).toLocaleDateString()}
+                            Site ID: {(wpAuthStatus as { token?: { siteId?: string; expiresAt?: string } }).token?.siteId} | 
+                            Expires: {new Date((wpAuthStatus as { token?: { expiresAt?: string } }).token?.expiresAt || '').toLocaleDateString()}
                           </div>
                         )}
                       </div>
@@ -841,7 +853,7 @@ if (!analyticsData) {
                   <div className="card bg-info text-white">
                     <div className="card-body text-center">
                       <i className="bi bi-eye fs-2 mb-2"></i>
-                      <h4 className="mb-0">{jetpackData.views?.toLocaleString()}</h4>
+                      <h4 className="mb-0">{(jetpackData as unknown as JetpackData).views?.toLocaleString()}</h4>
                       <small>Views</small>
                     </div>
                   </div>
@@ -850,7 +862,7 @@ if (!analyticsData) {
                   <div className="card bg-success text-white">
                     <div className="card-body text-center">
                       <i className="bi bi-people fs-2 mb-2"></i>
-                      <h4 className="mb-0">{jetpackData.visitors?.toLocaleString()}</h4>
+                      <h4 className="mb-0">{(jetpackData as unknown as JetpackData).visitors?.toLocaleString()}</h4>
                       <small>Visitors</small>
                     </div>
                   </div>
@@ -859,7 +871,7 @@ if (!analyticsData) {
                   <div className="card bg-warning text-white">
                     <div className="card-body text-center">
                       <i className="bi bi-heart fs-2 mb-2"></i>
-                      <h4 className="mb-0">{jetpackData.summary?.likes?.toLocaleString()}</h4>
+                      <h4 className="mb-0">{(jetpackData as unknown as JetpackData).summary?.likes?.toLocaleString()}</h4>
                       <small>Likes</small>
                     </div>
                   </div>
@@ -868,7 +880,7 @@ if (!analyticsData) {
                   <div className="card bg-primary text-white">
                     <div className="card-body text-center">
                       <i className="bi bi-chat fs-2 mb-2"></i>
-                      <h4 className="mb-0">{jetpackData.summary?.comments?.toLocaleString()}</h4>
+                      <h4 className="mb-0">{(jetpackData as unknown as JetpackData).summary?.comments?.toLocaleString()}</h4>
                       <small>Comments</small>
                     </div>
                   </div>
@@ -896,7 +908,7 @@ if (!analyticsData) {
                             </tr>
                           </thead>
                           <tbody>
-                            {jetpackData.topPosts?.map((post: any, index: number) => (
+                            {(jetpackData as unknown as JetpackData).topPosts?.map((post: { title?: string; views?: number; percentage?: number }, index: number) => (
                               <tr key={index}>
                                 <td>
                                   <div className="text-truncate" style={{ maxWidth: '200px' }}>
@@ -926,7 +938,7 @@ if (!analyticsData) {
                       </h5>
                     </div>
                     <div className="card-body">
-                      {jetpackData.referrers?.map((referrer: any, index: number) => (
+                      {(jetpackData as unknown as JetpackData).referrers?.map((referrer: { name?: string; views?: number; percentage?: number }, index: number) => (
                         <div key={index} className="d-flex justify-content-between align-items-center mb-3">
                           <div className="d-flex align-items-center">
                             <span className="me-2">{index + 1}.</span>
@@ -952,7 +964,7 @@ if (!analyticsData) {
                       </h5>
                     </div>
                     <div className="card-body">
-                      {jetpackData.searchTerms?.map((term: any, index: number) => (
+                      {(jetpackData as unknown as JetpackData).searchTerms?.map((term: { term?: string; views?: number; percentage?: number }, index: number) => (
                         <div key={index} className="d-flex justify-content-between align-items-center mb-3">
                           <div className="d-flex align-items-center">
                             <span className="me-2">{index + 1}.</span>
@@ -974,32 +986,32 @@ if (!analyticsData) {
                     <div className="card-header">
                       <h5 className="mb-0">
                         <i className="bi bi-bar-chart me-2"></i>
-                        Summary ({jetpackData.summary?.period})
+                        Summary ({(jetpackData as unknown as JetpackData).summary?.period})
                       </h5>
                     </div>
                     <div className="card-body">
                       <div className="row">
                         <div className="col-6 mb-3">
                           <div className="text-center">
-                            <h4 className="text-info mb-1">{jetpackData.summary?.views?.toLocaleString()}</h4>
+                            <h4 className="text-info mb-1">{(jetpackData as unknown as JetpackData).summary?.views?.toLocaleString()}</h4>
                             <small className="text-muted">Total Views</small>
                           </div>
                         </div>
                         <div className="col-6 mb-3">
                           <div className="text-center">
-                            <h4 className="text-success mb-1">{jetpackData.summary?.visitors?.toLocaleString()}</h4>
+                            <h4 className="text-success mb-1">{(jetpackData as unknown as JetpackData).summary?.visitors?.toLocaleString()}</h4>
                             <small className="text-muted">Unique Visitors</small>
                           </div>
                         </div>
                         <div className="col-6 mb-3">
                           <div className="text-center">
-                            <h4 className="text-warning mb-1">{jetpackData.summary?.likes?.toLocaleString()}</h4>
+                            <h4 className="text-warning mb-1">{(jetpackData as unknown as JetpackData).summary?.likes?.toLocaleString()}</h4>
                             <small className="text-muted">Total Likes</small>
                           </div>
                         </div>
                         <div className="col-6 mb-3">
                           <div className="text-center">
-                            <h4 className="text-primary mb-1">{jetpackData.summary?.comments?.toLocaleString()}</h4>
+                            <h4 className="text-primary mb-1">{(jetpackData as unknown as JetpackData).summary?.comments?.toLocaleString()}</h4>
                             <small className="text-muted">Total Comments</small>
                           </div>
                         </div>
@@ -1070,20 +1082,20 @@ if (!analyticsData) {
                       </div>
                       {/* WordPress.com Authentication Status */}
                       <div className="mb-4">
-                        <div className={`alert ${wpAuthStatus.isAuthenticated ? 'alert-success' : 'alert-info'}`}>
+                        <div className={`alert ${Boolean(wpAuthStatus?.isAuthenticated) ? 'alert-success' : 'alert-info'}`}>
                           <div className="d-flex align-items-center justify-content-between">
                             <div className="d-flex align-items-center">
-                              <i className={`bi ${wpAuthStatus.isAuthenticated ? 'bi-check-circle' : 'bi-info-circle'} me-2`}></i>
+                              <i className={`bi ${Boolean(wpAuthStatus?.isAuthenticated) ? 'bi-check-circle' : 'bi-info-circle'} me-2`}></i>
                               <div>
                                 <strong>
-                                  {wpAuthStatus.isAuthenticated ? 'WordPress.com Connected' : 'WordPress.com Authentication'}
+                                  {Boolean(wpAuthStatus?.isAuthenticated) ? 'WordPress.com Connected' : 'WordPress.com Authentication'}
                                 </strong>
                                 <div className="small">
-                                  {wpAuthStatus.isAuthenticated && isClient ? (
+                                  {Boolean(wpAuthStatus?.isAuthenticated) && isClient ? (
                                     <>
-                                      Method: Implicit OAuth (Grasshopper-style) | 
-                                      Site ID: {wpAuthStatus.token?.siteId} |
-                                      Expires: {wpAuthStatus.token?.expiresAt ? new Date(wpAuthStatus.token.expiresAt).toLocaleString() : 'Unknown'}
+                                      Method: Implicit OAuth (Grasshopper-style) |
+                                      Site ID: {(wpAuthStatus as { token?: { siteId?: string; expiresAt?: string } }).token?.siteId} |
+                                      Expires: {(wpAuthStatus as { token?: { expiresAt?: string } }).token?.expiresAt ? new Date((wpAuthStatus as { token?: { expiresAt: string } }).token!.expiresAt).toLocaleString() : 'Unknown'}
                                     </>
                                   ) : (
                                     'Click "Connect WordPress.com" to access live analytics data'
@@ -1091,8 +1103,8 @@ if (!analyticsData) {
                                 </div>
                               </div>
                             </div>
-                            {wpAuthStatus.isAuthenticated && isClient && (
-                              <button 
+                            {Boolean(wpAuthStatus?.isAuthenticated) && isClient && (
+                              <button
                                 className="btn btn-sm btn-outline-secondary"
                                 onClick={disconnectWordPress}
                               >
@@ -1105,7 +1117,7 @@ if (!analyticsData) {
                       </div>
 
                       <div className="mt-4">
-                        {wpAuthStatus.isAuthenticated && isClient ? (
+                        {Boolean(wpAuthStatus?.isAuthenticated) && isClient ? (
                           <button 
                             className="btn btn-success me-2"
                             onClick={() => fetchJetpackDataWithAuth()}

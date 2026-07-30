@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { wordpressApi } from '@/services/wordpress-api';
 
 export default function ApiDebugPage() {
-  const [debugInfo, setDebugInfo] = useState<any>(null);
+  const [debugInfo, setDebugInfo] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

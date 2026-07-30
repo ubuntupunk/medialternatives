@@ -59,7 +59,7 @@ export interface WordPressPost {
   sticky: boolean;
   template: string;
   format: string;
-  meta: Record<string, any>;
+  meta: Record<string, unknown>;
   categories: number[];
   tags: number[];
   _embedded?: {
@@ -95,7 +95,7 @@ export interface WordPressUser {
     '96': string;
   };
   avatar_url?: string;
-  meta: Record<string, any>;
+  meta: Record<string, unknown>;
 }
 
 /**
@@ -120,7 +120,7 @@ export interface WordPressCategory {
   slug: string;
   taxonomy: 'category';
   parent: number;
-  meta: Record<string, any>;
+  meta: Record<string, unknown>;
 }
 
 /**
@@ -143,7 +143,7 @@ export interface WordPressTag {
   name: string;
   slug: string;
   taxonomy: 'post_tag';
-  meta: Record<string, any>;
+  meta: Record<string, unknown>;
 }
 
 /**
@@ -181,7 +181,7 @@ export interface WordPressMedia {
   comment_status: 'open' | 'closed';
   ping_status: 'open' | 'closed';
   template: string;
-  meta: Record<string, any>;
+  meta: Record<string, unknown>;
   description: {
     rendered: string;
   };
@@ -202,7 +202,7 @@ export interface WordPressMedia {
       mime_type: string;
       source_url: string;
     }>;
-    image_meta: Record<string, any>;
+    image_meta: Record<string, unknown>;
   };
   source_url: string;
 }

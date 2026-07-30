@@ -49,8 +49,8 @@ export default function AdSenseManagementPage() {
       }
       setAdSenseData(data);
       setError(null);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch AdSense data');
       setAdSenseData(null);
     } finally {
       setIsLoading(false);
@@ -70,8 +70,8 @@ export default function AdSenseManagementPage() {
       await fetch('/api/adsense/auth/logout', { method: 'POST' });
       setAdSenseData(null);
       setError('Not authenticated');
-    } catch (err) {
-      console.error('Failed to sign out', err);
+    } catch {
+      console.error('Failed to sign out');
     }
   };
 

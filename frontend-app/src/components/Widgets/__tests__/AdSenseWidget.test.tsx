@@ -8,7 +8,7 @@ import { ADSENSE_CLIENT_ID, ADSENSE_SLOTS } from '@/lib/constants';
 // Mock the window.adsbygoogle
 declare global {
   interface Window {
-    adsbygoogle: any[];
+    adsbygoogle: { push: (config: Record<string, unknown>) => void }[];
   }
 }
 
@@ -16,7 +16,7 @@ describe('AdSenseWidget', () => {
   beforeEach(() => {
     // Reset DOM and window.adsbygoogle before each test
     document.head.innerHTML = '';
-    delete (window as any).adsbygoogle;
+    delete (window as unknown as Record<string, unknown>).adsbygoogle;
     
     // Mock console.error to avoid noise in tests
     jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -108,7 +108,7 @@ describe('AdSenseWidget', () => {
       push: jest.fn(() => {
         throw new Error('AdSense error');
       })
-    }] as any;
+    }];
     
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     

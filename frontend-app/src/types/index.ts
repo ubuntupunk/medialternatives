@@ -175,7 +175,7 @@ export interface SEOProps {
 // Global window extensions
 declare global {
   interface Window {
-    adsbygoogle: any[];
+    adsbygoogle: { push: (config: Record<string, unknown>) => void }[];
   }
 }
 

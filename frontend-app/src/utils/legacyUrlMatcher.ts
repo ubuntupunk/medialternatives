@@ -41,7 +41,7 @@ export async function findPostByLegacyUrl(
             strategy: 'exact_slug'
           };
         }
-      } catch (_error) {
+      } catch {
         // Post not found, continue
       }
       return null;
@@ -130,7 +130,7 @@ export async function findPostByLegacyUrl(
                 strategy: 'fuzzy_match'
               };
             }
-          } catch (_error) {
+          } catch {
             // Continue to next variation
           }
         }

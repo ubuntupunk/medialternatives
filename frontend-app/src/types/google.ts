@@ -178,12 +178,12 @@ export interface JetpackCacheEntry {
 /**
  * WordPress.com API Response Structure
  */
-export interface WordPressComApiResponse<T = any> {
+export interface WordPressComApiResponse<T = unknown> {
   data?: T;
   error?: {
     code: string;
     message: string;
-    data?: any;
+    data?: unknown;
   };
   success: boolean;
 }

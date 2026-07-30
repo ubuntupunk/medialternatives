@@ -104,7 +104,7 @@ export default async function CategoryPagePaginated({ params }: CategoryPagePagi
       link: '',
       taxonomy: 'category',
       parent: 0,
-      meta: []
+      meta: {}
     };
   }
 

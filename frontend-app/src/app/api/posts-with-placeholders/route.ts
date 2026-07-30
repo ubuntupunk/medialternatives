@@ -19,10 +19,10 @@ export async function GET() {
 
     // Filter posts that have placeholder images (picsum.photos or no featured image)
     const postsWithPlaceholders = posts.filter(post => {
-      const featuredImageUrl = getFeaturedImageUrl(post);
-      
+      const featuredImageUrl = getFeaturedImageUrl(post as unknown as Record<string, unknown>);
+
       // Check if it's a placeholder or missing image
-      return !featuredImageUrl || 
+      return !featuredImageUrl ||
              featuredImageUrl.includes('picsum.photos') ||
              featuredImageUrl.includes('placeholder') ||
              featuredImageUrl.includes('via.placeholder.com');
@@ -31,9 +31,9 @@ export async function GET() {
     // Add featured image URL to each post for easier access
     const enrichedPosts = postsWithPlaceholders.map(post => ({
       ...post,
-      featured_image_url: getFeaturedImageUrl(post),
+      featured_image_url: getFeaturedImageUrl(post as unknown as Record<string, unknown>),
       needs_image: true,
-      placeholder_type: getPlaceholderType(getFeaturedImageUrl(post))
+      placeholder_type: getPlaceholderType(getFeaturedImageUrl(post as unknown as Record<string, unknown>))
     }));
 
     return NextResponse.json({
@@ -60,19 +60,26 @@ export async function GET() {
  * @param {any} post - WordPress post object
  * @returns {string | null} Featured image URL or null if not found
  */
-function getFeaturedImageUrl(post: any): string | null {
+function getFeaturedImageUrl(post: Record<string, unknown> | null): string | null {
+  if (!post) return null;
+  const embedded = post._embedded as Record<string, unknown> | undefined;
+  const links = post._links as Record<string, unknown> | undefined;
+
   // Check for featured media in _embedded data
-  if (post._embedded?.['wp:featuredmedia']?.[0]?.source_url) {
-    return post._embedded['wp:featuredmedia'][0].source_url;
+  const featuredMedia = embedded?.['wp:featuredmedia'] as unknown[] | undefined;
+  const firstMedia = featuredMedia?.[0] as Record<string, unknown> | undefined;
+  const sourceUrl = firstMedia?.source_url;
+  if (typeof sourceUrl === 'string') {
+    return sourceUrl;
   }
-  
+
   // Check for featured media link
-  if (post._links?.['wp:featuredmedia']?.[0]?.href) {
-    // This would require another API call to get the actual image URL
-    // For now, we'll mark it as needing investigation
+  const linkMedia = links?.['wp:featuredmedia'] as unknown[] | undefined;
+  const firstLink = linkMedia?.[0] as Record<string, unknown> | undefined;
+  if (typeof firstLink?.href === 'string') {
     return null;
   }
-  
+
   // Check if there's a featured_media ID but no embedded data
   if (post.featured_media && post.featured_media !== 0) {
     // Has featured media but not embedded - might need separate API call

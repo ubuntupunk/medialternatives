@@ -10,7 +10,7 @@ import AuthorWidget from '../Widgets/AuthorWidget';
 import AdSenseWidget from '../Widgets/AdSenseWidget';
 import AudioWidget from '../Widgets/AudioWidget';
 import CreativeCommonsWidget from '../Widgets/CreativeCommonsWidget';
-import DonateWidget from '../Widgets/DonateWidget';
+
 import DonateWidgetImproved from '../Widgets/DonateWidgetImproved'
 import WebringWidget from '../widgets-extra/WebringWidget';
 

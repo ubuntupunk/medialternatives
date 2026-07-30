@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
  */
 
 export interface CacheEntry {
-  data: any;
+  data: unknown;
   timestamp: number;
   ttl: number;
   hits: number;
@@ -42,7 +42,7 @@ class MemoryCache {
   /**
    * Get cached data
    */
-  get(key: string): any | null {
+  get(key: string): unknown | null {
     const entry = this.cache.get(key);
 
     if (!entry) {
@@ -65,7 +65,7 @@ class MemoryCache {
   /**
    * Set cached data
   */
-  set(key: string, data: any, ttl?: number): void {
+  set(key: string, data: unknown, ttl?: number): void {
     const entry: CacheEntry = {
       data,
       timestamp: Date.now(),
@@ -189,7 +189,7 @@ export const analyticsCache = new MemoryCache({ ttl: 1800, maxSize: 100 }); // 3
 /**
  * Generate cache key from request
  */
-export function generateCacheKey(request: NextRequest, additionalData?: any): string {
+export function generateCacheKey(request: NextRequest, additionalData?: unknown): string {
   const url = new URL(request.url);
   const keyParts = [
     request.method,
@@ -259,7 +259,7 @@ export function withCache(
 
         cacheInstance.set(key, responseData, ttl);
         return responseClone;
-      } catch (error) {
+      } catch {
         // If we can't parse the response, just return it without caching
         return response;
       }
@@ -310,7 +310,7 @@ export class CacheWarmer {
         } else {
           failed++;
         }
-      } catch (error) {
+      } catch {
         failed++;
       }
     });

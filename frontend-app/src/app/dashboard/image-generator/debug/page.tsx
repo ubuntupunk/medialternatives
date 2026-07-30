@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const ImageGeneratorDebugPage: React.FC = () => {
-  const [debugInfo, setDebugInfo] = useState<any>(null);
+  const [debugInfo, setDebugInfo] = useState<Record<string, unknown> | null>(null);
   const [testPrompt, setTestPrompt] = useState('Climate change and environmental activism');
   const [loading, setLoading] = useState(false);
   const [selectedModel, setSelectedModel] = useState('black-forest-labs/FLUX.1-dev');
@@ -331,7 +332,7 @@ const ImageGeneratorDebugPage: React.FC = () => {
               <div className="card-header d-flex justify-content-between align-items-center">
                 <h5 className="mb-0">Debug Output</h5>
                 <small className="text-muted">
-                  {debugInfo.timestamp}
+                  {String(debugInfo.timestamp)}
                 </small>
               </div>
               <div className="card-body">
@@ -339,24 +340,26 @@ const ImageGeneratorDebugPage: React.FC = () => {
                   {JSON.stringify(debugInfo, null, 2)}
                 </pre>
                 
-                {debugInfo.response?.imageUrl && (
+                {Boolean((debugInfo.response as Record<string, unknown> | undefined)?.imageUrl) && (
                   <div className="mt-3">
                     <h6>Generated Image:</h6>
-                    <img 
-                      src={debugInfo.response.imageUrl} 
+                    <Image
+                      src={String((debugInfo.response as Record<string, unknown>).imageUrl)}
                       alt="Generated test image"
+                      width={400}
+                      height={300}
                       className="img-fluid rounded"
                       style={{ maxWidth: '400px' }}
                     />
                   </div>
                 )}
 
-                {debugInfo.hfClientTest?.debug?.imagePreview && (
+                {Boolean(((debugInfo.hfClientTest as Record<string, unknown> | undefined)?.debug as Record<string, unknown> | undefined)?.imagePreview) && (
                   <div className="mt-3">
                     <h6>HF Client Test Result:</h6>
                     <div className="alert alert-success">
                       <i className="bi bi-check-circle me-2"></i>
-                      Official HF Client is working! Image size: {debugInfo.hfClientTest.debug.imageSize} bytes
+                      Official HF Client is working! Image size: {String(((debugInfo.hfClientTest as Record<string, unknown>).debug as Record<string, unknown>).imageSize)} bytes
                     </div>
                   </div>
                 )}

@@ -34,7 +34,7 @@ const AdSenseWidget: React.FC<AdSenseWidgetProps> = ({
           if (insElement) {
             insElement.innerHTML = '';
           }
-          window.adsbygoogle.push({});
+          (window.adsbygoogle as unknown[]).push({});
         }
       } catch (error) {
         console.error('AdSense error:', error);

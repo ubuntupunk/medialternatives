@@ -222,7 +222,7 @@ export function isValidEmail(email: string): boolean {
  * @param {number} wait - Wait time in milliseconds
  * @returns {(...args: Parameters<T>) => void} Debounced function
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
@@ -275,7 +275,7 @@ export function isBrowser(): boolean {
  * @param {any} [defaultValue=null] - Default value if key not found
  * @returns {any} Parsed value from localStorage or default value
  */
-export function getLocalStorage(key: string, defaultValue: any = null): any {
+export function getLocalStorage(key: string, defaultValue: unknown = null): unknown {
   if (!isBrowser()) return defaultValue;
 
   try {
@@ -293,7 +293,7 @@ export function getLocalStorage(key: string, defaultValue: any = null): any {
  * @param {any} value - Value to store
  * @returns {boolean} True if successful, false if error occurred
  */
-export function setLocalStorage(key: string, value: any): boolean {
+export function setLocalStorage(key: string, value: unknown): boolean {
   if (!isBrowser()) return false;
 
   try {
@@ -310,7 +310,7 @@ export function setLocalStorage(key: string, value: any): boolean {
  * @param {Record<string, any>} params - Parameters object
  * @returns {URLSearchParams} URLSearchParams instance
  */
-export function createUrlParams(params: Record<string, any>): URLSearchParams {
+export function createUrlParams(params: Record<string, unknown>): URLSearchParams {
   const urlParams = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {

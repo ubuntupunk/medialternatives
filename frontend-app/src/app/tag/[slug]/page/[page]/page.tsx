@@ -103,7 +103,7 @@ export default async function TagPagePaginated({ params }: TagPagePaginatedProps
       count: posts.length,
       link: '',
       taxonomy: 'post_tag',
-      meta: []
+      meta: {}
     };
   }
 

@@ -88,7 +88,7 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
       count: posts.length,
       link: '',
       taxonomy: 'post_tag',
-      meta: []
+      meta: {}
     };
   }
 

@@ -148,7 +148,7 @@ export function verifyToken(token: string, type: 'access' | 'refresh' = 'access'
   try {
     const secret = type === 'access' ? JWT_ACCESS_SECRET : JWT_REFRESH_SECRET;
     return jwt.verify(token, secret) as JWTPayload;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

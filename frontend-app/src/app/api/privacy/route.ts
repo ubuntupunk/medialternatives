@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     const result = await gdprAPI.handleDataAccess(subjectId);
 
     if (!result.success) {
-      return NextResponse.json(createAPIResponse(false, undefined, result.error), { status: 404 });
+      return NextResponse.json(createAPIResponse(false, undefined, result.error as { code: string; message: string; details?: unknown } | undefined), { status: 404 });
     }
 
     return NextResponse.json(createAPIResponse(true, result.data));

@@ -277,6 +277,9 @@ export class CloudinaryAdapter implements AvatarStorageAdapter {
       formData.append('upload_preset', this.uploadPreset);
       formData.append('public_id', `avatars/${userId}`);
       formData.append('folder', 'avatars');
+      if (metadata) {
+        formData.append('metadata', JSON.stringify(metadata));
+      }
 
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${this.cloudName}/image/upload`,
@@ -292,8 +295,8 @@ export class CloudinaryAdapter implements AvatarStorageAdapter {
 
       const result = await response.json();
       return result.secure_url;
-    } catch (error) {
-      throw new Error(`Failed to save avatar to Cloudinary: ${error}`);
+    } catch {
+      throw new Error('Failed to save avatar to Cloudinary');
     }
   }
 
@@ -305,12 +308,13 @@ export class CloudinaryAdapter implements AvatarStorageAdapter {
       // Check if image exists
       const response = await fetch(url, { method: 'HEAD' });
       return response.ok ? url : null;
-    } catch (error) {
+    } catch {
       return null;
     }
   }
 
   async remove(userId: string): Promise<void> {
+    void userId;
     // Note: Removing from Cloudinary requires admin API with authentication
     // This would typically be done server-side
     throw new Error('Cloudinary removal requires server-side implementation');
@@ -338,7 +342,7 @@ export class SupabaseStorageAdapter implements AvatarStorageAdapter {
   async save(userId: string, avatarData: string, metadata?: AvatarMetadata): Promise<string> {
     try {
       const blob = this.dataURLToBlob(avatarData);
-      const fileName = `${userId}.png`;
+      const fileName = metadata?.originalName?.replace(/[^a-zA-Z0-9]/g, '_') || `${userId}.png`;
 
       const response = await fetch(
         `${this.supabaseUrl}/storage/v1/object/${this.bucket}/${fileName}`,
@@ -358,7 +362,7 @@ export class SupabaseStorageAdapter implements AvatarStorageAdapter {
 
       return `${this.supabaseUrl}/storage/v1/object/public/${this.bucket}/${fileName}`;
     } catch (error) {
-      throw new Error(`Failed to save avatar to Supabase: ${error}`);
+      throw new Error(`Failed to save avatar to Supabase: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -368,7 +372,7 @@ export class SupabaseStorageAdapter implements AvatarStorageAdapter {
     try {
       const response = await fetch(url, { method: 'HEAD' });
       return response.ok ? url : null;
-    } catch (error) {
+    } catch {
       return null;
     }
   }

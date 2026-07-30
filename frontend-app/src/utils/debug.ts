@@ -9,7 +9,7 @@ const isDebugMode = process.env.NEXT_PUBLIC_DEBUG_MODE === 'true' || process.env
  * @param {...any[]} args - Arguments to log
  * @returns {void}
  */
-export const debugLog = (...args: any[]) => {
+export const debugLog = (...args: unknown[]) => {
   if (isDebugMode) {
     console.log('[DEBUG]', ...args);
   }
@@ -17,10 +17,10 @@ export const debugLog = (...args: any[]) => {
 
 /**
  * Debug error logging function - only logs in debug mode
- * @param {...any[]} args - Arguments to log as error
+ * @param {...unknown[]} args - Arguments to log as error
  * @returns {void}
  */
-export const debugError = (...args: any[]) => {
+export const debugError = (...args: unknown[]) => {
   if (isDebugMode) {
     console.error('[DEBUG ERROR]', ...args);
   }
@@ -28,10 +28,10 @@ export const debugError = (...args: any[]) => {
 
 /**
  * Debug warning logging function - only logs in debug mode
- * @param {...any[]} args - Arguments to log as warning
+ * @param {...unknown[]} args - Arguments to log as warning
  * @returns {void}
  */
-export const debugWarn = (...args: any[]) => {
+export const debugWarn = (...args: unknown[]) => {
   if (isDebugMode) {
     console.warn('[DEBUG WARN]', ...args);
   }
@@ -39,10 +39,10 @@ export const debugWarn = (...args: any[]) => {
 
 /**
  * Debug info logging function - only logs in debug mode
- * @param {...any[]} args - Arguments to log as info
+ * @param {...unknown[]} args - Arguments to log as info
  * @returns {void}
  */
-export const debugInfo = (...args: any[]) => {
+export const debugInfo = (...args: unknown[]) => {
   if (isDebugMode) {
     console.info('[DEBUG INFO]', ...args);
   }

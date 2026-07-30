@@ -468,7 +468,7 @@ export default function ImageGeneratorPage() {
                                  onClick={async () => {
                                    try {
                                      await generateImageForPost(post);
-                                   } catch (_error) {
+                                   } catch {
                                      // Error is already handled in the function
                                    }
                                  }}
@@ -492,7 +492,7 @@ export default function ImageGeneratorPage() {
                                  onClick={async () => {
                                      try {
                                        await generateImageForPost(post);
-                                     } catch (_error) {
+                                     } catch {
                                        // Error is already handled in the function
                                      }
                                    }}

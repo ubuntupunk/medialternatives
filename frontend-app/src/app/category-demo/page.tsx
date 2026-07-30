@@ -29,14 +29,14 @@ export default async function CategoryDemoPage() {
     
     // Fallback mock categories for demo
     categories = [
-      { id: 1, name: 'Politics', slug: 'politics', count: 25, description: 'Political news and analysis', link: '', taxonomy: 'category', parent: 0, meta: [] },
-      { id: 2, name: 'Environment', slug: 'environment', count: 18, description: 'Environmental issues and climate change', link: '', taxonomy: 'category', parent: 0, meta: [] },
-      { id: 3, name: 'Technology', slug: 'technology', count: 15, description: 'Tech news and digital rights', link: '', taxonomy: 'category', parent: 0, meta: [] },
-      { id: 4, name: 'Media', slug: 'media', count: 12, description: 'Media analysis and journalism', link: '', taxonomy: 'category', parent: 0, meta: [] },
-      { id: 5, name: 'Human Rights', slug: 'human-rights', count: 10, description: 'Human rights advocacy', link: '', taxonomy: 'category', parent: 0, meta: [] },
-      { id: 6, name: 'Education', slug: 'education', count: 8, description: 'Educational resources and policy', link: '', taxonomy: 'category', parent: 0, meta: [] },
-      { id: 7, name: 'Health', slug: 'health', count: 6, description: 'Health and wellness topics', link: '', taxonomy: 'category', parent: 0, meta: [] },
-      { id: 8, name: 'Economics', slug: 'economics', count: 5, description: 'Economic analysis and policy', link: '', taxonomy: 'category', parent: 0, meta: [] },
+      { id: 1, name: 'Politics', slug: 'politics', count: 25, description: 'Political news and analysis', link: '', taxonomy: 'category', parent: 0, meta: {} },
+      { id: 2, name: 'Environment', slug: 'environment', count: 18, description: 'Environmental issues and climate change', link: '', taxonomy: 'category', parent: 0, meta: {} },
+      { id: 3, name: 'Technology', slug: 'technology', count: 15, description: 'Tech news and digital rights', link: '', taxonomy: 'category', parent: 0, meta: {} },
+      { id: 4, name: 'Media', slug: 'media', count: 12, description: 'Media analysis and journalism', link: '', taxonomy: 'category', parent: 0, meta: {} },
+      { id: 5, name: 'Human Rights', slug: 'human-rights', count: 10, description: 'Human rights advocacy', link: '', taxonomy: 'category', parent: 0, meta: {} },
+      { id: 6, name: 'Education', slug: 'education', count: 8, description: 'Educational resources and policy', link: '', taxonomy: 'category', parent: 0, meta: {} },
+      { id: 7, name: 'Health', slug: 'health', count: 6, description: 'Health and wellness topics', link: '', taxonomy: 'category', parent: 0, meta: {} },
+      { id: 8, name: 'Economics', slug: 'economics', count: 5, description: 'Economic analysis and policy', link: '', taxonomy: 'category', parent: 0, meta: {} },
     ];
   }
 

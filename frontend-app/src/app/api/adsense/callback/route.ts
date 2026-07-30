@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
     console.log('Stored state lookup:', {
       sessionId,
       storedState: !!storedState,
-      stateStoreSize: (global as any).stateStoreSize || 'unknown'
+      stateStoreSize: (global as Record<string, unknown>).stateStoreSize || 'unknown'
     });
 
     if (!storedState) {

@@ -199,7 +199,7 @@ export class HealthCheckSystem {
         if (response.ok) {
           healthyServices++;
         }
-      } catch (error) {
+      } catch {
         // Service is down
       }
     }

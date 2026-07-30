@@ -161,16 +161,16 @@ export function withAPIVersioning(
  */
 export function createVersionedResponse(
   success: boolean,
-  data?: any,
-  error?: any,
+  data?: unknown,
+  error?: unknown,
   request?: NextRequest
-): any {
+): Record<string, unknown> {
   const version = request ? getAPIVersion(request) : getCurrentVersion().version;
 
   return {
     success,
-    ...(data && { data }),
-    ...(error && { error }),
+    ...(data ? { data: data as Record<string, unknown> } : {}),
+    ...(error ? { error: error as Record<string, unknown> } : {}),
     meta: {
       timestamp: new Date().toISOString(),
       requestId: `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,

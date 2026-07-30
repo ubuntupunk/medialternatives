@@ -44,14 +44,14 @@ export default function FacebookDashboardPage() {
               <h6>1. Create Facebook App</h6>
               <ol>
                 <li>Go to <a href="https://developers.facebook.com" target="_blank" rel="noopener noreferrer">Facebook Developers</a></li>
-                <li>Create a new app (choose "Business" type)</li>
-                <li>Add "Facebook Login" and "Pages" products</li>
+                <li>Create a new app (choose &quot;Business&quot; type)</li>
+                <li>Add &quot;Facebook Login&quot; and &quot;Pages&quot; products</li>
               </ol>
 
               <h6>2. Get Page Access Token</h6>
               <ol>
-                <li>Go to your app's dashboard</li>
-                <li>Navigate to "Tools & Support" → "Graph API Explorer"</li>
+                <li>Go to your app&apos;s dashboard</li>
+                <li>Navigate to &quot;Tools &amp; Support&quot; → &quot;Graph API Explorer&quot;</li>
                 <li>Select your app and generate a Page Access Token</li>
                 <li>Request permissions: <code>pages_manage_posts</code>, <code>pages_read_engagement</code></li>
               </ol>
@@ -69,7 +69,7 @@ FACEBOOK_AUTO_POST_ENABLED=true`}
               <h6>4. Auto-Posting Integration</h6>
               <p>To auto-post when new articles are published on your site:</p>
               <ul>
-                <li>Use the "Auto-Post Article" section in this dashboard</li>
+                <li>Use the &quot;Auto-Post Article&quot; section in this dashboard</li>
                 <li>Or call the API directly: <code>POST /api/social/facebook/autopost</code> with <code>{`{ "postSlug": "your-post-slug" }`}</code></li>
                 <li>Enable auto-posting in the dashboard settings above</li>
                 <li>Integrate with your post publishing workflow to automatically trigger posting</li>

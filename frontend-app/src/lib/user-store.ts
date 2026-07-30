@@ -69,6 +69,7 @@ class InMemoryUserStore implements UserStore {
 
     // Return user without password hash
     const { passwordHash, ...userWithoutPassword } = user;
+    void passwordHash;
     return userWithoutPassword;
   }
 
@@ -76,8 +77,8 @@ class InMemoryUserStore implements UserStore {
     const user = this.users.get(userId);
     if (!user) return null;
 
-    // Return user without password hash
     const { passwordHash, ...userWithoutPassword } = user;
+    void passwordHash;
     return userWithoutPassword;
   }
 
@@ -101,6 +102,7 @@ class InMemoryUserStore implements UserStore {
 
     // Return user without password hash
     const { passwordHash, ...userWithoutPassword } = user;
+    void passwordHash;
     return userWithoutPassword;
   }
 

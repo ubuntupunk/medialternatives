@@ -109,20 +109,20 @@ async function searchHandler(request: NextRequest) {
     const posts = await response.json();
 
     // Transform the response to include relevant fields
-    const searchResults = posts.map((post: any) => ({
-      ID: post.id,
-      title: post.title.rendered,
-      excerpt: post.excerpt.rendered,
-      content: post.content.rendered,
-      slug: post.slug,
-      date: post.date,
-      modified: post.modified,
-      type: post.type,
-      link: post.link,
-      author: post._embedded?.author?.[0]?.name || 'Unknown',
-      featured_media: post._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
-      categories: post._embedded?.['wp:term']?.[0]?.map((cat: any) => cat.name) || [],
-      tags: post._embedded?.['wp:term']?.[1]?.map((tag: any) => tag.name) || []
+    const searchResults = posts.map((post: Record<string, unknown>) => ({
+      ID: post.id as number,
+      title: (post.title as Record<string, string>)?.rendered || '',
+      excerpt: (post.excerpt as Record<string, string>)?.rendered || '',
+      content: (post.content as Record<string, string>)?.rendered || '',
+      slug: post.slug as string,
+      date: post.date as string,
+      modified: post.modified as string,
+      type: post.type as string,
+      link: post.link as string,
+      author: ((post._embedded as Record<string, unknown>)?.author as unknown[])?.[0] && (((post._embedded as Record<string, unknown>)?.author as unknown[])?.[0] as Record<string, unknown>)?.name as string || 'Unknown',
+      featured_media: ((post._embedded as Record<string, unknown>)?.['wp:featuredmedia'] as unknown[])?.[0] && (((post._embedded as Record<string, unknown>)?.['wp:featuredmedia'] as unknown[])?.[0] as Record<string, unknown>)?.source_url as string || null,
+      categories: (((post._embedded as Record<string, unknown>)?.['wp:term'] as unknown[][])?.[0] || []).map((cat: unknown) => (cat as Record<string, unknown>).name as string),
+      tags: (((post._embedded as Record<string, unknown>)?.['wp:term'] as unknown[][])?.[1] || []).map((tag: unknown) => (tag as Record<string, unknown>).name as string)
     }));
 
     const successResponse = createAPIResponse(true, searchResults);

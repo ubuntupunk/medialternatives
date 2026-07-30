@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import {
   DndContext,
@@ -164,7 +164,7 @@ export default function DashboardPage() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [sections, setSections] = useState(dashboardSections);
   const [adsenseRevenue, setAdsenseRevenue] = useState<string>('0.00');
-  const [recentActivity, setRecentActivity] = useState<any[]>([]);
+  const [recentActivity, setRecentActivity] = useState<Array<{ icon: string; iconColor: string; text: string; time: string }>>([]);
 
   // Load saved order from localStorage
   useEffect(() => {
@@ -184,45 +184,8 @@ export default function DashboardPage() {
     }
   }, []);
 
-  // Fetch AdSense revenue data and recent activity
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      if (!isAuthenticated) return;
-
-      try {
-        // Fetch AdSense data
-        const adsenseResponse = await fetch('/api/adsense/data');
-        if (adsenseResponse.ok) {
-          const adsenseData = await adsenseResponse.json();
-
-          // Extract revenue
-          if (adsenseData.report && adsenseData.report.totals && adsenseData.report.totals[0]) {
-            const revenueCell = adsenseData.report.totals[0].cells?.find((cell: any, index: number) =>
-              adsenseData.report.headers?.[index]?.name === 'ESTIMATED_EARNINGS'
-            );
-            if (revenueCell) {
-              const revenue = parseFloat(revenueCell.value.replace(/[^0-9.-]/g, ''));
-              setAdsenseRevenue(revenue.toFixed(2));
-            }
-          }
-        }
-
-        // Generate real recent activity
-        const activities = await generateRecentActivity();
-        setRecentActivity(activities);
-
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-        // Set default activities if API fails
-        setRecentActivity(getDefaultActivities());
-      }
-    };
-
-    fetchDashboardData();
-  }, [isAuthenticated]);
-
   // Generate real recent activity from available data
-  const generateRecentActivity = async () => {
+  const generateRecentActivity = useCallback(async () => {
     const activities = [];
 
     try {
@@ -233,12 +196,14 @@ export default function DashboardPage() {
           if (postsResponse.ok) {
             const posts = await postsResponse.json();
             if (posts && posts.length > 0) {
-              posts.slice(0, 2).forEach((post: any) => {
+              posts.slice(0, 2).forEach((post: { title?: { rendered?: string } | string; date?: string }) => {
+                const titleObj = post.title;
+                const titleText = typeof titleObj === 'string' ? titleObj : titleObj?.rendered;
                 activities.push({
                   icon: 'bi-file-plus',
                   iconColor: 'text-success',
-                  text: `New post published: "${post.title?.rendered || post.title}"`,
-                  time: formatTimeAgo(new Date(post.date))
+                  text: `New post published: "${titleText ?? 'Untitled'}"`,
+                  time: formatTimeAgo(new Date(String(post.date)))
                 });
               });
             }
@@ -280,7 +245,44 @@ export default function DashboardPage() {
 
     // Return activities or defaults
     return activities.length > 0 ? activities.slice(0, 4) : getDefaultActivities();
-  };
+  }, [wpAuthenticated, adsenseRevenue]);
+
+  // Fetch AdSense revenue data and recent activity
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      if (!isAuthenticated) return;
+
+      try {
+        // Fetch AdSense data
+        const adsenseResponse = await fetch('/api/adsense/data');
+        if (adsenseResponse.ok) {
+          const adsenseData = await adsenseResponse.json();
+
+          // Extract revenue
+          if (adsenseData.report && adsenseData.report.totals && adsenseData.report.totals[0]) {
+            const revenueCell = adsenseData.report.totals[0].cells?.find((cell: { value: string }, index: number) =>
+              adsenseData.report.headers?.[index]?.name === 'ESTIMATED_EARNINGS'
+            );
+            if (revenueCell) {
+              const revenue = parseFloat(revenueCell.value.replace(/[^0-9.-]/g, ''));
+              setAdsenseRevenue(revenue.toFixed(2));
+            }
+          }
+        }
+
+        // Generate real recent activity
+        const activities = await generateRecentActivity();
+        setRecentActivity(activities);
+
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        // Set default activities if API fails
+        setRecentActivity(getDefaultActivities());
+      }
+    };
+
+    fetchDashboardData();
+  }, [isAuthenticated, generateRecentActivity]);
 
   // Default activities when no real data available
   const getDefaultActivities = () => [

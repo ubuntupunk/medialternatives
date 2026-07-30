@@ -101,7 +101,7 @@ export const SearchWidget: React.FC<SearchWidgetProps> = ({ className = '' }) =>
 
       setResults(searchResults);
       setShowResults(true);
-    } catch (_err) {
+    } catch {
       setError('Search failed. Please try again.');
       setResults([]);
     } finally {

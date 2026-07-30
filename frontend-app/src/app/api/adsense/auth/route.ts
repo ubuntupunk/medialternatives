@@ -9,7 +9,7 @@ import {
   storeOAuthState,
   generateSessionId
 } from '@/lib/oauth-security';
-import { CodeChallengeMethod as PKCEChallengeMethod } from '@/types/google';
+
 import { GOOGLE_SCOPES } from '@/lib/constants';
 import { getToken } from './token-utils';
 
@@ -67,7 +67,7 @@ export async function GET() {
       prompt: 'consent', // Force consent to ensure refresh token
       state: `${sessionId}:${state}`, // Include session ID with state
       code_challenge: pkce.codeChallenge,
-       code_challenge_method: 'S256' as any
+       code_challenge_method: 'S256' as 'S256' & 'plain'
     });
 
     // Create response with session cookie

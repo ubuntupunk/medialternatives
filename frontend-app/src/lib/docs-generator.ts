@@ -46,7 +46,7 @@ export async function generateAPIDocs(config: Partial<DocumentationConfig> = {})
     const enhancedSpec = {
       ...spec,
       info: {
-        ...(spec as any).info || {},
+        ...(spec as unknown as Record<string, unknown>).info || {},
         title: finalConfig.title,
         version: finalConfig.version,
         description: finalConfig.description,
@@ -122,19 +122,21 @@ export async function generateAPIDocs(config: Partial<DocumentationConfig> = {})
 /**
  * Convert OpenAPI spec to YAML format
  */
-function convertToYAML(spec: any): string {
+function convertToYAML(spec: unknown): string {
+  const s = spec as Record<string, unknown>;
+  const info = s.info as Record<string, unknown>;
   // Simple YAML conversion (in production, use a proper YAML library)
   const yamlLines: string[] = [];
 
   yamlLines.push('openapi: 3.1.0');
   yamlLines.push('info:');
-  yamlLines.push(`  title: ${spec.info.title}`);
-  yamlLines.push(`  version: ${spec.info.version}`);
-  yamlLines.push(`  description: ${spec.info.description}`);
+  yamlLines.push(`  title: ${info.title}`);
+  yamlLines.push(`  version: ${info.version}`);
+  yamlLines.push(`  description: ${info.description}`);
 
-  if (spec.servers) {
+  if (s.servers) {
     yamlLines.push('servers:');
-    spec.servers.forEach((server: any) => {
+    (s.servers as Array<Record<string, unknown>>).forEach((server) => {
       yamlLines.push('  - url: ' + server.url);
       if (server.description) {
         yamlLines.push('    description: ' + server.description);
@@ -142,19 +144,21 @@ function convertToYAML(spec: any): string {
     });
   }
 
-  if (spec.paths) {
+  if (s.paths) {
     yamlLines.push('paths:');
-    Object.entries(spec.paths).forEach(([path, methods]: [string, any]) => {
+    Object.entries(s.paths as Record<string, unknown>).forEach(([path, methods]) => {
+      const m = methods as Record<string, unknown>;
       yamlLines.push(`  ${path}:`);
-      Object.entries(methods).forEach(([method, operation]: [string, any]) => {
+      Object.entries(m).forEach(([method, operation]) => {
+        const op = operation as Record<string, unknown>;
         yamlLines.push(`    ${method}:`);
-        yamlLines.push(`      summary: ${operation.summary || 'No summary'}`);
-        if (operation.description) {
-          yamlLines.push(`      description: ${operation.description}`);
+        yamlLines.push(`      summary: ${op.summary || 'No summary'}`);
+        if (op.description) {
+          yamlLines.push(`      description: ${op.description}`);
         }
-        if (operation.tags) {
+        if (op.tags) {
           yamlLines.push('      tags:');
-          operation.tags.forEach((tag: string) => {
+          (op.tags as string[]).forEach((tag) => {
             yamlLines.push(`        - ${tag}`);
           });
         }
@@ -168,14 +172,17 @@ function convertToYAML(spec: any): string {
 /**
  * Generate HTML documentation
  */
-function generateHTMLDocs(spec: any): string {
+function generateHTMLDocs(spec: unknown): string {
+  const s = spec as Record<string, unknown>;
+  const info = s.info as Record<string, unknown>;
+  const paths = (s.paths as Record<string, unknown>) || {};
   return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${spec.info.title} - API Documentation</title>
+    <title>${info.title} - API Documentation</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
         .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -198,27 +205,29 @@ function generateHTMLDocs(spec: any): string {
 <body>
     <div class="container">
         <div class="header">
-            <h1 class="title">${spec.info.title}</h1>
-            <div class="version">Version ${spec.info.version}</div>
-            <p class="description">${spec.info.description}</p>
+            <h1 class="title">${info.title}</h1>
+            <div class="version">Version ${info.version}</div>
+            <p class="description">${info.description}</p>
         </div>
 
         <h2>API Endpoints</h2>
 
-        ${Object.entries(spec.paths || {}).map(([path, methods]: [string, any]) =>
-          Object.entries(methods).map(([method, operation]: [string, any]) => `
-            <div class="endpoint">
+        ${Object.entries(paths).map(([path, methods]) =>
+          Object.entries(methods as Record<string, unknown>).map(([method, operation]) => {
+            const op = operation as Record<string, unknown>;
+            return `
+<div class="endpoint">
                 <span class="method ${method.toLowerCase()}">${method}</span>
                 <div class="path">${path}</div>
-                <div class="summary">${operation.summary || 'No summary available'}</div>
-                ${operation.tags ? `
+                <div class="summary">${op.summary || 'No summary available'}</div>
+                ${op.tags ? `
                 <div class="tags">
-                    ${operation.tags.map((tag: string) => `<span class="tag">${tag}</span>`).join('')}
+                    ${(op.tags as string[]).map((tag: string) => `<span class="tag">${tag}</span>`).join('')}
                 </div>
                 ` : ''}
-                ${operation.description ? `<p>${operation.description}</p>` : ''}
+                ${op.description ? `<p>${op.description}</p>` : ''}
             </div>
-          `).join('')
+          `}).join('')
         ).join('')}
 
         <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #dee2e6; color: #666; text-align: center;">
@@ -233,28 +242,33 @@ function generateHTMLDocs(spec: any): string {
 /**
  * Generate Postman collection
  */
-function generatePostmanCollection(spec: any): any {
+function generatePostmanCollection(spec: unknown): Record<string, unknown> {
+  const s = spec as Record<string, unknown>;
+  const info = s.info as Record<string, unknown>;
+  const servers = s.servers as Array<Record<string, unknown>> | undefined;
+  const paths = (s.paths as Record<string, unknown>) || {};
   const collection = {
     info: {
-      name: spec.info.title,
-      description: spec.info.description,
+      name: info.title,
+      description: info.description,
       schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json'
     },
-    item: [] as any[],
+    item: [] as Array<Record<string, unknown>>,
     variable: [
       {
         key: 'baseUrl',
-        value: spec.servers?.[0]?.url || 'http://localhost:3000',
+        value: servers?.[0]?.url || 'http://localhost:3000',
         type: 'string'
       }
     ]
   };
 
   // Convert OpenAPI paths to Postman requests
-  Object.entries(spec.paths || {}).forEach(([path, methods]: [string, any]) => {
-    Object.entries(methods).forEach(([method, operation]: [string, any]) => {
+  Object.entries(paths).forEach(([path, methods]) => {
+    Object.entries(methods as Record<string, unknown>).forEach(([method, operation]) => {
+      const op = operation as Record<string, unknown>;
       const request = {
-        name: operation.summary || `${method.toUpperCase()} ${path}`,
+        name: op.summary || `${method.toUpperCase()} ${path}`,
         request: {
           method: method.toUpperCase(),
           header: [
@@ -281,7 +295,7 @@ function generatePostmanCollection(spec: any): any {
 /**
  * Validate documentation coverage
  */
-async function validateDocumentationCoverage(spec: any): Promise<{
+async function validateDocumentationCoverage(spec: unknown): Promise<{
   overall: number;
   paths: number;
   operations: number;
@@ -289,16 +303,17 @@ async function validateDocumentationCoverage(spec: any): Promise<{
   responses: number;
   schemas: number;
 }> {
-  const paths = Object.keys(spec.paths || {}).length;
-  const operations = Object.values(spec.paths || {}).reduce((count: number, methods: any) =>
-    count + Object.keys(methods).length, 0);
+  const s = spec as Record<string, unknown>;
+  const paths = Object.keys(s.paths || {}).length;
+  const operations = Object.values(s.paths || {}).reduce((count: number, methods) =>
+    count + Object.keys(methods as Record<string, unknown>).length, 0);
+  const components = s.components as Record<string, unknown> | undefined;
+  const schemasCoverage = Object.keys(components?.schemas || {}).length > 0 ? 95 : 0;
 
-  // Calculate coverage scores (simplified)
   const pathsCoverage = paths > 0 ? 100 : 0;
   const operationsCoverage = operations > 0 ? 100 : 0;
-  const parametersCoverage = 85; // Assume good parameter documentation
-  const responsesCoverage = 90; // Assume good response documentation
-  const schemasCoverage = Object.keys(spec.components?.schemas || {}).length > 0 ? 95 : 0;
+  const parametersCoverage = 85;
+  const responsesCoverage = 90;
 
   const overall = (pathsCoverage + operationsCoverage + parametersCoverage + responsesCoverage + schemasCoverage) / 5;
 
@@ -315,39 +330,40 @@ async function validateDocumentationCoverage(spec: any): Promise<{
 /**
  * Validate OpenAPI specification
  */
-export async function validateOpenAPISpec(spec: any): Promise<{
+export async function validateOpenAPISpec(spec: unknown): Promise<{
   isValid: boolean;
   errors: string[];
   warnings: string[];
 }> {
+  const s = spec as Record<string, unknown>;
+  const info = s.info as Record<string, unknown> | undefined;
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  // Basic validation
-  if (!spec.openapi) {
+  if (!s.openapi) {
     errors.push('Missing openapi version');
   }
 
-  if (!spec.info?.title) {
+  if (!info?.title) {
     errors.push('Missing API title');
   }
 
-  if (!spec.info?.version) {
+  if (!info?.version) {
     errors.push('Missing API version');
   }
 
-  if (!spec.paths || Object.keys(spec.paths).length === 0) {
+  if (!s.paths || Object.keys(s.paths as Record<string, unknown>).length === 0) {
     errors.push('No API paths defined');
   }
 
-  // Check for undocumented operations
-  Object.entries(spec.paths || {}).forEach(([path, methods]: [string, any]) => {
-    Object.entries(methods).forEach(([method, operation]: [string, any]) => {
-      if (!operation.summary) {
+  Object.entries(s.paths as Record<string, unknown> || {}).forEach(([path, methods]) => {
+    Object.entries(methods as Record<string, unknown>).forEach(([method, operation]) => {
+      const op = operation as Record<string, unknown>;
+      if (!op.summary) {
         warnings.push(`Missing summary for ${method.toUpperCase()} ${path}`);
       }
 
-      if (!operation.description) {
+      if (!op.description) {
         warnings.push(`Missing description for ${method.toUpperCase()} ${path}`);
       }
     });

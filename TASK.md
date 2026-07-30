@@ -439,3 +439,38 @@
 **Last Updated**: January 2025  
 **Next Review**: PWA Testing & Push Notifications Planning  
 **Sprint Status**: 🟢 PWA-Ready with Advanced Mobile Experience
+
+---
+
+## 🔧 TypeScript API Route Fixes (2025)
+
+Fixed TypeScript errors in 6 API route files caused by aggressive `any` → `unknown` replacement:
+
+| File | Fix |
+|------|-----|
+| `src/app/api/adsense/auth/route.ts` | Imported `CodeChallengeMethod` type; cast `'S256'` to it |
+| `src/app/api/posts-with-placeholders/route.ts` | Cast `WordPressPost` → `Record<string, unknown>` at helper call sites |
+| `src/app/api/privacy/route.ts` | Narrowed `unknown` `result.error` to expected APIError shape |
+| `src/app/api/search/route.ts` | Cast `.name` access on `Record<string, unknown>` items to `string` |
+| `src/app/api/v1/adsense/route.ts` | Same as adsense/auth — imported & cast `CodeChallengeMethod` |
+| `src/app/api/v1/search/route.ts` | Same as search — cast `.name` to `string` |
+
+**Note**: `src/app/dashboard/overview/page.tsx` has unrelated syntax errors (TS1005) that remain.
+
+## 🔧 Dashboard Page TypeScript Fixes (2026)
+
+Fixed TypeScript errors across 7 dashboard page files caused by `any` → `unknown` replacement:
+
+| File | Fix |
+|------|-----|
+| `src/app/dashboard/adsense/page.tsx` | Added `catch (err)` parameter + `err instanceof Error` guard |
+| `src/app/dashboard/analytics/page.tsx` | Added `JetpackData` interface, reordered `fetchJetpackData`/`fetchJetpackDataWithAuth` to resolve TDZ, added `lastUpdated` state, cast `AuthState` → `Record<string, unknown>` via `unknown`, used `Boolean(wpAuthStatus?.isAuthenticated)` for ReactNode-safe conditionals |
+| `src/app/dashboard/charts/page.tsx` | Cast `chartData` accesses via `String()` and `as unknown as` for `D3Chart` props |
+| `src/app/dashboard/content/page.tsx` | Aliased `postAny = post as Record<string, unknown>`; type-narrowed `title`, `views`, `date`, `id`, `slug`, `analyticsPath` via `typeof` checks |
+| `src/app/dashboard/image-generator/debug/page.tsx` | Wrapped `debugInfo.X` reads with `Record<string, unknown>` casts; `Boolean(...)` for JSX conditionals; `String(debugInfo.timestamp)` |
+| `src/app/dashboard/overview/page.tsx` | Cast `analyticsData` and `performanceData` to typed shapes via `Record<string, unknown> & {...}` intersections inside `getStats` |
+| `src/app/dashboard/page.tsx` | Reordered `generateRecentActivity` above the `useEffect` that references it; collapsed duplicate `title?: ...` keys into `title?: { rendered?: string } | string`; `String(post.date)` for `new Date(...)` |
+
+Pattern used: when a value is `unknown` but you know its shape, use `as Record<string, unknown>` for index access or `as unknown as SpecificType` for structured shapes; use `Boolean(...)` for JSX truthiness on `unknown`; use `String(...)`/`Number(...)` for primitive coercions.
+
+**Result**: `pnpm exec tsc --noEmit` produces no errors in the 7 targeted dashboard files.

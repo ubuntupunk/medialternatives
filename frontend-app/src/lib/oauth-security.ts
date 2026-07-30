@@ -85,7 +85,7 @@ export async function storeOAuthState(sessionId: string, state: string, pkce?: {
 
   // Persist to file for serverless environment
   try {
-    const states: Record<string, any> = {};
+    const states: Record<string, unknown> = {};
     for (const [sid, data] of stateStore.entries()) {
       states[sid] = data;
     }
@@ -107,14 +107,14 @@ async function ensureStatesLoaded() {
     const states = JSON.parse(data);
 
     for (const [sessionId, stateData] of Object.entries(states)) {
-      const data = stateData as any;
+      const data = stateData as { state: string; expires: number; pkce?: { codeVerifier: string } };
       if (Date.now() < data.expires) {
         stateStore.set(sessionId, data);
       }
     }
 
     console.log(`Loaded ${stateStore.size} OAuth states from file`);
-  } catch (error) {
+  } catch {
     // File doesn't exist or is corrupted
     console.log('No existing OAuth states file');
   }
@@ -152,7 +152,7 @@ export async function getOAuthState(sessionId: string): Promise<{ state: string;
 /**
  * Clear OAuth state after use
  */
-export function clearOAuthState(sessionId: string): void {
+export function clearOAuthState(): void {
   stateStore.clear();
 }
 

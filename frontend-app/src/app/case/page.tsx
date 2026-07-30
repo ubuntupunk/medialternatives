@@ -49,10 +49,10 @@ const DocumentsSection: React.FC<{ content: string }> = ({ content }) => (
             <div className="my-3">
               {fileChildren.map((childNode, index) => {
                 if (childNode.type === 'element' && childNode.tagName === 'a') {
-                  const href = (childNode.properties as any)?.href;
-                  const className = (childNode.properties as any)?.className;
-                  const download = (childNode.properties as any)?.download;
-                  const textContent = (childNode.children[0] as any)?.value;
+                  const href = (childNode.properties as unknown as Record<string, unknown>)?.href as string | undefined;
+                  const className = (childNode.properties as unknown as Record<string, unknown>)?.className as string | undefined;
+                  const download = (childNode.properties as unknown as Record<string, unknown>)?.download as string | undefined;
+                  const textContent = (childNode.children[0] as unknown as Record<string, unknown>)?.value as string | undefined;
 
                   const isDownloadButton = className?.includes('wp-block-file__button');
 
@@ -77,7 +77,7 @@ const DocumentsSection: React.FC<{ content: string }> = ({ content }) => (
           );
         }
         if (props.className?.includes('wp-block-embed__wrapper')) {
-          const rawHtml = (props.node!.children[0] as any)?.value;
+          const rawHtml = (props.node!.children[0] as unknown as Record<string, unknown>)?.value as string | undefined;
           if (rawHtml) {
             const embedUrl = rawHtml.trim();
             if (typeof embedUrl === 'string' && embedUrl.includes('youtu.be')) {

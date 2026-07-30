@@ -9,7 +9,7 @@ import { WORDPRESS_URLS } from '@/lib/wordpress-urls';
 
 export default function ContentManagementPage() {
   const [posts, setPosts] = useState<WordPressPost[]>([]);
-  const [popularPosts, setPopularPosts] = useState<any[]>([]);
+  const [popularPosts, setPopularPosts] = useState<Record<string, unknown>[]>([]);
   const [loading, setLoading] = useState(true);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +27,7 @@ export default function ContentManagementPage() {
       if (result.success && result.data.topPages) {
         // Match analytics pages with WordPress posts
         const popularPostsData = await Promise.all(
-          result.data.topPages.slice(0, 5).map(async (page: any) => {
+          result.data.topPages.slice(0, 5).map(async (page: { page: string; views: number }) => {
             try {
               // Extract slug from page path
               const slug = page.page.replace('/post/', '').replace('/', '');
@@ -48,7 +48,7 @@ export default function ContentManagementPage() {
                 analyticsPath: page.page,
                 isAnalyticsOnly: true
               };
-            } catch (err) {
+            } catch {
               return {
                 title: { rendered: page.page },
                 slug: page.page,
@@ -69,7 +69,7 @@ export default function ContentManagementPage() {
       
       // Set fallback popular posts based on recent posts
       if (posts.length > 0) {
-        setPopularPosts(posts.slice(0, 5).map((post, index) => ({
+        setPopularPosts(posts.slice(0, 5).map((post) => ({
           ...post,
           views: Math.floor(Math.random() * 1000) + 500,
           isEstimated: true
@@ -369,20 +369,24 @@ export default function ContentManagementPage() {
                               </tr>
                             </thead>
                             <tbody>
-                              {popularPosts.map((post, index) => (
-                                <tr key={post.id || post.slug}>
+                              {popularPosts.map((post, index) => {
+                                const postAny = post as Record<string, unknown>;
+                                const titleObj = postAny.title as { rendered?: string } | string | undefined;
+                                const titleText = typeof titleObj === 'string' ? titleObj : titleObj?.rendered;
+                                return (
+                                <tr key={String(postAny.id ?? postAny.slug ?? index)}>
                                   <td>
                                     <span className="badge bg-primary rounded-pill">#{index + 1}</span>
                                   </td>
                                   <td>
                                     <div>
                                       <strong className="text-truncate d-block" style={{ maxWidth: '300px' }}>
-                                        {decodeHtmlEntities(post.title?.rendered || post.title)}
+                                        {titleText ? decodeHtmlEntities(titleText) : ''}
                                       </strong>
-                                      {post.isAnalyticsOnly && (
-                                        <small className="text-muted">Analytics path: {post.analyticsPath}</small>
+                                      {Boolean(postAny.isAnalyticsOnly) && (
+                                        <small className="text-muted">Analytics path: {String(postAny.analyticsPath ?? '')}</small>
                                       )}
-                                      {post.isEstimated && (
+                                      {Boolean(postAny.isEstimated) && (
                                         <small className="text-warning">
                                           <i className="bi bi-exclamation-triangle me-1"></i>
                                           Estimated views
@@ -392,29 +396,29 @@ export default function ContentManagementPage() {
                                   </td>
                                   <td>
                                     <strong className="text-success">
-                                      {post.views?.toLocaleString() || 'N/A'}
+                                      {typeof postAny.views === 'number' ? postAny.views.toLocaleString() : 'N/A'}
                                     </strong>
                                     <br />
                                     <small className="text-muted">views</small>
                                   </td>
                                   <td>
                                     <small>
-                                      {post.date ? formatDate(post.date) : 'N/A'}
+                                      {typeof postAny.date === 'string' ? formatDate(postAny.date) : 'N/A'}
                                     </small>
                                   </td>
                                   <td>
                                     <div className="btn-group btn-group-sm">
-                                      {!post.isAnalyticsOnly && (
+                                      {!postAny.isAnalyticsOnly && (
                                         <>
                                           <Link
-                                            href={`/${post.slug}`}
+                                            href={`/${String(postAny.slug ?? '')}`}
                                             className="btn btn-outline-primary"
                                             title="View Post"
                                           >
                                             <i className="bi bi-eye"></i>
                                           </Link>
                                           <a
-                                            href={WORDPRESS_URLS.getEditPostUrl(post.id)}
+                                            href={WORDPRESS_URLS.getEditPostUrl(Number(postAny.id))}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="btn btn-outline-secondary"
@@ -424,8 +428,8 @@ export default function ContentManagementPage() {
                                           </a>
                                         </>
                                       )}
-                                      <a 
-                                        href={WORDPRESS_URLS.getPostUrl(post)}
+                                      <a
+                                        href={WORDPRESS_URLS.getPostUrl(postAny as { link?: string; analyticsPath?: string })}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="btn btn-outline-info"
@@ -436,7 +440,8 @@ export default function ContentManagementPage() {
                                     </div>
                                   </td>
                                 </tr>
-                              ))}
+                                );
+                              })}
                             </tbody>
                           </table>
                         </div>

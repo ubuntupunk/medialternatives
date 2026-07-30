@@ -4,13 +4,13 @@ import { NextRequest, NextResponse } from 'next/server';
 /**
  * Standard API Response interface
  */
-export interface APIResponse<T = any> {
+export interface APIResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: {
     code: string;
     message: string;
-    details?: any;
+    details?: unknown;
   };
   meta?: {
     timestamp: string;
@@ -108,7 +108,7 @@ export const schemas = {
 export function validateData<T>(
   data: unknown,
   schema: z.ZodSchema<T>
-): { success: true; data: T } | { success: false; error: string; details: any } {
+): { success: true; data: T } | { success: false; error: string; details: unknown } {
   try {
     const validatedData = schema.parse(data);
     return { success: true, data: validatedData };
@@ -117,7 +117,7 @@ export function validateData<T>(
       return {
         success: false,
         error: 'Validation failed',
-        details: error.issues.map((err: any) => ({
+        details: error.issues.map((err) => ({
           field: err.path.join('.'),
           message: err.message
         }))

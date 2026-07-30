@@ -92,7 +92,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
       link: '',
       taxonomy: 'category',
       parent: 0,
-      meta: []
+      meta: {}
     };
   }
 

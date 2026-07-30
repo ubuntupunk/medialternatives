@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/hooks/useAuth';
 import { wordpressApi } from '@/services/wordpress-api';
 import { WordPressPost } from '@/types/wordpress';
 import { WORDPRESS_URLS } from '@/lib/wordpress-urls';
@@ -44,14 +43,11 @@ interface OverviewStats {
 }
 
 export default function OverviewPage() {
-  const { user } = useAuth();
   const [recentPosts, setRecentPosts] = useState<WordPressPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState(new Date());
-  const [analyticsData, setAnalyticsData] = useState<any>(null);
-  const [performanceData, setPerformanceData] = useState<any>(null);
-  const [adSenseData, setAdSenseData] = useState<any>(null);
-  const [seoData, setSeoData] = useState<any>(null);
+  const [analyticsData, setAnalyticsData] = useState<Record<string, unknown> | null>(null);
+  const [performanceData, setPerformanceData] = useState<Record<string, unknown> | null>(null);
   const [dataLoading, setDataLoading] = useState(true);
 
   // Fetch real-time data from APIs
@@ -72,20 +68,6 @@ export default function OverviewPage() {
         setPerformanceData(performanceResult.data);
       }
 
-      // Fetch AdSense data
-      const adSenseResponse = await fetch('/api/adsense/data');
-      const adSenseResult = await adSenseResponse.json();
-      if (adSenseResult.report) {
-        setAdSenseData(adSenseResult);
-      }
-
-      // Fetch SEO data
-      const seoResponse = await fetch('/api/seo/metrics?period=30d');
-      const seoResult = await seoResponse.json();
-      if (seoResult.success) {
-        setSeoData(seoResult.data);
-      }
-
       setLastUpdated(new Date());
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -95,7 +77,17 @@ export default function OverviewPage() {
   };
 
   // Mock overview stats - enhanced with real data when available
-  const getStats = (): OverviewStats => ({
+  const getStats = (): OverviewStats => {
+    const ad = analyticsData as (Record<string, unknown> & {
+      visitors?: number; pageviews?: number; bounceRate?: number; avgSessionDuration?: string;
+      topPages?: Array<{ page?: string; views?: number }>;
+    }) | null;
+    const pd = performanceData as (Record<string, unknown> & {
+      loadTime?: number;
+      lighthouse?: { performance?: number };
+      coreWebVitals?: { status?: 'good' | 'needs-improvement' | 'poor' };
+    }) | null;
+    return {
     posts: {
       total: 247,
       published: 245,
@@ -103,18 +95,18 @@ export default function OverviewPage() {
       thisMonth: 12
     },
     analytics: {
-      visitors: analyticsData?.visitors || 8420,
-      pageviews: analyticsData?.pageviews || 15680,
-      bounceRate: analyticsData?.bounceRate || 68.5,
-      avgSessionDuration: analyticsData?.avgSessionDuration || '2m 34s',
-      topPage: analyticsData?.topPages?.[0]?.page || '/post/piers-morgan-calls-out-sophie-mokoena',
-      topPageViews: analyticsData?.topPages?.[0]?.views || 2340
+      visitors: ad?.visitors || 8420,
+      pageviews: ad?.pageviews || 15680,
+      bounceRate: ad?.bounceRate || 68.5,
+      avgSessionDuration: ad?.avgSessionDuration || '2m 34s',
+      topPage: ad?.topPages?.[0]?.page || '/post/piers-morgan-calls-out-sophie-mokoena',
+      topPageViews: ad?.topPages?.[0]?.views || 2340
     },
     performance: {
-      lighthouseScore: performanceData?.lighthouse?.performance || 94,
-      loadTime: performanceData?.loadTime || 1.8,
+      lighthouseScore: pd?.lighthouse?.performance || 94,
+      loadTime: pd?.loadTime || 1.8,
       uptime: 99.9, // This would come from uptime monitoring service
-      coreWebVitals: performanceData?.coreWebVitals?.status || 'good'
+      coreWebVitals: pd?.coreWebVitals?.status || 'good'
     },
     revenue: {
       thisMonth: 89.50,
@@ -128,7 +120,8 @@ export default function OverviewPage() {
       twitterShares: 890,
       linkedinShares: 340
     }
-  });
+  };
+  }
 
   useEffect(() => {
     const fetchRecentPosts = async () => {
