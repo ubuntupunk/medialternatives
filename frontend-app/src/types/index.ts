@@ -242,6 +242,20 @@ export interface CategoryCloudProps {
  * @property {string} [title] - Widget title
  * @property {string} [className] - Additional CSS classes
  */
+export interface AudioWidgetProps {
+  audioId?: string;
+  username?: string;
+  title?: string;
+  className?: string;
+  width?: number;
+  height?: number;
+  theme?: 'light' | 'dark';
+  showCover?: boolean;
+  showFooter?: boolean;
+  showAuthor?: boolean;
+  showWatermark?: boolean;
+}
+
 export interface CreativeCommonsWidgetProps {
   title?: string;
   className?: string;

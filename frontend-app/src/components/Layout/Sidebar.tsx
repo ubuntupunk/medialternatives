@@ -8,6 +8,7 @@ import SearchWidget from '../Widgets/SearchWidget';
 import CategoryCloudEnhanced from '../Widgets/CategoryCloudEnhanced';
 import AuthorWidget from '../Widgets/AuthorWidget';
 import AdSenseWidget from '../Widgets/AdSenseWidget';
+import AudioWidget from '../Widgets/AudioWidget';
 import CreativeCommonsWidget from '../Widgets/CreativeCommonsWidget';
 import DonateWidget from '../Widgets/DonateWidget';
 import DonateWidgetImproved from '../Widgets/DonateWidgetImproved'
@@ -49,6 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <CategoryCloudEnhanced key="categories" />,
     !isDashboardPage && <AdSenseWidget key="adsense" />,
     <DonateWidgetImproved key="donate" paypalHostedButtonId={process.env.NEXT_PUBLIC_PAYPAL_HOSTED_BUTTON_ID || ''} />,
+    <AudioWidget key="audio" />,
     <WebringWidget key="webring" />,
     <CreativeCommonsWidget key="creative-commons" />
   ].filter(Boolean); // Filter out false values
