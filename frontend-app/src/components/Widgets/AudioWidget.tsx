@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 
 export interface AudioWidgetProps {
   audioId?: string;
@@ -9,7 +9,7 @@ export interface AudioWidgetProps {
   className?: string;
   width?: number;
   height?: number;
-  theme?: 'light' | 'dark';
+  theme?: "light" | "dark";
   showCover?: boolean;
   showFooter?: boolean;
   showAuthor?: boolean;
@@ -17,13 +17,13 @@ export interface AudioWidgetProps {
 }
 
 const AudioWidget: React.FC<AudioWidgetProps> = ({
-  audioId = '1872083023586308',
-  username = 'ubuntupunk',
-  title = 'Listen on Audio.com',
-  className = '',
+  audioId = "1872323317872322",
+  username = "ubuntupunk",
+  title = "Listen on Audio.com",
+  className = "",
   width = 500,
   height = 235,
-  theme = 'light',
+  theme = "light",
   showCover = true,
   showFooter = true,
   showAuthor = true,
@@ -36,7 +36,7 @@ const AudioWidget: React.FC<AudioWidgetProps> = ({
     if (scriptLoaded) return;
 
     const existingScript = document.querySelector(
-      'script[src="https://audio.com/embed.js"]'
+      'script[src="https://audio.com/embed.js"]',
     ) as HTMLScriptElement | null;
 
     if (existingScript) {
@@ -44,15 +44,15 @@ const AudioWidget: React.FC<AudioWidgetProps> = ({
       return;
     }
 
-    const script = document.createElement('script');
-    script.src = 'https://audio.com/embed.js';
+    const script = document.createElement("script");
+    script.src = "https://audio.com/embed.js";
     script.async = true;
     script.onload = () => setScriptLoaded(true);
     document.body.appendChild(script);
 
     return () => {
       const el = document.querySelector(
-        'script[src="https://audio.com/embed.js"]'
+        'script[src="https://audio.com/embed.js"]',
       );
       if (el && scriptLoaded) {
         el.remove();
@@ -60,30 +60,28 @@ const AudioWidget: React.FC<AudioWidgetProps> = ({
     };
   }, [scriptLoaded]);
 
-  const embedUrl = new URL(
-    `https://audio.com/embed/v2/audio/${audioId}`
-  );
-  embedUrl.searchParams.set('theme', theme);
-  embedUrl.searchParams.set('layout', 'fixed');
-  embedUrl.searchParams.set('cover', showCover.toString());
-  embedUrl.searchParams.set('footer', showFooter.toString());
-  embedUrl.searchParams.set('author', showAuthor.toString());
-  embedUrl.searchParams.set('watermark', showWatermark.toString());
+  const embedUrl = new URL(`https://audio.com/embed/v2/collection/${audioId}`);
+  embedUrl.searchParams.set("theme", theme);
+  embedUrl.searchParams.set("layout", "fixed");
+  embedUrl.searchParams.set("cover", showCover.toString());
+  embedUrl.searchParams.set("footer", showFooter.toString());
+  embedUrl.searchParams.set("author", showAuthor.toString());
+  embedUrl.searchParams.set("watermark", showWatermark.toString());
 
   return (
     <div className={`widget audio-widget ${className}`}>
       <h3 className="widget-title">{title}</h3>
       <div className="audio-embed-container" ref={containerRef}>
-        <div style={{ width: `${width}px`, maxWidth: '100%' }}>
+        <div style={{ width: `${width}px`, maxWidth: "100%" }}>
           <iframe
             src={embedUrl.toString()}
             style={{
-              display: 'block',
-              borderRadius: '1px',
-              border: 'none',
+              display: "block",
+              borderRadius: "1px",
+              border: "none",
               height: `${height}px`,
               width: `${width}px`,
-              maxWidth: '100%',
+              maxWidth: "100%",
             }}
             loading="lazy"
             data-audiocom-embed
@@ -93,16 +91,16 @@ const AudioWidget: React.FC<AudioWidgetProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              textAlign: 'center',
-              display: 'block',
-              color: '#A4ABB6',
-              fontSize: '12px',
-              fontFamily: 'sans-serif',
-              lineHeight: '16px',
-              marginTop: '8px',
-              overflow: 'hidden',
-              whiteSpace: 'nowrap',
-              textOverflow: 'ellipsis',
+              textAlign: "center",
+              display: "block",
+              color: "#A4ABB6",
+              fontSize: "12px",
+              fontFamily: "sans-serif",
+              lineHeight: "16px",
+              marginTop: "8px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
             }}
           >
             @{username}
@@ -114,3 +112,4 @@ const AudioWidget: React.FC<AudioWidgetProps> = ({
 };
 
 export default AudioWidget;
+
