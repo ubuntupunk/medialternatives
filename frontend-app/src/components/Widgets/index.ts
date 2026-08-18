@@ -1,6 +1,7 @@
 // Widget exports for easier imports
 export { default as AdSenseWidget, AdSenseFeed } from './AdSenseWidget';
 export { default as AudioWidget } from './AudioWidget';
+export { default as SpotifyWidget } from './SpotifyWidget';
 export { default as AuthorWidget } from './AuthorWidget';
 export { default as CategoryCards } from './CategoryCards';
 export { default as CategoryCloud } from './CategoryCloud';
