@@ -101,6 +101,33 @@ clean:
     cd frontend-app && pnpm clean
 
 # ──────────────────────────────────────────────
+# Cloudflare Worker Failover (temporary)
+# ──────────────────────────────────────────────
+
+# Worker name used by the temporary failover deployment
+cf_worker := "medialternatives-failover"
+
+# Tail all live failover Worker logs as JSON
+cf-tail:
+    cd frontend-app && pnpm exec wrangler tail {{cf_worker}} --env-file /dev/null --format json
+
+# Tail only failed failover Worker invocations as JSON
+cf-tail-errors:
+    cd frontend-app && pnpm exec wrangler tail {{cf_worker}} --env-file /dev/null --status error --format json
+
+# List failover Worker deployments
+cf-deployments:
+    cd frontend-app && pnpm exec wrangler deployments list --env-file /dev/null
+
+# List failover Worker versions
+cf-versions:
+    cd frontend-app && pnpm exec wrangler versions list --env-file /dev/null
+
+# Redeploy the failover Worker with Wrangler debug logging
+cf-deploy-debug:
+    cd frontend-app && WRANGLER_LOG=debug pnpm exec wrangler deploy --env-file /dev/null
+
+# ──────────────────────────────────────────────
 # Session End Workflow
 # ──────────────────────────────────────────────
 

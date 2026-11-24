@@ -15,6 +15,7 @@
 | Deploy Worker to `workers.dev` | ✅ Done | Dev Team | 1h | 1h | `medialternatives-failover.ubuntupunk.workers.dev` |
 | Validate core routes | ✅ Done | Dev Team | 0.5h | 0.5h | Home, posts, clean URLs, blog, pagination, category, tag, feeds |
 | Add production Workers Routes | ✅ Done | Dev Team | 0.25h | 0.25h | Apex and www routes active; route IDs recorded in `FALLOVER.md` |
+| Add Wrangler troubleshooting recipes to `justfile` | ✅ Done | Dev Team | 0.1h | 0.1h | `just cf-tail`, `cf-tail-errors`, `cf-deployments`, `cf-versions`, `cf-deploy-debug` |
 | Verify CPU/limits and DO queue under live traffic | 🔄 In Progress | Dev Team | 0.5h | - | Workers Free accepted; monitor 100k/day and 10 ms CPU (`medialternatives-56k`); DO warning tracked in `medialternatives-23n` |
 | Investigate Vercel CPU overage | 📋 Planned | Dev Team | 2h | - | `medialternatives-a6n`; blocked on Vercel auth/telemetry |
 | Rollback to Vercel when restored | 📋 Planned | Dev Team | 0.25h | - | Delete Workers Routes; no DNS change |

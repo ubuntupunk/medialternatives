@@ -304,6 +304,18 @@ When Vercel is available again:
 
 No DNS edit, TTL wait, certificate change, or Vercel domain reconfiguration is required.
 
+### Quick Worker troubleshooting recipes
+
+```bash
+just cf-tail             # live logs as JSON
+just cf-tail-errors      # only failed invocations
+just cf-deployments      # deployment history
+just cf-versions         # version history
+just cf-deploy-debug     # redeploy with Wrangler debug logging
+```
+
+Each recipe runs from `frontend-app/` and passes `--env-file /dev/null` so the invalid `.env.local` token is ignored.
+
 ---
 
 ## 10. Known blockers and follow-ups
@@ -325,3 +337,4 @@ No DNS edit, TTL wait, certificate change, or Vercel domain reconfiguration is r
 - 2026-11-24 — Added OpenNext/Wrangler config, ported Vercel rewrites/headers, configured R2/D1/DO caching, excluded oversized PDFs, and deployed Worker.
 - 2026-11-24 — Validated all core routes, rewrites, security headers, static assets, PDF redirects, and clean URLs on `workers.dev`. No production routes or DNS changed.
 - 2026-11-24 — After explicit approval and Workers Free selection, added both production Workers Routes and verified apex/www traffic is served by the Worker with no Vercel outage response.
+- 2026-11-24 — Added reusable `just` recipes for Wrangler log tails, deployment history, version history, and debug deploys.
