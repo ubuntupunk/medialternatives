@@ -4,11 +4,13 @@ allowBuilds:
   bcrypt: true
   core-js: true
   core-js-pure: true
+  esbuild: true
   protobufjs: true
   sharp: true
   tree-sitter: true
   tree-sitter-json: true
   unrs-resolver: true
+  workerd: true
   yarn: true
 onlyBuiltDependencies:
   - bcrypt

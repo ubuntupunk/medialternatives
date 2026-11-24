@@ -1,5 +1,32 @@
 # Task Management - WordPress.com Headless CMS Migration
 
+## 🚧 Current Sprint: Incident Recovery — Vercel Outage / Cloudflare Failover
+**Sprint Goal**: Restore service with a temporary, reversible Cloudflare Workers failover while Vercel billing/CPU overage is resolved.  
+**Status**: In progress — Worker deployed and validated on `workers.dev`; awaiting cutover approval and Workers Paid decision.  
+**Tracking**: `medialternatives-8vv` (failover), `medialternatives-a6n` (Vercel CPU root cause)
+
+| Task | Status | Assignee | Estimate | Actual | Notes |
+|------|--------|----------|----------|--------|-------|
+| Create `FALLOVER.md` plan | ✅ Done | Dev Team | 0.5h | 0.5h | Plan, cutover, rollback, limits, validation checklist |
+| Add OpenNext Cloudflare tooling | ✅ Done | Dev Team | 1h | 1h | `@opennextjs/cloudflare`, `wrangler`, scripts, config |
+| Port Vercel rewrites/headers | ✅ Done | Dev Team | 0.5h | 0.5h | `next.config.ts` and `public/_headers` |
+| Configure R2/D1/DO cache | ✅ Done | Dev Team | 1h | 1h | 59 cache entries populated, D1 table created |
+| Handle oversized PDFs | ✅ Done | Dev Team | 1h | 1h | Uploaded to R2, excluded from Worker assets, 302 redirects |
+| Deploy Worker to `workers.dev` | ✅ Done | Dev Team | 1h | 1h | `medialternatives-failover.ubuntupunk.workers.dev` |
+| Validate core routes | ✅ Done | Dev Team | 0.5h | 0.5h | Home, posts, clean URLs, blog, pagination, category, tag, feeds |
+| Add production Workers Routes | 🔄 In Progress — blocked | Dev Team | 0.25h | - | Blocked on explicit user approval and Workers Paid decision |
+| Verify CPU/limits and DO queue under live traffic | 📋 Planned | Dev Team | 0.5h | - | Monitor after cutover; DO export warning observed but non-fatal |
+| Investigate Vercel CPU overage | 📋 Planned | Dev Team | 2h | - | `medialternatives-a6n`; blocked on Vercel auth/telemetry |
+| Rollback to Vercel when restored | 📋 Planned | Dev Team | 0.25h | - | Delete Workers Routes; no DNS change |
+
+### Blockers / Decisions
+- Explicit approval required before adding production Workers Routes.
+- Workers Paid vs Free decision required before cutover.
+- Vercel CLI unauthenticated; no route-level CPU telemetry available.
+- Wrangler emitted a non-fatal `DOQueueHandler` export warning; monitor on-demand revalidation (`medialternatives-23n`).
+
+---
+
 ## ✅ Completed Sprint: Dashboard & Production Readiness  
 **Sprint Duration**: Week 3
 **Sprint Goal**: Complete dashboard implementation and prepare for production deployment.

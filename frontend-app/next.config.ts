@@ -65,6 +65,8 @@ const withPWA = require('next-pwa')({
   ],
 });
 
+const unoptimizedImages = process.env.NEXT_IMAGE_UNOPTIMIZED === 'true';
+
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
   // Disable ESLint and TypeScript checking during builds
@@ -80,10 +82,22 @@ const nextConfig: NextConfig = {
     removeConsole: false,
   },
 
-  // DO NOT REMOVE: Clean URL rewrites - remove /post/ prefix
+  // Vercel-only rewrites moved here so Cloudflare Workers gets the same routes.
   async rewrites() {
     return [
-      // Rewrite clean URLs to /post/[slug] internally
+      {
+        source: '/robots.txt',
+        destination: '/api/robots',
+      },
+      {
+        source: '/sitemap.xml',
+        destination: '/api/sitemap',
+      },
+      {
+        source: '/feed.xml',
+        destination: '/api/feed',
+      },
+      // DO NOT REMOVE: Clean URL rewrites - remove /post/ prefix
       {
         source: '/:slug',
         destination: '/post/:slug',
@@ -91,8 +105,41 @@ const nextConfig: NextConfig = {
     ];
   },
 
+  // Mirror vercel.json headers on any platform that runs Next.js.
+  async headers() {
+    return [
+      {
+        source: '/:path*\\.(jpg|jpeg|png|gif|svg|ico|css|js)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin',
+          },
+        ],
+      },
+    ];
+  },
+
   // DO NOT REMOVE: Basic image configuration
   images: {
+    unoptimized: unoptimizedImages,
     remotePatterns: [
       {
         protocol: 'https',
