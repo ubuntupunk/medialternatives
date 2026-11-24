@@ -1,6 +1,6 @@
 # Temporary Cloudflare Failover Plan — medialternatives.com
 
-**Status**: Ready for cutover approval — Worker deployed and validated on `workers.dev`; production routes untouched  
+**Status**: Cutover complete — production Workers Routes active on Workers Free; rollback procedure ready  
 **Owner**: Dev Team  
 **Created**: 2026-11-24  
 **Tracking**: `medialternatives-8vv` (failover), `medialternatives-a6n` (Vercel CPU root cause)
@@ -113,7 +113,7 @@ No DNS records, nameservers, or Vercel domain settings were changed.
 
 Workers CPU time excludes network wait. WordPress.com fetch latency does not count as CPU, but JSON parsing, RSC rendering, and Middleware execution do.
 
-**Decision needed**: use Workers Paid for the failover month. Do not cut over production until this is decided or accepted risk is recorded.
+**Decision recorded**: use **Workers Free** for the failover. Accepted risk: 100,000 requests/day and 10 ms CPU/request. Monitor request volume and CPU closely; upgrade to Workers Paid if limits are approached.
 
 ---
 
@@ -203,7 +203,7 @@ CLOUDFLARE_ACCOUNT_ID=17f6081fecc2e14456c47f0628cf17f5 \
 pnpm exec wrangler deploy --env-file /dev/null
 ```
 
-**Do not add Workers Routes until the workers.dev validation passes and the user approves cutover.**
+`workers.dev` validation passed. Production Workers Routes were added only after explicit user approval on 2026-11-24.
 
 ---
 
@@ -232,8 +232,25 @@ Validated against `https://medialternatives-failover.ubuntupunk.workers.dev` on 
 | Bot probes | ✅ 404 | `/wp-login.php`, `/xmlrpc.php` return 404 |
 | Vercel outage header | ✅ absent | no `x-vercel-error` on Worker responses |
 
+### Production validation after cutover
+
+Validated on 2026-11-24 on both apex and `www`:
+
+| Check | Result | Notes |
+|---|---|---|
+| Apex and `www` routes active | ✅ | Both patterns listed on zone `13d78476de4fb4c3dfa307b6ec9760c4` |
+| `/` | ✅ 200 | `server: cloudflare`, no `x-vercel-error` |
+| `/blog` | ✅ 200 | apex and `www` |
+| Clean post URL | ✅ 200 | apex and `www` |
+| `/robots.txt`, `/sitemap.xml`, `/feed.xml` | ✅ 200 | rewrites work in production |
+| Security headers | ✅ present | `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy` |
+| Oversized PDF redirect | ✅ 302 | redirects to public R2 URL |
+| `/wp-login.php` | ✅ 404 | no Vercel outage response |
+
 Still to observe after cutover:
 
+- [ ] Workers Free request volume against 100,000/day (`medialternatives-56k`)
+- [ ] Worker CPU time against 10 ms/request (`medialternatives-56k`)
 - [ ] Full 300s/600s ISR revalidation cycle
 - [ ] Worker CPU time against the 10 ms/request Free limit (or confirm Paid plan)
 - [ ] Durable Object queue behavior on on-demand revalidation
@@ -245,17 +262,19 @@ Deployment emitted a non-fatal Wrangler warning that `DOQueueHandler` was not fo
 
 ## 8. Cutover procedure
 
-Only after validation and explicit approval:
+Completed on 2026-11-24 after validation and explicit user approval.
 
-1. Audit existing Workers Routes on `medialternatives.com` for overlap.
-2. Add route:
+1. Audited existing Workers Routes on `medialternatives.com` — none existed.
+2. Added route:
    - pattern: `medialternatives.com/*`
    - worker: `medialternatives-failover`
    - zone: `medialternatives.com`
-3. Add route:
+   - route ID: `2d38c55884a443c3a6b678fd42a24e9e`
+3. Added route:
    - pattern: `www.medialternatives.com/*`
    - worker: `medialternatives-failover`
    - zone: `medialternatives.com`
+   - route ID: `06f5022d9829401593b9adda44ed74b1`
 4. Verify:
    - `curl -I https://medialternatives.com/`
    - `curl -I https://www.medialternatives.com/`
@@ -290,7 +309,7 @@ No DNS edit, TTL wait, certificate change, or Vercel domain reconfiguration is r
 ## 10. Known blockers and follow-ups
 
 - Vercel CLI is unauthenticated; no route-level CPU telemetry available. Tracked in `medialternatives-a6n`.
-- Workers Paid billing decision is outstanding. Free plan has 100,000 requests/day and 10 ms CPU/request.
+- Workers Free is active by user decision; 100,000 requests/day and 10 ms CPU/request limits are accepted and must be monitored.
 - `.windsurfconfig` referenced by project docs does not exist in the repo root.
 - Local Node is `v24.10.0`; project target is `22.x.x`. The Cloudflare build still passed.
 - Existing `.documents` submodule is modified from prior work and must be left untouched.
@@ -305,3 +324,4 @@ No DNS edit, TTL wait, certificate change, or Vercel domain reconfiguration is r
 - 2026-11-24 — Created plan, verified Cloudflare zone/DNS/Workers/Pages state, opened tracking issues.
 - 2026-11-24 — Added OpenNext/Wrangler config, ported Vercel rewrites/headers, configured R2/D1/DO caching, excluded oversized PDFs, and deployed Worker.
 - 2026-11-24 — Validated all core routes, rewrites, security headers, static assets, PDF redirects, and clean URLs on `workers.dev`. No production routes or DNS changed.
+- 2026-11-24 — After explicit approval and Workers Free selection, added both production Workers Routes and verified apex/www traffic is served by the Worker with no Vercel outage response.

@@ -2,7 +2,7 @@
 
 ## 🚧 Current Sprint: Incident Recovery — Vercel Outage / Cloudflare Failover
 **Sprint Goal**: Restore service with a temporary, reversible Cloudflare Workers failover while Vercel billing/CPU overage is resolved.  
-**Status**: In progress — Worker deployed and validated on `workers.dev`; awaiting cutover approval and Workers Paid decision.  
+**Status**: In progress — cutover complete; Worker serving apex and www on Workers Free, with limits under monitoring.  
 **Tracking**: `medialternatives-8vv` (failover), `medialternatives-a6n` (Vercel CPU root cause)
 
 | Task | Status | Assignee | Estimate | Actual | Notes |
@@ -14,14 +14,14 @@
 | Handle oversized PDFs | ✅ Done | Dev Team | 1h | 1h | Uploaded to R2, excluded from Worker assets, 302 redirects |
 | Deploy Worker to `workers.dev` | ✅ Done | Dev Team | 1h | 1h | `medialternatives-failover.ubuntupunk.workers.dev` |
 | Validate core routes | ✅ Done | Dev Team | 0.5h | 0.5h | Home, posts, clean URLs, blog, pagination, category, tag, feeds |
-| Add production Workers Routes | 🔄 In Progress — blocked | Dev Team | 0.25h | - | Blocked on explicit user approval and Workers Paid decision |
-| Verify CPU/limits and DO queue under live traffic | 📋 Planned | Dev Team | 0.5h | - | Monitor after cutover; DO export warning observed but non-fatal |
+| Add production Workers Routes | ✅ Done | Dev Team | 0.25h | 0.25h | Apex and www routes active; route IDs recorded in `FALLOVER.md` |
+| Verify CPU/limits and DO queue under live traffic | 🔄 In Progress | Dev Team | 0.5h | - | Workers Free accepted; monitor 100k/day and 10 ms CPU (`medialternatives-56k`); DO warning tracked in `medialternatives-23n` |
 | Investigate Vercel CPU overage | 📋 Planned | Dev Team | 2h | - | `medialternatives-a6n`; blocked on Vercel auth/telemetry |
 | Rollback to Vercel when restored | 📋 Planned | Dev Team | 0.25h | - | Delete Workers Routes; no DNS change |
 
 ### Blockers / Decisions
-- Explicit approval required before adding production Workers Routes.
-- Workers Paid vs Free decision required before cutover.
+- Cutover approval received and both production Workers Routes are active.
+- Workers Free selected; request/CPU limits accepted and must be monitored.
 - Vercel CLI unauthenticated; no route-level CPU telemetry available.
 - Wrangler emitted a non-fatal `DOQueueHandler` export warning; monitor on-demand revalidation (`medialternatives-23n`).
 
