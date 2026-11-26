@@ -4,6 +4,12 @@ upload_source_maps = true
 compatibility_date = "2026-11-24"
 compatibility_flags = ["nodejs_compat"]
 
+# Cache Worker responses at the edge. Without this, every request invokes the
+# Worker and blows the Free plan 10 ms CPU budget. Zone CDN cache rules do not
+# apply to Worker-generated responses; Workers Cache is the supported path.
+[cache]
+enabled = true
+
 [assets]
 directory = ".open-next/assets"
 binding = "ASSETS"
@@ -24,9 +30,17 @@ database_id = "7ac09614-7163-4116-8c0c-46bacf765624"
 name = "NEXT_CACHE_DO_QUEUE"
 class_name = "DOQueueHandler"
 
+[[durable_objects.bindings]]
+name = "NEXT_CACHE_DO_PURGE"
+class_name = "BucketCachePurge"
+
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["DOQueueHandler"]
+
+[[migrations]]
+tag = "v2"
+new_sqlite_classes = ["BucketCachePurge"]
 
 [[services]]
 binding = "WORKER_SELF_REFERENCE"

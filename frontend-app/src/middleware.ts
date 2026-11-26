@@ -21,6 +21,15 @@ const adminRoutes = [
 ];
 
 /**
+ * High-volume scraper and AI-crawler user agents observed during the Cloudflare
+ * failover. WAF custom rules are preferred, but Workers Free accounts without
+ * WAF edit access still need a cheap short-circuit before Next.js rendering.
+ * @constant {RegExp}
+ */
+const botUserAgentPattern =
+  /PetalBot|MJ12bot|meta-webindexer|pixellm-research-pilot|HeadlessChrome|GPTBot|ClaudeBot|Amazonbot/i;
+
+/**
  * Next.js middleware for route protection and URL redirects
  *
  * Handles authentication checks, legacy URL redirects, and route protection
@@ -31,7 +40,31 @@ const adminRoutes = [
  */
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  
+
+  // Scrapers and scanners probe WordPress endpoints on every migrated site.
+  // Answer them at the edge of the Worker instead of rendering a Next.js 404
+  // page, which is expensive on Workers Free (10 ms CPU/request).
+  if (
+    /^\/(?:wp-login\.php|xmlrpc\.php|wp-admin(?:\/|$)|wp-content(?:\/|$)|wp-includes(?:\/|$))/.test(
+      pathname
+    )
+  ) {
+    return new NextResponse(null, {
+      status: 404,
+      headers: { 'Cache-Control': 'public, max-age=86400' },
+    });
+  }
+
+  // Scraper UAs repeatedly requested uncached paths and dominated Worker CPU.
+  // Stop them here when WAF custom rules are unavailable on the account.
+  const userAgent = request.headers.get('user-agent') ?? '';
+  if (botUserAgentPattern.test(userAgent)) {
+    return new NextResponse(null, {
+      status: 403,
+      headers: { 'Cache-Control': 'public, max-age=86400' },
+    });
+  }
+
   // Handle ALL legacy date-based URLs from WordPress.com
   // Format: /YYYY/MM/DD/post-slug/
   

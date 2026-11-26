@@ -1,9 +1,9 @@
 # Temporary Cloudflare Failover Plan — medialternatives.com
 
-**Status**: Cutover complete — production Workers Routes active on Workers Free; rollback procedure ready  
+**Status**: Cutover complete — production Workers Routes active on Workers Free; CPU hardening deployed; rollback procedure ready  
 **Owner**: Dev Team  
 **Created**: 2026-11-24  
-**Tracking**: `medialternatives-8vv` (failover), `medialternatives-a6n` (Vercel CPU root cause)
+**Tracking**: `medialternatives-8vv` (failover), `medialternatives-a6n` (Vercel CPU root cause), `medialternatives-56k` (Workers Free limits), `medialternatives-23n` (DO queue), `medialternatives-esx` (WAF rules), `medialternatives-ghv` (bot-UA deploy)
 
 ---
 
@@ -157,7 +157,7 @@ In `frontend-app/`:
   - temporary fallback: `NEXT_IMAGE_UNOPTIMIZED=true` for Cloudflare builds
   - Cloudflare Images binding left as a future option
 - [x] Worker secrets/build vars taken from `.env.local` without committing values
-- [x] Avoided the invalid `CLOUDFLARE_API_TOKEN` from `.env.local` by overriding it in the deploy environment with the Wrangler OAuth token
+- [x] Avoided the invalid `CLOUDFLARE_API_TOKEN` from `.env.local` with `--env-file /dev/null`; Wrangler then uses its own OAuth config and refresh token
 
 ### 6.3 Configure ISR caching
 
@@ -188,20 +188,14 @@ Avoided Workers KV as the primary incremental cache because it is eventually con
   - `https://medialternatives-failover.ubuntupunk.workers.dev`
   - Current Version ID: `4d7bf8bf-dfe0-44b7-a26e-c2b2ca1bf4c6`
 
-Deploy command used (token value omitted):
+Deploy command used (Wrangler OAuth credentials stay in `~/.config/.wrangler/config/default.toml`):
 
 ```bash
-CF_TOKEN="$(python3 - <<'PY'
-import tomllib, pathlib
-p = pathlib.Path('/home/ubuntupunk/.config/.wrangler/config/default.toml')
-d = tomllib.load(p.open('rb'))
-print(d['oauth_token'])
-PY
-)"
-CLOUDFLARE_API_TOKEN="$CF_TOKEN" \
-CLOUDFLARE_ACCOUNT_ID=17f6081fecc2e14456c47f0628cf17f5 \
+cd frontend-app
 pnpm exec wrangler deploy --env-file /dev/null
 ```
+
+`--env-file /dev/null` is required so the invalid `CLOUDFLARE_API_TOKEN` in `.env.local` is ignored. Do not copy the OAuth token into `CLOUDFLARE_API_TOKEN`; that bypasses refresh and causes `503 / 10001` on several Cloudflare API endpoints.
 
 `workers.dev` validation passed. Production Workers Routes were added only after explicit user approval on 2026-11-24.
 
@@ -247,13 +241,15 @@ Validated on 2026-11-24 on both apex and `www`:
 | Oversized PDF redirect | ✅ 302 | redirects to public R2 URL |
 | `/wp-login.php` | ✅ 404 | no Vercel outage response |
 
-Still to observe after cutover:
+Post-cutover findings (2026-11-26):
 
-- [ ] Workers Free request volume against 100,000/day (`medialternatives-56k`)
-- [ ] Worker CPU time against 10 ms/request (`medialternatives-56k`)
+- [x] Workers CPU-limit failures identified: 1,633 `Worker exceeded CPU time limit.` events, ~10,900 invocations over 10 ms CPU (avg 73 ms, max 951 ms), 551 HTTP 503s (`medialternatives-56k`)
+- [x] Worker HTML caching verified after enabling Workers Cache: `cf-cache-status: MISS` then `HIT`, plus `x-opennext-cache: HIT`
+- [x] Legacy WordPress probes short-circuited: `/wp-login.php` and `/xmlrpc.php` return 404 without rendering Next.js
+- [ ] Workers Free request volume against 100,000/day after hardening (`medialternatives-56k`)
+- [ ] Post-hardening CPU/error trend after the bot-UA build is deployed (`medialternatives-56k`)
 - [ ] Full 300s/600s ISR revalidation cycle
-- [ ] Worker CPU time against the 10 ms/request Free limit (or confirm Paid plan)
-- [ ] Durable Object queue behavior on on-demand revalidation
+- [ ] Durable Object queue behavior on on-demand revalidation (`medialternatives-23n`)
 - [ ] Cache hit rate and WordPress.com request volume under real traffic
 
 Deployment emitted a non-fatal Wrangler warning that `DOQueueHandler` was not found as an exported Durable Object class. The generated `.open-next/worker.js` does export it, and the Worker deployed and served requests successfully. Monitor revalidation; if queue errors appear, fix the generated export/bundling before relying on on-demand revalidation.
@@ -282,11 +278,55 @@ Completed on 2026-11-24 after validation and explicit user approval.
    - Worker logs show requests
 5. Monitor Cloudflare CPU, request volume, cache hit rate, R2 operations, and WordPress.com API calls.
 
-Optional hardening after cutover:
+Hardening after cutover is documented in section 8a. Remaining optional work:
 
-- Cloudflare WAF/rate limiting for `/wp-login.php`, `/xmlrpc.php`, `/api/*`
-- bot filtering for crawler probes
-- longer ISR intervals to reduce revalidation churn
+- Cloudflare WAF/rate limiting for `/wp-login.php`, `/xmlrpc.php`, `/api/*` once a token with ruleset edit scope is available (`medialternatives-esx`)
+- longer ISR intervals if revalidation churn remains high after cache interception is verified under live traffic
+
+---
+
+## 8a. Workers Free CPU hardening (2026-11-26)
+
+The failover stayed on Workers Free. No Paid upgrade was made.
+
+### Root causes
+
+- Cached ISR/SSG pages were still being rendered by the Worker on many hits.
+- Time-based revalidation produced repeated DO queue work; 105 revalidation failures were observed.
+- Zone CDN cache rules do not cache Worker-generated responses. Before `cache.enabled = true`, responses had no `cf-cache-status` and every request invoked the Worker.
+- Bots and legacy WordPress probes generated expensive 404 renders.
+
+### Changes
+
+- `open-next.config.ts`:
+  - `withRegionalCache(r2IncrementalCache, { mode: 'long-lived' })`
+  - `queueCache(doQueue, { regionalCacheTtlSec: 30 })`
+  - `purgeCache({ type: 'durableObject' })`
+  - `enableCacheInterception: true`
+- `wrangler.toml`:
+  - `[cache] enabled = true`
+  - `NEXT_CACHE_DO_PURGE` binding for `BucketCachePurge`
+  - migration `v2`
+- `src/middleware.ts`:
+  - cheap 404 for `/wp-login.php`, `/xmlrpc.php`, `/wp-admin/`, `/wp-content/`, `/wp-includes/`
+  - cheap 403 for high-volume scraper/AI-crawler UAs (built, redeploy pending OAuth re-auth)
+- Worker secret `CACHE_PURGE_API_TOKEN` and `CACHE_PURGE_ZONE_ID` were set with a token that only has Cache Purge permission. The token value is not stored in the repository.
+
+### Verified
+
+- Deployed cache-hardened version: `a3cb274b-671a-45d3-a04a-e4186e25da4c`
+- `/` → `200`, `x-opennext-cache: HIT`
+- `cf-cache-status: MISS` on first request, then `HIT`
+- `/wp-login.php` → `404`, `/xmlrpc.php` → `404`
+- `pnpm type-check` and `pnpm lint` passed; `pnpm build:cloudflare` succeeded
+
+### Blocked
+
+- WAF custom rules for scraper UAs and legacy paths could not be created: Cloudflare API returns `HTTP 503 / code 10001` for `http_request_firewall_custom` with both the MCP connection and Wrangler OAuth token. Tracked in `medialternatives-esx`.
+- The redundant zone cache rule `e39615356e0b492c97034e8002f51e2e` was added before Workers Cache was understood; it is harmless but should be deleted with a token that has ruleset edit scope.
+- Re-deploying the bot-UA middleware build is blocked (`medialternatives-ghv`). Wrangler OAuth device login cannot complete because Cloudflare redirects to `localhost:8976` on the user's machine while Wrangler listens in the sandbox, and Cloudflare API calls intermittently return `503 / 10001` or `504`.
+- User chose to stop on 2026-11-26. The live Worker remains cache-hardened version `a3cb274b-671a-45d3-a04a-e4186e25da4c`; the built bot-UA code is committed but not deployed.
+- Post-hardening telemetry could not be read for the same reason; keep `medialternatives-56k` open until a fresh CPU/error trend is observed.
 
 ---
 
@@ -325,9 +365,10 @@ Each recipe runs from `frontend-app/` and passes `--env-file /dev/null` so the i
 - `.windsurfconfig` referenced by project docs does not exist in the repo root.
 - Local Node is `v24.10.0`; project target is `22.x.x`. The Cloudflare build still passed.
 - Existing `.documents` submodule is modified from prior work and must be left untouched.
-- Cloudflare MCP OAuth works for reads; classic token verify still fails.
-- `.env.local` contains an invalid `CLOUDFLARE_API_TOKEN`; it was overridden for deploy but should be replaced or removed later.
-- Wrangler emitted a non-fatal `DOQueueHandler` export warning; monitor on-demand revalidation. Tracked in `medialternatives-23n`.
+- Cloudflare MCP OAuth works for cache-rule reads/writes but returns `503 / 10001` for WAF rulesets; Wrangler OAuth has the same WAF scope limitation (`medialternatives-esx`).
+- `.env.local` contains an invalid `CLOUDFLARE_API_TOKEN`; always use `--env-file /dev/null`. Do not copy the OAuth token into `CLOUDFLARE_API_TOKEN` because that bypasses refresh and causes API auth failures.
+- Wrangler emitted a non-fatal `DOQueueHandler`/`BucketCachePurge` export warning; generated worker exports both classes. Monitor on-demand revalidation (`medialternatives-23n`).
+- Cloudflare API intermittently returns `503 / 10001` or `504` for Workers/R2/WAF endpoints. OAuth device login cannot complete because the callback targets `localhost:8976` on the user's machine rather than this sandbox; the built bot-UA deploy is deferred as `medialternatives-ghv`.
 
 ---
 
@@ -338,3 +379,6 @@ Each recipe runs from `frontend-app/` and passes `--env-file /dev/null` so the i
 - 2026-11-24 — Validated all core routes, rewrites, security headers, static assets, PDF redirects, and clean URLs on `workers.dev`. No production routes or DNS changed.
 - 2026-11-24 — After explicit approval and Workers Free selection, added both production Workers Routes and verified apex/www traffic is served by the Worker with no Vercel outage response.
 - 2026-11-24 — Added reusable `just` recipes for Wrangler log tails, deployment history, version history, and debug deploys.
+- 2026-11-26 — Diagnosed Workers Free CPU-limit notices: uncached Worker HTML, ISR revalidation failures, and bot/legacy traffic.
+- 2026-11-26 — Deployed OpenNext cache interception, regional cache, queue dedupe, DO purge binding, and Workers Cache; verified `cf-cache-status` and `x-opennext-cache` hits.
+- 2026-11-26 — Added legacy-path and scraper-UA middleware short-circuits; legacy 404s are live, WAF rules remain blocked (`medialternatives-esx`), and the bot-UA redeploy was deferred by user decision (`medialternatives-ghv`).
