@@ -3,7 +3,7 @@
 **Status**: Cutover complete — production Workers Routes active on Workers Free; CPU hardening deployed; rollback procedure ready  
 **Owner**: Dev Team  
 **Created**: 2026-11-24  
-**Tracking**: `medialternatives-8vv` (failover), `medialternatives-a6n` (Vercel CPU root cause), `medialternatives-56k` (Workers Free limits), `medialternatives-23n` (DO queue)
+**Tracking**: `medialternatives-8vv` (failover), `medialternatives-a6n` (Vercel CPU root cause)
 
 ---
 
@@ -246,11 +246,11 @@ Post-cutover findings (2026-11-26):
 - [x] Workers CPU-limit failures identified: 1,633 `Worker exceeded CPU time limit.` events, ~10,900 invocations over 10 ms CPU (avg 73 ms, max 951 ms), 551 HTTP 503s (`medialternatives-56k`)
 - [x] Worker HTML caching verified after enabling Workers Cache: `cf-cache-status: MISS` then `HIT`, plus `x-opennext-cache: HIT`
 - [x] Legacy WordPress probes short-circuited: `/wp-login.php` and `/xmlrpc.php` return 404 without rendering Next.js
-- [ ] Workers Free request volume against 100,000/day after hardening (`medialternatives-56k`)
-- [ ] Post-hardening CPU/error trend after the bot-UA and WAF rules are deployed (`medialternatives-56k`)
+- [x] Workers Free request volume after hardening: 17,199 Worker invocations from `2026-11-26T16:00Z` to `2026-11-27T15:17Z` — well under 100,000/day
+- [x] Post-hardening CPU/error trend: GraphQL analytics show 0 `exceededResources` errors across those 17,199 invocations; the last CPU-limit error was in the `2026-11-26T15:00Z` hour
 - [ ] Full 300s/600s ISR revalidation cycle
-- [ ] Durable Object queue behavior on on-demand revalidation (`medialternatives-23n`)
-- [ ] Cache hit rate and WordPress.com request volume under real traffic
+- [x] Durable Object queue behavior on on-demand revalidation: live tail captured `purgeCacheByTags`, `revalidate`, and a scheduled revalidation RPC with no exceptions
+- [ ] WordPress.com request volume under real traffic (edge `cf-cache-status: HIT` is confirmed, but a hit-rate percentage was not measured)
 
 Deployment emitted a non-fatal Wrangler warning that `DOQueueHandler` was not found as an exported Durable Object class. The generated `.open-next/worker.js` does export it, and the Worker deployed and served requests successfully. Monitor revalidation; if queue errors appear, fix the generated export/bundling before relying on on-demand revalidation.
 
@@ -322,6 +322,9 @@ The failover stayed on Workers Free. No Paid upgrade was made.
 - `PetalBot`, `MJ12bot`, `meta-webindexer`, `pixellm-research-pilot`, `HeadlessChrome`, `GPTBot`, `ClaudeBot`, `Amazonbot` → `403`; normal browser UA → `200`
 - Live tail of 7 forced-uncached requests: all `ok`, avg CPU 67.4 ms, p50 34 ms, max 233 ms; repeated fixed URLs are edge-cached and do not invoke the Worker
 - Live tail during 10 WAF-blocked requests recorded zero Worker invocations; the single cache-busting normal request invoked the Worker once and returned `ok` at 16 ms CPU
+- Cloudflare GraphQL analytics: 17,199 Worker invocations and 0 CPU-limit errors from `2026-11-26T16:00Z` to `2026-11-27T15:17Z`; last `exceededResources` hour was `2026-11-26T15:00Z`
+- On-demand revalidation: `POST /api/revalidate` returned `200`, and the live tail captured `purgeCacheByTags`, a scheduled revalidation, and `rpcMethod: revalidate` with all invocations `ok`
+- Set Worker secret `REVALIDATE_SECRET` (value stored outside the repo at `/home/ubuntupunk/.config/medialternatives/revalidate-secret`); unauthenticated POST now returns `401`, authenticated POST returns `200`
 - `pnpm type-check` and `pnpm lint` passed; `pnpm build:cloudflare` succeeded
 
 ### WAF edge protection (2026-11-27)
@@ -333,9 +336,10 @@ Created via Cloudflare MCP ruleset tools in phase `http_request_firewall_custom`
 - Rule `3cf210e601e54bda9c62a710b726482c`: block legacy WordPress paths (`/wp-login.php`, `/xmlrpc.php`, `/wp-admin/`, `/wp-content/`, `/wp-includes/`)
 - Deleted redundant zone cache rule `e39615356e0b492c97034e8002f51e2e` from ruleset `e5c625c248844bf6be54046d360bb507`; the pre-existing `Cache Everything [Template]` rule was left untouched.
 
-### Blocked
+### Monitoring status
 
-- Post-hardening telemetry is observable via `wrangler tail`. Forced-uncached requests still exceed the 10 ms Free CPU budget, but normal repeated URLs are served from Workers Cache without invoking the Worker, and WAF-blocked traffic invokes no Worker at all. Keep `medialternatives-56k` open until a longer real-traffic trend confirms the error rate.
+- `medialternatives-56k` and `medialternatives-23n` are closed: the post-hardening analytics window shows zero CPU-limit errors, and on-demand revalidation was observed end-to-end with no exceptions.
+- Forced-uncached requests still show high raw CPU in telemetry, but repeated URLs are served from Workers Cache without invoking the Worker, and WAF-blocked traffic invokes no Worker at all. Continue periodic monitoring; a longer trend is not required to keep the failover stable.
 
 ---
 
@@ -376,7 +380,8 @@ Each recipe runs from `frontend-app/` and passes `--env-file /dev/null` so the i
 - Existing `.documents` submodule is modified from prior work and must be left untouched.
 - Cloudflare MCP `user_tokens_verify` returns `401 / 1000 Invalid API Token`, but the MCP ruleset tools work with the session's configured scopes and were used for the WAF changes. Wrangler OAuth works for Worker deploys/tails but its REST token only has `zone:read`; do not use it for ruleset API calls.
 - `.env.local` contains an invalid `CLOUDFLARE_API_TOKEN`; always use `--env-file /dev/null`. Do not copy the OAuth token into `CLOUDFLARE_API_TOKEN` because that bypasses refresh and causes API auth failures.
-- Wrangler emitted a non-fatal `DOQueueHandler`/`BucketCachePurge` export warning; generated worker exports both classes. Monitor on-demand revalidation (`medialternatives-23n`).
+- Wrangler emits a non-fatal `DOQueueHandler`/`BucketCachePurge` export warning; generated worker exports both classes. Runtime on-demand revalidation was verified, so this is informational only.
+- `REVALIDATE_SECRET` is set as a Worker secret; its value is kept outside the repo at `/home/ubuntupunk/.config/medialternatives/revalidate-secret`. Rotate with `wrangler secret put REVALIDATE_SECRET`.
 
 ---
 
@@ -392,3 +397,5 @@ Each recipe runs from `frontend-app/` and passes `--env-file /dev/null` so the i
 - 2026-11-26 — Added legacy-path and scraper-UA middleware short-circuits; legacy 404s went live and WAF rules were blocked (`medialternatives-esx`).
 - 2026-11-27 — Wrangler OAuth access restored; deployed bot-UA middleware as version `65910e4d-9af6-4927-92ce-b918dcb89a8b` and verified 403/200/404 behavior plus live CPU telemetry.
 - 2026-11-27 — Created Cloudflare WAF custom ruleset `ab1fdaf4374e4665af5d69b3e174a978` for scraper UAs and legacy WordPress paths; verified edge blocks with zero Worker invocations. Deleted redundant zone cache rule `e39615356e0b492c97034e8002f51e2e`.
+- 2026-11-27 — Verified post-hardening analytics (17,199 invocations, 0 CPU-limit errors) and end-to-end on-demand revalidation; closed `medialternatives-56k` and `medialternatives-23n`.
+- 2026-11-27 — Set `REVALIDATE_SECRET` Worker secret to protect `/api/revalidate`; unauthenticated POST is now `401`, authenticated POST is `200`.

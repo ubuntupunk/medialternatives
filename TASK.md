@@ -3,7 +3,7 @@
 ## 🚧 Current Sprint: Incident Recovery — Vercel Outage / Cloudflare Failover
 **Sprint Goal**: Restore service with a temporary, reversible Cloudflare Workers failover while Vercel billing/CPU overage is resolved.  
 **Status**: In progress — cutover complete; Worker serving apex and www on Workers Free, with limits under monitoring.  
-**Tracking**: `medialternatives-8vv` (failover), `medialternatives-a6n` (Vercel CPU root cause), `medialternatives-56k` (Workers Free limits), `medialternatives-23n` (DO queue)
+**Tracking**: `medialternatives-8vv` (failover), `medialternatives-a6n` (Vercel CPU root cause)
 
 | Task | Status | Assignee | Estimate | Actual | Notes |
 |------|--------|----------|----------|--------|-------|
@@ -19,7 +19,8 @@
 | Harden Workers Free CPU budget (cache + ISR fast path) | ✅ Done | Dev Team | 1.5h | 1.5h | OpenNext cache interception/regional cache/queue dedupe/DO purge + `[cache] enabled`; verified `cf-cache-status` and `x-opennext-cache` hits |
 | Add legacy-path and scraper-UA short-circuits | ✅ Done | Dev Team | 0.75h | 0.75h | Deployed version `65910e4d-9af6-4927-92ce-b918dcb89a8b`; verified PetalBot/ClaudeBot 403, normal 200, legacy paths 404 |
 | Configure Cloudflare WAF custom rules | ✅ Done | Dev Team | 0.5h | 0.25h | Created ruleset `ab1fdaf4374e4665af5d69b3e174a978` via Cloudflare MCP; bot UAs and legacy paths now blocked at edge, redundant zone cache rule deleted |
-| Verify CPU/limits and DO queue under live traffic | 🔄 In Progress | Dev Team | 0.5h | - | Workers Free accepted; 1,633 CPU-limit errors diagnosed; post-hardening trend pending (`medialternatives-56k`); DO warning tracked in `medialternatives-23n` |
+| Verify CPU/limits and DO queue under live traffic | ✅ Done | Dev Team | 0.5h | 0.5h | 17,199 Worker invocations with 0 CPU-limit errors after hardening; on-demand revalidation observed end-to-end via live tail |
+| Secure on-demand revalidation endpoint | ✅ Done | Dev Team | 0.25h | 0.1h | Set `REVALIDATE_SECRET` Worker secret; unauthenticated POST → 401, authenticated POST → 200 |
 | Investigate Vercel CPU overage | 📋 Planned | Dev Team | 2h | - | `medialternatives-a6n`; blocked on Vercel auth/telemetry |
 | Rollback to Vercel when restored | 📋 Planned | Dev Team | 0.25h | - | Delete Workers Routes; no DNS change |
 
@@ -27,8 +28,9 @@
 - Cutover approval received and both production Workers Routes are active.
 - Workers Free selected; request/CPU limits accepted and must be monitored.
 - Vercel CLI unauthenticated; no route-level CPU telemetry available.
-- Wrangler emitted a non-fatal `DOQueueHandler`/`BucketCachePurge` export warning; generated Worker exports both; monitor on-demand revalidation (`medialternatives-23n`).
+- Wrangler emits a non-fatal `DOQueueHandler`/`BucketCachePurge` export warning; generated Worker exports both, and runtime revalidation was verified.
 - Wrangler OAuth access restored on 2026-11-27; bot-UA middleware deployed successfully.
+- `REVALIDATE_SECRET` is stored outside the repo at `/home/ubuntupunk/.config/medialternatives/revalidate-secret`; never commit it.
 - Cloudflare MCP token verification returns `401`, but MCP ruleset tools work and were used for WAF creation/cache-rule cleanup. Wrangler OAuth token has `zone:read` only and cannot edit rulesets.
 
 ---
