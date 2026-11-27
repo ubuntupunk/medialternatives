@@ -3,7 +3,7 @@
 **Status**: Cutover complete — production Workers Routes active on Workers Free; CPU hardening deployed; rollback procedure ready  
 **Owner**: Dev Team  
 **Created**: 2026-11-24  
-**Tracking**: `medialternatives-8vv` (failover), `medialternatives-a6n` (Vercel CPU root cause), `medialternatives-56k` (Workers Free limits), `medialternatives-23n` (DO queue), `medialternatives-esx` (WAF rules), `medialternatives-ghv` (bot-UA deploy)
+**Tracking**: `medialternatives-8vv` (failover), `medialternatives-a6n` (Vercel CPU root cause), `medialternatives-56k` (Workers Free limits), `medialternatives-23n` (DO queue), `medialternatives-esx` (WAF rules)
 
 ---
 
@@ -315,18 +315,20 @@ The failover stayed on Workers Free. No Paid upgrade was made.
 ### Verified
 
 - Deployed cache-hardened version: `a3cb274b-671a-45d3-a04a-e4186e25da4c`
+- Deployed bot-UA short-circuit version: `65910e4d-9af6-4927-92ce-b918dcb89a8b` (2026-11-27)
 - `/` → `200`, `x-opennext-cache: HIT`
 - `cf-cache-status: MISS` on first request, then `HIT`
 - `/wp-login.php` → `404`, `/xmlrpc.php` → `404`
+- `PetalBot` / `ClaudeBot` with cache-busting query → `403`; normal browser UA → `200`
+- Live tail of 7 forced-uncached requests: all `ok`, avg CPU 67.4 ms, p50 34 ms, max 233 ms; repeated fixed URLs are edge-cached and do not invoke the Worker
 - `pnpm type-check` and `pnpm lint` passed; `pnpm build:cloudflare` succeeded
 
 ### Blocked
 
 - WAF custom rules for scraper UAs and legacy paths could not be created: Cloudflare API returns `HTTP 503 / code 10001` for `http_request_firewall_custom` with both the MCP connection and Wrangler OAuth token. Tracked in `medialternatives-esx`.
 - The redundant zone cache rule `e39615356e0b492c97034e8002f51e2e` was added before Workers Cache was understood; it is harmless but should be deleted with a token that has ruleset edit scope.
-- Re-deploying the bot-UA middleware build is blocked (`medialternatives-ghv`). Wrangler OAuth device login cannot complete because Cloudflare redirects to `localhost:8976` on the user's machine while Wrangler listens in the sandbox, and Cloudflare API calls intermittently return `503 / 10001` or `504`.
-- User chose to stop on 2026-11-26. The live Worker remains cache-hardened version `a3cb274b-671a-45d3-a04a-e4186e25da4c`; the built bot-UA code is committed but not deployed.
-- Post-hardening telemetry could not be read for the same reason; keep `medialternatives-56k` open until a fresh CPU/error trend is observed.
+- WAF custom rules and redundant zone cache-rule deletion remain blocked (`medialternatives-esx`). Cloudflare REST ruleset endpoints return `HTTP 403 / code 10000 Authentication error` for the Wrangler OAuth token, which has `zone:read` but no ruleset-edit scope; the MCP token is still invalid.
+- Post-hardening telemetry is now observable via `wrangler tail`. Forced-uncached requests still exceed the 10 ms Free CPU budget, but normal repeated URLs are served from Workers Cache without invoking the Worker; keep `medialternatives-56k` open until a longer real-traffic trend confirms the error rate.
 
 ---
 
@@ -368,7 +370,7 @@ Each recipe runs from `frontend-app/` and passes `--env-file /dev/null` so the i
 - Cloudflare MCP OAuth works for cache-rule reads/writes but returns `503 / 10001` for WAF rulesets; Wrangler OAuth has the same WAF scope limitation (`medialternatives-esx`).
 - `.env.local` contains an invalid `CLOUDFLARE_API_TOKEN`; always use `--env-file /dev/null`. Do not copy the OAuth token into `CLOUDFLARE_API_TOKEN` because that bypasses refresh and causes API auth failures.
 - Wrangler emitted a non-fatal `DOQueueHandler`/`BucketCachePurge` export warning; generated worker exports both classes. Monitor on-demand revalidation (`medialternatives-23n`).
-- Cloudflare API intermittently returns `503 / 10001` or `504` for Workers/R2/WAF endpoints. OAuth device login cannot complete because the callback targets `localhost:8976` on the user's machine rather than this sandbox; the built bot-UA deploy is deferred as `medialternatives-ghv`.
+- Wrangler OAuth works for Worker deploys and tails as of 2026-11-27. Cloudflare ruleset endpoints return `403 / 10000` for that token and the MCP token is invalid; WAF/ruleset cleanup remains `medialternatives-esx`.
 
 ---
 
@@ -381,4 +383,5 @@ Each recipe runs from `frontend-app/` and passes `--env-file /dev/null` so the i
 - 2026-11-24 — Added reusable `just` recipes for Wrangler log tails, deployment history, version history, and debug deploys.
 - 2026-11-26 — Diagnosed Workers Free CPU-limit notices: uncached Worker HTML, ISR revalidation failures, and bot/legacy traffic.
 - 2026-11-26 — Deployed OpenNext cache interception, regional cache, queue dedupe, DO purge binding, and Workers Cache; verified `cf-cache-status` and `x-opennext-cache` hits.
-- 2026-11-26 — Added legacy-path and scraper-UA middleware short-circuits; legacy 404s are live, WAF rules remain blocked (`medialternatives-esx`), and the bot-UA redeploy was deferred by user decision (`medialternatives-ghv`).
+- 2026-11-26 — Added legacy-path and scraper-UA middleware short-circuits; legacy 404s went live and WAF rules were blocked (`medialternatives-esx`).
+- 2026-11-27 — Wrangler OAuth access restored; deployed bot-UA middleware as version `65910e4d-9af6-4927-92ce-b918dcb89a8b` and verified 403/200/404 behavior plus live CPU telemetry. WAF rules still require a ruleset-scoped token.
